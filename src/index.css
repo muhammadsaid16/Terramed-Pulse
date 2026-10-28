@@ -1,0 +1,290 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   TerraPulse: Apple Design System & Fluid Interactions
+   ========================================================================== */
+
+:root {
+  --font-en: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Text", Roboto, sans-serif;
+  --font-ar: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
+
+  --bg-deep: #070B14;
+  --bg-space: #0B1120;
+  --bg-card: rgba(15, 23, 42, 0.72);
+  --bg-card-hover: rgba(30, 41, 59, 0.85);
+  
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-highlight: rgba(45, 212, 191, 0.4);
+
+  --teal-glow: rgba(13, 148, 136, 0.35);
+  --rose-glow: rgba(244, 63, 94, 0.35);
+  --amber-glow: rgba(245, 158, 11, 0.35);
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-en);
+  background-color: var(--bg-space);
+  color: #F8FAFC;
+}
+
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at 50% 0%, #172554 0%, #0B1120 40%, #070B14 100%);
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+
+/* RTL Language Handling */
+body[dir="rtl"] {
+  font-family: var(--font-ar);
+  direction: rtl;
+  text-align: right;
+}
+
+/* Apple Design Direct Touch & Spring Response */
+.apple-btn {
+  transition: transform 120ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 150ms ease, box-shadow 150ms ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.apple-btn:active {
+  transform: scale(0.965);
+}
+
+.apple-chip {
+  transition: transform 100ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 150ms ease, border-color 150ms ease;
+}
+
+.apple-chip:active {
+  transform: scale(0.95);
+}
+
+/* Tabular figures for rock-solid stability during sliding / counters */
+.tabular-numbers,
+.stat-value,
+.slider-val,
+input[type="range"] + span {
+  font-variant-numeric: tabular-nums;
+  -moz-font-feature-settings: "tnum";
+  -webkit-font-feature-settings: "tnum";
+  font-feature-settings: "tnum";
+}
+
+/* Apple Frosted Glass Panels */
+.apple-glass {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 1.25rem;
+  box-shadow: 0 12px 35px -10px rgba(0, 0, 0, 0.65);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.apple-glass:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.apple-glass-card {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 1rem;
+  transition: transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1), border-color 200ms ease;
+}
+
+.apple-glass-card:hover {
+  border-color: var(--border-highlight);
+  transform: translateY(-2px);
+}
+
+/* Glowing Border Utilities */
+.border-glow-teal {
+  box-shadow: 0 0 25px -4px var(--teal-glow);
+  border-color: #14B8A6 !important;
+}
+
+.border-glow-rose {
+  box-shadow: 0 0 25px -4px var(--rose-glow);
+  border-color: #F43F5E !important;
+}
+
+/* Custom Sliders with Smooth Tactile Feel */
+.slider-teal {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 7px;
+  background: #1E293B;
+  border-radius: 8px;
+  outline: none;
+  transition: background 150ms;
+}
+
+.slider-teal::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #14B8A6;
+  cursor: grab;
+  box-shadow: 0 0 12px rgba(20, 184, 166, 0.7);
+  border: 2px solid #0F172A;
+  transition: transform 120ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 120ms;
+}
+
+.slider-teal::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.25);
+  background: #2DD4BF;
+}
+
+.slider-teal::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #14B8A6;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(20, 184, 166, 0.7);
+  border: 2px solid #0F172A;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #14B8A6;
+}
+
+/* Leaflet Custom DivIcon fixes */
+.leaflet-div-icon,
+.custom-div-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.leaflet-container {
+  background: #070B14 !important;
+  font-family: inherit !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: rgba(15, 23, 42, 0.95) !important;
+  color: #F8FAFC !important;
+  border: 1px solid rgba(45, 212, 191, 0.4) !important;
+  border-radius: 1rem !important;
+  backdrop-filter: blur(16px) !important;
+  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.8) !important;
+}
+
+.leaflet-popup-tip {
+  background: rgba(15, 23, 42, 0.95) !important;
+  border: 1px solid rgba(45, 212, 191, 0.4) !important;
+}
+
+/* Animated Pulse Rings on Leaflet Markers */
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.9; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+.marker-pulse-ring {
+  position: absolute;
+  border-radius: 50%;
+  animation: pulse-ring 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+/* Modal Spring Animation */
+.modal-overlay {
+  background-color: rgba(3, 7, 18, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.modal-spring {
+  animation: modal-spring-enter 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modal-spring-enter {
+  0% { opacity: 0; transform: scale(0.94) translateY(12px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Official 1-Page Ministerial Brief Print Stylesheet */
+@media print {
+  nav, header, footer, .no-print, button, input, select, textarea, .leaflet-control-container, #print-brief-btn {
+    display: none !important;
+  }
+
+  body {
+    background: #FFFFFF !important;
+    color: #0F172A !important;
+    font-size: 10.5pt;
+    line-height: 1.4;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #print-executive-brief {
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    padding: 1.2cm !important;
+    margin: 0 !important;
+    background: #FFFFFF !important;
+    color: #0F172A !important;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  .print-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12pt 0;
+  }
+
+  .print-table th,
+  .print-table td {
+    border: 1px solid #CBD5E1;
+    padding: 6pt 8pt;
+    text-align: left;
+    font-size: 9.5pt;
+  }
+
+  body[dir="rtl"] .print-table th,
+  body[dir="rtl"] .print-table td {
+    text-align: right;
+  }
+
+  .print-table th {
+    background-color: #F1F5F9 !important;
+    font-weight: 700;
+  }
+
+  .print-box {
+    border: 1.5px solid #0F2C59;
+    border-radius: 6pt;
+    padding: 10pt;
+    margin-bottom: 12pt;
+    background-color: #F8FAFC !important;
+  }
+}

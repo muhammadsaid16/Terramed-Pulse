@@ -118,11 +118,10 @@ def run_tests():
 
     # 11. Cross-runtime parity test with Node.js
     node_test_code = """
-    const fs = require('fs');
-    const path = require('path');
-    const data = JSON.parse(fs.readFileSync(path.join(__dirname, 'data.json'), 'utf8'));
-    const engine = require(path.resolve(__dirname, 'trend-engine.js'));
+    import fs from 'fs';
+    import engine from './trend-engine.js';
 
+    const data = JSON.parse(fs.readFileSync('./data.json', 'utf8'));
     const years = data.governorates.aswan.series.years;
     const t2m = data.governorates.aswan.series.T2M;
 

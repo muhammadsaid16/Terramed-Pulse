@@ -3,7 +3,7 @@
  * Run with: node test-trend-engine.js
  */
 
-const engine = require('./trend-engine.js');
+import engine from './trend-engine.js';
 
 let passedTests = 0;
 let totalTests = 0;

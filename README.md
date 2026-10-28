@@ -141,22 +141,34 @@ python3 -m http.server 8080
 # Open http://localhost:8080 in your browser
 ```
 
-### 2. Run the NASA POWER Python Data Pipeline
+### 1. Launch the Vite + React Application
+```bash
+cd "/home/zer0/Desktop/Projects/Nasa project"
+
+# Install dependencies (if not already installed)
+npm install
+
+# Start lightning-fast Vite development server with HMR
+npm run dev
+
+# Or build and preview the optimized production bundle
+npm run build
+npm run preview
+```
+
+### 2. Run the NASA POWER Python Data Pipeline & Test Suite
 The included `fetch_nasa_data.py` script queries the real NASA POWER API, computes statistical trends, and outputs `data.json`:
 ```bash
 cd "/home/zer0/Desktop/Projects/Nasa project"
 
-# Display CLI help
-python3 fetch_nasa_data.py --help
+# Run the 82-test backend verification suite
+python3 test_nasa_pipeline.py
 
-# Run with live NASA POWER API (falls back gracefully to calibrated offline baseline if offline)
+# Run the 51-test JavaScript statistical parity suite
+node test-trend-engine.js
+
+# Fetch live NASA POWER observations
 python3 fetch_nasa_data.py --output data.json
-
-# Run strictly in deterministic offline mode
-python3 fetch_nasa_data.py --offline --output data.json
-
-# Test calculations on dry-run
-python3 fetch_nasa_data.py --dry-run
 ```
 
 ---
@@ -165,13 +177,38 @@ python3 fetch_nasa_data.py --dry-run
 
 ```
 /home/zer0/Desktop/Projects/Nasa project/
-├── index.html            # Complete semantic HTML5 structure with bilingual RTL support
-├── styles.css            # Dark space theme (#0B1120), glassmorphism, animations & print styling
-├── app.js                # Full 30-year time series, math engine, 45 physician seed reports, UI logic
-├── fetch_nasa_data.py    # Python pipeline querying NASA POWER API & computing Mann-Kendall statistics
-├── data.json             # Standalone 30-year dataset and computed trend metrics
-├── README.md             # This comprehensive bilingual documentation guide
-└── SUBMISSION_COPY.md    # Official Space Apps submission text, 30s storyboard & 7-slide pitch deck
+├── index.html                   # HTML5 entry with Inter & Cairo font stacks
+├── package.json                 # Vite + React 18, Tailwind, Lucide, Leaflet, Chart.js
+├── vite.config.js               # Optimized Vite bundler configuration
+├── tailwind.config.js           # Apple dark space theme tokens & typography
+├── data.json                    # Golden 30-year NASA datasets (1995-2025)
+├── fetch_nasa_data.py           # NASA POWER API fetcher & Mann-Kendall CLI pipeline
+├── test_nasa_pipeline.py        # 82-check verification suite (100% passing)
+├── test-trend-engine.js         # 51-check JS statistical verification suite (100% passing)
+├── README.md                    # Bilingual documentation & architecture guide
+├── SUBMISSION_COPY.md           # Copy-paste submission package (storyboard & 7-slide deck)
+└── src/
+    ├── main.jsx                 # React root mount
+    ├── App.jsx                  # Main application orchestrator & state manager
+    ├── index.css                # Apple Design fluid interactions, frosted glass, print styles
+    ├── data/
+    │   └── terrapulseData.js    # Continuous 31-yr records & 45 realistic physician reports
+    ├── lib/
+    │   ├── trendEngine.js       # OLS linear regression, Mann-Kendall test, t-test, HNI & simulation
+    │   └── translations.js      # Full English & Arabic localization dictionaries
+    └── components/
+        ├── Header.jsx           # Apple-style segmented tabs, 1-click cases, language toggle
+        ├── KpiStrip.jsx         # Executive metrics with tabular-nums & glowing cards
+        ├── MapModule.jsx        # Watermark-free Leaflet map (Esri Dark) + 1995-2025 time-lapse
+        ├── TrendChartModule.jsx # 30-yr Chart.js series, anomaly toggle, Mann-Kendall badge
+        ├── OppositeTrends.jsx   # Upper Egypt arid warming vs Nile Delta humidity/aerosols
+        ├── DoctorMatcher.jsx    # "Stay & Build" 8-specialty clinical impact matcher
+        ├── PhysicianForm.jsx    # In-page clinical observation & migration intent form
+        ├── DecisionMaker.jsx    # What-If simulator & 3 executive Chart.js dashboards
+        ├── WizardModal.jsx      # 3-step Guided Trend Detective Wizard
+        ├── MathModal.jsx        # Mathematical & statistical methodology guide
+        ├── PrintBrief.jsx       # Official 1-page ministerial brief for @media print
+        └── Footer.jsx           # NASA mission credits & hackathon branding
 ```
 
 ---

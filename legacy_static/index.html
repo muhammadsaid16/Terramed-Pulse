@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TerraPulse: Stay & Build Egypt — NASA Earth System Trend Detective</title>
+  <meta name="description" content="TerraPulse: NASA Earth System Trend Detective & Climate-Health Compass. Empowering physicians and policy makers to detect 30-year climate shifts, reverse brain drain, and protect Egypt's vulnerable communities.">
+
+  <!-- Google Fonts: Inter & Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            space: {
+              950: '#070B14',
+              900: '#0B1120',
+              800: '#0F172A',
+              700: '#1E293B'
+            },
+            teal: {
+              400: '#2DD4BF',
+              500: '#14B8A6',
+              600: '#0D9488'
+            },
+            nasa: {
+              blue: '#0F2C59',
+              light: '#2563EB'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-space-900 text-slate-100 min-h-screen flex flex-col selection:bg-teal-500 selection:text-slate-950">
+
+  <!-- =========================================================================
+       TOP GLOBAL ANNOUNCEMENT STRIP
+       ========================================================================= -->
+  <div class="bg-gradient-to-r from-nasa-blue via-teal-900 to-space-900 border-b border-teal-500/30 text-xs py-1.5 px-4 text-center font-medium text-teal-200 flex items-center justify-center space-x-2">
+    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-teal-500/20 text-teal-300 border border-teal-400/40">
+      NASA SPACE APPS 2026
+    </span>
+    <span class="hidden sm:inline">•</span>
+    <span data-i18n="tagline">Empowering physicians and decision-makers to detect 30-year Earth system shifts, protect vulnerable communities, and build resilient healthcare across Egypt.</span>
+  </div>
+
+  <!-- =========================================================================
+       MAIN NAVIGATION & TOOLBAR
+       ========================================================================= -->
+  <header class="sticky top-0 z-40 bg-space-950/80 backdrop-blur-md border-b border-slate-800/80 px-4 lg:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand Logo & Identity -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-500 to-blue-600 p-0.5 flex items-center justify-center shadow-lg shadow-teal-500/20">
+          <div class="w-full h-full bg-space-950 rounded-[10px] flex items-center justify-center">
+            <i data-lucide="satellite" class="w-5 h-5 text-teal-400"></i>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-teal-400 via-teal-200 to-blue-400 bg-clip-text text-transparent" data-i18n="appTitle">
+              TerraPulse
+            </span>
+            <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40">
+              Egypt 1995-2025
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 truncate hidden md:block" data-i18n="appSubtitle">
+            NASA Earth System Trend Detective & Climate-Health Compass
+          </p>
+        </div>
+      </div>
+
+      <!-- Demonstration Cases Preset Dropdown / Buttons -->
+      <div class="flex items-center flex-wrap gap-2">
+        <div class="hidden xl:flex items-center space-x-1.5 bg-slate-900/90 border border-slate-800 rounded-lg p-1 text-xs">
+          <span class="text-slate-400 px-2 font-semibold" data-i18n="btnCases">1-Click Cases:</span>
+          <button id="btn-demo-1" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-teal-900/60 hover:text-teal-300 transition-colors text-slate-200" title="Upper Egypt Heat & Kidney Crisis">
+            ⚡ <span data-i18n="demo1">Stay & Build: Upper Egypt</span>
+          </button>
+          <button id="btn-demo-2" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-teal-900/60 hover:text-teal-300 transition-colors text-slate-200" title="Nile Delta Water & Agro Shift">
+            🌊 <span data-i18n="demo2">Nile Delta Water Shift</span>
+          </button>
+          <button id="btn-demo-3" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-teal-900/60 hover:text-teal-300 transition-colors text-slate-200" title="Cairo Urban Heat & Air Quality">
+            🏙️ <span data-i18n="demo3">Cairo Heat & Smog</span>
+          </button>
+        </div>
+
+        <!-- Utility Buttons -->
+        <div class="flex items-center space-x-2">
+          <!-- Guided Wizard -->
+          <button id="btn-open-wizard" class="px-3 py-1.5 rounded-lg bg-teal-600/30 hover:bg-teal-600/50 text-teal-300 border border-teal-500/40 text-xs font-semibold flex items-center space-x-1.5 transition-all">
+            <i data-lucide="compass" class="w-4 h-4"></i>
+            <span data-i18n="btnWizard">Detective Wizard</span>
+          </button>
+
+          <!-- Math / Methodology Explainer -->
+          <button id="btn-open-math" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center space-x-1 border border-slate-700 transition-all" title="View Statistical Algorithms">
+            <i data-lucide="help-circle" class="w-4 h-4 text-teal-400"></i>
+            <span class="hidden sm:inline" data-i18n="btnMathExplain">Math (?)</span>
+          </button>
+
+          <!-- Export Print Brief -->
+          <button id="btn-print-brief" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center space-x-1 border border-slate-700 transition-all" title="Print 1-Page Ministerial Brief">
+            <i data-lucide="printer" class="w-4 h-4 text-blue-400"></i>
+            <span class="hidden sm:inline" data-i18n="btnPrintBrief">Print Brief</span>
+          </button>
+
+          <!-- Bilingual Toggle -->
+          <button id="btn-lang-toggle" class="px-3 py-1.5 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-950 text-xs font-black flex items-center space-x-1 transition-all shadow-md shadow-teal-500/20">
+            <i data-lucide="languages" class="w-4 h-4"></i>
+            <span id="lang-label" data-i18n="langBtn">عربي</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       MAIN BODY WRAPPER
+       ========================================================================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-8 space-y-8">
+
+    <!-- KPI HIGHLIGHT STRIP (30-Year Earth System Trends) -->
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="glass-panel p-4 flex flex-col justify-between">
+        <div class="flex items-center justify-between text-slate-400 text-xs mb-2">
+          <span data-i18n="kpiWarmingLabel">Egypt Avg 30-Yr Warming Rate</span>
+          <i data-lucide="flame" class="w-4 h-4 text-rose-400"></i>
+        </div>
+        <div class="text-2xl font-extrabold text-rose-400" data-i18n="kpiWarmingRate">+0.44°C / decade</div>
+        <div class="text-[11px] text-slate-400 mt-1">Accelerating since 2010</div>
+      </div>
+
+      <div class="glass-panel p-4 flex flex-col justify-between">
+        <div class="flex items-center justify-between text-slate-400 text-xs mb-2">
+          <span data-i18n="kpiHighestNeedLabel">Highest Climate-Health Need</span>
+          <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400"></i>
+        </div>
+        <div class="text-2xl font-extrabold text-amber-400" data-i18n="kpiHighestNeed">Aswan (HNI: 88.4)</div>
+        <div class="text-[11px] text-slate-400 mt-1">Critical Physician Shortage</div>
+      </div>
+
+      <div class="glass-panel p-4 flex flex-col justify-between">
+        <div class="flex items-center justify-between text-slate-400 text-xs mb-2">
+          <span data-i18n="kpiTotalDoctorsLabel">Physician Field Observatory</span>
+          <i data-lucide="stethoscope" class="w-4 h-4 text-teal-400"></i>
+        </div>
+        <div class="text-2xl font-extrabold text-teal-300" id="kpi-total-doctors" data-i18n="kpiTotalDoctors">45+ Verified Reports</div>
+        <div class="text-[11px] text-slate-400 mt-1">Crowdsourced Clinical Evidence</div>
+      </div>
+
+      <div class="glass-panel p-4 flex flex-col justify-between">
+        <div class="flex items-center justify-between text-slate-400 text-xs mb-2">
+          <span data-i18n="kpiTrendDivergenceLabel">Opposite-Direction Dynamics</span>
+          <i data-lucide="git-compare" class="w-4 h-4 text-blue-400"></i>
+        </div>
+        <div class="text-xl font-bold text-blue-300" data-i18n="kpiTrendDivergence">Upper Egypt vs Delta</div>
+        <div class="text-[11px] text-slate-400 mt-1">Arid heat vs Humid aerosols</div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         MODULE 1: EARTH SYSTEM TREND DETECTIVE & SPATIAL MAP
+         ===================================================================== -->
+    <section class="glass-panel p-5 lg:p-6 space-y-6">
+      
+      <!-- Module Header -->
+      <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <h2 class="text-xl font-black text-slate-100 flex items-center space-x-2">
+            <i data-lucide="radar" class="w-5 h-5 text-teal-400"></i>
+            <span data-i18n="module1Title">Module 1: Earth System Trend Detective & Spatial Map</span>
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5" data-i18n="module1Subtitle">
+            Interactive 30-Year Satellite Climate-Environmental Observatory (1995-2025)
+          </p>
+        </div>
+
+        <!-- Controls Toolbar: Gov & Var Selectors -->
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center space-x-2">
+            <label for="gov-selector" class="text-xs text-slate-400 font-semibold" data-i18n="govSelectorLabel">Governorate:</label>
+            <select id="gov-selector" class="bg-space-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-1.5 focus:border-teal-400 outline-none">
+              <option value="aswan">Aswan (أسوان)</option>
+              <option value="assiut">Assiut (أسيوط)</option>
+              <option value="cairo">Cairo (القاهرة)</option>
+              <option value="giza">Giza (الجيزة)</option>
+              <option value="alexandria">Alexandria (الإسكندرية)</option>
+            </select>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <label for="var-selector" class="text-xs text-slate-400 font-semibold" data-i18n="varSelectorLabel">Variable:</label>
+            <select id="var-selector" class="bg-space-950 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-1.5 focus:border-teal-400 outline-none">
+              <option value="T2M_MAX">Maximum Air Temperature (T2M_MAX, °C)</option>
+              <option value="T2M">Mean Air Temperature (T2M, °C)</option>
+              <option value="RH2M">Relative Humidity (RH2M, %)</option>
+              <option value="ALLSKY_SFC_SW_DWN">Solar Insolation (MJ/m²/day)</option>
+              <option value="PM25">Fine Particulates (PM2.5, µg/m³)</option>
+              <option value="AOD">Aerosol Optical Depth (AOD 550nm)</option>
+              <option value="NDVI">Vegetation Greenness Index (NDVI)</option>
+              <option value="LST">Land Surface Temperature (LST, °C)</option>
+              <option value="SOIL_MOIST">Root-Zone Soil Moisture (kg/m²)</option>
+              <option value="ET">Evapotranspiration (kg/m²/day)</option>
+            </select>
+          </div>
+
+          <!-- Anomaly Toggle -->
+          <div class="flex items-center space-x-2 bg-space-950 border border-slate-800 rounded-lg px-3 py-1">
+            <input type="checkbox" id="toggle-anomaly" class="w-3.5 h-3.5 text-teal-500 rounded focus:ring-0 cursor-pointer">
+            <label for="toggle-anomaly" class="text-xs text-slate-300 cursor-pointer select-none" data-i18n="anomalyToggleLabel">
+              Anomaly Mode (vs 1995-2005)
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Grid: Spatial Map + Time Series Analytics -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left: Leaflet Map Container (5 cols) -->
+        <div class="lg:col-span-5 flex flex-col space-y-3">
+          <div class="relative w-full h-[420px] rounded-xl overflow-hidden border border-slate-800">
+            <div id="map" class="w-full h-full"></div>
+            <!-- Map Overlay Legend -->
+            <div class="absolute bottom-3 left-3 z-[1000] bg-space-950/90 backdrop-blur-md p-2.5 rounded-lg border border-slate-700 text-[11px] space-y-1">
+              <div class="font-bold text-slate-200 mb-1">Health Need Index (HNI)</div>
+              <div class="flex items-center space-x-2">
+                <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                <span class="text-slate-300">Critical (&ge; 80)</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                <span class="text-slate-300">High (70 - 79)</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="w-3 h-3 rounded-full bg-cyan-500"></span>
+                <span class="text-slate-300">Moderate (&lt; 70)</span>
+              </div>
+            </div>
+          </div>
+          <div class="text-[11px] text-slate-400 flex items-center justify-between px-1">
+            <span>Click any marker to inspect regional trends</span>
+            <span class="text-teal-400 font-semibold">5 Governorates Monitored</span>
+          </div>
+
+          <!-- 30-Year Satellite Time-Lapse Player (1995-2025) -->
+          <div class="bg-space-950 p-3 rounded-xl border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <div class="flex items-center space-x-2">
+                <button id="btn-play-timelapse" class="px-3 py-1 rounded-lg bg-teal-600 hover:bg-teal-500 text-slate-950 font-bold flex items-center space-x-1.5 transition-all shadow-sm">
+                  <span id="play-icon">▶</span>
+                  <span id="play-text" data-i18n="btnPlayTime">Play 30-Yr Time-Lapse</span>
+                </button>
+                <div class="flex items-center space-x-1">
+                  <button id="btn-prev-year" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs">-1</button>
+                  <button id="btn-next-year" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs">+1</button>
+                </div>
+              </div>
+              <div class="flex items-center space-x-1.5">
+                <span class="text-slate-400 font-medium" data-i18n="timelapseYearLabel">Year:</span>
+                <span id="val-timelapse-year" class="font-black text-sm text-teal-300 bg-slate-900 px-2 py-0.5 rounded border border-teal-500/30">2025</span>
+              </div>
+            </div>
+            <input type="range" id="slider-timelapse" min="1995" max="2025" value="2025" step="1" class="slider-teal w-full cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-500 px-1 font-mono">
+              <span>1995 (Baseline Climatology)</span>
+              <span>2010 (Mid-Point)</span>
+              <span>2025 (Present Orbit)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Time Series Chart & Statistical Badges (7 cols) -->
+        <div class="lg:col-span-7 flex flex-col space-y-4">
+          
+          <!-- Chart Canvas Container -->
+          <div class="relative h-[280px] w-full bg-space-950/60 rounded-xl p-3 border border-slate-800/80">
+            <canvas id="trendChart"></canvas>
+          </div>
+
+          <!-- Mathematical & Statistical Confidence Badge Card -->
+          <div class="bg-space-950/80 rounded-xl p-4 border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="binary" class="w-4 h-4 text-teal-400"></i>
+                <span class="text-xs font-bold text-slate-200" data-i18n="statTitle">Mann-Kendall Trend & Statistical Confidence</span>
+              </div>
+              <div id="stat-badge" class="trend-pill trend-pill-warming">
+                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                <span data-i18n="trendSignificanceSignificant">Significant Trend (p < 0.05)</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+              <div>
+                <span class="text-slate-400 block text-[11px]" data-i18n="slopeLabel">Linear Slope / Decade:</span>
+                <b id="stat-slope" class="text-teal-300 text-sm">+0.540 °C / dec</b>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[11px]" data-i18n="mkStatLabel">Mann-Kendall S:</span>
+                <b id="stat-mks" class="text-slate-200 text-sm">+412</b>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[11px]" data-i18n="zScoreLabel">Standard Normal Z:</span>
+                <b id="stat-z" class="text-slate-200 text-sm">6.12</b>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[11px]" data-i18n="pValueLabel">Two-Tailed p-value:</span>
+                <b id="stat-p" class="text-rose-400 text-sm">&lt; 0.001 (***)</b>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[11px]" data-i18n="r2Label">Goodness of Fit (R²):</span>
+                <b id="stat-r2" class="text-slate-200 text-sm">0.962</b>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[11px]" data-i18n="ci95Label">95% CI on Slope:</span>
+                <b id="stat-ci" class="text-amber-300 text-sm">[+0.49, +0.58]</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OPPOSITE-DIRECTION REGIONAL TREND SHOWCASE -->
+      <div class="bg-gradient-to-r from-space-950 via-slate-900 to-space-950 rounded-xl p-5 border border-slate-800 space-y-3">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="split" class="w-5 h-5 text-amber-400"></i>
+          <h3 class="font-bold text-sm text-slate-100" data-i18n="oppositeTitle">Opposite-Direction Regional Trend Showcase</h3>
+        </div>
+        <p class="text-xs text-slate-400" data-i18n="oppositeDesc">
+          Earth systems display opposing regional trajectories across Egypt’s geographic coordinates:
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+          <div class="glass-panel p-4 border-l-4 border-l-rose-500">
+            <div class="font-bold text-rose-400 text-xs mb-1" data-i18n="upperEgyptLabel">
+              Upper Egypt (Aswan & Assiut): Rapid Arid Warming
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed" data-i18n="upperEgyptDetail">
+              T2M rising at +0.54°C/decade while Relative Humidity drops by -2.8%/decade, driving extreme desiccation, heatstroke, and severe renal-cardiac strain.
+            </p>
+          </div>
+
+          <div class="glass-panel p-4 border-l-4 border-l-cyan-500">
+            <div class="font-bold text-cyan-400 text-xs mb-1" data-i18n="deltaLabel">
+              Nile Delta & Coast (Alexandria & Cairo): Humidity Surge & Aerosols
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed" data-i18n="deltaDetail">
+              Alexandria coastal RH2M surges by +2.5%/decade alongside high PM2.5 stagnation in Cairo (85 µg/m³), elevating dangerous wet-bulb index and pediatric asthma.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         MODULE 2: "STAY & BUILD EGYPT" DOCTOR IMPACT MATCHER (ابقَ وابنِ)
+         ===================================================================== -->
+    <section class="glass-panel p-5 lg:p-6 space-y-6">
+      <div class="border-b border-slate-800 pb-4">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="user-check" class="w-5 h-5 text-teal-400"></i>
+          <h2 class="text-xl font-black text-slate-100" data-i18n="module2Title">
+            Module 2: "Stay & Build Egypt" Doctor Impact Matcher (ابقَ وابنِ)
+          </h2>
+        </div>
+        <p class="text-xs text-slate-400 mt-1" data-i18n="module2Subtitle">
+          Directly linking clinical specialties to NASA satellite environmental drivers
+        </p>
+      </div>
+
+      <!-- Specialty Grid Selector -->
+      <div>
+        <label class="text-xs font-semibold text-slate-300 block mb-3" data-i18n="chooseSpecialtyLabel">
+          Select Your Medical Specialty:
+        </label>
+        <div id="specialty-buttons-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </div>
+
+      <!-- Specialty Detailed Rationale Card -->
+      <div class="bg-space-950 rounded-xl p-5 border border-slate-800 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+          <h3 id="spec-title" class="text-base font-extrabold text-teal-300">
+            Nephrology & Urological Care
+          </h3>
+          <span class="text-xs px-2.5 py-1 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30 font-semibold">
+            High Climate Demand Match
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+          <!-- Left: Clinical Rationale (8 cols) -->
+          <div class="md:col-span-8 space-y-3">
+            <div>
+              <span class="text-xs font-bold text-slate-400 block mb-1" data-i18n="clinicalRationaleHeading">
+                Biomedical & Pathophysiological Mechanism:
+              </span>
+              <p id="spec-rationale" class="text-xs text-slate-200 leading-relaxed">
+                Hyper-arid climates with daily maximums exceeding 42°C produce chronic subclinical hypovolemia, recurrent renal medullary ischemia, hyperuricemia, and rapid progression of tubular injury. Upper Egypt exhibits endemic nephrolithiasis and accelerated Chronic Kidney Disease (CKD).
+              </p>
+            </div>
+
+            <div>
+              <span class="text-xs font-bold text-slate-400 block mb-1" data-i18n="nasaDriversHeading">
+                Primary NASA Satellite Drivers:
+              </span>
+              <p id="spec-drivers" class="text-xs text-teal-400 font-medium">
+                NASA POWER T2M_MAX, GLDAS Aridification, Low RH2M
+              </p>
+            </div>
+
+            <div class="bg-slate-900/80 rounded-lg p-3 border-l-4 border-l-teal-500">
+              <span class="text-xs font-bold text-teal-300 block mb-1" data-i18n="retentionPitchHeading">
+                Why Egypt Needs You Here:
+              </span>
+              <p id="spec-pitch" class="text-xs text-slate-300 leading-relaxed">
+                Aswan has only 5.2 physicians per 10k people, while heat-induced renal stress is at its highest national peak. By practicing nephrology in Upper Egypt, you become an irreplaceable pillar providing life-saving hemodialysis stewardship and hydration prevention.
+              </p>
+            </div>
+          </div>
+
+          <!-- Right: Recommended Governorates (4 cols) -->
+          <div class="md:col-span-4 space-y-2">
+            <span class="text-xs font-bold text-slate-400 block" data-i18n="topGovsHeading">
+              Top Urgently Needed Governorates:
+            </span>
+            <div id="spec-govs" class="space-y-2">
+              <!-- Populated by app.js -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         MODULE 3: VOICE OF EGYPTIAN PHYSICIANS IN-PAGE OBSERVATORY
+         ===================================================================== -->
+    <section class="glass-panel p-5 lg:p-6 space-y-6">
+      <div class="border-b border-slate-800 pb-4">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="message-square" class="w-5 h-5 text-teal-400"></i>
+          <h2 class="text-xl font-black text-slate-100" data-i18n="module3Title">
+            Module 3: Voice of Egyptian Physicians In-Page Observatory
+          </h2>
+        </div>
+        <p class="text-xs text-slate-400 mt-1" data-i18n="module3Subtitle">
+          Live crowdsourced clinical observatory of climate-health burdens across Egypt
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left: In-Page Submission Form (5 cols) -->
+        <div id="physician-form-section" class="lg:col-span-5 bg-space-950 p-5 rounded-xl border border-slate-800 space-y-4">
+          <h3 class="font-bold text-sm text-slate-200 flex items-center space-x-2" data-i18n="formTitle">
+            <i data-lucide="edit-3" class="w-4 h-4 text-teal-400"></i>
+            <span>Log Your Clinical Field Observation</span>
+          </h3>
+
+          <form id="physician-form" class="space-y-3">
+            <div>
+              <label class="text-[11px] text-slate-400 block mb-1" data-i18n="inputDoctorName">Physician Name:</label>
+              <input type="text" id="doc-name" placeholder="Dr. Ahmed / Anonymous Dr." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-100 outline-none focus:border-teal-400">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="text-[11px] text-slate-400 block mb-1">Governorate:</label>
+                <select id="doc-gov" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-100 outline-none focus:border-teal-400">
+                  <option value="aswan">Aswan (أسوان)</option>
+                  <option value="assiut">Assiut (أسيوط)</option>
+                  <option value="cairo">Cairo (القاهرة)</option>
+                  <option value="giza">Giza (الجيزة)</option>
+                  <option value="alexandria">Alexandria (الإسكندرية)</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-[11px] text-slate-400 block mb-1">Specialty:</label>
+                <select id="doc-specialty" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-100 outline-none focus:border-teal-400">
+                  <option value="nephrology">Nephrology (كلى)</option>
+                  <option value="pulmonology">Pulmonology (صدر)</option>
+                  <option value="cardiology">Cardiology (قلب)</option>
+                  <option value="emergency">Emergency (طوارئ)</option>
+                  <option value="pediatrics">Pediatrics (أطفال)</option>
+                  <option value="geriatrics">Geriatrics (مسنين)</option>
+                  <option value="dermatology_ophthalmology">Derm/Eye (جلد ورمد)</option>
+                  <option value="occupational_preventive">Occupational (صحة مهنية)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="text-[11px] text-slate-400 block mb-1" data-i18n="inputHospital">Hospital / Healthcare Unit:</label>
+              <input type="text" id="doc-hospital" placeholder="e.g. Assiut University Hospital" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-100 outline-none focus:border-teal-400">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="text-[11px] text-slate-400 block mb-1" data-i18n="inputBurden">Observed Climate Burden:</label>
+                <select id="doc-burden" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-100 outline-none focus:border-teal-400">
+                  <option value="heat_exhaustion">Heat Exhaustion / Stroke</option>
+                  <option value="acute_kidney_injury">Acute Kidney Injury / AKI</option>
+                  <option value="asthma_exacerbation">Asthma & Aerosol Spike</option>
+                  <option value="cardiac_decompensation">Cardiac Strain / MI</option>
+                  <option value="pediatric_dehydration">Pediatric Dehydration</option>
+                  <option value="geriatric_hyperthermia">Geriatric Hyperthermia</option>
+                  <option value="occupational_heat_stroke">Laborer Heat Cramps</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-[11px] text-slate-400 block mb-1" data-i18n="inputSeverity">Severity Rating (1-5):</label>
+                <select id="doc-severity" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-100 outline-none focus:border-teal-400 font-bold text-amber-400">
+                  <option value="5">5 - Critical Crisis (★★★★★)</option>
+                  <option value="4" selected>4 - Severe Burden (★★★★☆)</option>
+                  <option value="3">3 - Moderate Strain (★★★☆☆)</option>
+                  <option value="2">2 - Mild Impact (★★☆☆☆)</option>
+                  <option value="1">1 - Baseline (★☆☆☆☆)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="text-[11px] text-slate-400 block mb-1" data-i18n="inputComment">Clinical Notes & Community Needs:</label>
+              <textarea id="doc-comment" rows="3" placeholder="Describe symptoms, patient influx patterns, weather context, and missing resources..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-100 outline-none focus:border-teal-400 resize-none"></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-400 hover:to-teal-500 text-slate-950 font-black text-xs rounded-lg transition-all shadow-md shadow-teal-500/20" data-i18n="btnSubmitReport">
+              Submit Verified Observation to Observatory
+            </button>
+          </form>
+
+          <!-- Toast feedback -->
+          <div id="submit-toast" class="hidden p-2.5 bg-emerald-900/60 border border-emerald-500/60 rounded-lg text-xs text-emerald-300 text-center font-semibold animate-pulse">
+            ✓ Report verified & appended. Live WNI/HNI indices dynamically recalculated!
+          </div>
+        </div>
+
+        <!-- Right: Real-time Reports Feed (7 cols) -->
+        <div class="lg:col-span-7 flex flex-col space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-300" data-i18n="reportsFeedTitle">
+              Real-Time Physician Field Reports Feed
+            </span>
+            <span class="text-[11px] text-teal-400 font-semibold">Live Synchronized Feed</span>
+          </div>
+
+          <div id="physician-feed" class="space-y-2.5 max-h-[500px] overflow-y-auto pr-1">
+            <!-- Populated dynamically by app.js (45 seeded reports + user additions) -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         MODULE 4: DECISION-MAKER & "WHAT-IF" POLICY LAB
+         ===================================================================== -->
+    <section class="glass-panel p-5 lg:p-6 space-y-6">
+      <div class="border-b border-slate-800 pb-4">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="sliders" class="w-5 h-5 text-teal-400"></i>
+          <h2 class="text-xl font-black text-slate-100" data-i18n="module4Title">
+            Module 4: Decision-Maker & "What-If" Policy Lab
+          </h2>
+        </div>
+        <p class="text-xs text-slate-400 mt-1" data-i18n="module4Subtitle">
+          Simulating resource allocation to curb Health Need Index (HNI) nationwide
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left: HNI Breakdown & Radar / Bars (5 cols) -->
+        <div class="lg:col-span-5 bg-space-950 p-5 rounded-xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+            <h3 class="font-bold text-xs text-slate-200" data-i18n="hniSummaryTitle">
+              Composite Health Need Index (HNI) Breakdown
+            </h3>
+            <span class="text-[11px] text-teal-400 font-bold">Selected Governorate</span>
+          </div>
+
+          <!-- Composite Big Numbers -->
+          <div class="flex items-center justify-around py-2">
+            <div class="text-center">
+              <span class="text-[10px] text-slate-400 block uppercase tracking-wider">Current HNI</span>
+              <div id="hni-base-score" class="text-3xl font-black text-rose-400">88.4</div>
+            </div>
+            <div class="text-slate-600 font-light text-2xl">→</div>
+            <div class="text-center">
+              <span class="text-[10px] text-teal-400 block uppercase tracking-wider">Simulated HNI</span>
+              <div id="hni-simulated-score" class="text-3xl font-black text-emerald-400">76.2</div>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <span id="hni-delta-badge" class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+              -12.2 pts (14% reduction)
+            </span>
+          </div>
+
+          <!-- Sub-indices breakdown bars -->
+          <div class="space-y-2.5 pt-2 text-xs">
+            <div>
+              <div class="flex justify-between text-[11px] mb-1">
+                <span class="text-slate-300">Environmental Pressure (EPI - 35%)</span>
+                <b id="val-epi" class="text-teal-400">82.1</b>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                <div id="bar-epi" class="bg-rose-500 h-full rounded-full transition-all duration-500" style="width: 82%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-[11px] mb-1">
+                <span class="text-slate-300">Population Pressure (PPI - 30%)</span>
+                <b id="val-ppi" class="text-teal-400">74.5</b>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                <div id="bar-ppi" class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: 74%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-[11px] mb-1">
+                <span class="text-slate-300">Facility Shortage (FSI - 20%)</span>
+                <b id="val-fsi" class="text-teal-400">68.0</b>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                <div id="bar-fsi" class="bg-blue-500 h-full rounded-full transition-all duration-500" style="width: 68%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-[11px] mb-1">
+                <span class="text-slate-300">Physician Workload / Shortage (WNI - 15%)</span>
+                <b id="val-wni" class="text-teal-400">92.0</b>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                <div id="bar-wni" class="bg-teal-500 h-full rounded-full transition-all duration-500" style="width: 92%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: What-If Policy Levers & Simulator (7 cols) -->
+        <div id="what-if-controls" class="lg:col-span-7 bg-space-950 p-5 rounded-xl border border-slate-800 space-y-5">
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+            <h3 class="font-bold text-xs text-slate-200">
+              Interactive Policy Intervention Levers
+            </h3>
+            <span class="text-[11px] text-slate-400">Adjust Levers to Test Resilience</span>
+          </div>
+
+          <!-- Slider 1: Mobile Clinics -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <label for="slider-clinics" class="text-slate-300 font-medium" data-i18n="sliderClinics">
+                Mobile Climate-Health Clinics Deployed (0 - 50 units):
+              </label>
+              <span id="val-slider-clinics" class="font-bold text-teal-400">15</span>
+            </div>
+            <input type="range" id="slider-clinics" min="0" max="50" value="15" class="slider-teal">
+          </div>
+
+          <!-- Slider 2: Specialty Retention Stipends -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <label for="slider-incentive" class="text-slate-300 font-medium" data-i18n="sliderIncentive">
+                Rural Specialty Retention Stipend (+0% to +100%):
+              </label>
+              <span id="val-slider-incentive" class="font-bold text-teal-400">40%</span>
+            </div>
+            <input type="range" id="slider-incentive" min="0" max="100" value="40" class="slider-teal">
+          </div>
+
+          <!-- Slider 3: Urban Greening & Cool Roofs -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <label for="slider-greening" class="text-slate-300 font-medium" data-i18n="sliderGreening">
+                Urban Greening & Reflective Cool Surfaces (+0% to +30%):
+              </label>
+              <span id="val-slider-greening" class="font-bold text-teal-400">10%</span>
+            </div>
+            <input type="range" id="slider-greening" min="0" max="30" value="10" class="slider-teal">
+          </div>
+
+          <!-- Projected Health Dividends -->
+          <div class="grid grid-cols-2 gap-3 pt-2">
+            <div class="glass-panel p-3 bg-slate-900/60 text-center">
+              <span class="text-[10px] text-slate-400 block" data-i18n="admissionsPrevented">
+                Est. Prevented Emergency Admissions / Mo:
+              </span>
+              <div id="hni-prevented-admissions" class="text-xl font-black text-teal-300 mt-1">1,159</div>
+            </div>
+
+            <div class="glass-panel p-3 bg-slate-900/60 text-center">
+              <span class="text-[10px] text-slate-400 block" data-i18n="retentionBoost">
+                Projected Physician Retention Gain:
+              </span>
+              <div id="hni-retention-boost" class="text-xl font-black text-blue-300 mt-1">+23%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       FOOTER & DATA CREDITS
+       ========================================================================= -->
+  <footer class="bg-space-950 border-t border-slate-800/80 py-8 px-4 text-xs text-slate-400 mt-12">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <i data-lucide="globe" class="w-4 h-4 text-teal-400"></i>
+        <span><b>TerraPulse: Stay & Build Egypt</b> — NASA Space Apps Challenge 2026</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 text-slate-500">
+        <span>NASA POWER</span>
+        <span>•</span>
+        <span>MERRA-2</span>
+        <span>•</span>
+        <span>MODIS Terra/Aqua</span>
+        <span>•</span>
+        <span>GLDAS Noah</span>
+        <span>•</span>
+        <span>SEDAC CIESIN</span>
+      </div>
+      <div>
+        <span>Engineered by <b>WhiteRoom Labs</b></span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       MODAL 1: 3-STEP GUIDED TREND DETECTIVE WIZARD
+       ========================================================================= -->
+  <div id="wizard-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
+    <div class="bg-space-950 border border-slate-700 rounded-2xl max-w-xl w-full p-6 modal-content space-y-5 shadow-2xl">
+      
+      <!-- Wizard Header & Steps Indicator -->
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="compass" class="w-5 h-5 text-teal-400"></i>
+          <h3 class="font-extrabold text-base text-slate-100" data-i18n="wizardTitle">Guided Trend Detective Wizard</h3>
+        </div>
+        <button id="btn-close-wizard" class="text-slate-400 hover:text-slate-200">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Steps Badge Row -->
+      <div class="flex items-center justify-center space-x-6 py-2">
+        <div id="wizard-step-indicator-1" class="w-8 h-8 rounded-full bg-teal-500 text-slate-950 font-bold flex items-center justify-center">1</div>
+        <div class="w-8 h-0.5 bg-slate-700"></div>
+        <div id="wizard-step-indicator-2" class="w-8 h-8 rounded-full bg-slate-800 text-slate-500 font-bold flex items-center justify-center">2</div>
+        <div class="w-8 h-0.5 bg-slate-700"></div>
+        <div id="wizard-step-indicator-3" class="w-8 h-8 rounded-full bg-slate-800 text-slate-500 font-bold flex items-center justify-center">3</div>
+      </div>
+
+      <!-- Step Panes -->
+      <div id="wizard-pane-1" class="space-y-3">
+        <h4 class="font-bold text-sm text-teal-300" data-i18n="step1Title">Step 1: Choose Environmental Trend</h4>
+        <p class="text-xs text-slate-300 leading-relaxed" data-i18n="step1Desc">
+          Select an Earth observation metric from NASA POWER, MERRA-2, MODIS, or GLDAS to examine 30-year shifts across Egyptian governorates.
+        </p>
+        <div class="p-3 bg-slate-900 rounded-lg text-xs text-slate-400">
+          💡 <b>Tip:</b> Compare Upper Egypt (Aswan T2M_MAX) with the Nile Delta (Alexandria Relative Humidity) to see diverging regional signals.
+        </div>
+      </div>
+
+      <div id="wizard-pane-2" class="space-y-3 hidden">
+        <h4 class="font-bold text-sm text-teal-300" data-i18n="step2Title">Step 2: Detect Statistical Trend & Opposing Regions</h4>
+        <p class="text-xs text-slate-300 leading-relaxed" data-i18n="step2Desc">
+          Evaluate Mann-Kendall Z, p-value, and linear slope per decade, contrasting Upper Egypt warming against Delta moisture changes.
+        </p>
+        <div class="p-3 bg-slate-900 rounded-lg text-xs text-slate-400">
+          📊 <b>Key Stat:</b> Mann-Kendall p &lt; 0.05 guarantees that the detected trajectory is a real long-term physical shift rather than random noise.
+        </div>
+      </div>
+
+      <div id="wizard-pane-3" class="space-y-3 hidden">
+        <h4 class="font-bold text-sm text-teal-300" data-i18n="step3Title">Step 3: Connect to Health & Community Action</h4>
+        <p class="text-xs text-slate-300 leading-relaxed" data-i18n="step3Desc">
+          Match clinical specialties to local demand and simulate policy interventions in the What-If Lab to protect Egyptian lives.
+        </p>
+        <div class="p-3 bg-slate-900 rounded-lg text-xs text-slate-400">
+          🩺 <b>Retention Mission:</b> Use the generated Executive Brief to advocate for rural stipends and mobile clinic deployment.
+        </div>
+      </div>
+
+      <!-- Wizard Navigation Buttons -->
+      <div class="flex items-center justify-between border-t border-slate-800 pt-3">
+        <button id="btn-wizard-prev" class="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold" data-i18n="btnPrev">
+          Previous Step
+        </button>
+        <button id="btn-wizard-next" class="px-5 py-1.5 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-950 text-xs font-black shadow-md" data-i18n="btnNext">
+          Next Step
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: MATHEMATICAL & STATISTICAL METHODOLOGY GUIDE
+       ========================================================================= -->
+  <div id="math-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
+    <div class="bg-space-950 border border-slate-700 rounded-2xl max-w-2xl w-full p-6 modal-content space-y-4 shadow-2xl max-h-[85vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="help-circle" class="w-5 h-5 text-teal-400"></i>
+          <h3 class="font-extrabold text-base text-slate-100" data-i18n="mathModalTitle">
+            Mathematical & Statistical Methodology Guide
+          </h3>
+        </div>
+        <button id="btn-close-math" class="text-slate-400 hover:text-slate-200">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
+        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+          <h4 class="font-bold text-teal-300 mb-1" data-i18n="mathLinearTitle">
+            1. Linear Regression & Student-t 95% Confidence Interval
+          </h4>
+          <p data-i18n="mathLinearBody">
+            Calculates the rate of change (m) per year and per decade (10 × m). Standard error of slope SE(m) is computed from residual variance with df = n - 2 (df = 29 for 31 years), using Student t-critical = 2.045 for two-tailed 95% confidence intervals.
+          </p>
+          <div class="mt-2 text-slate-400 font-mono text-[11px]">
+            m = Σ(x - x̄)(y - ȳ) / Σ(x - x̄)² | SE(m) = √[SS_res / (df · Σ(x - x̄)²)]
+          </div>
+        </div>
+
+        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+          <h4 class="font-bold text-teal-300 mb-1" data-i18n="mathMKTitle">
+            2. Mann-Kendall Non-Parametric Trend Test
+          </h4>
+          <p data-i18n="mathMKBody">
+            Evaluates monotonic upward or downward trends without assuming normal distribution. Computes Mann-Kendall S statistic, variance Var(S) with tie adjustments, standardized Z score, and exact two-tailed p-value via normal CDF.
+          </p>
+          <div class="mt-2 text-slate-400 font-mono text-[11px]">
+            S = Σ Σ sgn(x_j - x_k) | Z = (S - 1) / √Var(S) | p = 2 · (1 - Φ(|Z|))
+          </div>
+        </div>
+
+        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+          <h4 class="font-bold text-teal-300 mb-1" data-i18n="mathHNITitle">
+            3. Composite Health Need Index (HNI)
+          </h4>
+          <p data-i18n="mathHNIBody">
+            HNI = 0.35 × EPI + 0.30 × PPI + 0.20 × FSI + 0.15 × WNI, where EPI is Environmental Pressure, PPI is Population Pressure, FSI is Facility Shortage, and WNI is Physician Workload & Shortage.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PRINT BRIEF CONTAINER (Strictly formatted for @media print)
+       ========================================================================= -->
+  <div id="print-executive-brief" class="hidden">
+    <div class="print-header">
+      <div>
+        <h1 class="text-xl font-bold tracking-tight" data-i18n="printTitle">
+          OFFICIAL EXECUTIVE BRIEFING: CLIMATE-HEALTH ACTION PLAN
+        </h1>
+        <div class="text-xs text-slate-600" data-i18n="printSub">
+          Arab Republic of Egypt — Ministry of Health & Population & Ministry of Environment
+        </div>
+      </div>
+      <div class="official-seal">
+        SEAL OF EGYPT
+      </div>
+    </div>
+
+    <div class="print-box">
+      <div class="flex justify-between text-xs mb-1 font-bold">
+        <span>Target Governorate: <b id="print-gov-name">Aswan</b></span>
+        <span data-i18n="printDate">Generated on: 28/10/2026</span>
+      </div>
+      <p class="text-xs text-slate-700">
+        This document represents an evidence-based executive brief synthesized from 30 years of NASA satellite Earth observations (1995-2025) and real-time clinical reports from Egyptian frontline physicians under the TerraPulse initiative.
+      </p>
+    </div>
+
+    <table class="print-table">
+      <thead>
+        <tr>
+          <th>Indicator</th>
+          <th>Baseline Status</th>
+          <th>Simulated Policy Dividend</th>
+          <th>Strategic Impact</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Composite Health Need (HNI)</td>
+          <td><b id="print-base-hni">88.4</b> / 100</td>
+          <td><b id="print-sim-hni">76.2</b> / 100</td>
+          <td>Substantial vulnerability reduction</td>
+        </tr>
+        <tr>
+          <td>Prevented Emergency Visits</td>
+          <td>Baseline High Influx</td>
+          <td><b id="print-prevented">1,159</b> visits / month</td>
+          <td>Relieves overcrowded district triage</td>
+        </tr>
+        <tr>
+          <td>Physician Retention Gain</td>
+          <td>Severe Brain Drain Deficit</td>
+          <td><b id="print-retention">+23%</b> Retention</td>
+          <td>Stabilizes rural nephrology & ER units</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="print-box">
+      <div class="font-bold text-xs mb-1">Recommended Ministerial Directive:</div>
+      <ol class="text-xs space-y-1 list-decimal pl-4">
+        <li>Pre-position active cooling rehydration centers in high-risk Upper Egypt districts prior to May-September heatwave peaks.</li>
+        <li>Ratify 40%+ retention stipends for critical specialties (Nephrology, Cardiology, ER) serving in desert valley corridors.</li>
+        <li>Deploy mobile satellite-alerted response clinics synchronized with NASA MERRA-2 Khamaseen aerosol forecasts.</li>
+      </ol>
+    </div>
+
+    <div class="flex justify-between items-end pt-8 mt-4 border-t border-slate-300 text-xs">
+      <div>
+        <div>_________________________________</div>
+        <div class="font-bold">Minister of Health & Population</div>
+      </div>
+      <div class="text-center">
+        <div>TerraPulse Verified System</div>
+        <div class="text-[9px] text-slate-500">NASA Space Apps Challenge 2026</div>
+      </div>
+      <div class="text-right">
+        <div>_________________________________</div>
+        <div class="font-bold">Minister of Environment</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pre-compiled 30-Year Dataset & Pure JS Statistical Engine -->
+  <script src="data.js"></script>
+  <script src="trend-engine.js"></script>
+
+  <!-- Main Application Script -->
+  <script src="app.js"></script>
+</body>
+</html>

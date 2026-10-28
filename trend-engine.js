@@ -22,7 +22,7 @@
   } else {
     root.TerraPulseTrendEngine = factory();
   }
-})(typeof self !== 'undefined' ? self : this, function () {
+})(typeof globalThis !== 'undefined' ? globalThis : (typeof self !== 'undefined' ? self : (typeof window !== 'undefined' ? window : {})), function () {
   'use strict';
 
   // =========================================================================
@@ -803,3 +803,6 @@
     }
   };
 });
+
+const _engine = (typeof globalThis !== 'undefined' && globalThis.TerraPulseTrendEngine) ? globalThis.TerraPulseTrendEngine : (typeof module !== 'undefined' && module.exports ? module.exports : {});
+export default _engine;

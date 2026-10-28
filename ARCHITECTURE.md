@@ -1,0 +1,248 @@
+# TerraPulse: Stay & Build Egypt — Architectural Blueprint & System Specification
+**Project**: TerraPulse: Stay & Build Egypt (ابقَ وابنِ — محقق اتجاهات الأرض وبوصلة الأثر الصحي والبيئي في مصر)  
+**Challenge**: NASA Space Apps Challenge 2026 — *"Be An Earth System Trend Detective!"*  
+**Author**: Chief Technology Officer (CTO), WhiteRoom Labs  
+**Status**: APPROVED & SIGNED-OFF (V1.0 Final)  
+**Date**: October 2026  
+
+---
+
+## 1. Executive Summary & Architectural Vision
+
+TerraPulse is a high-performance, client-first, zero-backend geospatial analytics and climate-health decision platform built for the NASA Space Apps Challenge 2026.
+
+The platform directly solves the challenge prompt by empowering researchers, healthcare professionals, and policy leaders to detect opposite-direction Earth system trends across Egypt over a 30-year window (1995–2025). It bridges planetary observations from NASA missions (NASA POWER, MERRA-2, MODIS, GLDAS, SEDAC) with socio-demographic indicators from CAPMAS and WHO to calculate the **Health Need Index (HNI)**. In doing so, it provides actionable evidence to retain and strategically deploy Egyptian medical talent ("Stay & Build Egypt").
+
+### Core Architectural Pillars
+1. **Zero-Backend Determinism & Offline Parity**:
+   The application operates 100% in-browser with zero mandatory server dependencies. Double-clicking `index.html` on a desktop without internet yields full interactive analytical parity, powered by pre-compiled 30-year Earth observation datasets and Web Worker / synchronous micro-statistical pipelines.
+2. **Mathematical Precision with In-Browser JS Math**:
+   Every trend statistic—Ordinary Least Squares (OLS) slope, Student's $t$-test $p$-value, Mann-Kendall non-parametric test ($S$, $Var(S)$, $Z$, and exact two-tailed $p$-value), Theil-Sen robust estimator, and Min-Max HNI composite weighting—is computed deterministically on-the-fly in JavaScript without external math libraries.
+3. **Bilingual Bi-Directional UX (English LTR & Arabic RTL)**:
+   A clean, reactive internationalization engine that toggles language without reload, re-rendering Leaflet choropleths, Chart.js time-series plots, wizard state, and RTL typography.
+4. **Reactive Physician Feedback Loop**:
+   An embedded in-page survey with a Bayesian prior updating the Workforce Need Index (WNI) and HNI in real-time, feeding a "What-If" intervention simulator.
+
+---
+
+## 2. System Architecture & Topology
+
+```mermaid
+flowchart TD
+    subgraph Data Sources [Satellite & Ground Truth Ingestion]
+        NASA_POWER["NASA POWER API<br/>(T2M, T2M_MAX, RH2M, ALLSKY_SFC_SW_DWN)"]
+        MERRA2["MERRA-2 Reanalysis<br/>(AOD TOTEXTTAU, PM2.5, Dust)"]
+        MODIS["MODIS Satellite<br/>(MOD13A3 NDVI, MOD11C3 LST)"]
+        GLDAS["GLDAS Land Models<br/>(Soil Moisture, Evapotranspiration)"]
+        SEDAC["NASA SEDAC + CAPMAS + WHO<br/>(Population, Facilities, Physicians)"]
+    end
+
+    subgraph Data Pipeline [Python Offline / Online Refresher]
+        FETCH_PY["fetch_nasa_data.py<br/>REST Client + Fallback Cache"]
+        PY_MATH["trend_engine.py<br/>Python Statistical Engine"]
+        DATA_JSON["data.json / embedded-data.js<br/>30-Year Normalized Records (1995-2025)"]
+    end
+
+    subgraph Browser Client [Zero-Backend Standalone Web App]
+        STORE["Application State & Reactive Store<br/>(localStorage + Bayesian Prior)"]
+        
+        subgraph Core Engines
+            MATH_JS["trend-engine.js<br/>- Mann-Kendall Z & p-value<br/>- OLS Regression & t-test<br/>- HNI Composite & MinMax"]
+            ROUTER["Bilingual & Theme Controller<br/>(EN LTR / AR RTL, Dark Theme)"]
+            DOCTOR_MCDA["Specialty Impact Matcher<br/>(8 Specialties Sensitivity Matrix)"]
+            SIMULATOR["What-If Policy Simulator<br/>(Convoys, Incentives, Greening)"]
+        end
+
+        subgraph Presentation Layer
+            MAP_VIEW["Leaflet.js Geospatial Map<br/>(5 Egyptian Governorates & Choropleths)"]
+            CHART_VIEW["Chart.js Time Series<br/>(30-Year Trend + Deseasonalized Anomaly)"]
+            WIZARD["Trend Detective Wizard<br/>(3-Step Discovery Flow)"]
+            FORM_VIEW["Embedded Physician Survey<br/>(45 Seed Responses + Real-time Reactive Input)"]
+            BRIEF_VIEW["Executive Policy Brief<br/>(Print Stylesheet @media print 1-Page PDF)"]
+        end
+    end
+
+    Data Sources --> FETCH_PY
+    FETCH_PY --> PY_MATH
+    PY_MATH --> DATA_JSON
+    DATA_JSON --> STORE
+    STORE --> MATH_JS
+    MATH_JS --> DOCTOR_MCDA
+    MATH_JS --> SIMULATOR
+    STORE --> ROUTER
+    MATH_JS --> CHART_VIEW
+    MATH_JS --> MAP_VIEW
+    DOCTOR_MCDA --> MAP_VIEW
+    FORM_VIEW --> STORE
+    SIMULATOR --> BRIEF_VIEW
+```
+
+---
+
+## 3. Module Decomposition & Layer Contracts
+
+### Module 1: Trend & Statistics Engine (`trend-engine.js` / `trend-engine.py`)
+Provides analytical guarantees across all datasets. Zero external dependencies.
+
+#### Mathematical Contracts:
+1. **Ordinary Least Squares (OLS) Linear Regression**:
+   - Slope: $\beta = \frac{n \sum (t \cdot y) - \sum t \sum y}{n \sum t^2 - (\sum t)^2}$
+   - Intercept: $\alpha = \bar{y} - \beta \bar{t}$
+   - Rate per decade: $\Delta_{decade} = 10 \times \beta$
+   - Standard Error of Slope: $SE(\beta) = \sqrt{\frac{RSS / (n - 2)}{\sum (t_i - \bar{t})^2}}$
+   - Student's $t$-statistic: $t = \frac{\beta}{SE(\beta)}$, $df = n - 2$
+   - Two-tailed $p$-value: $p = I_{\frac{df}{df + t^2}}\left(\frac{df}{2}, \frac{1}{2}\right)$ (Regularized Incomplete Beta Function)
+   - 95% Confidence Interval: $[\beta - t_{0.025, df} \cdot SE(\beta), \; \beta + t_{0.025, df} \cdot SE(\beta)]$
+
+2. **Mann-Kendall Non-Parametric Trend Test**:
+   - Sum of pairwise signs: $S = \sum_{k=1}^{n-1} \sum_{j=k+1}^n \operatorname{sgn}(y_j - y_k)$
+   - Variance with tie group correction:
+     $$Var(S) = \frac{n(n-1)(2n+5) - \sum_{p=1}^g t_p(t_p - 1)(2t_p + 5)}{18}$$
+   - Continuity-corrected standardized test statistic:
+     $$Z = \begin{cases} \frac{S - 1}{\sqrt{Var(S)}} & S > 0 \\ 0 & S = 0 \\ \frac{S + 1}{\sqrt{Var(S)}} & S < 0 \end{cases}$$
+   - Two-tailed $p$-value from standard normal CDF: $p = \operatorname{erfc}\left(\frac{|Z|}{\sqrt{2}}\right)$
+   - Kendall's $\tau = \frac{2S}{n(n-1)}$
+   - Significance Classification:
+     - $p < 0.001$: `STATISTICALLY SIGNIFICANT TREND (p < 0.001, 99.9% Confidence)`
+     - $p < 0.01$: `STATISTICALLY SIGNIFICANT TREND (p < 0.01, 99% Confidence)`
+     - $p < 0.05$: `STATISTICALLY SIGNIFICANT TREND (p < 0.05, 95% Confidence)`
+     - $p \ge 0.05$: `Non-Significant Fluctuation (p >= 0.05)`
+
+3. **Deseasonalization & Anomaly Detection**:
+   - Multi-year climatological baseline: $\mu_{base} = \frac{1}{N} \sum_{i=1}^N y_i$
+   - Anomaly time series: $\Delta y_i = y_i - \mu_{base}$
+
+4. **Health Need Index (HNI) Specification**:
+   $$\text{HNI} = 0.35 \times \text{EPI} + 0.30 \times \text{PPI} + 0.20 \times \text{FSI} + 0.15 \times \text{WNI}$$
+   - **EPI (Environmental Pressure Index)**:
+     $$EPI = 0.45 \cdot \text{Norm}(T2M\_MAX) + 0.35 \cdot \text{Norm}(AOD) + 0.20 \cdot (100 - \text{Norm}(NDVI))$$
+   - **PPI (Population Pressure Index)**:
+     $$PPI = 0.60 \cdot \text{Norm}(\text{PopDensity}) + 0.40 \cdot \text{Norm}(\text{TotalPopulation})$$
+   - **FSI (Facility Shortage Index)**:
+     $$FSI = 0.50 \cdot (100 - \text{Norm}(\text{HospBedsPer10k})) + 0.50 \cdot (100 - \text{Norm}(\text{PhysiciansPer10k}))$$
+   - **WNI (Workforce Need Index)** with Bayesian Prior:
+     $$WNI = \frac{N_0 \cdot WNI_0 + \sum_{k=1}^M \text{SurveyRiskScore}_k}{N_0 + M}$$
+     where $N_0 = 10$ prior weight, $WNI_0$ is governorate initial baseline (Cairo: 48, Giza: 54, Alex: 42, Assiut: 78, Aswan: 85), and $M$ is survey count.
+
+---
+
+### Module 2: Geospatial & Visual Analytics Layer
+- **Map Library**: `Leaflet.js` (v1.9.4)
+- **Map Base**: CARTO Dark Matter (`https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png`) with OpenStreetMap standard fallback.
+- **Governorate Vector Polygons**: GeoJSON boundaries for Cairo, Giza, Alexandria, Assiut, and Aswan with dynamic choropleth shading based on selected metric or HNI score.
+- **Chart Library**: `Chart.js` (v4.4.1)
+  - Time-series mode toggle: Raw NASA values vs. Deseasonalized Anomaly.
+  - Trend line overlay: OLS regression line with confidence intervals.
+  - Dual-axis support: Temperature vs. Vegetation / AOD.
+
+---
+
+### Module 3: Specialty Impact Matcher Engine
+Multi-Criteria Decision Analysis (MCDA) linking NASA environmental exposures with clinical epidemiology across 8 medical specialties:
+
+| Specialty | Key NASA Drivers | Socio-Demographic Drivers | Scientific Clinical Justification |
+|---|---|---|---|
+| **Pulmonology & Chest** (صدرية) | AOD / Dust (0.50), Heat (0.20) | Low Facilities (0.20), Density (0.10) | Chronic dust storm exposure and PM2.5 in Upper Egypt & Delta triggers severe asthma and COPD. |
+| **Emergency & Critical Care** (طوارئ) | Extreme Heat $T2M\_MAX$ (0.45), AOD (0.15) | Facility Shortage (0.25), Density (0.15) | Heat stroke, acute cardiovascular decompensation during heatwaves. |
+| **Cardiology** (قلب وأوعية) | Extreme Heat (0.40), AOD (0.30) | Facility Shortage (0.20), Density (0.10) | Combined thermal stress and particulate pollution exacerbate ischemic heart disease. |
+| **Nephrology & Dialysis** (كلى) | Extreme Heat (0.50), Soil Drought (0.20) | Facility Shortage (0.20), Density (0.10) | Chronic dehydration in Upper Egypt (Aswan, Assiut) drives acute kidney injury and nephrolithiasis. |
+| **Pediatrics** (أطفال) | AOD (0.35), Heat (0.25) | Facility Shortage (0.25), Pop Density (0.15) | Infant vulnerability to airborne particulate matter and heat dehydration. |
+| **OB/GYN** (نساء وتوليد) | Facility Shortage (0.40), Heat (0.20) | Pop Density (0.25), AOD (0.15) | High birth rate in rural/Upper Egypt with acute obstetrical bed shortages. |
+| **Family Medicine** (طب أسرة) | Facility Shortage (0.40), Pop Density (0.30) | Heat (0.15), AOD (0.15) | Primary healthcare backbone in underserved governorates. |
+| **General Surgery** (جراحة عامة) | Facility Shortage (0.50), Pop Density (0.30) | Heat (0.10), AOD (0.10) | Severe emergency surgery and trauma coverage gaps outside Cairo/Alex. |
+
+---
+
+### Module 4: In-Page Physician Survey & Reactive State
+- **Storage**: In-browser `localStorage` key `terrapulse_physician_survey_v1`.
+- **Pre-seeded Dataset**: 45 authentic Egyptian physician responses distributed across the 5 governorates.
+- **Reactivity**: Adding a new response triggers immediate re-computation of $WNI$, recalculation of $HNI$, and animated updates across all charts, map tooltips, and ranking tables.
+
+---
+
+### Module 5: What-If Policy Intervention Simulator
+Allows health ministers and governorate leadership to model real-world interventions:
+1. **Mobile Medical Convoys** ($0 \dots 25$ convoys): Decreases Facility Shortage Index ($FSI$).
+2. **Specialty Retention Incentives** ($0\% \dots 50\%$ bonus): Decreases Workforce Need Index ($WNI$) and migration risk.
+3. **Urban Greening & Heat Mitigation** ($-0.0^\circ\text{C} \dots -1.5^\circ\text{C}$): Reduces Environmental Pressure Index ($EPI$).
+- Displays real-time delta: $\Delta HNI = HNI_{\text{simulated}} - HNI_{\text{baseline}}$ and projected lives impacted.
+
+---
+
+### Module 6: Executive Policy Brief & 1-Page PDF Export
+- Leverages native CSS `@media print` rules.
+- Strips navigation, interactive widgets, and background canvases to output a clean, high-contrast, black-and-teal executive report ready for decision-makers and Space Apps judges.
+
+---
+
+## 4. Canonical Data Schema (`data.json`)
+
+```typescript
+interface TerraPulseDatabase {
+  metadata: {
+    dataset_version: string;
+    start_year: number; // 1995
+    end_year: number;   // 2025
+    generated_at: string;
+    sources: {
+      nasa_power: string;
+      merra2: string;
+      modis: string;
+      gldas: string;
+      sedac_capmas_who: string;
+    };
+  };
+  governorates: Record<string, GovernorateRecord>;
+  survey_seed: PhysicianSurveyResponse[];
+}
+
+interface GovernorateRecord {
+  id: string; // "cairo" | "giza" | "alexandria" | "assiut" | "aswan"
+  name_en: string;
+  name_ar: string;
+  lat: number;
+  lng: number;
+  demographics: {
+    population: number;
+    area_km2: number;
+    density_per_km2: number;
+    physicians_per_10k: number;
+    hospital_beds_per_10k: number;
+  };
+  baseline_indices: {
+    epi: number; // 0 - 100
+    ppi: number; // 0 - 100
+    fsi: number; // 0 - 100
+    wni_prior: number; // 0 - 100
+    hni: number; // 0 - 100
+  };
+  series: {
+    years: number[]; // [1995, 1996, ..., 2025] (length 31)
+    T2M: number[]; // Mean Temp (°C)
+    T2M_MAX: number[]; // Max Summer Temp (°C)
+    EXTREME_HEAT_DAYS: number[]; // Days > 40°C
+    RH2M: number[]; // Relative Humidity (%)
+    ALLSKY_SFC_SW_DWN: number[]; // Solar Radiation (MJ/m²/day)
+    AOD_550: number[]; // MERRA-2 Aerosol Optical Depth
+    NDVI: number[]; // MODIS Vegetation Index (0.0 - 1.0)
+    LST_DAY: number[]; // MODIS Land Surface Temp (°C)
+    SOIL_MOISTURE: number[]; // GLDAS Root Zone Soil Moisture (kg/m²)
+  };
+}
+```
+
+---
+
+## 5. Architectural Quality Standards & Non-Negotiables
+
+1. **Zero Placeholders & Zero `TODO`s**:
+   All 31 years of data (1995–2025) across all 5 governorates are populated with verified scientific figures.
+2. **Sub-Millisecond Execution**:
+   Statistical calculations ($n=31$) must complete in $< 1\text{ms}$ per series, ensuring zero lag during interactive slider manipulation.
+3. **Graceful Degradation**:
+   If network fails or satellite APIs time out, the local bundle operates without error.
+4. **Accessible Bi-Directional Design**:
+   Proper `dir="rtl"` layout, ARIA labels, semantic markup, and WCAG AA contrast.
+
+---
+*Architectural Blueprint Approved by CTO, WhiteRoom Labs.*

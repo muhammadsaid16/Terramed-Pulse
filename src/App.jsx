@@ -134,9 +134,6 @@ export default function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onOpenWizard={() => setIsWizardOpen(true)}
-        onOpenMath={() => setIsMathOpen(true)}
-        onApplyCase={handleApplyCase}
-        activeCase={activeCase}
       />
 
       {/* Main App Container */}

@@ -6,7 +6,8 @@ export default function DoctorMatcher({
   data,
   lang,
   t,
-  onSelectGov
+  onSelectGov,
+  onVoiceNeeds
 }) {
   const [selectedSpecialty, setSelectedSpecialty] = useState('nephrology');
   const [priorityGoal, setPriorityGoal] = useState('impact'); // 'impact', 'facilities', 'climate'
@@ -130,6 +131,18 @@ export default function DoctorMatcher({
                 ? `محافظة ${topGov?.name_ar} تعاني من مؤشر عجز منشآت يبلغ ${topGov?.keyDrivers?.fsi}/100 وتصاعد مستمر في موجات الإجهاد الحراري. تواجدك هنا ينقذ مئات الحالات الحرجة شهرياً.`
                 : `${topGov?.name_en} suffers from a severe facility gap (${topGov?.keyDrivers?.fsi}/100) and accelerating heatwave frequency. Practicing your specialty here creates the maximum clinical life-saving dividend.`}
             </p>
+
+            <button
+              onClick={() => onVoiceNeeds && onVoiceNeeds(topGov?.id, selectedSpecialty)}
+              className="w-full mt-3 apple-btn py-2.5 px-4 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-apple-glow"
+            >
+              <HeartPulse className="w-4 h-4" />
+              <span>
+                {lang === 'ar'
+                  ? `الخطوة التالية: سجّل صوتك واحتياجك الميداني في ${topGov?.name_ar} ⬅`
+                  : `Next Step: Voice Your Needs in ${topGov?.name_en} ➔`}
+              </span>
+            </button>
           </div>
         </div>
 

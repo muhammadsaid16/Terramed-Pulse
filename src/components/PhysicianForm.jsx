@@ -5,13 +5,15 @@ export default function PhysicianForm({
   reports,
   onAddReport,
   governorates,
+  selectedGov,
+  preselectedSpecialty,
   lang,
   t
 }) {
   const [formData, setFormData] = useState({
     doctor: '',
-    specialty: 'nephrology',
-    gov: 'aswan',
+    specialty: preselectedSpecialty || 'nephrology',
+    gov: selectedGov || 'aswan',
     hospital: '',
     considering_migration: 'hesitant',
     primary_reason: 'salary',
@@ -19,6 +21,18 @@ export default function PhysicianForm({
     severity: 4,
     comment: ''
   });
+
+  React.useEffect(() => {
+    if (selectedGov) {
+      setFormData(prev => ({ ...prev, gov: selectedGov }));
+    }
+  }, [selectedGov]);
+
+  React.useEffect(() => {
+    if (preselectedSpecialty) {
+      setFormData(prev => ({ ...prev, specialty: preselectedSpecialty }));
+    }
+  }, [preselectedSpecialty]);
 
   const [toastMessage, setToastMessage] = useState(null);
 

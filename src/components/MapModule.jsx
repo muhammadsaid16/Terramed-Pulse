@@ -2,41 +2,7 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import L from 'leaflet';
 import { Play, Pause, ChevronLeft, ChevronRight, Layers, Flame, Eye, Thermometer, ShieldAlert, Sparkles, Activity } from 'lucide-react';
 
-// Exact Geographic Regional Polygons for Egypt's 5 Target Governorates
-const GOV_POLYGONS = {
-  aswan: [
-    [22.4, 31.2],
-    [22.4, 34.2],
-    [24.6, 34.2],
-    [25.4, 33.3],
-    [25.2, 31.4]
-  ],
-  assiut: [
-    [26.2, 30.1],
-    [26.2, 32.1],
-    [28.1, 32.1],
-    [28.1, 30.1]
-  ],
-  giza: [
-    [28.6, 29.5],
-    [28.6, 31.4],
-    [30.3, 31.4],
-    [30.3, 30.2],
-    [29.4, 29.5]
-  ],
-  cairo: [
-    [29.7, 31.0],
-    [29.7, 32.1],
-    [30.5, 32.1],
-    [30.5, 31.0]
-  ],
-  alexandria: [
-    [30.6, 29.1],
-    [30.6, 30.8],
-    [31.8, 30.8],
-    [31.8, 29.1]
-  ]
-};
+import { EGYPT_GOVS_GEOJSON } from '../data/egyptGovernoratesGeoJson';
 
 // Calibrated 5-tier Climate & Heat Color Palette
 function getDynamicColor(score) {
@@ -184,7 +150,7 @@ export default function MapModule({
     };
   }, []);
 
-  // Synchronize Markers, Regional Polygons, and Radiant Heat Halos
+  // Synchronize Official GeoJSON Boundaries and Pulse Markers
   useEffect(() => {
     const map = mapInstanceRef.current;
     const layerGroup = layerGroupRef.current;
@@ -195,6 +161,32 @@ export default function MapModule({
 
     const govs = data.governorates;
 
+    // 1. Official UN OCHA / geoBoundaries Egypt Governorate Polygons
+    const geoJsonLayer = L.geoJSON(EGYPT_GOVS_GEOJSON, {
+      style: (feature) => {
+        const govId = feature.properties.govId;
+        const gov = govs[govId];
+        const { severityScore } = getAnnualMetricData(gov, year, mapMetric, selectedVar);
+        const color = getDynamicColor(severityScore);
+        const isSelected = selectedGov === govId;
+        const fillOpacity = isSelected ? 0.70 : 0.40 + (severityScore / 100) * 0.32;
+
+        return {
+          color: isSelected ? '#ffffff' : color,
+          weight: isSelected ? 3 : 1.5,
+          fillColor: color,
+          fillOpacity: fillOpacity,
+          dashArray: isSelected ? null : '4, 4'
+        };
+      },
+      onEachFeature: (feature, layer) => {
+        const govId = feature.properties.govId;
+        layer.on('click', () => setSelectedGov(govId));
+      }
+    });
+    layerGroup.addLayer(geoJsonLayer);
+
+    // 2. Glowing Interactive Pulse Marker with Live Annual Score
     Object.keys(govs).forEach(govId => {
       const gov = govs[govId];
       const coords = [gov.lat, gov.lng];
@@ -203,34 +195,6 @@ export default function MapModule({
       const isSelected = selectedGov === govId;
       const name = lang === 'ar' ? gov.name_ar : gov.name_en;
 
-      // 1. High-Contrast Choropleth Regional Polygons
-      const polyCoords = GOV_POLYGONS[govId];
-      if (polyCoords) {
-        const fillOpacity = 0.42 + (severityScore / 100) * 0.38; // Rich 0.42 to 0.80 opacity
-        const poly = L.polygon(polyCoords, {
-          color: color,
-          weight: isSelected ? 3.5 : 2,
-          fillColor: color,
-          fillOpacity: isSelected ? Math.min(0.85, fillOpacity + 0.15) : fillOpacity,
-          dashArray: isSelected ? null : '6, 4'
-        });
-        poly.on('click', () => setSelectedGov(govId));
-        layerGroup.addLayer(poly);
-      }
-
-      // 2. Radiant Thermal Heat Discs
-      const circleRadius = 45000 + (severityScore / 100) * 45000; // 45km to 90km radius
-      const circle = L.circle(coords, {
-        radius: circleRadius,
-        color: color,
-        weight: 1.5,
-        fillColor: color,
-        fillOpacity: 0.25 + (severityScore / 100) * 0.25
-      });
-      circle.on('click', () => setSelectedGov(govId));
-      layerGroup.addLayer(circle);
-
-      // 3. Glowing Interactive Pulse Marker with Live Annual Score
       const iconHtml = `
         <div class="relative flex items-center justify-center cursor-pointer group" style="width: 52px; height: 52px;">
           <div class="marker-pulse-ring" style="width: 52px; height: 52px; border: 3px solid ${color};"></div>

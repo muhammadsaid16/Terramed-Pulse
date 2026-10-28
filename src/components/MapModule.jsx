@@ -129,9 +129,8 @@ export default function MapModule({
 }) {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
-  const markersRef = useRef({});
-  const polygonsRef = useRef({});
-  const heatCirclesRef = useRef({});
+  const layerGroupRef = useRef(null);
+  const [mapReady, setMapReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const playIntervalRef = useRef(null);
 
@@ -139,6 +138,11 @@ export default function MapModule({
   useEffect(() => {
     if (!mapContainerRef.current) return;
     if (mapInstanceRef.current) return;
+
+    // Safety: remove previous leaflet id if container was reused
+    if (mapContainerRef.current._leaflet_id) {
+      delete mapContainerRef.current._leaflet_id;
+    }
 
     const map = L.map(mapContainerRef.current, {
       center: [27.0, 31.0],
@@ -155,20 +159,39 @@ export default function MapModule({
       subdomains: ['server']
     }).addTo(map);
 
-    L.control.zoom({ position: 'topright' }).addTo(map);
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
 
+    const layerGroup = L.layerGroup().addTo(map);
+    layerGroupRef.current = layerGroup;
     mapInstanceRef.current = map;
+    setMapReady(true);
+
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+    }, 120);
 
     return () => {
-      map.remove();
-      mapInstanceRef.current = null;
+      clearTimeout(timer);
+      setMapReady(false);
+      if (layerGroupRef.current) {
+        layerGroupRef.current.clearLayers();
+        layerGroupRef.current = null;
+      }
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
     };
   }, []);
 
   // Synchronize Markers, Regional Polygons, and Radiant Heat Halos
   useEffect(() => {
     const map = mapInstanceRef.current;
-    if (!map || !data?.governorates) return;
+    const layerGroup = layerGroupRef.current;
+    if (!map || !layerGroup || !data?.governorates) return;
+
+    // Clean previous layers on this map instance
+    layerGroup.clearLayers();
 
     const govs = data.governorates;
 
@@ -184,42 +207,28 @@ export default function MapModule({
       const polyCoords = GOV_POLYGONS[govId];
       if (polyCoords) {
         const fillOpacity = 0.42 + (severityScore / 100) * 0.38; // Rich 0.42 to 0.80 opacity
-        const polyOptions = {
+        const poly = L.polygon(polyCoords, {
           color: color,
           weight: isSelected ? 3.5 : 2,
           fillColor: color,
           fillOpacity: isSelected ? Math.min(0.85, fillOpacity + 0.15) : fillOpacity,
           dashArray: isSelected ? null : '6, 4'
-        };
-
-        if (polygonsRef.current[govId]) {
-          polygonsRef.current[govId].setStyle(polyOptions);
-        } else {
-          const poly = L.polygon(polyCoords, polyOptions).addTo(map);
-          poly.on('click', () => setSelectedGov(govId));
-          polygonsRef.current[govId] = poly;
-        }
+        });
+        poly.on('click', () => setSelectedGov(govId));
+        layerGroup.addLayer(poly);
       }
 
       // 2. Radiant Thermal Heat Discs
       const circleRadius = 45000 + (severityScore / 100) * 45000; // 45km to 90km radius
-      const circleOptions = {
+      const circle = L.circle(coords, {
         radius: circleRadius,
         color: color,
         weight: 1.5,
         fillColor: color,
         fillOpacity: 0.25 + (severityScore / 100) * 0.25
-      };
-
-      if (heatCirclesRef.current[govId]) {
-        heatCirclesRef.current[govId].setLatLng(coords);
-        heatCirclesRef.current[govId].setRadius(circleRadius);
-        heatCirclesRef.current[govId].setStyle(circleOptions);
-      } else {
-        const circle = L.circle(coords, circleOptions).addTo(map);
-        circle.on('click', () => setSelectedGov(govId));
-        heatCirclesRef.current[govId] = circle;
-      }
+      });
+      circle.on('click', () => setSelectedGov(govId));
+      layerGroup.addLayer(circle);
 
       // 3. Glowing Interactive Pulse Marker with Live Annual Score
       const iconHtml = `
@@ -247,15 +256,11 @@ export default function MapModule({
         iconAnchor: [26, 26]
       });
 
-      if (markersRef.current[govId]) {
-        markersRef.current[govId].setIcon(customIcon);
-      } else {
-        const marker = L.marker(coords, { icon: customIcon }).addTo(map);
-        marker.on('click', () => setSelectedGov(govId));
-        markersRef.current[govId] = marker;
-      }
+      const marker = L.marker(coords, { icon: customIcon });
+      marker.on('click', () => setSelectedGov(govId));
+      layerGroup.addLayer(marker);
     });
-  }, [data, selectedGov, selectedVar, year, mapMetric, lang]);
+  }, [mapReady, data, selectedGov, selectedVar, year, mapMetric, lang]);
 
   // Handle Play / Pause 30-year Time-Lapse
   useEffect(() => {
@@ -341,7 +346,7 @@ export default function MapModule({
         <div ref={mapContainerRef} className="w-full h-full min-h-[400px]" />
 
         {/* Dynamic On-Map Year HUD Banner */}
-        <div className="absolute top-3 left-3 right-14 z-[400] bg-space-950/90 backdrop-blur-xl px-4 py-2 rounded-xl border border-white/15 shadow-2xl flex items-center justify-between gap-2">
+        <div className="absolute top-3 left-3 right-3 z-[400] bg-space-950/90 backdrop-blur-xl px-4 py-2 rounded-xl border border-white/15 shadow-2xl flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 truncate">
             <Flame className={`w-4 h-4 shrink-0 ${timelinePhase.color} animate-pulse`} />
             <span className="text-xs font-black text-slate-100 truncate">

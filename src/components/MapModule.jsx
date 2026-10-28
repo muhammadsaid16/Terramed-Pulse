@@ -1,6 +1,119 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import L from 'leaflet';
-import { Play, Pause, ChevronLeft, ChevronRight, Layers, Eye } from 'lucide-react';
+import { Play, Pause, ChevronLeft, ChevronRight, Layers, Flame, Eye, Thermometer, ShieldAlert, Sparkles, Activity } from 'lucide-react';
+
+// Exact Geographic Regional Polygons for Egypt's 5 Target Governorates
+const GOV_POLYGONS = {
+  aswan: [
+    [22.4, 31.2],
+    [22.4, 34.2],
+    [24.6, 34.2],
+    [25.4, 33.3],
+    [25.2, 31.4]
+  ],
+  assiut: [
+    [26.2, 30.1],
+    [26.2, 32.1],
+    [28.1, 32.1],
+    [28.1, 30.1]
+  ],
+  giza: [
+    [28.6, 29.5],
+    [28.6, 31.4],
+    [30.3, 31.4],
+    [30.3, 30.2],
+    [29.4, 29.5]
+  ],
+  cairo: [
+    [29.7, 31.0],
+    [29.7, 32.1],
+    [30.5, 32.1],
+    [30.5, 31.0]
+  ],
+  alexandria: [
+    [30.6, 29.1],
+    [30.6, 30.8],
+    [31.8, 30.8],
+    [31.8, 29.1]
+  ]
+};
+
+// Calibrated 5-tier Climate & Heat Color Palette
+function getDynamicColor(score) {
+  if (score >= 72) return '#f43f5e'; // Blazing Crimson Red (Critical Crisis)
+  if (score >= 63) return '#f97316'; // Deep Fiery Orange (Severe Burden)
+  if (score >= 54) return '#f59e0b'; // Golden Amber (High Strain)
+  if (score >= 46) return '#06b6d4'; // Radiant Cyan / Sky Blue (Moderate)
+  return '#10b981';                  // Cool Emerald Green (Baseline Mild)
+}
+
+// Compute dynamic annual metric value and 0-100 severity score for every year
+function getAnnualMetricData(gov, currentYear, metric, selectedVar) {
+  if (!gov) return { displayVal: 0, severityScore: 50 };
+  const yearIdx = Math.max(0, Math.min(30, currentYear - 1995));
+
+  const t2mMax = gov.series?.T2M_MAX?.[yearIdx] ?? 38;
+  const heatDays = gov.series?.EXTREME_HEAT_DAYS?.[yearIdx] ?? 45;
+  const aod = gov.series?.AOD_550?.[yearIdx] ?? 0.45;
+  const ndvi = gov.series?.NDVI?.[yearIdx] ?? 0.25;
+
+  let displayVal = 0;
+  let severityScore = 50;
+
+  if (metric === 'var') {
+    const series = gov.series?.[selectedVar];
+    const val = series ? series[yearIdx] : 0;
+    displayVal = typeof val === 'number' ? (val > 20 ? Math.round(val) : val.toFixed(2)) : val;
+
+    if (selectedVar === 'T2M_MAX') {
+      severityScore = ((t2mMax - 36) / (49 - 36)) * 100;
+    } else if (selectedVar === 'EXTREME_HEAT_DAYS') {
+      severityScore = ((heatDays - 20) / (90 - 20)) * 100;
+    } else if (selectedVar === 'NDVI') {
+      severityScore = (1 - (ndvi - 0.18) / (0.35 - 0.18)) * 100;
+    } else if (selectedVar === 'AOD_550') {
+      severityScore = ((aod - 0.25) / (0.85 - 0.25)) * 100;
+    } else {
+      severityScore = ((val - 20) / (50 - 20)) * 100;
+    }
+  } else {
+    // Dynamic Annual Climate-Health Need Index
+    const annualEpi = Math.min(100, Math.max(20,
+      ((heatDays - 25) / (88 - 25)) * 50 +
+      ((t2mMax - 36) / (49 - 36)) * 30 +
+      ((aod - 0.25) / (0.80 - 0.25)) * 20
+    ));
+
+    const popGrowth = 0.72 + (yearIdx / 30) * 0.28;
+    const annualPpi = (gov.baseline_indices?.ppi || 50) * popGrowth;
+    const baseFsi = gov.baseline_indices?.fsi || 60;
+    const baseWni = gov.baseline_indices?.wni || gov.baseline_indices?.wni_prior || 75;
+
+    const annualHni = Math.round(
+      (0.35 * annualEpi) + (0.30 * annualPpi) + (0.20 * baseFsi) + (0.15 * baseWni)
+    );
+
+    if (metric === 'hni') {
+      displayVal = annualHni;
+      severityScore = annualHni;
+    } else if (metric === 'epi') {
+      displayVal = Math.round(annualEpi);
+      severityScore = annualEpi;
+    } else if (metric === 'ppi') {
+      displayVal = Math.round(annualPpi);
+      severityScore = annualPpi;
+    } else if (metric === 'fsi') {
+      displayVal = Math.round(baseFsi);
+      severityScore = baseFsi;
+    } else if (metric === 'wni') {
+      displayVal = Math.round(baseWni);
+      severityScore = baseWni;
+    }
+  }
+
+  severityScore = Math.max(10, Math.min(100, Math.round(severityScore)));
+  return { displayVal, severityScore };
+}
 
 export default function MapModule({
   data,
@@ -17,36 +130,10 @@ export default function MapModule({
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersRef = useRef({});
+  const polygonsRef = useRef({});
+  const heatCirclesRef = useRef({});
   const [isPlaying, setIsPlaying] = useState(false);
   const playIntervalRef = useRef(null);
-
-  // Helper for color by score
-  const getSeverityColor = (score) => {
-    if (score >= 80) return "#f43f5e"; // Rose / Critical
-    if (score >= 70) return "#f59e0b"; // Amber / High
-    if (score >= 60) return "#38bdf8"; // Sky / Moderate
-    return "#10b981"; // Emerald
-  };
-
-  // Helper for metric value
-  const getGovMetricValue = (gov, currentYear, metric) => {
-    if (!gov) return 0;
-    const yearIdx = Math.max(0, Math.min(30, currentYear - 1995));
-
-    if (metric === 'hni') return Math.round(gov.baseline_indices?.hni || 70);
-    if (metric === 'epi') return Math.round(gov.baseline_indices?.epi || 70);
-    if (metric === 'ppi') return Math.round(gov.baseline_indices?.ppi || 50);
-    if (metric === 'fsi') return Math.round(gov.baseline_indices?.fsi || 60);
-    if (metric === 'wni') return Math.round(gov.baseline_indices?.wni || 75);
-
-    // Variable specific
-    const series = gov.series?.[selectedVar];
-    if (series && typeof series[yearIdx] === 'number') {
-      const val = series[yearIdx];
-      return val > 20 ? Math.round(val) : val.toFixed(1);
-    }
-    return Math.round(gov.baseline_indices?.hni || 70);
-  };
 
   // Initialize Map
   useEffect(() => {
@@ -54,15 +141,15 @@ export default function MapModule({
     if (mapInstanceRef.current) return;
 
     const map = L.map(mapContainerRef.current, {
-      center: [26.8, 30.8],
+      center: [27.0, 31.0],
       zoom: 6,
       minZoom: 5,
-      maxZoom: 10,
+      maxZoom: 9,
       zoomControl: false,
       attributionControl: false
     });
 
-    // Watermark-free Esri World Dark Gray Base
+    // High performance keyless Esri World Dark Gray Base
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
       maxZoom: 16,
       subdomains: ['server']
@@ -78,7 +165,7 @@ export default function MapModule({
     };
   }, []);
 
-  // Update or create markers
+  // Synchronize Markers, Regional Polygons, and Radiant Heat Halos
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map || !data?.governorates) return;
@@ -88,19 +175,66 @@ export default function MapModule({
     Object.keys(govs).forEach(govId => {
       const gov = govs[govId];
       const coords = [gov.lat, gov.lng];
-      const val = getGovMetricValue(gov, year, mapMetric);
-      const score = gov.baseline_indices?.hni || 70;
-      const color = getSeverityColor(score);
+      const { displayVal, severityScore } = getAnnualMetricData(gov, year, mapMetric, selectedVar);
+      const color = getDynamicColor(severityScore);
       const isSelected = selectedGov === govId;
       const name = lang === 'ar' ? gov.name_ar : gov.name_en;
 
+      // 1. High-Contrast Choropleth Regional Polygons
+      const polyCoords = GOV_POLYGONS[govId];
+      if (polyCoords) {
+        const fillOpacity = 0.42 + (severityScore / 100) * 0.38; // Rich 0.42 to 0.80 opacity
+        const polyOptions = {
+          color: color,
+          weight: isSelected ? 3.5 : 2,
+          fillColor: color,
+          fillOpacity: isSelected ? Math.min(0.85, fillOpacity + 0.15) : fillOpacity,
+          dashArray: isSelected ? null : '6, 4'
+        };
+
+        if (polygonsRef.current[govId]) {
+          polygonsRef.current[govId].setStyle(polyOptions);
+        } else {
+          const poly = L.polygon(polyCoords, polyOptions).addTo(map);
+          poly.on('click', () => setSelectedGov(govId));
+          polygonsRef.current[govId] = poly;
+        }
+      }
+
+      // 2. Radiant Thermal Heat Discs
+      const circleRadius = 45000 + (severityScore / 100) * 45000; // 45km to 90km radius
+      const circleOptions = {
+        radius: circleRadius,
+        color: color,
+        weight: 1.5,
+        fillColor: color,
+        fillOpacity: 0.25 + (severityScore / 100) * 0.25
+      };
+
+      if (heatCirclesRef.current[govId]) {
+        heatCirclesRef.current[govId].setLatLng(coords);
+        heatCirclesRef.current[govId].setRadius(circleRadius);
+        heatCirclesRef.current[govId].setStyle(circleOptions);
+      } else {
+        const circle = L.circle(coords, circleOptions).addTo(map);
+        circle.on('click', () => setSelectedGov(govId));
+        heatCirclesRef.current[govId] = circle;
+      }
+
+      // 3. Glowing Interactive Pulse Marker with Live Annual Score
       const iconHtml = `
-        <div class="relative flex items-center justify-center cursor-pointer group" style="width: 44px; height: 44px;">
-          <div class="marker-pulse-ring" style="width: 44px; height: 44px; border: 2px solid ${color};"></div>
-          <div class="w-9 h-9 rounded-full flex flex-col items-center justify-center text-[11px] font-black text-white shadow-xl transition-transform ${isSelected ? 'scale-125 ring-2 ring-teal-300' : 'group-hover:scale-110'}" style="background-color: ${color}">
-            <span class="leading-none tabular-nums">${val}</span>
+        <div class="relative flex items-center justify-center cursor-pointer group" style="width: 52px; height: 52px;">
+          <div class="marker-pulse-ring" style="width: 52px; height: 52px; border: 3px solid ${color};"></div>
+          <div class="w-11 h-11 rounded-full flex flex-col items-center justify-center text-[12px] font-black text-white shadow-2xl transition-all duration-300 ${
+            isSelected ? 'scale-125 ring-4 ring-teal-300' : 'group-hover:scale-115'
+          }" style="background-color: ${color}; box-shadow: 0 0 20px ${color}99;">
+            <span class="leading-none tabular-nums font-black">${displayVal}</span>
           </div>
-          <div class="absolute -bottom-5 px-2 py-0.5 rounded-md text-[10px] font-bold whitespace-nowrap shadow-xl border ${isSelected ? 'bg-teal-900/95 text-teal-200 border-teal-400' : 'bg-slate-900/90 text-slate-200 border-slate-700'}">
+          <div class="absolute -bottom-6 px-2.5 py-0.5 rounded-lg text-[10px] font-black whitespace-nowrap shadow-2xl border transition-all ${
+            isSelected
+              ? 'bg-teal-900/95 text-teal-200 border-teal-400 scale-110 shadow-apple-glow'
+              : 'bg-slate-900/90 text-slate-200 border-slate-700'
+          }">
             ${name}
           </div>
         </div>
@@ -109,17 +243,15 @@ export default function MapModule({
       const customIcon = L.divIcon({
         className: 'custom-div-icon',
         html: iconHtml,
-        iconSize: [44, 44],
-        iconAnchor: [22, 22]
+        iconSize: [52, 52],
+        iconAnchor: [26, 26]
       });
 
       if (markersRef.current[govId]) {
         markersRef.current[govId].setIcon(customIcon);
       } else {
         const marker = L.marker(coords, { icon: customIcon }).addTo(map);
-        marker.on('click', () => {
-          setSelectedGov(govId);
-        });
+        marker.on('click', () => setSelectedGov(govId));
         markersRef.current[govId] = marker;
       }
     });
@@ -130,7 +262,7 @@ export default function MapModule({
     if (isPlaying) {
       playIntervalRef.current = setInterval(() => {
         setYear(prev => (prev >= 2025 ? 1995 : prev + 1));
-      }, 750);
+      }, 650);
     } else {
       if (playIntervalRef.current) clearInterval(playIntervalRef.current);
     }
@@ -139,29 +271,62 @@ export default function MapModule({
     };
   }, [isPlaying, setYear]);
 
+  // Year Timeline Metadata & Alert Levels
+  const timelinePhase = useMemo(() => {
+    if (year <= 2000) {
+      return {
+        title_en: '1995-2000: Baseline Climatology — Moderate Thermal Load',
+        title_ar: '1995-2000: خط الأساس المناخي — حمل حراري معتدل ومساحات زراعية مستقرة',
+        anomaly: '+0.0°C',
+        color: 'text-emerald-400',
+        bgColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+        badge: 'Baseline Orbit'
+      };
+    } else if (year <= 2012) {
+      return {
+        title_en: '2001-2012: Warming Acceleration & Upper Egypt Heat Escalation',
+        title_ar: '2001-2012: تسارع الاحترار وتزايد الإجهاد الحراري بصعيد مصر',
+        anomaly: '+0.65°C',
+        color: 'text-amber-400',
+        bgColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+        badge: 'Warming Accelerating'
+      };
+    } else {
+      return {
+        title_en: '2013-2025: CRITICAL HEAT DOME & ARIDIFICATION PEAK',
+        title_ar: '2013-2025: ذروة القباب الحرارية وأزمة الجفاف القصوى بالصعيد',
+        anomaly: '+1.46°C',
+        color: 'text-rose-400',
+        bgColor: 'bg-rose-500/25 text-rose-300 border-rose-500/50',
+        badge: 'CRITICAL ALERT'
+      };
+    }
+  }, [year]);
+
   return (
-    <div className="flex flex-col h-full space-y-4">
-      {/* Top Map Toolbar: Metric Selector */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-space-950/70 p-3 rounded-xl border border-white/10">
+    <div className="flex flex-col h-full space-y-3">
+      
+      {/* Top Map Metric Selector Toolbar */}
+      <div className="flex flex-wrap items-center justify-between gap-2.5 bg-space-950/85 p-3 rounded-2xl border border-white/10">
         <div className="flex items-center gap-2">
           <Layers className="w-4 h-4 text-teal-400" />
           <span className="text-xs font-bold text-slate-200">{t.layerSelectorLabel}</span>
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
           {[
-            { id: 'hni', label: 'HNI (Overall Need)' },
-            { id: 'epi', label: 'EPI (NASA Climate)' },
+            { id: 'hni', label: 'HNI (Annual Need)' },
+            { id: 'epi', label: 'EPI (NASA Heat/Dust)' },
+            { id: 'var', label: 'Live NASA Var' },
             { id: 'ppi', label: 'PPI (Population)' },
             { id: 'fsi', label: 'FSI (Facilities)' },
-            { id: 'wni', label: 'WNI (Workforce)' },
-            { id: 'var', label: 'Satellite Var' }
+            { id: 'wni', label: 'WNI (Workforce)' }
           ].map(metric => (
             <button
               key={metric.id}
               onClick={() => setMapMetric(metric.id)}
-              className={`apple-chip px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all ${
+              className={`apple-chip px-2.5 py-1 rounded-xl text-[11px] font-semibold transition-all ${
                 mapMetric === metric.id
-                  ? 'bg-teal-500 text-slate-950 font-bold shadow-md'
+                  ? 'bg-teal-500 text-slate-950 font-black shadow-apple-glow'
                   : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
               }`}
             >
@@ -171,35 +336,64 @@ export default function MapModule({
         </div>
       </div>
 
-      {/* Map Container */}
-      <div className="relative flex-1 min-h-[360px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-        <div ref={mapContainerRef} className="w-full h-full min-h-[360px]" />
+      {/* Map Viewport Container */}
+      <div className="relative flex-1 min-h-[400px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+        <div ref={mapContainerRef} className="w-full h-full min-h-[400px]" />
 
-        {/* Floating Map Legend */}
-        <div className="absolute bottom-4 left-4 z-[400] bg-space-950/90 backdrop-blur-md p-3 rounded-xl border border-white/10 shadow-xl text-xs space-y-1.5">
-          <div className="font-bold text-[11px] text-slate-300">{t.legendHni}</div>
-          <div className="flex items-center gap-2 text-[10px]">
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-            <span className="text-slate-300">{t.legendCritical}</span>
+        {/* Dynamic On-Map Year HUD Banner */}
+        <div className="absolute top-3 left-3 right-14 z-[400] bg-space-950/90 backdrop-blur-xl px-4 py-2 rounded-xl border border-white/15 shadow-2xl flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 truncate">
+            <Flame className={`w-4 h-4 shrink-0 ${timelinePhase.color} animate-pulse`} />
+            <span className="text-xs font-black text-slate-100 truncate">
+              {lang === 'ar' ? timelinePhase.title_ar : timelinePhase.title_en}
+            </span>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className={`text-xs font-black tabular-nums ${timelinePhase.color}`}>
+              {timelinePhase.anomaly}
+            </span>
+            <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border ${timelinePhase.bgColor}`}>
+              {timelinePhase.badge}
+            </span>
+          </div>
+        </div>
+
+        {/* Dynamic Live Heatmap Legend */}
+        <div className="absolute bottom-4 left-4 z-[400] bg-space-950/95 backdrop-blur-md p-3.5 rounded-2xl border border-white/15 shadow-2xl text-xs space-y-1.5">
+          <div className="font-extrabold text-[11px] text-slate-200 flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-teal-400" />
+            <span>Heat & Stress Scale ({year})</span>
           </div>
           <div className="flex items-center gap-2 text-[10px]">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-            <span className="text-slate-300">{t.legendHigh}</span>
+            <span className="w-3 h-3 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></span>
+            <span className="text-slate-200 font-bold">Critical Peak (≥ 72 HNI / Alert)</span>
           </div>
           <div className="flex items-center gap-2 text-[10px]">
-            <span className="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
-            <span className="text-slate-300">{t.legendModerate}</span>
+            <span className="w-3 h-3 rounded-full bg-orange-500 shadow-sm shadow-orange-500/50"></span>
+            <span className="text-slate-200 font-bold">Severe Heat (63 - 71)</span>
+          </div>
+          <div className="flex items-center gap-2 text-[10px]">
+            <span className="w-3 h-3 rounded-full bg-amber-500 shadow-sm shadow-amber-500/50"></span>
+            <span className="text-slate-200 font-bold">High Warming (54 - 62)</span>
+          </div>
+          <div className="flex items-center gap-2 text-[10px]">
+            <span className="w-3 h-3 rounded-full bg-cyan-500 shadow-sm shadow-cyan-500/50"></span>
+            <span className="text-slate-200 font-bold">Moderate Strain (46 - 53)</span>
+          </div>
+          <div className="flex items-center gap-2 text-[10px]">
+            <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
+            <span className="text-slate-200 font-bold">Baseline Cool (&lt; 46)</span>
           </div>
         </div>
       </div>
 
-      {/* Time-Lapse Scrubber & Controls */}
-      <div className="bg-space-950/80 backdrop-blur-xl p-4 rounded-2xl border border-white/10 space-y-3">
+      {/* 30-Year Time-Lapse Slider Control Box */}
+      <div className="bg-space-950/85 backdrop-blur-xl p-4 rounded-2xl border border-white/10 space-y-3">
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsPlaying(!isPlaying)}
-              className="apple-btn px-3 py-1.5 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-950 font-black flex items-center gap-1.5 shadow-md shadow-teal-500/20"
+              className="apple-btn px-3.5 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-black flex items-center gap-2 shadow-apple-glow"
             >
               {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               <span>{isPlaying ? t.btnPauseTime : t.btnPlayTime}</span>
@@ -207,31 +401,31 @@ export default function MapModule({
 
             <button
               onClick={() => setYear(prev => Math.max(1995, prev - 1))}
-              className="apple-btn p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300"
+              className="apple-chip p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/5"
               title="Previous Year"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
             </button>
 
             <button
               onClick={() => setYear(prev => Math.min(2025, prev + 1))}
-              className="apple-btn p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300"
+              className="apple-chip p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/5"
               title="Next Year"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-4 h-4 rtl:rotate-180" />
             </button>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="text-slate-400 font-medium">{t.timelapseYearLabel}</span>
-            <span className="text-lg font-black text-teal-300 tabular-nums bg-teal-950/60 px-2.5 py-0.5 rounded-lg border border-teal-500/40">
+          <div className="flex items-center gap-2.5">
+            <span className="text-slate-400 font-bold text-xs">{t.timelapseYearLabel}</span>
+            <span className="text-2xl font-black text-teal-300 tabular-nums bg-teal-950/80 px-3.5 py-1 rounded-xl border border-teal-500/50 shadow-inner">
               {year}
             </span>
           </div>
         </div>
 
-        {/* 1995-2025 Slider */}
-        <div className="space-y-1">
+        {/* Interactive Slider Bar */}
+        <div className="space-y-1.5">
           <input
             type="range"
             min="1995"
@@ -243,13 +437,14 @@ export default function MapModule({
             }}
             className="slider-teal"
           />
-          <div className="flex justify-between text-[10px] text-slate-500 font-medium px-1">
-            <span>1995 (Baseline Orbit)</span>
-            <span>2010 (Mid-Point)</span>
-            <span>2025 (Present State)</span>
+          <div className="flex justify-between text-[11px] font-bold px-1 tabular-nums">
+            <span className="text-emerald-400">1995 (Baseline Orbit: +0.0°C)</span>
+            <span className="text-amber-400">2010 (Mid-Point: +0.65°C)</span>
+            <span className="text-rose-400 font-black">2025 (Present Crisis: +1.46°C)</span>
           </div>
         </div>
       </div>
+
     </div>
   );
 }

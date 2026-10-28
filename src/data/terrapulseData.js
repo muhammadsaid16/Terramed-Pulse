@@ -21,8 +21,8 @@ export const TERRAPULSE_DATA = {
       "id": "cairo",
       "name_en": "Cairo",
       "name_ar": "\u0627\u0644\u0642\u0627\u0647\u0631\u0629",
-      "lat": 30.0444,
-      "lng": 31.2357,
+      "lat": 30.0600,
+      "lng": 31.3800,
       "region": "delta_urban",
       "data_source_status": "LIVE_NASA_POWER_API",
       "demographics": {
@@ -1249,8 +1249,8 @@ export const TERRAPULSE_DATA = {
       "id": "giza",
       "name_en": "Giza",
       "name_ar": "\u0627\u0644\u062c\u064a\u0632\u0629",
-      "lat": 30.0131,
-      "lng": 31.2089,
+      "lat": 29.9800,
+      "lng": 30.9500,
       "region": "delta_urban",
       "data_source_status": "LIVE_NASA_POWER_API",
       "demographics": {

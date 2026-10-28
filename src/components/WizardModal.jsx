@@ -13,42 +13,42 @@ export default function WizardModal({ isOpen, onClose, t, onApplyPreset }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
-      <div className="bg-space-950 border border-white/15 rounded-3xl max-w-xl w-full p-6 modal-spring space-y-5 shadow-2xl">
+      <div className="bg-[#090C15]/95 backdrop-blur-3xl border border-white/12 rounded-3xl max-w-xl w-full p-6 modal-spring space-y-5 shadow-2xl">
         
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-3">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center border border-teal-500/30">
-              <Compass className="w-4 h-4" />
+        <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center">
+              <Compass className="w-4 h-4 text-sky-400" />
             </div>
-            <h3 className="font-extrabold text-base text-slate-100">
+            <h3 className="font-semibold text-base text-white">
               {t.wizardTitle}
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="apple-chip p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5"
+            className="apple-chip p-1.5 rounded-full text-white/50 hover:text-white hover:bg-white/[0.08]"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Step Indicator */}
+        {/* Step Indicator (Apple Segmented Track) */}
         <div className="flex items-center justify-center space-x-6 rtl:space-x-reverse py-1">
           {[1, 2, 3].map(s => (
             <React.Fragment key={s}>
               <div
-                className={`w-8 h-8 rounded-full font-black text-xs flex items-center justify-center transition-all ${
+                className={`w-7 h-7 rounded-full text-xs font-semibold flex items-center justify-center transition-all ${
                   step === s
-                    ? 'bg-teal-500 text-slate-950 shadow-apple-glow ring-2 ring-teal-300'
+                    ? 'bg-white text-black shadow-sm'
                     : step > s
-                    ? 'bg-teal-900 text-teal-300'
-                    : 'bg-slate-800 text-slate-500'
+                    ? 'bg-white/20 text-white'
+                    : 'bg-white/[0.06] text-white/40'
                 }`}
               >
-                {step > s ? <Check className="w-4 h-4" /> : s}
+                {step > s ? <Check className="w-3.5 h-3.5" /> : s}
               </div>
-              {s < 3 && <div className={`w-10 h-0.5 ${step > s ? 'bg-teal-500' : 'bg-slate-800'}`} />}
+              {s < 3 && <div className={`w-12 h-0.5 ${step > s ? 'bg-white/30' : 'bg-white/[0.06]'}`} />}
             </React.Fragment>
           ))}
         </div>
@@ -56,28 +56,35 @@ export default function WizardModal({ isOpen, onClose, t, onApplyPreset }) {
         {/* Step 1 */}
         {step === 1 && (
           <div className="space-y-4">
-            <h4 className="font-bold text-sm text-teal-300">
+            <h4 className="font-semibold text-sm text-white">
               {t.step1Title}
             </h4>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-white/60 leading-relaxed font-normal">
               {t.step1Desc}
             </p>
-            <div className="p-3.5 bg-slate-900/90 rounded-xl border border-white/5 text-xs text-slate-400 leading-relaxed">
-              {t.step1Tip}
-            </div>
-
-            <div className="grid grid-cols-2 gap-2 pt-1">
+            <div className="grid grid-cols-2 gap-3 pt-2">
               <button
                 onClick={() => setStep(2)}
-                className="apple-chip p-2.5 rounded-xl bg-space-900 border border-rose-500/30 text-rose-300 text-xs font-bold text-left rtl:text-right"
+                className="apple-card p-4 text-left rtl:text-right space-y-1.5 group"
               >
-                🔥 Upper Egypt Heat Stress
+                <span className="font-semibold text-xs text-white group-hover:text-sky-400 flex items-center gap-1.5">
+                  🩺 {t.rolePhysician}
+                </span>
+                <span className="text-[11px] text-white/50 block font-normal leading-normal">
+                  {t.rolePhysicianSub}
+                </span>
               </button>
+
               <button
                 onClick={() => setStep(2)}
-                className="apple-chip p-2.5 rounded-xl bg-space-900 border border-teal-500/30 text-teal-300 text-xs font-bold text-left rtl:text-right"
+                className="apple-card p-4 text-left rtl:text-right space-y-1.5 group"
               >
-                🌊 Nile Delta Moisture & Dust
+                <span className="font-semibold text-xs text-white group-hover:text-sky-400 flex items-center gap-1.5">
+                  📊 {t.roleDecision}
+                </span>
+                <span className="text-[11px] text-white/50 block font-normal leading-normal">
+                  {t.roleDecisionSub}
+                </span>
               </button>
             </div>
           </div>
@@ -86,76 +93,57 @@ export default function WizardModal({ isOpen, onClose, t, onApplyPreset }) {
         {/* Step 2 */}
         {step === 2 && (
           <div className="space-y-4">
-            <h4 className="font-bold text-sm text-teal-300">
+            <h4 className="font-semibold text-sm text-white">
               {t.step2Title}
             </h4>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-white/60 leading-relaxed font-normal">
               {t.step2Desc}
             </p>
-            <div className="p-3.5 bg-slate-900/90 rounded-xl border border-white/5 text-xs text-slate-400 leading-relaxed">
-              {t.step2Tip}
-            </div>
-
-            <div className="p-3 bg-teal-950/40 rounded-xl border border-teal-500/30 text-xs text-teal-200">
-              <b>Statistical Engine Rule:</b> Slope $\beta$ is computed along with Mann-Kendall test to confirm trends at $\alpha = 0.05$ (95% confidence).
-            </div>
-          </div>
-        )}
-
-        {/* Step 3 */}
-        {step === 3 && (
-          <div className="space-y-4">
-            <h4 className="font-bold text-sm text-teal-300">
-              {t.step3Title}
-            </h4>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              {t.step3Desc}
-            </p>
-            <div className="p-3.5 bg-slate-900/90 rounded-xl border border-white/5 text-xs text-slate-400 leading-relaxed">
-              {t.step3Tip}
-            </div>
-
-            <div className="p-3 bg-gradient-to-r from-teal-950/60 to-slate-900 rounded-xl border border-teal-500/30 flex items-center justify-between">
-              <span className="text-xs text-slate-200 font-bold">Apply Recommended Case:</span>
-              <button
-                onClick={() => handleFinish(1)}
-                className="apple-btn px-3 py-1.5 bg-teal-500 text-slate-950 font-black text-xs rounded-lg flex items-center gap-1 shadow-md"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Launch Flagship Upper Egypt</span>
-              </button>
+            <div className="space-y-2 pt-1">
+              {[
+                { id: 1, label: t.demo1, sub: 'Extreme heat escalations driving acute renal decompensation in Upper Egypt.' },
+                { id: 2, label: t.demo2, sub: 'Mediterranean coastal sea-spray and atmospheric aerosol shifting.' },
+                { id: 3, label: t.demo3, sub: 'Dense urban microclimates and particulate loading in Greater Cairo.' }
+              ].map(preset => (
+                <div
+                  key={preset.id}
+                  onClick={() => handleFinish(preset.id)}
+                  className="apple-card p-3.5 flex items-center justify-between cursor-pointer group"
+                >
+                  <div>
+                    <span className="font-semibold text-xs text-white group-hover:text-sky-400 transition-colors">
+                      {preset.label}
+                    </span>
+                    <span className="text-[11px] text-white/50 block mt-0.5 font-normal">
+                      {preset.sub}
+                    </span>
+                  </div>
+                  <Sparkles className="w-4 h-4 text-white/30 group-hover:text-sky-400 transition-colors" />
+                </div>
+              ))}
             </div>
           </div>
         )}
 
-        {/* Navigation Buttons */}
-        <div className="flex items-center justify-between border-t border-white/10 pt-3">
-          <button
-            onClick={() => setStep(prev => Math.max(1, prev - 1))}
-            disabled={step === 1}
-            className={`apple-btn px-4 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 ${
-              step === 1 ? 'opacity-30 cursor-not-allowed text-slate-500' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-            }`}
-          >
-            <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-180" />
-            <span>{t.btnPrev}</span>
-          </button>
-
-          {step < 3 ? (
+        {/* Footer Controls */}
+        <div className="flex items-center justify-between pt-3 border-t border-white/[0.08]">
+          {step > 1 ? (
             <button
-              onClick={() => setStep(prev => Math.min(3, prev + 1))}
-              className="apple-btn px-5 py-1.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md shadow-teal-500/20"
+              onClick={() => setStep(step - 1)}
+              className="apple-chip px-3 py-1.5 rounded-full bg-white/[0.06] text-white/70 hover:text-white text-xs font-medium flex items-center gap-1.5"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-180" />
+              <span>{t.btnBack}</span>
+            </button>
+          ) : <div />}
+
+          {step === 1 && (
+            <button
+              onClick={() => setStep(2)}
+              className="apple-btn-primary px-4 py-1.5 text-xs flex items-center gap-1.5"
             >
               <span>{t.btnNext}</span>
-              <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
-            </button>
-          ) : (
-            <button
-              onClick={() => handleFinish(1)}
-              className="apple-btn px-5 py-1.5 rounded-xl bg-gradient-to-r from-teal-400 to-teal-500 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-apple-glow"
-            >
-              <span>{t.btnFinish}</span>
-              <Check className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180 text-black" />
             </button>
           )}
         </div>

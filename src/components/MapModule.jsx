@@ -207,16 +207,16 @@ export default function MapModule({
 
       const iconHtml = `
         <div class="relative flex items-center justify-center cursor-pointer group" style="width: 52px; height: 52px;">
-          <div class="marker-pulse-ring" style="width: 52px; height: 52px; border: 3px solid ${color};"></div>
-          <div class="w-11 h-11 rounded-full flex flex-col items-center justify-center text-[12px] font-black text-white shadow-2xl transition-all duration-300 ${
-            isSelected ? 'scale-125 ring-4 ring-teal-300' : 'group-hover:scale-115'
-          }" style="background-color: ${color}; box-shadow: 0 0 20px ${color}99;">
-            <span class="leading-none tabular-nums font-black">${displayVal}</span>
+          <div class="marker-pulse-ring" style="width: 52px; height: 52px; border: 2px solid ${color};"></div>
+          <div class="w-10 h-10 rounded-full flex flex-col items-center justify-center text-[12px] font-semibold text-white transition-all duration-300 ${
+            isSelected ? 'scale-125 ring-2 ring-white shadow-[0_0_30px_rgba(255,255,255,0.45)]' : 'group-hover:scale-110'
+          }" style="background-color: ${color}; box-shadow: 0 6px 20px ${color}80, inset 0 1px 1px rgba(255,255,255,0.4);">
+            <span class="leading-none tabular-nums font-semibold">${displayVal}</span>
           </div>
-          <div class="absolute -bottom-6 px-2.5 py-0.5 rounded-lg text-[10px] font-black whitespace-nowrap shadow-2xl border transition-all ${
+          <div class="absolute -bottom-6 px-2.5 py-0.5 rounded-full text-[10px] font-medium whitespace-nowrap border transition-all ${
             isSelected
-              ? 'bg-teal-900/95 text-teal-200 border-teal-400 scale-110 shadow-apple-glow'
-              : 'bg-slate-900/90 text-slate-200 border-slate-700'
+              ? 'bg-white text-black border-white scale-105 font-semibold shadow-[0_4px_16px_rgba(255,255,255,0.3)]'
+              : 'bg-[#07090F]/90 backdrop-blur-md text-white/90 border-white/10 shadow-lg'
           }">
             ${name}
           </div>
@@ -285,13 +285,13 @@ export default function MapModule({
   return (
     <div className="flex flex-col h-full space-y-3">
       
-      {/* Top Map Metric Selector Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-2.5 bg-space-950/85 p-3 rounded-2xl border border-white/10">
-        <div className="flex items-center gap-2">
-          <Layers className="w-4 h-4 text-teal-400" />
-          <span className="text-xs font-bold text-slate-200">{t.layerSelectorLabel}</span>
+      {/* Top Map Metric Selector Toolbar (Apple Segmented Style) */}
+      <div className="flex flex-wrap items-center justify-between gap-2.5 bg-white/[0.03] backdrop-blur-xl p-2.5 rounded-2xl border border-white/[0.08]">
+        <div className="flex items-center gap-2 px-1">
+          <Layers className="w-4 h-4 text-sky-400" />
+          <span className="text-xs font-medium text-white/70">{t.layerSelectorLabel}</span>
         </div>
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="apple-segmented-track flex flex-wrap items-center gap-0.5">
           {[
             { id: 'hni', label: 'HNI (Annual Need)' },
             { id: 'epi', label: 'EPI (NASA Heat/Dust)' },
@@ -303,10 +303,10 @@ export default function MapModule({
             <button
               key={metric.id}
               onClick={() => setMapMetric(metric.id)}
-              className={`apple-chip px-2.5 py-1 rounded-xl text-[11px] font-semibold transition-all ${
+              className={`apple-segmented-item px-2.5 py-1 text-[11px] font-medium transition-all ${
                 mapMetric === metric.id
-                  ? 'bg-teal-500 text-slate-950 font-black shadow-apple-glow'
-                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                  ? 'apple-segmented-item-active'
+                  : 'text-white/60 hover:text-white hover:bg-white/[0.04]'
               }`}
             >
               {metric.label}
@@ -316,92 +316,92 @@ export default function MapModule({
       </div>
 
       {/* Map Viewport Container */}
-      <div className="relative flex-1 min-h-[400px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-        <div ref={mapContainerRef} className="w-full h-full min-h-[400px]" />
+      <div className="relative flex-1 min-h-[420px] rounded-3xl overflow-hidden border border-white/[0.08] shadow-2xl">
+        <div ref={mapContainerRef} className="w-full h-full min-h-[420px]" />
 
         {/* Dynamic On-Map Year HUD Banner */}
-        <div className="absolute top-3 left-3 right-3 z-[400] bg-space-950/90 backdrop-blur-xl px-4 py-2 rounded-xl border border-white/15 shadow-2xl flex items-center justify-between gap-2">
+        <div className="absolute top-3 left-3 right-3 z-[400] bg-black/65 backdrop-blur-2xl px-4 py-2 rounded-2xl border border-white/[0.12] shadow-2xl flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 truncate">
-            <Flame className={`w-4 h-4 shrink-0 ${timelinePhase.color} animate-pulse`} />
-            <span className="text-xs font-black text-slate-100 truncate">
+            <Flame className={`w-4 h-4 shrink-0 ${timelinePhase.color}`} />
+            <span className="text-xs font-semibold text-white/95 truncate">
               {lang === 'ar' ? timelinePhase.title_ar : timelinePhase.title_en}
             </span>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <span className={`text-xs font-black tabular-nums ${timelinePhase.color}`}>
+            <span className={`text-xs font-semibold tabular-nums ${timelinePhase.color}`}>
               {timelinePhase.anomaly}
             </span>
-            <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border ${timelinePhase.bgColor}`}>
+            <span className={`text-[10px] font-medium uppercase tracking-wider px-2 py-0.5 rounded-full border ${timelinePhase.bgColor}`}>
               {timelinePhase.badge}
             </span>
           </div>
         </div>
 
         {/* Dynamic Live Heatmap Legend */}
-        <div className="absolute bottom-4 left-4 z-[400] bg-space-950/95 backdrop-blur-md p-3 rounded-2xl border border-white/15 shadow-2xl text-xs space-y-1.5">
-          <div className="font-extrabold text-[11px] text-slate-200 flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-teal-400" />
+        <div className="absolute bottom-4 left-4 z-[400] bg-black/75 backdrop-blur-2xl p-3.5 rounded-2xl border border-white/[0.12] shadow-2xl text-xs space-y-1.5">
+          <div className="font-semibold text-[11px] text-white/90 flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-sky-400" />
             <span>Heat & Stress Scale ({year})</span>
           </div>
           <div className="flex items-center gap-2 text-[10px]">
-            <span className="w-3 h-3 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></span>
-            <span className="text-slate-200 font-bold">Critical Peak (≥ 72 HNI / Alert)</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></span>
+            <span className="text-white/80 font-medium">Critical Peak (≥ 72 HNI / Alert)</span>
           </div>
           <div className="flex items-center gap-2 text-[10px]">
-            <span className="w-3 h-3 rounded-full bg-orange-500 shadow-sm shadow-orange-500/50"></span>
-            <span className="text-slate-200 font-bold">Severe Heat (63 - 71)</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm shadow-orange-500/50"></span>
+            <span className="text-white/80 font-medium">Severe Heat (63 - 71)</span>
           </div>
           <div className="flex items-center gap-2 text-[10px]">
-            <span className="w-3 h-3 rounded-full bg-amber-500 shadow-sm shadow-amber-500/50"></span>
-            <span className="text-slate-200 font-bold">High Arid Burden (57 - 62)</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-sm shadow-amber-500/50"></span>
+            <span className="text-white/80 font-medium">High Arid Burden (57 - 62)</span>
           </div>
           <div className="flex items-center gap-2 text-[10px]">
-            <span className="w-3 h-3 rounded-full bg-purple-500 shadow-sm shadow-purple-500/50"></span>
-            <span className="text-slate-200 font-bold">Urban Smog & Density (50 - 56)</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-sm shadow-purple-500/50"></span>
+            <span className="text-white/80 font-medium">Urban Smog & Density (50 - 56)</span>
           </div>
           <div className="flex items-center gap-2 text-[10px]">
-            <span className="w-3 h-3 rounded-full bg-cyan-500 shadow-sm shadow-cyan-500/50"></span>
-            <span className="text-slate-200 font-bold">Moderate Strain (44 - 49)</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 shadow-sm shadow-cyan-500/50"></span>
+            <span className="text-white/80 font-medium">Moderate Strain (44 - 49)</span>
           </div>
           <div className="flex items-center gap-2 text-[10px]">
-            <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
-            <span className="text-slate-200 font-bold">Baseline Cool (&lt; 44)</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
+            <span className="text-white/80 font-medium">Baseline Cool (&lt; 44)</span>
           </div>
         </div>
       </div>
 
-      {/* 30-Year Time-Lapse Slider Control Box */}
-      <div className="bg-space-950/85 backdrop-blur-xl p-4 rounded-2xl border border-white/10 space-y-3">
+      {/* 30-Year Time-Lapse Slider Control Box (Apple Player Aesthetics) */}
+      <div className="apple-glass p-4 rounded-2xl border border-white/[0.08] space-y-3">
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsPlaying(!isPlaying)}
-              className="apple-btn px-3.5 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-black flex items-center gap-2 shadow-apple-glow"
+              className="apple-chip px-3.5 py-1.5 rounded-full bg-white text-black font-semibold flex items-center gap-1.5 shadow-sm hover:bg-neutral-200 transition-all text-xs"
             >
-              {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+              {isPlaying ? <Pause className="w-3.5 h-3.5 fill-black" /> : <Play className="w-3.5 h-3.5 fill-black" />}
               <span>{isPlaying ? t.btnPauseTime : t.btnPlayTime}</span>
             </button>
 
             <button
               onClick={() => setYear(prev => Math.max(1995, prev - 1))}
-              className="apple-chip p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/5"
+              className="apple-chip p-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] text-white/80 border border-white/10"
               title="Previous Year"
             >
-              <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
+              <ChevronLeft className="w-3.5 h-3.5 rtl:rotate-180" />
             </button>
 
             <button
               onClick={() => setYear(prev => Math.min(2025, prev + 1))}
-              className="apple-chip p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/5"
+              className="apple-chip p-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] text-white/80 border border-white/10"
               title="Next Year"
             >
-              <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+              <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180" />
             </button>
           </div>
 
           <div className="flex items-center gap-2.5">
-            <span className="text-slate-400 font-bold text-xs">{t.timelapseYearLabel}</span>
-            <span className="text-2xl font-black text-teal-300 tabular-nums bg-teal-950/80 px-3.5 py-1 rounded-xl border border-teal-500/50 shadow-inner">
+            <span className="text-white/45 font-medium text-xs">{t.timelapseYearLabel}</span>
+            <span className="text-xl font-semibold text-white tabular-nums bg-white/[0.06] px-3 py-0.5 rounded-xl border border-white/10">
               {year}
             </span>
           </div>
@@ -420,10 +420,10 @@ export default function MapModule({
             }}
             className="slider-teal"
           />
-          <div className="flex justify-between text-[11px] font-bold px-1 tabular-nums">
-            <span className="text-emerald-400">1995 (Baseline Orbit: +0.0°C)</span>
-            <span className="text-amber-400">2010 (Mid-Point: +0.65°C)</span>
-            <span className="text-rose-400 font-black">2025 (Present Crisis: +1.46°C)</span>
+          <div className="flex justify-between text-[11px] font-medium text-white/45 px-1 tabular-nums">
+            <span className="text-emerald-400/90 font-medium">1995 (Baseline: +0.0°C)</span>
+            <span className="text-amber-400/90 font-medium">2010 (Mid-Point: +0.65°C)</span>
+            <span className="text-rose-400/90 font-medium">2025 (Peak: +1.46°C)</span>
           </div>
         </div>
       </div>

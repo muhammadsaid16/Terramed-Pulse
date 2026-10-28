@@ -145,36 +145,36 @@ export default function App() {
         {/* ===================================================================
             SECTION 1: HERO & CORE VISION (Docx Section 1 & 6)
             =================================================================== */}
-        <section className="apple-glass p-6 sm:p-8 mb-8 relative overflow-hidden">
-          {/* Subtle glow background */}
-          <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+        <section className="apple-glass p-8 sm:p-12 mb-8 relative overflow-hidden">
+          {/* Subtle Apple ambient background glow */}
+          <div className="absolute top-0 right-0 -mr-24 -mt-24 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 -ml-24 -mb-24 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="relative z-10 max-w-4xl space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-teal-500/15 text-teal-300 border border-teal-500/30">
-              <Sparkles className="w-3.5 h-3.5 text-teal-400" />
+          <div className="relative z-10 max-w-4xl space-y-5">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-medium bg-white/[0.06] text-white/90 border border-white/10 backdrop-blur-xl">
+              <Sparkles className="w-3.5 h-3.5 text-sky-400" />
               <span>{t.heroBadge}</span>
             </div>
 
-            <h1 className="text-2xl sm:text-4xl font-black text-slate-100 tracking-tight leading-tight">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-[-0.035em] text-transparent bg-clip-text bg-gradient-to-b from-white via-white/95 to-white/55 leading-[1.12]">
               {t.heroMainTitle}
             </h1>
 
-            <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
+            <p className="text-base sm:text-lg text-white/60 leading-relaxed font-normal max-w-3xl">
               {t.heroDesc}
             </p>
 
             {/* The 2 Primary Hero Call-to-Actions from Docx Section 6 */}
-            <div className="pt-2 flex flex-wrap items-center gap-3">
+            <div className="pt-3 flex flex-wrap items-center gap-3">
               <button
                 onClick={() => {
                   setActiveTab('doctor');
                   const el = document.getElementById('section-doctor');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="apple-btn px-5 py-3 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-slate-950 font-black text-sm flex items-center gap-2 shadow-apple-glow"
+                className="apple-btn-primary px-6 py-3 text-sm flex items-center gap-2.5"
               >
-                <Stethoscope className="w-4 h-4 text-slate-950" />
+                <Stethoscope className="w-4 h-4 text-black" />
                 <span>{t.btnDoctorCta}</span>
               </button>
 
@@ -184,23 +184,23 @@ export default function App() {
                   const el = document.getElementById('section-decision');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="apple-chip px-5 py-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-white/15 font-bold text-sm flex items-center gap-2 shadow-md"
+                className="apple-btn-secondary px-6 py-3 text-sm flex items-center gap-2.5"
               >
-                <BarChart3 className="w-4 h-4 text-teal-400" />
+                <BarChart3 className="w-4 h-4 text-sky-400" />
                 <span>{t.btnDecisionCta}</span>
               </button>
             </div>
           </div>
 
           {/* Scientific Disclaimer Card (Docx Section 1 & 3: 10/10 Judging Criteria) */}
-          <div className="mt-6 pt-5 border-t border-white/10">
-            <div className="p-4 rounded-xl bg-slate-950/70 border border-teal-500/20 flex items-start gap-3">
-              <ShieldCheck className="w-5 h-5 text-teal-400 shrink-0 mt-0.5" />
+          <div className="mt-8 pt-6 border-t border-white/[0.08]">
+            <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.08] backdrop-blur-xl flex items-start gap-3.5">
+              <ShieldCheck className="w-5 h-5 text-sky-400 shrink-0 mt-0.5" />
               <div className="space-y-1 text-xs">
-                <span className="font-bold text-teal-300 block">
+                <span className="font-semibold text-white/90 block">
                   {t.disclaimerTitle}
                 </span>
-                <p className="text-slate-300 leading-relaxed">
+                <p className="text-white/60 leading-relaxed font-normal">
                   {t.disclaimerBody}
                 </p>
               </div>
@@ -214,17 +214,17 @@ export default function App() {
         {/* ===================================================================
             MODULE 1: EARTH SYSTEM TREND DETECTIVE & SPATIAL MAP
             =================================================================== */}
-        <section id="section-detective" className="apple-glass p-5 lg:p-6 mb-8 space-y-6">
-          <div className="border-b border-white/10 pb-4 flex flex-wrap items-center justify-between gap-2">
+        <section id="section-detective" className="apple-glass p-6 sm:p-8 mb-8 space-y-6">
+          <div className="border-b border-white/[0.08] pb-4 flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h2 className="text-xl font-black text-slate-100 flex items-center gap-2">
+              <h2 className="text-xl font-semibold text-white tracking-tight flex items-center gap-2">
                 <span>{t.module1Title}</span>
               </h2>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-white/50 font-normal mt-1">
                 {t.module1Subtitle}
               </p>
             </div>
-            <div className="text-[11px] text-teal-400 font-semibold bg-teal-950/60 px-3 py-1 rounded-full border border-teal-500/30">
+            <div className="text-[11px] text-white/70 font-medium bg-white/[0.06] px-3 py-1 rounded-full border border-white/10">
               {t.clickMarkerTip}
             </div>
           </div>

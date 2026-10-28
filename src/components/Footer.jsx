@@ -1,19 +1,19 @@
 import React from 'react';
-import { Globe, Award, Sparkles } from 'lucide-react';
+import { Globe, Award, Sparkles, Orbit } from 'lucide-react';
 
 export default function Footer({ lang, t }) {
   return (
-    <footer className="bg-space-950/95 border-t border-white/10 py-8 px-4 text-xs text-slate-400 mt-12">
+    <footer className="border-t border-white/[0.08] bg-[#040508]/80 backdrop-blur-2xl py-8 px-4 text-xs text-white/50 mt-16">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         
-        <div className="flex items-center gap-2">
-          <Globe className="w-4 h-4 text-teal-400" />
-          <span>
-            <b>TerraPulse: Stay & Build Egypt</b> — NASA Space Apps Challenge 2026
+        <div className="flex items-center gap-2 text-white/80">
+          <Orbit className="w-4 h-4 text-sky-400" />
+          <span className="font-medium">
+            TerraPulse: Stay & Build Egypt — NASA Space Apps Challenge 2026
           </span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 text-slate-500 font-medium text-[11px]">
+        <div className="flex flex-wrap items-center gap-2.5 text-white/40 text-[11px] font-normal">
           <span>NASA POWER</span>
           <span>•</span>
           <span>MERRA-2</span>
@@ -22,14 +22,14 @@ export default function Footer({ lang, t }) {
           <span>•</span>
           <span>GLDAS Noah</span>
           <span>•</span>
-          <span>SEDAC CIESIN</span>
+          <span>SEDAC GPWv4</span>
           <span>•</span>
           <span>CAPMAS</span>
         </div>
 
-        <div className="flex items-center gap-1.5 text-teal-300 font-bold">
+        <div className="flex items-center gap-1.5 text-white/80 font-medium bg-white/[0.04] px-3 py-1 rounded-full border border-white/10">
           <Award className="w-3.5 h-3.5 text-amber-400" />
-          <span>NASA Grand Prize Finalist Architecture</span>
+          <span>NASA Space Apps 2026 Architecture</span>
         </div>
 
       </div>

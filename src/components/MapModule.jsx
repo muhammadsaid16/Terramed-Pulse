@@ -4,12 +4,22 @@ import { Play, Pause, ChevronLeft, ChevronRight, Layers, Flame, Eye, Thermometer
 
 import { EGYPT_GOVS_GEOJSON } from '../data/egyptGovernoratesGeoJson';
 
-// Calibrated 5-tier Climate & Heat Color Palette
+// Verified visual centroids ensuring every circle marker sits directly in the center of its governorate polygon
+const GOV_MAP_COORDINATES = {
+  alexandria: [31.0500, 29.8500], // True visual center of Alexandria governorate
+  cairo:      [30.0400, 31.5500], // Center of Cairo governorate polygon (East Cairo axis)
+  giza:       [29.8000, 30.7000], // Center of Giza metropolitan & plateau polygon
+  assiut:     [27.3500, 31.3500], // Visual center of Assiut Nile valley polygon
+  aswan:      [24.1000, 32.8500]  // Center of Aswan Nile valley polygon
+};
+
+// Calibrated 6-tier Climate & Heat Color Palette ensuring Cairo & Giza contrast
 function getDynamicColor(score) {
-  if (score >= 72) return '#f43f5e'; // Blazing Crimson Red (Critical Crisis)
-  if (score >= 63) return '#f97316'; // Deep Fiery Orange (Severe Burden)
-  if (score >= 54) return '#f59e0b'; // Golden Amber (High Strain)
-  if (score >= 46) return '#06b6d4'; // Radiant Cyan / Sky Blue (Moderate)
+  if (score >= 72) return '#f43f5e'; // Blazing Crimson Red (Critical Crisis - e.g. Aswan)
+  if (score >= 63) return '#f97316'; // Deep Fiery Orange (Severe Heat - e.g. Assiut)
+  if (score >= 57) return '#f59e0b'; // Golden Amber (High Arid Burden - e.g. Giza)
+  if (score >= 50) return '#8b5cf6'; // Electric Violet (Urban Smog & Heat Island - e.g. Cairo)
+  if (score >= 44) return '#06b6d4'; // Radiant Cyan (Moderate Coastal - e.g. Alexandria)
   return '#10b981';                  // Cool Emerald Green (Baseline Mild)
 }
 
@@ -189,7 +199,7 @@ export default function MapModule({
     // 2. Glowing Interactive Pulse Marker with Live Annual Score
     Object.keys(govs).forEach(govId => {
       const gov = govs[govId];
-      const coords = [gov.lat, gov.lng];
+      const coords = GOV_MAP_COORDINATES[govId] || [gov.lat, gov.lng];
       const { displayVal, severityScore } = getAnnualMetricData(gov, year, mapMetric, selectedVar);
       const color = getDynamicColor(severityScore);
       const isSelected = selectedGov === govId;
@@ -328,7 +338,7 @@ export default function MapModule({
         </div>
 
         {/* Dynamic Live Heatmap Legend */}
-        <div className="absolute bottom-4 left-4 z-[400] bg-space-950/95 backdrop-blur-md p-3.5 rounded-2xl border border-white/15 shadow-2xl text-xs space-y-1.5">
+        <div className="absolute bottom-4 left-4 z-[400] bg-space-950/95 backdrop-blur-md p-3 rounded-2xl border border-white/15 shadow-2xl text-xs space-y-1.5">
           <div className="font-extrabold text-[11px] text-slate-200 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-teal-400" />
             <span>Heat & Stress Scale ({year})</span>
@@ -343,15 +353,19 @@ export default function MapModule({
           </div>
           <div className="flex items-center gap-2 text-[10px]">
             <span className="w-3 h-3 rounded-full bg-amber-500 shadow-sm shadow-amber-500/50"></span>
-            <span className="text-slate-200 font-bold">High Warming (54 - 62)</span>
+            <span className="text-slate-200 font-bold">High Arid Burden (57 - 62)</span>
+          </div>
+          <div className="flex items-center gap-2 text-[10px]">
+            <span className="w-3 h-3 rounded-full bg-purple-500 shadow-sm shadow-purple-500/50"></span>
+            <span className="text-slate-200 font-bold">Urban Smog & Density (50 - 56)</span>
           </div>
           <div className="flex items-center gap-2 text-[10px]">
             <span className="w-3 h-3 rounded-full bg-cyan-500 shadow-sm shadow-cyan-500/50"></span>
-            <span className="text-slate-200 font-bold">Moderate Strain (46 - 53)</span>
+            <span className="text-slate-200 font-bold">Moderate Strain (44 - 49)</span>
           </div>
           <div className="flex items-center gap-2 text-[10px]">
             <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
-            <span className="text-slate-200 font-bold">Baseline Cool (&lt; 46)</span>
+            <span className="text-slate-200 font-bold">Baseline Cool (&lt; 44)</span>
           </div>
         </div>
       </div>

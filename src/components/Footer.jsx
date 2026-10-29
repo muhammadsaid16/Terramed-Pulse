@@ -1,5 +1,15 @@
 import React from 'react';
-import { Globe, Award, Sparkles, Orbit } from 'lucide-react';
+import { Award, Orbit } from 'lucide-react';
+
+// Upstream datasets credited in the footer, in citation order (NASA POWER first).
+const DATA_SOURCES = [
+  { id: 'power', en: 'NASA POWER', ar: 'مرصد ناسا POWER' },
+  { id: 'merra2', en: 'MERRA-2', ar: 'مرصد MERRA-2' },
+  { id: 'modis', en: 'MODIS Terra/Aqua', ar: 'أقمار MODIS تيرا/أكوا' },
+  { id: 'gldas', en: 'GLDAS Noah', ar: 'نموذج GLDAS نوح' },
+  { id: 'sedac', en: 'SEDAC GPWv4', ar: 'مرصد SEDAC السكاني' },
+  { id: 'capmas', en: 'CAPMAS', ar: 'الجهاز المركزي للتعبئة والإحصاء (CAPMAS)' }
+];
 
 export default function Footer({ lang, t }) {
   return (
@@ -9,27 +19,24 @@ export default function Footer({ lang, t }) {
         <div className="flex items-center gap-2 text-white/80">
           <Orbit className="w-4 h-4 text-sky-400" />
           <span className="font-medium">
-            TerraPulse: Stay & Build Egypt — NASA Space Apps Challenge 2026
+            {t.footerTagline}
           </span>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5 text-white/40 text-[11px] font-normal">
-          <span>NASA POWER</span>
-          <span>•</span>
-          <span>MERRA-2</span>
-          <span>•</span>
-          <span>MODIS Terra/Aqua</span>
-          <span>•</span>
-          <span>GLDAS Noah</span>
-          <span>•</span>
-          <span>SEDAC GPWv4</span>
-          <span>•</span>
-          <span>CAPMAS</span>
+          {DATA_SOURCES.map((source, i) => (
+            <React.Fragment key={source.id}>
+              {i > 0 && <span>•</span>}
+              <span>{lang === 'ar' ? source.ar : source.en}</span>
+            </React.Fragment>
+          ))}
         </div>
 
         <div className="flex items-center gap-1.5 text-white/80 font-medium bg-white/[0.04] px-3 py-1 rounded-full border border-white/10">
           <Award className="w-3.5 h-3.5 text-amber-400" />
-          <span>NASA Space Apps 2026 Architecture</span>
+          <span>
+            {t.footerArchitecture}
+          </span>
         </div>
 
       </div>

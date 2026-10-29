@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import L from 'leaflet';
-import { Play, Pause, ChevronLeft, ChevronRight, Layers, Flame, Eye, Thermometer, ShieldAlert, Sparkles, Activity } from 'lucide-react';
+import { Play, Pause, ChevronLeft, ChevronRight, Layers, Flame, Sparkles } from 'lucide-react';
 
 import { EGYPT_GOVS_GEOJSON } from '../data/egyptGovernoratesGeoJson';
+import { HNI_WEIGHTS } from '../lib/trendEngine';
 
 // Verified visual centroids ensuring every circle marker sits directly in the center of its governorate polygon
 const GOV_MAP_COORDINATES = {
@@ -13,15 +14,31 @@ const GOV_MAP_COORDINATES = {
   aswan:      [24.1000, 32.8500]  // Center of Aswan Nile valley polygon
 };
 
-// Calibrated 6-tier Climate & Heat Color Palette ensuring Cairo & Giza contrast
+// Calibrated 6-tier Climate & Heat scale: single source for the polygon/marker color and the on-map legend.
+// Tier `min` thresholds are mirrored in the legend caption strings — keep both in sync.
+const HEAT_TIERS = [
+  { min: 72, hex: '#f43f5e', dot: 'bg-rose-500 shadow-sm shadow-rose-500/50', labelKey: 'scaleCritical' },
+  { min: 63, hex: '#f97316', dot: 'bg-orange-500 shadow-sm shadow-orange-500/50', labelKey: 'scaleSevere' },
+  { min: 57, hex: '#f59e0b', dot: 'bg-amber-500 shadow-sm shadow-amber-500/50', labelKey: 'scaleArid' },
+  { min: 50, hex: '#8b5cf6', dot: 'bg-purple-500 shadow-sm shadow-purple-500/50', labelKey: 'scaleSmog' },
+  { min: 44, hex: '#06b6d4', dot: 'bg-cyan-500 shadow-sm shadow-cyan-500/50', labelKey: 'scaleModerate' },
+  { min: 10, hex: '#10b981', dot: 'bg-emerald-500 shadow-sm shadow-emerald-500/50', labelKey: 'scaleBaseline' }
+];
+
+// Severity scores are clamped to [10, 100] upstream, so the last tier is unreachable only below 10.
 function getDynamicColor(score) {
-  if (score >= 72) return '#f43f5e'; // Blazing Crimson Red (Critical Crisis - e.g. Aswan)
-  if (score >= 63) return '#f97316'; // Deep Fiery Orange (Severe Heat - e.g. Assiut)
-  if (score >= 57) return '#f59e0b'; // Golden Amber (High Arid Burden - e.g. Giza)
-  if (score >= 50) return '#8b5cf6'; // Electric Violet (Urban Smog & Heat Island - e.g. Cairo)
-  if (score >= 44) return '#06b6d4'; // Radiant Cyan (Moderate Coastal - e.g. Alexandria)
-  return '#10b981';                  // Cool Emerald Green (Baseline Mild)
+  return (HEAT_TIERS.find(tier => score >= tier.min) || HEAT_TIERS[HEAT_TIERS.length - 1]).hex;
 }
+
+// Map layer switcher: id feeds getAnnualMetricData, labelKey feeds TRANSLATIONS.
+const MAP_METRIC_OPTIONS = [
+  { id: 'hni', labelKey: 'layerHni' },
+  { id: 'epi', labelKey: 'layerEpi' },
+  { id: 'var', labelKey: 'layerVar' },
+  { id: 'ppi', labelKey: 'layerPpi' },
+  { id: 'fsi', labelKey: 'layerFsi' },
+  { id: 'wni', labelKey: 'layerWni' }
+];
 
 // Compute dynamic annual metric value and 0-100 severity score for every year
 function getAnnualMetricData(gov, currentYear, metric, selectedVar) {
@@ -66,7 +83,7 @@ function getAnnualMetricData(gov, currentYear, metric, selectedVar) {
     const baseWni = gov.baseline_indices?.wni || gov.baseline_indices?.wni_prior || 75;
 
     const annualHni = Math.round(
-      (0.35 * annualEpi) + (0.30 * annualPpi) + (0.20 * baseFsi) + (0.15 * baseWni)
+      (HNI_WEIGHTS.epi * annualEpi) + (HNI_WEIGHTS.ppi * annualPpi) + (HNI_WEIGHTS.fsi * baseFsi) + (HNI_WEIGHTS.wni * baseWni)
     );
 
     if (metric === 'hni') {
@@ -259,7 +276,7 @@ export default function MapModule({
         anomaly: '+0.0°C',
         color: 'text-emerald-400',
         bgColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
-        badge: 'Baseline Orbit'
+        badge: t.phaseBaselineBadge
       };
     } else if (year <= 2012) {
       return {
@@ -268,7 +285,7 @@ export default function MapModule({
         anomaly: '+0.65°C',
         color: 'text-amber-400',
         bgColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
-        badge: 'Warming Accelerating'
+        badge: t.phaseWarmingBadge
       };
     } else {
       return {
@@ -277,10 +294,10 @@ export default function MapModule({
         anomaly: '+1.46°C',
         color: 'text-rose-400',
         bgColor: 'bg-rose-500/25 text-rose-300 border-rose-500/50',
-        badge: 'CRITICAL ALERT'
+        badge: t.phaseCriticalBadge
       };
     }
-  }, [year]);
+  }, [year, lang]);
 
   return (
     <div className="flex flex-col h-full space-y-3">
@@ -292,14 +309,7 @@ export default function MapModule({
           <span className="text-xs font-medium text-white/70">{t.layerSelectorLabel}</span>
         </div>
         <div className="apple-segmented-track flex flex-wrap items-center gap-0.5">
-          {[
-            { id: 'hni', label: 'HNI (Annual Need)' },
-            { id: 'epi', label: 'EPI (NASA Heat/Dust)' },
-            { id: 'var', label: 'Live NASA Var' },
-            { id: 'ppi', label: 'PPI (Population)' },
-            { id: 'fsi', label: 'FSI (Facilities)' },
-            { id: 'wni', label: 'WNI (Workforce)' }
-          ].map(metric => (
+          {MAP_METRIC_OPTIONS.map(metric => (
             <button
               key={metric.id}
               onClick={() => setMapMetric(metric.id)}
@@ -309,7 +319,7 @@ export default function MapModule({
                   : 'text-white/60 hover:text-white hover:bg-white/[0.04]'
               }`}
             >
-              {metric.label}
+              {t[metric.labelKey]}
             </button>
           ))}
         </div>
@@ -341,32 +351,16 @@ export default function MapModule({
         <div className="absolute bottom-4 left-4 z-[400] bg-black/75 backdrop-blur-2xl p-3.5 rounded-2xl border border-white/[0.12] shadow-2xl text-xs space-y-1.5">
           <div className="font-semibold text-[11px] text-white/90 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-sky-400" />
-            <span>Heat & Stress Scale ({year})</span>
+            <span>{t.heatScaleTitle} ({year})</span>
           </div>
-          <div className="flex items-center gap-2 text-[10px]">
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></span>
-            <span className="text-white/80 font-medium">Critical Peak (≥ 72 HNI / Alert)</span>
-          </div>
-          <div className="flex items-center gap-2 text-[10px]">
-            <span className="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-sm shadow-orange-500/50"></span>
-            <span className="text-white/80 font-medium">Severe Heat (63 - 71)</span>
-          </div>
-          <div className="flex items-center gap-2 text-[10px]">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-sm shadow-amber-500/50"></span>
-            <span className="text-white/80 font-medium">High Arid Burden (57 - 62)</span>
-          </div>
-          <div className="flex items-center gap-2 text-[10px]">
-            <span className="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-sm shadow-purple-500/50"></span>
-            <span className="text-white/80 font-medium">Urban Smog & Density (50 - 56)</span>
-          </div>
-          <div className="flex items-center gap-2 text-[10px]">
-            <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 shadow-sm shadow-cyan-500/50"></span>
-            <span className="text-white/80 font-medium">Moderate Strain (44 - 49)</span>
-          </div>
-          <div className="flex items-center gap-2 text-[10px]">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
-            <span className="text-white/80 font-medium">Baseline Cool (&lt; 44)</span>
-          </div>
+          {HEAT_TIERS.map(tier => (
+            <div key={tier.labelKey} className="flex items-center gap-2 text-[10px]">
+              <span className={`w-2.5 h-2.5 rounded-full ${tier.dot}`}></span>
+              <span className="text-white/80 font-medium">
+                {t[tier.labelKey]}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -385,7 +379,7 @@ export default function MapModule({
             <button
               onClick={() => setYear(prev => Math.max(1995, prev - 1))}
               className="apple-chip p-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] text-white/80 border border-white/10"
-              title="Previous Year"
+              title={t.prevYearTitle}
             >
               <ChevronLeft className="w-3.5 h-3.5 rtl:rotate-180" />
             </button>
@@ -393,7 +387,7 @@ export default function MapModule({
             <button
               onClick={() => setYear(prev => Math.min(2025, prev + 1))}
               className="apple-chip p-2 rounded-full bg-white/[0.05] hover:bg-white/[0.1] text-white/80 border border-white/10"
-              title="Next Year"
+              title={t.nextYearTitle}
             >
               <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180" />
             </button>
@@ -421,9 +415,15 @@ export default function MapModule({
             className="slider-teal"
           />
           <div className="flex justify-between text-[11px] font-medium text-white/45 px-1 tabular-nums">
-            <span className="text-emerald-400/90 font-medium">1995 (Baseline: +0.0°C)</span>
-            <span className="text-amber-400/90 font-medium">2010 (Mid-Point: +0.65°C)</span>
-            <span className="text-rose-400/90 font-medium">2025 (Peak: +1.46°C)</span>
+            <span className="text-emerald-400/90 font-medium">
+              {t.yearBaselineCaption}
+            </span>
+            <span className="text-amber-400/90 font-medium">
+              {t.yearMidCaption}
+            </span>
+            <span className="text-rose-400/90 font-medium">
+              {t.yearPeakCaption}
+            </span>
           </div>
         </div>
       </div>

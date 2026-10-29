@@ -74,7 +74,7 @@ export default function TrendChartModule({
       labels: years,
       datasets: [
         {
-          label: `${t[`var_${selectedVar}`] || selectedVar} ${isAnomaly ? '(Anomaly)' : ''}`,
+          label: `${t[`var_${selectedVar}`] || selectedVar} ${isAnomaly ? t.anomalySuffix : ''}`,
           data: displaySeries,
           borderColor: '#0A84FF',
           backgroundColor: 'rgba(10, 132, 255, 0.08)',
@@ -88,7 +88,7 @@ export default function TrendChartModule({
           order: 2
         },
         {
-          label: 'OLS Linear Trendline',
+          label: t.trendlineOls,
           data: trendlineData,
           borderColor: '#FF453A',
           borderWidth: 1.8,
@@ -99,7 +99,7 @@ export default function TrendChartModule({
         }
       ]
     };
-  }, [years, displaySeries, regression, selectedVar, isAnomaly, currentYear, t]);
+  }, [years, displaySeries, regression, selectedVar, isAnomaly, currentYear, t, lang]);
 
   const chartOptions = {
     responsive: true,
@@ -162,7 +162,7 @@ export default function TrendChartModule({
       <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 bg-white/[0.03] backdrop-blur-xl p-3 rounded-2xl border border-white/[0.08]">
         
         {/* Governorate Selector */}
-        <div className="sm:col-span-4">
+        <div className="sm:col-span-3">
           <label className="text-[11px] font-medium text-white/50 block mb-1">
             {t.govSelectorLabel}
           </label>
@@ -180,7 +180,7 @@ export default function TrendChartModule({
         </div>
 
         {/* NASA Variable Selector */}
-        <div className="sm:col-span-5">
+        <div className="sm:col-span-6">
           <label className="text-[11px] font-medium text-white/50 block mb-1">
             {t.varSelectorLabel}
           </label>
@@ -208,93 +208,94 @@ export default function TrendChartModule({
             }`}
           >
             <Activity className="w-3.5 h-3.5" />
-            <span>{isAnomaly ? 'Anomaly Mode' : 'Raw Values'}</span>
+            <span>{isAnomaly ? t.anomalyMode : t.rawValues}</span>
           </button>
         </div>
 
       </div>
 
-      {/* Chart Canvas Container */}
-      <div className="apple-glass p-5 rounded-3xl min-h-[300px] flex-1 flex flex-col justify-between shadow-2xl">
-        <div className="flex items-center justify-between mb-2">
+      {/* Chart Canvas Bento Container */}
+      <div className="bento-card p-4 sm:p-5 min-h-[300px] flex-1 flex flex-col justify-between shadow-2xl">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
           <div className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-sky-400" />
-            <span className="text-xs font-semibold text-white/90">
+            <TrendingUp className="w-4 h-4 text-sky-400 shrink-0" />
+            <span className="text-xs font-semibold text-white/95">
               {govName} — {t[`var_${selectedVar}`] || selectedVar} (1995-2025)
             </span>
           </div>
-          <span className="text-[10px] text-white/40 tabular-nums font-medium">
-            {isAnomaly ? 'Baseline: 1995–2005' : 'Continuous 31-Yr Annual Orbit'}
+          <span className="satellite-chip text-[9px] text-white/50">
+            {isAnomaly ? t.anomalyBaselineChip : t.continuousOrbitChip}
           </span>
         </div>
 
-        <div className="h-[240px] w-full">
+        <div className="h-[230px] sm:h-[250px] w-full">
           <Line data={chartData} options={chartOptions} />
         </div>
       </div>
 
-      {/* Statistical Proof Card */}
-      <div className="apple-card p-4 space-y-3">
+      {/* Statistical Proof Bento Card */}
+      <div className="bento-card p-4 space-y-3">
         <div className="flex items-center justify-between border-b border-white/[0.08] pb-2">
           <div className="flex items-center gap-2">
-            <span className="w-5 h-5 rounded-md bg-white/[0.08] text-white/90 font-mono text-[10px] font-semibold flex items-center justify-center border border-white/10">
-              MK
+            <span className="satellite-chip text-sky-300 bg-sky-950/40 border-sky-800/40">
+              {t.mannKendallSuite}
             </span>
-            <h4 className="text-xs font-semibold text-white/90">{t.statTitle}</h4>
           </div>
 
           <button
             onClick={onOpenMath}
             className="text-[11px] text-sky-400 hover:text-sky-300 flex items-center gap-1 font-medium transition-colors"
           >
-            <Info className="w-3 h-3" />
-            <span>Methodology</span>
+            <Info className="w-3.5 h-3.5" />
+            <span>{t.methodologyLink}</span>
           </button>
         </div>
 
         {/* Significance Badge */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <span className={`inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-medium ${
             mkTest.isSignificant
               ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
               : 'bg-white/[0.05] text-white/50 border border-white/10'
           }`}>
             {mkTest.isSignificant ? <CheckCircle2 className="w-3.5 h-3.5" /> : <AlertCircle className="w-3.5 h-3.5" />}
-            <span>{mkTest.badgeText}</span>
+            <span>
+              {t[mkTest.badgeKey]}
+            </span>
           </span>
 
-          <span className="text-xs font-semibold text-white tabular-nums">
+          <span className="text-xs font-bold text-white telemetry-mono">
             {regression.ratePerDecade >= 0 ? '+' : ''}
-            {regression.ratePerDecade.toFixed(3)} / decade
+            {regression.ratePerDecade.toFixed(3)} {t.perDecade}
           </span>
         </div>
 
-        {/* Math Grid */}
+        {/* Telemetry Math Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs pt-1">
           <div className="bg-white/[0.03] p-2.5 rounded-xl border border-white/[0.06]">
-            <span className="text-[10px] text-white/40 block font-medium">{t.mkStatLabel}</span>
-            <span className="font-semibold text-white tabular-nums">
+            <span className="text-[10px] text-white/40 block font-medium mb-0.5">{t.mkStatLabel}</span>
+            <span className="font-bold text-white telemetry-mono text-sm">
               {mkTest.s > 0 ? `+${mkTest.s}` : mkTest.s}
             </span>
           </div>
 
           <div className="bg-white/[0.03] p-2.5 rounded-xl border border-white/[0.06]">
-            <span className="text-[10px] text-white/40 block font-medium">{t.zScoreLabel}</span>
-            <span className="font-semibold text-sky-400 tabular-nums">
+            <span className="text-[10px] text-white/40 block font-medium mb-0.5">{t.zScoreLabel}</span>
+            <span className="font-bold text-sky-400 telemetry-mono text-sm">
               {mkTest.z.toFixed(2)}
             </span>
           </div>
 
           <div className="bg-white/[0.03] p-2.5 rounded-xl border border-white/[0.06]">
-            <span className="text-[10px] text-white/40 block font-medium">{t.pValueLabel}</span>
-            <span className="font-semibold text-amber-300 tabular-nums">
+            <span className="text-[10px] text-white/40 block font-medium mb-0.5">{t.pValueLabel}</span>
+            <span className="font-bold text-amber-300 telemetry-mono text-sm">
               {mkTest.pValue < 0.0001 ? '< 0.0001' : mkTest.pValue.toFixed(4)}
             </span>
           </div>
 
           <div className="bg-white/[0.03] p-2.5 rounded-xl border border-white/[0.06]">
-            <span className="text-[10px] text-white/40 block font-medium">{t.ci95Label}</span>
-            <span className="font-semibold text-white/80 tabular-nums text-[11px]">
+            <span className="text-[10px] text-white/40 block font-medium mb-0.5">{t.ci95Label}</span>
+            <span className="font-bold text-white/80 telemetry-mono text-[11px]">
               [{regression.ci95Lower.toFixed(2)}, {regression.ci95Upper.toFixed(2)}]
             </span>
           </div>

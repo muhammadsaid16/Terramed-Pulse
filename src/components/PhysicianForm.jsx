@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Edit3, Send, CheckCircle2, MapPin, Building, AlertCircle } from 'lucide-react';
+import { Edit3, Send, CheckCircle2, MapPin, Building, Database } from 'lucide-react';
+import { SPECIALTY_SHORT_LABELS, specialtyLabel } from '../lib/specialties';
 
 export default function PhysicianForm({
   reports,
@@ -8,7 +9,9 @@ export default function PhysicianForm({
   selectedGov,
   preselectedSpecialty,
   lang,
-  t
+  t,
+  isDbConnected = false,
+  onOpenDbModal
 }) {
   const [formData, setFormData] = useState({
     doctor: '',
@@ -41,15 +44,15 @@ export default function PhysicianForm({
 
     const newReport = {
       id: `report-${Date.now()}`,
-      doctor: formData.doctor.trim() || (lang === 'ar' ? 'طبيب ميداني موثق' : 'Verified Field Doctor'),
+      doctor: formData.doctor.trim() || (t.defaultDoctor),
       specialty: formData.specialty,
       gov: formData.gov,
-      hospital: formData.hospital.trim() || (lang === 'ar' ? 'مستشفى جامعي / عام' : 'Public / University Hospital'),
+      hospital: formData.hospital.trim() || (t.defaultHospital),
       considering_migration: formData.considering_migration,
       primary_reason: formData.primary_reason,
       needed_support: formData.needed_support,
       severity: Number(formData.severity),
-      comment: formData.comment.trim() || (lang === 'ar' ? 'بلاغ سريري يرصد ضغطاً متزايداً على الرعاية الحرجة تزامناً مع موجة الحر.' : 'Routine clinical record reporting intense triage pressure during extreme weather.'),
+      comment: formData.comment.trim() || (t.defaultComment),
       date: new Date().toISOString().split('T')[0]
     };
 
@@ -69,16 +72,16 @@ export default function PhysicianForm({
   };
 
   return (
-    <section id="section-physicians" className="apple-glass p-6 sm:p-8 mb-8 space-y-6">
+    <section id="section-physicians" className="bento-card p-5 sm:p-8 mb-8 space-y-6">
       
       {/* Header */}
-      <div className="border-b border-white/[0.08] pb-4 flex items-center justify-between">
+      <div className="border-b border-white/[0.08] pb-4 flex flex-wrap items-center justify-between gap-2">
         <div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.2)]">
               <Edit3 className="w-4 h-4 text-sky-400" />
             </div>
-            <h2 className="text-xl font-semibold text-white tracking-tight">
+            <h2 className="text-lg sm:text-xl font-semibold text-white tracking-tight">
               {t.module3Title}
             </h2>
           </div>
@@ -86,6 +89,9 @@ export default function PhysicianForm({
             {t.module3Subtitle}
           </p>
         </div>
+        <span className="satellite-chip text-emerald-300 bg-emerald-950/40 border-emerald-800/40">
+          {t.feedBadge}
+        </span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -106,7 +112,7 @@ export default function PhysicianForm({
                 </label>
                 <input
                   type="text"
-                  placeholder="Dr. Ahmed / Anonymous"
+                  placeholder={t.phDoctorName}
                   value={formData.doctor}
                   onChange={(e) => setFormData({ ...formData, doctor: e.target.value })}
                   className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30 transition-colors"
@@ -142,14 +148,11 @@ export default function PhysicianForm({
                   onChange={(e) => setFormData({ ...formData, specialty: e.target.value })}
                   className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30"
                 >
-                  <option value="nephrology">{lang === 'ar' ? 'كلى وغسيل كلوي' : 'Nephrology'}</option>
-                  <option value="pulmonology">{lang === 'ar' ? 'أمراض صدرية' : 'Pulmonology'}</option>
-                  <option value="cardiology">{lang === 'ar' ? 'أمراض قلب' : 'Cardiology'}</option>
-                  <option value="emergency">{lang === 'ar' ? 'طوارئ ورعاية حرجة' : 'Emergency & Critical'}</option>
-                  <option value="pediatrics">{lang === 'ar' ? 'طب أطفال' : 'Pediatrics'}</option>
-                  <option value="geriatrics">{lang === 'ar' ? 'طب مسنين' : 'Geriatrics'}</option>
-                  <option value="dermatology_ophthalmology">{lang === 'ar' ? 'جلدية وعيون' : 'Derm / Eye'}</option>
-                  <option value="occupational_preventive">{lang === 'ar' ? 'صحة مهنية وطب أسرة' : 'Occupational'}</option>
+                  {SPECIALTY_SHORT_LABELS.map(spec => (
+                    <option key={spec.id} value={spec.id}>
+                      {lang === 'ar' ? spec.ar : spec.en}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -159,7 +162,7 @@ export default function PhysicianForm({
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Kasr Al-Ainy / Aswan Gen"
+                  placeholder={t.phHospital}
                   value={formData.hospital}
                   onChange={(e) => setFormData({ ...formData, hospital: e.target.value })}
                   className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30 transition-colors"
@@ -182,52 +185,51 @@ export default function PhysicianForm({
                     key={opt.id}
                     type="button"
                     onClick={() => setFormData({ ...formData, considering_migration: opt.id })}
-                    className={`apple-chip py-1.5 px-2 rounded-full text-xs font-medium transition-all truncate text-center ${
+                    className={`apple-chip py-2 px-1 rounded-full text-xs font-medium transition-all text-center whitespace-nowrap ${
                       formData.considering_migration === opt.id
                         ? 'bg-white text-black font-semibold shadow-sm'
                         : 'text-white/60 hover:text-white'
                     }`}
                   >
-                    {opt.label}
+                    <span>{opt.label}</span>
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Primary Driver & Needed Support */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              <div>
-                <label className="text-[11px] font-medium text-white/50 block mb-1">
-                  {t.inputReason}
-                </label>
-                <select
-                  value={formData.primary_reason}
-                  onChange={(e) => setFormData({ ...formData, primary_reason: e.target.value })}
-                  className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30"
-                >
-                  <option value="salary">{t.reasonSalary}</option>
-                  <option value="burnout">{t.reasonBurnout}</option>
-                  <option value="equipment">{t.reasonEquipment}</option>
-                  <option value="workload">{t.reasonWorkload}</option>
-                  <option value="training">{t.reasonTraining}</option>
-                </select>
-              </div>
+            {/* Primary Driver */}
+            <div>
+              <label className="text-[11px] font-medium text-white/50 block mb-1">
+                {t.inputReason}
+              </label>
+              <select
+                value={formData.primary_reason}
+                onChange={(e) => setFormData({ ...formData, primary_reason: e.target.value })}
+                className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30"
+              >
+                <option value="salary">{t.reasonSalary}</option>
+                <option value="burnout">{t.reasonBurnout}</option>
+                <option value="equipment">{t.reasonEquipment}</option>
+                <option value="workload">{t.reasonWorkload}</option>
+                <option value="training">{t.reasonTraining}</option>
+              </select>
+            </div>
 
-              <div>
-                <label className="text-[11px] font-medium text-white/50 block mb-1">
-                  {t.inputSupport}
-                </label>
-                <select
-                  value={formData.needed_support}
-                  onChange={(e) => setFormData({ ...formData, needed_support: e.target.value })}
-                  className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30"
-                >
-                  <option value="incentive">{t.supportIncentive}</option>
-                  <option value="equipment">{t.supportEquipment}</option>
-                  <option value="training">{t.supportTraining}</option>
-                  <option value="housing">{t.supportHousing}</option>
-                </select>
-              </div>
+            {/* Needed Support */}
+            <div>
+              <label className="text-[11px] font-medium text-white/50 block mb-1">
+                {t.inputSupport}
+              </label>
+              <select
+                value={formData.needed_support}
+                onChange={(e) => setFormData({ ...formData, needed_support: e.target.value })}
+                className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30"
+              >
+                <option value="incentive">{t.supportIncentive}</option>
+                <option value="equipment">{t.supportEquipment}</option>
+                <option value="training">{t.supportTraining}</option>
+                <option value="housing">{t.supportHousing}</option>
+              </select>
             </div>
 
             {/* Severity Rating */}
@@ -240,11 +242,11 @@ export default function PhysicianForm({
                 onChange={(e) => setFormData({ ...formData, severity: Number(e.target.value) })}
                 className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30"
               >
-                <option value={5}>5 - Critical Crisis (★★★★★)</option>
-                <option value={4}>4 - Severe Burden (★★★★☆)</option>
-                <option value={3}>3 - Moderate Strain (★★★☆☆)</option>
-                <option value={2}>2 - Mild Impact (★★☆☆☆)</option>
-                <option value={1}>1 - Baseline (★☆☆☆☆)</option>
+                <option value={5}>{t.severity5}</option>
+                <option value={4}>{t.severity4}</option>
+                <option value={3}>{t.severity3}</option>
+                <option value={2}>{t.severity2}</option>
+                <option value={1}>{t.severity1}</option>
               </select>
             </div>
 
@@ -255,7 +257,7 @@ export default function PhysicianForm({
               </label>
               <textarea
                 rows={2}
-                placeholder="Describe patient influx, extreme heat/dust symptoms, or equipment shortages..."
+                placeholder={t.phComment}
                 value={formData.comment}
                 onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
                 className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30 resize-none font-normal"
@@ -285,13 +287,35 @@ export default function PhysicianForm({
 
         {/* Right: Live Reports Feed (7 cols) */}
         <div className="lg:col-span-7 flex flex-col space-y-3">
-          <div className="flex items-center justify-between px-1">
+          <div className="flex items-center justify-between px-1 flex-wrap gap-2">
             <span className="text-xs font-semibold text-white/90">
               {t.reportsFeedTitle}
             </span>
-            <span className="text-[11px] text-white/60 font-medium bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-white/10">
-              {t.feedSub} ({reports.length})
-            </span>
+            <div className="flex items-center gap-2">
+              {/* Cloud DB Sync Status & Config Modal Trigger */}
+              <button
+                type="button"
+                onClick={onOpenDbModal}
+                className={`inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-0.5 rounded-full border transition-all ${
+                  isDbConnected
+                    ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/25 hover:bg-emerald-500/20 shadow-sm'
+                    : 'bg-white/[0.04] text-white/70 border-white/10 hover:bg-white/[0.08]'
+                }`}
+                title={t.dbBadgeTooltip}
+              >
+                <Database className={`w-3 h-3 ${isDbConnected ? 'text-emerald-400' : 'text-amber-400'}`} />
+                <span>
+                  {isDbConnected
+                    ? (t.dbBadgeCloud)
+                    : (t.dbBadgeLocal)}
+                </span>
+                <span className="text-[10px] text-white/40">⚙</span>
+              </button>
+
+              <span className="text-[11px] text-white/60 font-medium bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-white/10">
+                {t.feedSub} ({reports.length})
+              </span>
+            </div>
           </div>
 
           <div className="space-y-3 max-h-[540px] overflow-y-auto pr-1">
@@ -299,10 +323,12 @@ export default function PhysicianForm({
               const govKey = rep.gov || rep.governorate;
               const govObj = governorates?.[govKey];
               const govName = govObj ? (lang === 'ar' ? govObj.name_ar : govObj.name_en) : govKey;
-              const docName = rep.doctor || (lang === 'ar' ? `طبيب استشاري #${idx + 1}` : `Consultant Physician #${idx + 1}`);
-              const hospitalName = rep.hospital || (lang === 'ar' ? `مستشفى عام / جامعي، ${govName}` : `General / University Hospital, ${govName}`);
+              const docName = rep.doctor || `${t.consultantPrefix}${idx + 1}`;
+              const hospitalName = rep.hospital || `${t.hospitalFallbackPrefix}${govName}`;
               const isMigrating = (rep.considering_migration || '').toLowerCase() === 'yes';
               const repDate = rep.date || `2026-0${(idx % 5) + 4}-${10 + (idx % 18)}`;
+
+              const displaySpecialty = specialtyLabel(rep.specialty, lang);
 
               return (
                 <div
@@ -315,14 +341,14 @@ export default function PhysicianForm({
                         {docName}
                       </span>
                       <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/[0.06] text-white/70 border border-white/10">
-                        {rep.specialty}
+                        {displaySpecialty}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-2">
                       {isMigrating && (
                         <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-300 border border-rose-500/20">
-                          {lang === 'ar' ? 'نية الهجرة' : 'Migration Intent'}
+                          {t.migrationIntentBadge}
                         </span>
                       )}
                       <span className="text-[10px] text-white/40 tabular-nums">

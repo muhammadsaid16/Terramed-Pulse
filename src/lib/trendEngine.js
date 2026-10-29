@@ -215,7 +215,7 @@ export function mannKendall(x) {
   if (n < 4) {
     return {
       s: 0, varS: 1, z: 0, pValue: 1.0, tau: 0,
-      direction: 'no_trend', isSignificant: false, badgeText: 'Insufficient Data'
+      direction: 'no_trend', isSignificant: false, badgeKey: 'sigInsufficient'
     };
   }
 
@@ -265,10 +265,10 @@ export function mannKendall(x) {
   else if (s < 0) direction = 'decreasing';
 
   const isSignificant = pValue < 0.05;
-  let badgeText = 'Non-Significant Fluctuation';
-  if (pValue < 0.001) badgeText = 'STATISTICALLY SIGNIFICANT TREND (p < 0.001, 99.9% Confidence)';
-  else if (pValue < 0.01) badgeText = 'STATISTICALLY SIGNIFICANT TREND (p < 0.01, 99% Confidence)';
-  else if (pValue < 0.05) badgeText = 'STATISTICALLY SIGNIFICANT TREND (p < 0.05, 95% Confidence)';
+  let badgeKey = 'sigNone';
+  if (pValue < 0.001) badgeKey = 'sigP999';
+  else if (pValue < 0.01) badgeKey = 'sigP99';
+  else if (pValue < 0.05) badgeKey = 'sigP95';
 
   return {
     s,
@@ -278,7 +278,7 @@ export function mannKendall(x) {
     tau,
     direction,
     isSignificant,
-    badgeText
+    badgeKey
   };
 }
 
@@ -333,8 +333,10 @@ export function minMaxNormalize(value, min, max, invert = false) {
   return Math.round(normalized * 10) / 10;
 }
 
+export const HNI_WEIGHTS = { epi: 0.35, ppi: 0.30, fsi: 0.20, wni: 0.15 };
+
 export function computeHNI(epi, ppi, fsi, wni) {
-  const score = (0.35 * epi) + (0.30 * ppi) + (0.20 * fsi) + (0.15 * wni);
+  const score = (HNI_WEIGHTS.epi * epi) + (HNI_WEIGHTS.ppi * ppi) + (HNI_WEIGHTS.fsi * fsi) + (HNI_WEIGHTS.wni * wni);
   return Math.round(score * 10) / 10;
 }
 
@@ -470,7 +472,7 @@ export function simulatePolicyInterventions(baseHni, baseEpi, baseFsi, baseWni, 
   const simFsi = Math.max(10, baseFsi - fsiReduction);
   const simWni = Math.max(10, baseWni - wniReduction);
 
-  const simHni = (0.35 * simEpi) + (0.30 * 50.0) + (0.20 * simFsi) + (0.15 * simWni);
+  const simHni = (HNI_WEIGHTS.epi * simEpi) + (HNI_WEIGHTS.ppi * 50.0) + (HNI_WEIGHTS.fsi * simFsi) + (HNI_WEIGHTS.wni * simWni);
   const deltaHni = simHni - baseHni;
 
   const preventedAdmissionsPerMonth = Math.round(

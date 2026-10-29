@@ -1,78 +1,99 @@
 import React from 'react';
 import { Flame, AlertTriangle, Stethoscope, ArrowLeftRight } from 'lucide-react';
 
+// Four KPI cards, one shape. Class strings stay literal so Tailwind's scanner keeps them.
+// `Value` is the only slot that genuinely differs between the cards.
+const KPIS = [
+  {
+    id: 'warming',
+    chipClass: 'satellite-chip text-rose-300/80 bg-rose-950/40 border-rose-800/40',
+    chipLabelKey: 'kpiChipPower',
+    iconBoxClass: 'w-7 h-7 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400',
+    Icon: Flame,
+    labelKey: 'kpiWarmingLabel',
+    valueClass: 'text-3xl font-bold tracking-tight text-white telemetry-mono',
+    Value: ({ t }) => t.kpiWarmingRate,
+    dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse',
+    subClass: 'text-xs text-rose-400/80 mt-1.5 font-medium flex items-center gap-1',
+    subKey: 'kpiWarmingSub',
+    glowClass: 'absolute top-0 right-0 w-24 h-24 bg-rose-500/5 rounded-full blur-2xl pointer-events-none'
+  },
+  {
+    id: 'highest-need',
+    chipClass: 'satellite-chip text-amber-300/80 bg-amber-950/40 border-amber-800/40',
+    chipLabelKey: 'kpiChipModis',
+    iconBoxClass: 'w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400',
+    Icon: AlertTriangle,
+    labelKey: 'kpiHighestNeedLabel',
+    valueClass: 'text-2xl sm:text-3xl font-bold tracking-tight text-amber-300 telemetry-mono',
+    Value: ({ t }) => t.kpiHighestNeed,
+    dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-amber-400',
+    subClass: 'text-xs text-amber-400/80 mt-1.5 font-medium flex items-center gap-1',
+    subKey: 'kpiHighestNeedSub',
+    glowClass: 'absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl pointer-events-none'
+  },
+  {
+    id: 'field-doctors',
+    chipClass: 'satellite-chip text-sky-300/80 bg-sky-950/40 border-sky-800/40',
+    chipLabelKey: 'kpiChipField',
+    iconBoxClass: 'w-7 h-7 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400',
+    Icon: Stethoscope,
+    labelKey: 'kpiTotalDoctorsLabel',
+    valueClass: 'text-3xl font-bold tracking-tight text-white telemetry-mono',
+    Value: ({ t, reportsCount }) => (
+      <>
+        {reportsCount}+ <span className="text-sm font-normal text-white/50">{t.kpiTotalDoctors}</span>
+      </>
+    ),
+    dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-sky-400',
+    subClass: 'text-xs text-sky-400/80 mt-1.5 font-medium flex items-center gap-1',
+    subKey: 'kpiTotalDoctorsSub',
+    glowClass: 'absolute top-0 right-0 w-24 h-24 bg-sky-500/5 rounded-full blur-2xl pointer-events-none'
+  },
+  {
+    id: 'divergence',
+    chipClass: 'satellite-chip text-purple-300/80 bg-purple-950/40 border-purple-800/40',
+    chipLabelKey: 'kpiChipSpatial',
+    iconBoxClass: 'w-7 h-7 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400',
+    Icon: ArrowLeftRight,
+    labelKey: 'kpiTrendDivergenceLabel',
+    valueClass: 'text-xl sm:text-2xl font-bold tracking-tight text-white',
+    Value: ({ t }) => t.kpiTrendDivergence,
+    dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-purple-400',
+    subClass: 'text-xs text-purple-400/80 mt-1.5 font-medium flex items-center gap-1',
+    subKey: 'kpiTrendDivergenceSub',
+    glowClass: 'absolute top-0 right-0 w-24 h-24 bg-purple-500/5 rounded-full blur-2xl pointer-events-none'
+  }
+];
+
 export default function KpiStrip({ t, reportsCount = 45 }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      
-      {/* KPI 1: Warming Rate */}
-      <div className="apple-card p-5 relative overflow-hidden group">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-[11px] font-medium text-white/45 uppercase tracking-[0.05em]">
-            {t.kpiWarmingLabel}
-          </span>
-          <div className="w-8 h-8 rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
-            <Flame className="w-4 h-4" />
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 mb-8">
+      {KPIS.map(kpi => {
+        const Icon = kpi.Icon;
+        const Value = kpi.Value;
+        return (
+          <div key={kpi.id} className="bento-card p-5 relative overflow-hidden group">
+            <div className="flex items-center justify-between mb-3">
+              <span className={kpi.chipClass}>{t[kpi.chipLabelKey]}</span>
+              <div className={kpi.iconBoxClass}>
+                <Icon className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="text-xs text-white/50 mb-1 font-medium">
+              {t[kpi.labelKey]}
+            </div>
+            <div className={kpi.valueClass}>
+              <Value t={t} reportsCount={reportsCount} />
+            </div>
+            <p className={kpi.subClass}>
+              <span className={kpi.dotClass} />
+              {t[kpi.subKey]}
+            </p>
+            <div className={kpi.glowClass} />
           </div>
-        </div>
-        <div className="text-3xl font-semibold tracking-tight text-white tabular-nums">
-          {t.kpiWarmingRate}
-        </div>
-        <p className="text-xs text-white/45 mt-1 font-normal leading-normal">{t.kpiWarmingSub}</p>
-        <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/5 rounded-full blur-2xl pointer-events-none" />
-      </div>
-
-      {/* KPI 2: Highest Need */}
-      <div className="apple-card p-5 relative overflow-hidden group">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-[11px] font-medium text-white/45 uppercase tracking-[0.05em]">
-            {t.kpiHighestNeedLabel}
-          </span>
-          <div className="w-8 h-8 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-            <AlertTriangle className="w-4 h-4" />
-          </div>
-        </div>
-        <div className="text-3xl font-semibold tracking-tight text-white tabular-nums">
-          {t.kpiHighestNeed}
-        </div>
-        <p className="text-xs text-white/45 mt-1 font-normal leading-normal">{t.kpiHighestNeedSub}</p>
-        <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
-      </div>
-
-      {/* KPI 3: Verified Field Doctors */}
-      <div className="apple-card p-5 relative overflow-hidden group">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-[11px] font-medium text-white/45 uppercase tracking-[0.05em]">
-            {t.kpiTotalDoctorsLabel}
-          </span>
-          <div className="w-8 h-8 rounded-full bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
-            <Stethoscope className="w-4 h-4" />
-          </div>
-        </div>
-        <div className="text-3xl font-semibold tracking-tight text-white tabular-nums">
-          {reportsCount}+ <span className="text-lg font-normal text-white/50">{t.kpiTotalDoctors}</span>
-        </div>
-        <p className="text-xs text-white/45 mt-1 font-normal leading-normal">{t.kpiTotalDoctorsSub}</p>
-        <div className="absolute top-0 right-0 w-24 h-24 bg-sky-500/5 rounded-full blur-2xl pointer-events-none" />
-      </div>
-
-      {/* KPI 4: Climate Divergence */}
-      <div className="apple-card p-5 relative overflow-hidden group">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-[11px] font-medium text-white/45 uppercase tracking-[0.05em]">
-            {t.kpiTrendDivergenceLabel}
-          </span>
-          <div className="w-8 h-8 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
-            <ArrowLeftRight className="w-4 h-4" />
-          </div>
-        </div>
-        <div className="text-2xl font-semibold tracking-tight text-white leading-tight">
-          {t.kpiTrendDivergence}
-        </div>
-        <p className="text-xs text-white/45 mt-1 font-normal leading-normal">{t.kpiTrendDivergenceSub}</p>
-        <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/5 rounded-full blur-2xl pointer-events-none" />
-      </div>
-
+        );
+      })}
     </div>
   );
 }

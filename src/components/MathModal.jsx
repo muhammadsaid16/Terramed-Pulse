@@ -1,5 +1,5 @@
 import React from 'react';
-import { HelpCircle, X, CheckCircle, Calculator } from 'lucide-react';
+import { X, Calculator } from 'lucide-react';
 
 export default function MathModal({ isOpen, onClose, t }) {
   if (!isOpen) return null;

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Stethoscope, HeartPulse, Wind, AlertCircle, Baby, Users, ShieldAlert, Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Stethoscope, HeartPulse, Wind, AlertCircle, Baby, Users, ShieldAlert, Sparkles, CheckCircle2 } from 'lucide-react';
 import { matchSpecialty } from '../lib/trendEngine';
 
 export default function DoctorMatcher({
@@ -32,16 +32,16 @@ export default function DoctorMatcher({
   const currentSpecialtyObj = specialties.find(s => s.id === selectedSpecialty);
 
   return (
-    <section id="section-doctor" className="apple-glass p-6 sm:p-8 mb-8 space-y-6">
+    <section id="section-doctor" className="bento-card p-5 sm:p-8 mb-8 space-y-6">
       
       {/* Module Header */}
-      <div className="border-b border-white/[0.08] pb-4 flex items-center justify-between">
+      <div className="border-b border-white/[0.08] pb-4 flex flex-wrap items-center justify-between gap-2">
         <div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.2)]">
               <Stethoscope className="w-4 h-4 text-sky-400" />
             </div>
-            <h2 className="text-xl font-semibold text-white tracking-tight">
+            <h2 className="text-lg sm:text-xl font-semibold text-white tracking-tight">
               {t.module2Title}
             </h2>
           </div>
@@ -49,6 +49,9 @@ export default function DoctorMatcher({
             {t.module2Subtitle}
           </p>
         </div>
+        <span className="satellite-chip text-sky-300 bg-sky-950/40 border-sky-800/40">
+          {t.impactChip}
+        </span>
       </div>
 
       {/* Specialty Selector Pills */}
@@ -71,7 +74,7 @@ export default function DoctorMatcher({
                 }`}
               >
                 <Icon className={`w-4 h-4 shrink-0 ${isSelected ? 'text-black' : 'text-white/50'}`} />
-                <span className="text-xs truncate font-medium">
+                <span className="text-xs font-medium leading-tight">
                   {lang === 'ar' ? spec.label_ar : spec.label_en}
                 </span>
               </button>
@@ -112,13 +115,13 @@ export default function DoctorMatcher({
             </h4>
             <div className="flex flex-wrap gap-2 text-[10px] font-medium">
               <span className="px-3 py-1 rounded-full bg-rose-500/10 text-rose-300 border border-rose-500/20">
-                NASA POWER T2M_MAX &gt; 42°C
+                {t.driverHeat}
               </span>
               <span className="px-3 py-1 rounded-full bg-sky-500/10 text-sky-300 border border-sky-500/20">
-                MERRA-2 AOD / PM2.5 Spikes
+                {t.driverAod}
               </span>
               <span className="px-3 py-1 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/20">
-                GLDAS Aridification
+                {t.driverGlas}
               </span>
             </div>
           </div>
@@ -174,14 +177,14 @@ export default function DoctorMatcher({
                       {lang === 'ar' ? r.name_ar : r.name_en}
                     </span>
                     <span className="text-[10px] text-white/45 block tabular-nums font-normal mt-0.5">
-                      HNI Score: {r.hni}
+                      {t.hniScoreLabel}: {r.hni}
                     </span>
                   </div>
                 </div>
 
                 <div className="text-right rtl:text-left">
                   <span className="text-xs font-semibold text-white tabular-nums bg-white/[0.06] px-3 py-1 rounded-full border border-white/10">
-                    {r.match_pct}% Match
+                    {r.match_pct}% {t.matchWord}
                   </span>
                 </div>
               </div>

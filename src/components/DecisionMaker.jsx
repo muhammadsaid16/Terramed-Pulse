@@ -9,8 +9,15 @@ import {
   Legend
 } from 'chart.js';
 import { Doughnut, Bar } from 'react-chartjs-2';
-import { Sliders, ShieldCheck, TrendingDown, Users, HeartHandshake, BarChart3, PieChart, Sparkles } from 'lucide-react';
+import { Sliders, ShieldCheck, BarChart3, PieChart } from 'lucide-react';
 import { simulatePolicyInterventions } from '../lib/trendEngine';
+import {
+  buildTurnoverChartData,
+  buildMigrationChartData,
+  buildPriorityChartData,
+  doughnutChartOptions,
+  barChartOptions
+} from '../lib/chartAdapters';
 
 ChartJS.register(
   ArcElement,
@@ -22,7 +29,6 @@ ChartJS.register(
 );
 
 export default function DecisionMaker({
-  selectedGov,
   govData,
   allGovs,
   reports,
@@ -55,118 +61,36 @@ export default function DecisionMaker({
   }, [baseIndices, clinics, stipendPct, greeningPct]);
 
   // Executive Chart 1: Primary Drivers of Turnover (computed live from reports)
-  const turnoverChartData = useMemo(() => {
-    const counts = {
-      salary: 0,
-      burnout: 0,
-      equipment: 0,
-      workload: 0,
-      training: 0
-    };
-
-    reports.forEach(r => {
-      const reason = (r.primary_reason || 'salary').toLowerCase();
-      if (counts[reason] !== undefined) counts[reason]++;
-      else counts.salary++;
-    });
-
-    const labels = lang === 'ar'
-      ? ['الراتب والمعيشة', 'بيئة العمل والإرهاق', 'نقص الأجهزة', 'التكدس السكاني', 'غياب التدريب']
-      : ['Salary & Living', 'Burnout & Environment', 'Medical Equipment', 'Workload & Pop', 'Training Gap'];
-
-    return {
-      labels,
-      datasets: [
-        {
-          data: [counts.salary, counts.burnout, counts.equipment, counts.workload, counts.training],
-          backgroundColor: [
-            '#FF453A', // Apple Red
-            '#FF9F0A', // Apple Orange
-            '#0A84FF', // Apple Blue
-            '#BF5AF2', // Apple Purple
-            '#30D158'  // Apple Mint
-          ],
-          borderColor: '#07090F',
-          borderWidth: 2
-        }
-      ]
-    };
-  }, [reports, lang]);
+  const turnoverChartData = useMemo(
+    () => buildTurnoverChartData(reports, lang, t),
+    [reports, lang, t]
+  );
 
   // Executive Chart 2: Migration Risk vs Climate Demand
-  const migrationChartData = useMemo(() => {
-    const specialtiesList = ['nephrology', 'pulmonology', 'cardiology', 'emergency', 'pediatrics'];
-    const specLabels = lang === 'ar'
-      ? ['كلى', 'صدرية', 'قلب', 'طوارئ', 'أطفال']
-      : ['Nephrology', 'Pulmonology', 'Cardiology', 'Emergency', 'Pediatrics'];
-
-    const riskValues = specialtiesList.map((spec, i) => {
-      const specReports = reports.filter(r => (r.specialty || '').toLowerCase().includes(spec));
-      if (!specReports.length) return 40 + i * 8;
-      const migrating = specReports.filter(r => (r.considering_migration || '').toLowerCase() === 'yes').length;
-      return Math.round((migrating / specReports.length) * 100);
-    });
-
-    const demandValues = [85, 78, 72, 90, 68];
-
-    return {
-      labels: specLabels,
-      datasets: [
-        {
-          label: lang === 'ar' ? 'مؤشر خطورة الهجرة (%)' : 'Migration Risk (%)',
-          data: riskValues,
-          backgroundColor: 'rgba(255, 69, 58, 0.85)',
-          borderRadius: 6
-        },
-        {
-          label: lang === 'ar' ? 'الحاجة المناخية السريرية (%)' : 'Climate Demand (%)',
-          data: demandValues,
-          backgroundColor: 'rgba(10, 132, 255, 0.85)',
-          borderRadius: 6
-        }
-      ]
-    };
-  }, [reports, lang]);
+  const migrationChartData = useMemo(
+    () => buildMigrationChartData(reports, lang, t),
+    [reports, lang, t]
+  );
 
   // Executive Chart 3: Governorate Priority Matrix (Comparative)
-  const priorityChartData = useMemo(() => {
-    const govKeys = Object.keys(allGovs || {});
-    const labels = govKeys.map(k => lang === 'ar' ? allGovs[k].name_ar : allGovs[k].name_en);
-    const hniValues = govKeys.map(k => Math.round(allGovs[k].baseline_indices?.hni || 50));
-    const epiValues = govKeys.map(k => Math.round(allGovs[k].baseline_indices?.epi || 50));
-
-    return {
-      labels,
-      datasets: [
-        {
-          label: lang === 'ar' ? 'مؤشر الحاجة الصحية الكلي (HNI)' : 'Overall Health Need (HNI)',
-          data: hniValues,
-          backgroundColor: 'rgba(10, 132, 255, 0.85)',
-          borderRadius: 6
-        },
-        {
-          label: lang === 'ar' ? 'الإجهاد البيئي والمناخي (EPI)' : 'Climate Stress (EPI)',
-          data: epiValues,
-          backgroundColor: 'rgba(255, 159, 10, 0.85)',
-          borderRadius: 6
-        }
-      ]
-    };
-  }, [allGovs, lang]);
+  const priorityChartData = useMemo(
+    () => buildPriorityChartData(allGovs, lang, t),
+    [allGovs, lang, t]
+  );
 
   const govName = lang === 'ar' ? govData?.name_ar : govData?.name_en;
 
   return (
-    <section id="section-decision" className="apple-glass p-6 sm:p-8 mb-8 space-y-6">
+    <section id="section-decision" className="bento-card p-5 sm:p-8 mb-8 space-y-6">
       
       {/* Header */}
-      <div className="border-b border-white/[0.08] pb-4 flex items-center justify-between">
+      <div className="border-b border-white/[0.08] pb-4 flex flex-wrap items-center justify-between gap-2">
         <div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.2)]">
               <Sliders className="w-4 h-4 text-sky-400" />
             </div>
-            <h2 className="text-xl font-semibold text-white tracking-tight">
+            <h2 className="text-lg sm:text-xl font-semibold text-white tracking-tight">
               {t.module4Title}
             </h2>
           </div>
@@ -174,6 +98,9 @@ export default function DecisionMaker({
             {t.module4Subtitle} — {govName}
           </p>
         </div>
+        <span className="satellite-chip text-sky-300 bg-sky-950/40 border-sky-800/40">
+          {t.mcdaChip}
+        </span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -199,7 +126,9 @@ export default function DecisionMaker({
                 {baseIndices.hni}
               </div>
             </div>
-            <div className="text-white/30 font-light text-2xl">→</div>
+            <div className="text-white/30 font-light text-2xl select-none" aria-hidden="true">
+              {lang === 'ar' ? '←' : '→'}
+            </div>
             <div className="text-center">
               <span className="text-[10px] text-emerald-400 block uppercase tracking-[0.05em] font-medium">
                 {t.simulatedHni}
@@ -211,8 +140,12 @@ export default function DecisionMaker({
           </div>
 
           <div className="text-center">
-            <span className="inline-block px-3.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 tabular-nums shadow-sm">
-              {sim.deltaHni} pts ({sim.pctReduction}% reduction)
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 tabular-nums shadow-sm">
+              <span dir="ltr" className="font-mono font-bold">{sim.deltaHni}</span>
+              <span>{t.unitPts}</span>
+              <span className="opacity-80">
+                (<span dir="ltr" className="font-mono">{sim.pctReduction}%</span> {t.reductionWord})
+              </span>
             </span>
           </div>
 
@@ -220,7 +153,9 @@ export default function DecisionMaker({
           <div className="space-y-3 pt-2 text-xs">
             <div>
               <div className="flex justify-between text-[11px] mb-1 font-medium">
-                <span className="text-white/70">Environmental Pressure (EPI - 35%)</span>
+                <span className="text-white/70">
+                  {t.sliderEpi}
+                </span>
                 <span className="text-rose-400 tabular-nums font-semibold">{sim.simEpi}</span>
               </div>
               <div className="w-full bg-white/[0.06] rounded-full h-1.5 overflow-hidden">
@@ -233,7 +168,9 @@ export default function DecisionMaker({
 
             <div>
               <div className="flex justify-between text-[11px] mb-1 font-medium">
-                <span className="text-white/70">Population Pressure (PPI - 30%)</span>
+                <span className="text-white/70">
+                  {t.sliderPpi}
+                </span>
                 <span className="text-amber-400 tabular-nums font-semibold">{baseIndices.ppi}</span>
               </div>
               <div className="w-full bg-white/[0.06] rounded-full h-1.5 overflow-hidden">
@@ -246,7 +183,9 @@ export default function DecisionMaker({
 
             <div>
               <div className="flex justify-between text-[11px] mb-1 font-medium">
-                <span className="text-white/70">Facility Shortage (FSI - 20%)</span>
+                <span className="text-white/70">
+                  {t.sliderFsi}
+                </span>
                 <span className="text-sky-400 tabular-nums font-semibold">{sim.simFsi}</span>
               </div>
               <div className="w-full bg-white/[0.06] rounded-full h-1.5 overflow-hidden">
@@ -259,7 +198,9 @@ export default function DecisionMaker({
 
             <div>
               <div className="flex justify-between text-[11px] mb-1 font-medium">
-                <span className="text-white/70">Physician Shortage (WNI - 15%)</span>
+                <span className="text-white/70">
+                  {t.sliderWni}
+                </span>
                 <span className="text-emerald-400 tabular-nums font-semibold">{sim.simWni}</span>
               </div>
               <div className="w-full bg-white/[0.06] rounded-full h-1.5 overflow-hidden">
@@ -385,13 +326,7 @@ export default function DecisionMaker({
             <div className="h-[180px] w-full flex items-center justify-center">
               <Doughnut
                 data={turnoverChartData}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: { position: 'bottom', labels: { boxWidth: 8, font: { size: 9 }, color: 'rgba(255,255,255,0.6)' } }
-                  }
-                }}
+                options={doughnutChartOptions()}
               />
             </div>
           </div>
@@ -407,17 +342,7 @@ export default function DecisionMaker({
             <div className="h-[180px] w-full">
               <Bar
                 data={migrationChartData}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: { position: 'bottom', labels: { boxWidth: 8, font: { size: 9 }, color: 'rgba(255,255,255,0.6)' } }
-                  },
-                  scales: {
-                    x: { ticks: { font: { size: 9 }, color: 'rgba(255,255,255,0.45)' }, grid: { display: false } },
-                    y: { max: 100, ticks: { font: { size: 9 }, color: 'rgba(255,255,255,0.45)' }, grid: { color: 'rgba(255,255,255,0.04)' } }
-                  }
-                }}
+                options={barChartOptions()}
               />
             </div>
           </div>
@@ -433,17 +358,7 @@ export default function DecisionMaker({
             <div className="h-[180px] w-full">
               <Bar
                 data={priorityChartData}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: { position: 'bottom', labels: { boxWidth: 8, font: { size: 9 }, color: 'rgba(255,255,255,0.6)' } }
-                  },
-                  scales: {
-                    x: { ticks: { font: { size: 9 }, color: 'rgba(255,255,255,0.45)' }, grid: { display: false } },
-                    y: { max: 100, ticks: { font: { size: 9 }, color: 'rgba(255,255,255,0.45)' }, grid: { color: 'rgba(255,255,255,0.04)' } }
-                  }
-                }}
+                options={barChartOptions()}
               />
             </div>
           </div>

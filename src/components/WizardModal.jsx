@@ -11,6 +11,24 @@ export default function WizardModal({ isOpen, onClose, t, onApplyPreset }) {
     onClose();
   };
 
+  const presets = [
+    {
+      id: 1,
+      label: t.demo1,
+      sub: t.demoSub1
+    },
+    {
+      id: 2,
+      label: t.demo2,
+      sub: t.demoSub2
+    },
+    {
+      id: 3,
+      label: t.demo3,
+      sub: t.demoSub3
+    }
+  ];
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
       <div className="bg-[#090C15]/95 backdrop-blur-3xl border border-white/12 rounded-3xl max-w-xl w-full p-6 modal-spring space-y-5 shadow-2xl">
@@ -100,11 +118,7 @@ export default function WizardModal({ isOpen, onClose, t, onApplyPreset }) {
               {t.step2Desc}
             </p>
             <div className="space-y-2 pt-1">
-              {[
-                { id: 1, label: t.demo1, sub: 'Extreme heat escalations driving acute renal decompensation in Upper Egypt.' },
-                { id: 2, label: t.demo2, sub: 'Mediterranean coastal sea-spray and atmospheric aerosol shifting.' },
-                { id: 3, label: t.demo3, sub: 'Dense urban microclimates and particulate loading in Greater Cairo.' }
-              ].map(preset => (
+              {presets.map(preset => (
                 <div
                   key={preset.id}
                   onClick={() => handleFinish(preset.id)}

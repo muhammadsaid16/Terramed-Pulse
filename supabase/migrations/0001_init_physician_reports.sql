@@ -96,7 +96,36 @@ CREATE INDEX IF NOT EXISTS physician_reports_gov_idx
 
 ALTER TABLE public.physician_reports ENABLE ROW LEVEL SECURITY;
 
--- The PostgREST schema cache must be told a new table exists, otherwise the very
--- first request from the client returns HTTP 404 "relation does not exist" even
--- though the table is present.
+-- The PostgREST schema cache must be told a new table exists, otherwise requests from
+-- the client keep returning HTTP 404 with code PGRST205, "Could not find the table
+-- 'public.physician_reports' in the schema cache", even though the table is present.
 NOTIFY pgrst, 'reload schema';
+
+-- -----------------------------------------------------------------------------
+-- Read-only verification, run this AFTER the migration to confirm the posture.
+-- It changes nothing; it is here so "secure by default" is a checked fact rather
+-- than an assumption. Expect: relrowsecurity = true, zero policy rows, and no
+-- grant row for role `anon` on this table.
+--
+--   select c.relname, c.relrowsecurity, c.relforcerowsecurity
+--     from pg_class c join pg_namespace n on n.oid = c.relnamespace
+--    where n.nspname = 'public' and c.relname = 'physician_reports';
+--
+--   select polname, polcmd, roles::text, polqual is not null as has_qual
+--     from pg_policies where tablename = 'physician_reports';
+--
+--   select grantee, privilege_type
+--     from information_schema.role_table_grants
+--    where table_name = 'physician_reports';
+--
+-- Then confirm from outside the database, with the anon key the browser holds:
+--   curl -s -o /dev/null -w '%{http_code}\n' \
+--     -H "apikey: $ANON" -H "Authorization: Bearer $ANON" \
+--     "$URL/rest/v1/physician_reports?select=id&limit=1"        -> 200 with []
+--   curl -s -w '\n%{http_code}\n' -X POST \
+--     -H "apikey: $ANON" -H "Authorization: Bearer $ANON" -H 'Content-Type: application/json' \
+--     -d '{"id":"probe","specialty":"probe","gov":"cairo"}' \
+--     "$URL/rest/v1/physician_reports"                           -> 401/403
+-- A 2xx on the POST means an over-permissive policy is live; drop it before
+-- shipping, since the rows name physicians and record migration intent.
+-- -----------------------------------------------------------------------------

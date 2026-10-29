@@ -84,9 +84,10 @@ async function classifyResponse(res) {
     /* plain-text or HTML error body; keep the raw snippet */
   }
 
-  // 42P01 = PostgreSQL undefined_table. Supabase also returns 404 for a table that
-  // exists but is not yet in PostgREST's relationship cache.
-  if (res.status === 404 || code === '42P01') {
+  // Absent table. 42P01 is PostgreSQL undefined_table; PGRST205 is PostgREST's own
+  // "not in my schema cache", which is what a project with the table never created
+  // actually returns (observed: HTTP 404 + PGRST205). Both mean "not usable here".
+  if (res.status === 404 || code === '42P01' || code === 'PGRST205') {
     schemaUnavailableThisSession = true;
     return { state: SYNC_STATE.SCHEMA_MISSING, detail: message };
   }

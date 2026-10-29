@@ -126,9 +126,13 @@ export default function MapModule({
   const [mapReady, setMapReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const playIntervalRef = useRef(null);
-  // 'unknown' until the first tile answers, then 'online' or 'unavailable'.
-  const [basemapState, setBasemapState] = useState('unknown');
-  const basemapSettledRef = useRef(false);
+  // Driven by what is actually on screen, not by a one-shot verdict: the credit must
+  // stay up while any Esri tile is displayed, and the offline notice must stay down
+  // while the basemap is still rendering. Both flip at most twice per transition.
+  const [creditedTilesVisible, setCreditedTilesVisible] = useState(false);
+  const [basemapNoticeVisible, setBasemapNoticeVisible] = useState(false);
+  const creditedRef = useRef(false);
+  const erroredTilesRef = useRef(0);
 
   // Initialize Map
   useEffect(() => {
@@ -156,18 +160,27 @@ export default function MapModule({
     }).addTo(map);
 
     // Tiles come from Esri, so an air-gapped machine loses the basemap but keeps every
-    // overlay. Leaflet does not retry a failed tile, so the only thing to control here is
-    // reporting: settle on the first definitive answer and ignore the rest, otherwise each
-    // visible tile error would re-render the module.
-    basemap.on('tileload', () => {
-      if (basemapSettledRef.current) return;
-      basemapSettledRef.current = true;
-      setBasemapState('online');
-    });
+    // overlay. Leaflet never retries a failed tile, so the only thing to get right here is
+    // reporting. Read the live DOM rather than trusting the first event: a single erroring
+    // tile among many that load fine is a partial failure, not an offline basemap, and the
+    // attribution has to stay visible for the tiles that did render.
+    const syncBasemapUi = () => {
+      const el = mapContainerRef.current;
+      if (!el) return;
+      const visible = el.querySelectorAll('.leaflet-tile-loaded').length > 0;
+      if (visible !== creditedRef.current) {
+        creditedRef.current = visible;
+        setCreditedTilesVisible(visible);
+      }
+      const notice = !visible && erroredTilesRef.current > 0;
+      setBasemapNoticeVisible(prev => (prev === notice ? prev : notice));
+    };
+
+    basemap.on('tileload', syncBasemapUi);
+    basemap.on('tileunload', syncBasemapUi);
     basemap.on('tileerror', () => {
-      if (basemapSettledRef.current) return;
-      basemapSettledRef.current = true;
-      setBasemapState('unavailable');
+      erroredTilesRef.current += 1;
+      syncBasemapUi();
     });
 
     L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -183,8 +196,10 @@ export default function MapModule({
 
     return () => {
       clearTimeout(timer);
-      basemapSettledRef.current = false;
-      setBasemapState('unknown');
+      creditedRef.current = false;
+      erroredTilesRef.current = 0;
+      setCreditedTilesVisible(false);
+      setBasemapNoticeVisible(false);
       setMapReady(false);
       if (layerGroupRef.current) {
         layerGroupRef.current.clearLayers();
@@ -202,8 +217,8 @@ export default function MapModule({
   useEffect(() => {
     const el = mapContainerRef.current;
     if (!el) return;
-    el.classList.toggle('basemap-unavailable', basemapState === 'unavailable');
-  }, [basemapState]);
+    el.classList.toggle('basemap-unavailable', !creditedTilesVisible);
+  }, [creditedTilesVisible]);
 
   // Synchronize Official GeoJSON Boundaries and Pulse Markers
   useEffect(() => {
@@ -357,7 +372,7 @@ export default function MapModule({
       <div className="relative flex-1 min-h-[420px] rounded-3xl overflow-hidden border border-white/[0.08] shadow-2xl">
         <div ref={mapContainerRef} className="w-full h-full min-h-[420px]" />
 
-        {basemapState === 'unavailable' && (
+        {basemapNoticeVisible && (
           <div
             role="status"
             aria-live="polite"
@@ -371,10 +386,10 @@ export default function MapModule({
         )}
 
         {/* Basemap credit. Leaflet's attribution control is switched off for the dark UI,
-            so the Esri tile source has to be credited here instead. Lifted above the
-            bottom-right zoom stack, which it would otherwise sit under, and dropped when
-            no Esri tile is on screen. */}
-        {basemapState !== 'unavailable' && (
+            so the Esri tile source has to be credited here instead. Shown exactly while an
+            Esri tile is on screen, and lifted above the bottom-right zoom stack it would
+            otherwise sit under. */}
+        {creditedTilesVisible && (
           <div className="absolute bottom-[78px] right-2 z-[400] px-1.5 py-0.5 rounded-md bg-black/45 text-[9px] leading-none text-white/45 pointer-events-none">
             © Esri — Source: Esri, Maxar, Earthstar Geographics
           </div>

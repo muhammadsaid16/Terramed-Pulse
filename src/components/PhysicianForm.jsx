@@ -32,7 +32,7 @@ export default function PhysicianForm({
   const [formData, setFormData] = useState({
     doctor: '',
     specialty: preselectedSpecialty || 'nephrology',
-    gov: selectedGov || 'aswan',
+    gov: selectedGov || '',
     hospital: '',
     considering_migration: 'hesitant',
     primary_reason: 'salary',
@@ -40,6 +40,8 @@ export default function PhysicianForm({
     severity: 4,
     comment: ''
   });
+
+  const [errors, setErrors] = useState({});
 
   React.useEffect(() => {
     if (selectedGov) {
@@ -58,17 +60,30 @@ export default function PhysicianForm({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const newErrors = {};
+    const required = (field) => (lang === 'ar' ? `هذا الحقل مطلوب: ${field}` : `${field} is required`);
+    if (!formData.doctor.trim()) newErrors.doctor = required(t.inputDoctorName);
+    if (!formData.gov) newErrors.gov = required(t.inputGov);
+    if (!formData.hospital.trim()) newErrors.hospital = required(lang === 'ar' ? 'المستشفى' : 'Hospital');
+    if (!formData.comment.trim()) newErrors.comment = required(lang === 'ar' ? 'التعليق' : 'Comment');
+
+    if (Object.keys(newErrors).length) {
+      setErrors(newErrors);
+      return;
+    }
+    setErrors({});
+
     const newReport = {
       id: `report-${Date.now()}`,
-      doctor: formData.doctor.trim() || (t.defaultDoctor),
+      doctor: formData.doctor.trim(),
       specialty: formData.specialty,
       gov: formData.gov,
-      hospital: formData.hospital.trim() || (t.defaultHospital),
+      hospital: formData.hospital.trim(),
       considering_migration: formData.considering_migration,
       primary_reason: formData.primary_reason,
       needed_support: formData.needed_support,
       severity: Number(formData.severity),
-      comment: formData.comment.trim() || (t.defaultComment),
+      comment: formData.comment.trim(),
       date: new Date().toISOString().split('T')[0]
     };
 
@@ -157,6 +172,9 @@ export default function PhysicianForm({
                   onChange={(e) => setFormData({ ...formData, gov: e.target.value })}
                   className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30"
                 >
+                  <option value="" disabled>
+                    {lang === 'ar' ? 'اختر محافظة' : 'Select governorate'}
+                  </option>
                   {Object.keys(governorates || {}).map(id => (
                     <option key={id} value={id}>
                       {lang === 'ar' ? governorates[id].name_ar : governorates[id].name_en}
@@ -299,6 +317,14 @@ export default function PhysicianForm({
                 </span>
               )}
             </div>
+
+            {Object.keys(errors).length > 0 && (
+              <div className="text-[11px] text-rose-300 bg-rose-500/10 border border-rose-500/20 rounded-xl px-3 py-2 space-y-1">
+                {Object.values(errors).map((msg, i) => (
+                  <div key={i}>{msg}</div>
+                ))}
+              </div>
+            )}
 
             {/* Submit Button */}
             <button

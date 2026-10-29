@@ -336,7 +336,7 @@ export default function PrintBrief({
             {migrationPct !== null && (isAr ? '(بسبب فجوة الحوافز)' : '(Due to compensation gap)')}
           </div>
           <div>
-            <b>{isAr ? 'المطلب التدخلي الأول للأطباء:' : 'Primary Doctor Demand:'}</b>{' '}
+            <b>{isAr ? 'المطلب التدخلي الأول للأطباء (أولوية سياساتية نموذجية، وليست بيانات ميدانية):' : 'Primary Doctor Demand (modeled policy priority, not measured field data):'}</b>{' '}
             <span className="font-semibold">{isAr ? 'بدل جذب نائي + بيئة عمل آمنة' : 'Hardship stipends & ICU supplies'}</span>
           </div>
         </div>

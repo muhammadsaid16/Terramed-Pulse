@@ -42,9 +42,17 @@ export default function App() {
     try {
       const urlGov = new URLSearchParams(window.location.search).get('gov');
       if (urlGov && TERRAPULSE_DATA.governorates[urlGov]) return urlGov;
+      const saved = localStorage.getItem('terrapulse_selected_gov');
+      if (saved && TERRAPULSE_DATA.governorates[saved]) return saved;
     } catch {}
-    return 'aswan';
+    return '';
   });
+  useEffect(() => {
+    try {
+      if (selectedGov) localStorage.setItem('terrapulse_selected_gov', selectedGov);
+      else localStorage.removeItem('terrapulse_selected_gov');
+    } catch {}
+  }, [selectedGov]);
   const [selectedVar, setSelectedVar] = useState('T2M_MAX');
   const [year, setYear] = useState(2025);
   const [mapMetric, setMapMetric] = useState('hni');

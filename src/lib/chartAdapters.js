@@ -52,17 +52,17 @@ const MIGRATION_SERIES = [
   { id: 'pediatrics', en: 'Pediatrics', ar: 'أطفال' }
 ];
 
-const CLINICAL_DEMAND_PCT = [85, 78, 72, 90, 68];
-
 export function buildMigrationChartData(reports, lang, t) {
   // A specialty with no reports has no migration rate. The old code returned
   // `40 + i * 8` for those bars, which is a fabricated ranking, so a specialty is
   // plotted only when it has at least one report behind it.
-  const series = MIGRATION_SERIES.map((spec, i) => {
+  // Only measured field data (physician reports) is plotted. There is no defensible
+  // source for a "clinical demand" series, so no such series is fabricated.
+  const series = MIGRATION_SERIES.map((spec) => {
     const specReports = reports.filter(r => (r.specialty || '').toLowerCase().includes(spec.id));
     if (!specReports.length) return null;
     const migrating = specReports.filter(r => (r.considering_migration || '').toLowerCase() === 'yes').length;
-    return { spec, risk: Math.round((migrating / specReports.length) * 100), demand: CLINICAL_DEMAND_PCT[i] };
+    return { spec, risk: Math.round((migrating / specReports.length) * 100) };
   }).filter(Boolean);
 
   if (!series.length) return null;
@@ -74,12 +74,6 @@ export function buildMigrationChartData(reports, lang, t) {
         label: t.chartMigrationRisk,
         data: series.map(x => x.risk),
         backgroundColor: 'rgba(255, 69, 58, 0.85)',
-        borderRadius: 6
-      },
-      {
-        label: t.chartClimateDemand,
-        data: series.map(x => x.demand),
-        backgroundColor: 'rgba(10, 132, 255, 0.85)',
         borderRadius: 6
       }
     ]

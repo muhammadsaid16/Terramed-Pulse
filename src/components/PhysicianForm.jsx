@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import { Edit3, Send, CheckCircle2, MapPin, Building, Database } from 'lucide-react';
 import { SPECIALTY_SHORT_LABELS, specialtyLabel } from '../lib/specialties';
-
-// Mirrors the WITH CHECK clause in supabase/migrations/0001_init_physician_reports.sql.
-// The browser stops the input where the policy stops the row, so a long note cannot
-// become a submission the server rejects after the user pressed Send.
-const LIMITS = { doctor: 120, hospital: 160, comment: 1000 };
+import { LIMITS } from '../lib/reportLimits';
 
 export default function PhysicianForm({
   reports,
@@ -22,16 +18,17 @@ export default function PhysicianForm({
   const syncBadge = {
     local: t.dbBadgeLocal,
     pending: t.syncPending,
-    ok: t.dbBadgeCloud,
-    schema_missing: t.syncSchemaMissing,
-    read_denied: t.syncSubmitOnly,
-    forbidden: t.syncForbidden,
+    read_blocked: t.syncSubmitOnly,
+    rate_limited: t.syncRateLimited,
+    rejected: t.syncRejected,
     unreachable: t.syncUnreachable,
     error: t.syncError
   }[syncState] || t.syncError;
-  // Only a table the app actually reached counts as "synced"; pending and every
-  // failure state read as local mode so the badge cannot over-report.
-  const cloudActive = syncState === 'ok';
+  // The badge describes the endpoint, not this report: `read_blocked` is the shipped
+  // posture (writes accepted, reads do not exist), and it is the only state that colours
+  // the chip green. A 201 on one submission never changes it, because one successful
+  // write does not prove the app can talk to the store in general.
+  const writesEnabled = syncState === 'read_blocked';
   const [formData, setFormData] = useState({
     doctor: '',
     specialty: preselectedSpecialty || 'nephrology',
@@ -78,14 +75,18 @@ export default function PhysicianForm({
     const result = await onAddReport(newReport);
     const state = result?.state;
 
-    // The toast names the storage the report actually landed in. A rejected cloud
-    // write is reported as such even though the local copy succeeded.
+    // The toast names the storage the report actually landed in. A rejected or
+    // rate-limited cloud write is reported as such even though the local copy succeeded;
+    // the quota gets its own sentence because "error" would send a physician to look for
+    // a bug when the real answer is "wait a minute".
     setToastMessage(
       state === 'ok'
         ? t.submitToastCloud
         : state === 'local'
           ? t.submitToastLocalMode
-          : t.submitToastLocalOnly
+          : state === 'rate_limited'
+            ? t.submitToastRateLimited
+            : t.submitToastLocalOnly
     );
     setTimeout(() => setToastMessage(null), 4000);
 
@@ -327,12 +328,12 @@ export default function PhysicianForm({
               {t.reportsFeedTitle}
             </span>
             <div className="flex items-center gap-2">
-              {/* Cloud DB Sync Status & Config Modal Trigger */}
+              {/* Submission endpoint status + posture view */}
               <button
                 type="button"
                 onClick={onOpenDbModal}
                 className={`inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-0.5 rounded-full border transition-all ${
-                  cloudActive
+                  writesEnabled
                     ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/25 hover:bg-emerald-500/20 shadow-sm'
                     : syncState === 'pending'
                       ? 'bg-sky-500/10 text-sky-300 border-sky-500/25'
@@ -340,13 +341,15 @@ export default function PhysicianForm({
                 }`}
                 title={t.dbBadgeTooltip}
               >
-                <Database className={`w-3 h-3 ${cloudActive ? 'text-emerald-400' : 'text-amber-400'}`} />
+                <Database className={`w-3 h-3 ${writesEnabled ? 'text-emerald-400' : 'text-amber-400'}`} />
                 <span>{syncBadge}</span>
                 <span className="text-[10px] text-white/40">⚙</span>
               </button>
 
               <span className="text-[11px] text-white/60 font-medium bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-white/10">
-                {cloudActive ? t.feedSub : t.feedSubLocal} ({reports.length})
+                {/* Always the local label. There is no read endpoint, so no state of the
+                    badge — including a live one — makes this list anyone else's. */}
+                {t.feedSubLocal} ({reports.length})
               </span>
             </div>
           </div>

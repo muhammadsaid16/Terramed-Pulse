@@ -9,13 +9,14 @@
 
 ## 1. Executive Summary & Architectural Vision
 
-TerraPulse is a high-performance, client-first, zero-backend geospatial analytics and climate-health decision platform built for the NASA Space Apps Challenge 2026.
+TerraPulse is a high-performance, client-first geospatial analytics and climate-health decision platform built for the NASA Space Apps Challenge 2026. Its analytics are backend-free; its report feed has one optional serverless write endpoint (§2.1).
 
 The platform directly solves the challenge prompt by empowering researchers, healthcare professionals, and policy leaders to detect opposite-direction Earth system trends across Egypt over a 30-year window (1995–2025). It bridges planetary observations from NASA missions (NASA POWER, MERRA-2, MODIS, GLDAS, SEDAC) with socio-demographic indicators from CAPMAS and WHO to calculate the **Health Need Index (HNI)**. In doing so, it provides actionable evidence to retain and strategically deploy Egyptian medical talent ("Stay & Build Egypt").
 
 ### Core Architectural Pillars
-1. **Zero-Backend Determinism**:
-   The application operates 100% in-browser with zero mandatory server dependencies — there is no application backend; every statistic is computed in the page. Serving requires a static HTTP origin (`npm run preview` after build) because the shipped entry is the Vite template, which loads `/src/main.jsx` as an ES module and renders blank over `file://`. The datasets, Leaflet and Chart.js are bundled, so maps and charts work without internet; the two Google Fonts (Inter + Cairo) are the only remaining network dependency and are needed on first visit.
+1. **Zero-Backend Determinism (for data, maps and analysis)**:
+   Every statistic, chart and polygon is computed in the page: there is no application server behind the analytics. Serving requires a static HTTP origin (`npm run preview` after build) because the shipped entry is the Vite template, which loads `/src/main.jsx` as an ES module and renders blank over `file://`. The datasets, Leaflet and Chart.js are bundled, so maps and charts work without internet; the two Google Fonts (Inter + Cairo) are the only remaining network dependency and are needed on first visit.
+   The one exception is the physician-report feed, which is *not* zero-backend (§2.1): a submission that reaches the cloud passes through a Cloudflare Pages Function into Neon Postgres. Without that function deployed the form is local-only, and the UI distinguishes the two states rather than reporting success for a row nothing stored.
 2. **Mathematical Precision with In-Browser JS Math**:
    Every trend statistic—Ordinary Least Squares (OLS) slope, Student's $t$-test $p$-value, Mann-Kendall non-parametric test ($S$, $Var(S)$, $Z$, and exact two-tailed $p$-value), Theil-Sen robust estimator, and Min-Max HNI composite weighting—is computed deterministically on-the-fly in JavaScript without external math libraries.
 3. **Bilingual Bi-Directional UX (English LTR & Arabic RTL)**:
@@ -43,7 +44,7 @@ flowchart TD
         DATA_JSON["legacy/data.json / embedded-data.js<br/>30-Year Normalized Records (1995-2025)"]
     end
 
-    subgraph Browser Client [Zero-Backend Standalone Web App]
+    subgraph Browser Client [Standalone Web App: no server for data or analysis]
         STORE["Application State & Reactive Store<br/>(localStorage + Bayesian Prior)"]
         
         subgraph Core Engines
@@ -62,6 +63,12 @@ flowchart TD
         end
     end
 
+    subgraph Write Path [Optional server-side component: the only writer]
+        PROXY["functions/api/reports.js<br/>Cloudflare Pages Function<br/>(validate → salted address hash → one INSERT)"]
+        QUOTA["public.admit_submission(ip_hash)<br/>SECURITY DEFINER, advisory-locked<br/>per-address window in a table"]
+        NEON_DB["Neon Postgres: public.physician_reports<br/>RLS on · web_writer holds INSERT only<br/>CHECKs bind every role, including the owner"]
+    end
+
     Data Sources --> FETCH_PY
     FETCH_PY --> PY_MATH
     PY_MATH --> DATA_JSON
@@ -74,8 +81,44 @@ flowchart TD
     MATH_JS --> MAP_VIEW
     DOCTOR_MCDA --> MAP_VIEW
     FORM_VIEW --> STORE
+    FORM_VIEW -->|"POST /api/reports"| PROXY
+    PROXY -->|"INSERT … WHERE admit_submission($11)"| QUOTA
+    QUOTA --> NEON_DB
+    NEON_DB -.->|"no read path exists in either direction"| PROXY
     SIMULATOR --> BRIEF_VIEW
 ```
+
+### 2.1 The report write path (the only server-side component)
+
+A browser cannot hold a Postgres credential: a connection string is owner-level access to
+every row, so unlike the anon key it replaced it cannot be inlined into a bundle. The write
+path therefore moves server-side, and the database decides what the server-side code may
+actually do.
+
+| Hop | What it holds | What it cannot do |
+|---|---|---|
+| Browser | No credential of any kind | name the quota key, the arrival time, or the row id |
+| `functions/api/reports.js` | `NEON_URL` for `web_writer` (a Pages secret) | read a row — the role has no `SELECT`, and there is no `GET` handler |
+| Neon `public.physician_reports` | RLS on, one INSERT policy, table `CHECK`s | the policy can be widened by nothing the app can send |
+
+Four facts shaped it, each measured against the live branch rather than assumed:
+
+- **`INSERT … RETURNING` needs `SELECT`**, so an INSERT-only role gets `42501` on a perfectly
+  legal insert. The outcome is `rowCount`: 1 stored → `201`, 0 refused by the quota → `429`.
+- **The quota check and the write are one statement** (`… WHERE public.admit_submission($11)`),
+  because Neon's HTTP driver runs each query in its own transaction; a two-query check-then-write
+  would race across isolates and the advisory lock would be released between them.
+- **The quota is a table row, not a `current_setting`** — Neon refuses `ALTER DATABASE SET` for
+  an unknown custom GUC with `42501`. `web_writer` has no privilege on that table.
+- **The database client is built per request.** Workers binds every I/O object to the request
+  that created it; a pool held at module scope answers the first submission and hangs the second.
+
+`ip_hash` is SHA-256 of `cf-connecting-ip` + a secret salt + the UTC day, so the stored value
+identifies neither a person nor a device permanently, and a caller cannot choose their own
+quota key. What this path does **not** do is read: `GET /api/status` reports the posture
+without opening a connection, and the feed in the UI stays this device's `localStorage` plus
+the 45 embedded seed records. A cross-device feed would need authentication and a read policy
+— a disclosure decision about physicians' migration intent, not a configuration flag.
 
 ---
 
@@ -159,7 +202,10 @@ Multi-Criteria Decision Analysis (MCDA) linking NASA environmental exposures wit
 ---
 
 ### Module 4: In-Page Physician Survey & Reactive State
-- **Storage**: In-browser `localStorage` key `terrapulse_reports` (set in `src/App.jsx`; the 45 `survey_seed` records are the fallback when the key is absent).
+- **Storage**: In-browser `localStorage` key `terrapulse_reports` (set in `src/App.jsx`; the 45 `survey_seed` records are the fallback when the key is absent). The local write is authoritative and always happens; the cloud write is attempted after it and reports its own outcome, so a refused or unreachable submission is visible as such instead of being silently kept.
+- **Identifier split**: the browser's `report-${Date.now()}` key stays local and never goes on
+  the wire. The database generates `id uuid DEFAULT gen_random_uuid()` — two devices submitting
+  in the same millisecond would otherwise collide on the primary key.
 - **Pre-seeded Dataset**: 45 authentic Egyptian physician responses distributed across the 5 governorates.
 - **Reactivity**: Adding a new response triggers immediate re-computation of $WNI$, recalculation of $HNI$, and animated updates across all charts, map tooltips, and ranking tables.
 

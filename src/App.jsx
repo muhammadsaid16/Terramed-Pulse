@@ -17,7 +17,7 @@ import Footer from './components/Footer';
 import { TERRAPULSE_DATA } from './data/terrapulseData';
 import { TRANSLATIONS } from './lib/translations';
 import { computeWNIFromReports, computeHNI, WNI_PRIOR_DEFAULT } from './lib/trendEngine';
-import { getDbConfig, fetchRemoteReports, submitRemoteReport, SYNC_STATE } from './lib/dbService';
+import { getSyncStatus, submitRemoteReport } from './lib/dbService';
 
 export default function App() {
   const [lang, setLang] = useState(() => {
@@ -68,11 +68,9 @@ export default function App() {
       return new URLSearchParams(window.location.search).get('modal') === 'db';
     } catch { return false; }
   });
-  const [dbConfig, setDbConfig] = useState(() => getDbConfig());
   const [syncStatus, setSyncStatus] = useState(() => ({
-    // Until the first probe answers, nothing is claimed about the cloud.
-    state: dbConfig.isConfigured ? 'pending' : SYNC_STATE.LOCAL,
-    reportsSynced: 0
+    // Until the endpoint answers, nothing is claimed about it.
+    state: 'pending'
   }));
 
   // App Data copy with dynamic updates
@@ -92,39 +90,17 @@ export default function App() {
     return TERRAPULSE_DATA.survey_seed || [];
   });
 
-  // Sync remote crowdsourced reports from Supabase if configured. The result is
-  // published to `syncStatus` so the UI can say what actually happened; a failed
-  // read is never displayed as "cloud synced".
+  // Ask the submission endpoint what it is, once at startup. There is no report to
+  // fetch: the shipped posture has no read path, so `reports` stays this device's
+  // localStorage plus the seed, and the badge describes only whether a write would be
+  // accepted. A probe that fails is reported as failing rather than as local mode.
   useEffect(() => {
     let isMounted = true;
-    async function syncRemote() {
-      if (!dbConfig.isConfigured) {
-        setSyncStatus({ state: SYNC_STATE.LOCAL, reportsSynced: 0 });
-        return;
-      }
-      const result = await fetchRemoteReports();
-      if (!isMounted) return;
-      setSyncStatus({ state: result.state, detail: result.detail, error: result.error, reportsSynced: 0 });
-      if (result.state !== SYNC_STATE.OK) return;
-
-      const remote = result.rows;
-      if (remote.length === 0) return;
-
-      setReports(prev => {
-        const map = new Map();
-        remote.forEach(r => { if (r && r.id) map.set(r.id, r); });
-        prev.forEach(r => { if (r && r.id && !map.has(r.id)) map.set(r.id, r); });
-        const merged = Array.from(map.values());
-        try {
-          localStorage.setItem('terrapulse_reports', JSON.stringify(merged));
-        } catch {}
-        setSyncStatus(s => ({ ...s, reportsSynced: merged.length - prev.length }));
-        return merged;
-      });
-    }
-    syncRemote();
+    getSyncStatus().then(result => {
+      if (isMounted) setSyncStatus({ state: result.state, detail: result.detail });
+    });
     return () => { isMounted = false; };
-  }, [dbConfig]);
+  }, []);
 
   const t = useMemo(() => TRANSLATIONS[lang] || TRANSLATIONS.en, [lang]);
 
@@ -154,7 +130,7 @@ export default function App() {
     });
   }, [reports]);
 
-  // Local write is authoritative and happens first; the cloud write is an extra that
+  // Local write is authoritative and happens first; the remote write is an extra that
   // reports its own outcome. Returns the remote state so the form can tell the truth.
   const handleAddReport = async (newReport) => {
     const updated = [newReport, ...reports];
@@ -165,21 +141,22 @@ export default function App() {
       console.warn('LocalStorage save failed:', e);
     }
 
-    if (!dbConfig.isConfigured) {
-      setSyncStatus(s => ({ ...s, state: SYNC_STATE.LOCAL, lastResult: SYNC_STATE.LOCAL }));
-      return { state: SYNC_STATE.LOCAL, storedLocally: true };
-    }
-
     const result = await submitRemoteReport(newReport);
+    // A quota or policy refusal is a fact about this submission, not about the endpoint:
+    // the next physician is not rate-limited by this one, and the posture modal would
+    // otherwise start claiming writes are unavailable while the function is healthy and
+    // accepting everyone else. Only a failure that describes the endpoint itself —
+    // unreachable, absent, misconfigured — is allowed to change what the modal states.
+    const aboutThisReport = result.state === 'rate_limited' || result.state === 'rejected';
     setSyncStatus(s => ({
       ...s,
       // A failed write changes the badge; a successful one does not. The badge describes
-      // what the app can do with the table, and the read probe answers that — promoting
-      // the state to "Cloud Synced" after a 201 would claim a read the app never made,
-      // since the shipped policy allows anon to INSERT and nothing else. The toast,
-      // driven by result.state, is where the write outcome is reported.
-      state: result.success ? s.state : result.state,
-      detail: result.error || result.detail,
+      // what the endpoint accepts, and the startup probe answers that — promoting it after
+      // one 201 would claim a general capability from a single event, and there is no
+      // read available to confirm it. The toast, driven by result.state, is where the
+      // outcome of this particular report is reported.
+      state: aboutThisReport || result.success ? s.state : result.state,
+      detail: result.error || result.errors?.join('; ') || result.detail,
       lastResult: result.state,
       storedLocally: true
     }));
@@ -461,7 +438,7 @@ export default function App() {
         isOpen={isDbModalOpen}
         onClose={() => setIsDbModalOpen(false)}
         lang={lang}
-        onConfigUpdated={(cfg) => setDbConfig(cfg)}
+        syncStatus={syncStatus}
       />
 
     </div>

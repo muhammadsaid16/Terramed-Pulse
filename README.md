@@ -146,31 +146,36 @@ npm run preview
 > the **Esri ArcGIS `World_Dark_Gray_Base` tile layer** (offline, the map keeps its polygons,
 > markers, legend and time-lapse on a plain grid canvas and shows a "basemap unavailable"
 > notice instead of retrying), the **Inter/Cairo webfonts** from Google Fonts (system-font
-> fallback), and **Supabase** when you configure it. TerraPulse is offline-*capable*, not
-> fully offline.
+> fallback), and **the report submission endpoint** when one is deployed. TerraPulse is
+> offline-*capable*, not fully offline — and since the cloud write path landed, "no
+> backend" is true of the data and false of the feed.
 >
-> **Cloud sync is optional and off by default.** With no `.env` the app runs in local-only
-> mode on `localStorage`; nothing requests the network and the UI says so. To enable it:
-> create a Supabase project, run `supabase/migrations/0001_init_physician_reports.sql`
-> in the SQL Editor (the same SQL is copyable from the in-app *Cloud Database Sync* dialog),
-> then set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (or
-> `VITE_SUPABASE_PUBLISHABLE_KEY` — the same browser-safe value under the name newer
-> Supabase dashboards print) — or enter them at runtime in that dialog.
+> **Cloud submission is optional and off by default.** With no endpoint deployed the app
+> runs in local-only mode on `localStorage`; nothing requests the network beyond tiles and
+> fonts, and the UI says so. The write path is: browser → `POST /api/reports` → one
+> Cloudflare Pages Function → Neon Postgres. Set it up in two steps, described in
+> `.env.example`: apply `db/migrations/0001_neon_physician_reports.sql` in the Neon SQL
+> Editor (the same SQL is copyable from the in-app *Report Submission Endpoint* dialog),
+> then attach `NEON_URL` and `IP_SALT` as **Pages secrets**. The browser is given neither.
 >
-> **What the migration actually allows.** Row Level Security is on, and the public
-> `anon` key holds exactly one right: **INSERT a report**, with every value re-validated
-> by the policy's `WITH CHECK`. It can never `SELECT`, `UPDATE` or `DELETE`, so a visitor
-> cannot enumerate other physicians' submissions. The feed consequently shows this
-> device's reports plus the embedded seed, and the status badge reads "cloud submits
-> allowed, reads blocked" — which is the intended posture, not a failure. A shared
-> cross-device feed needs Supabase Auth plus a read policy (commented `auth.uid()`
-> template in the migration); that is a disclosure decision, not a config flag.
+> **What that posture actually allows.** The migration creates an `INSERT`-only role
+> called `web_writer`, turns Row Level Security on, and defines the one statement the
+> function may issue. `web_writer` can add a validated row and nothing else: no `SELECT`,
+> `UPDATE`, `DELETE`, `TRUNCATE`; it cannot read the quota table it is rate-limited by, and
+> a real login test confirmed every one of those refusals. There is no read endpoint at
+> all, so nobody — including this app — can enumerate other physicians' submissions. The
+> feed consequently shows this device's reports plus the embedded seed, and the badge reads
+> "cloud submits allowed, reads blocked", which is the intended posture rather than a
+> failure. A shared cross-device feed needs authentication plus a read policy; that is a
+> disclosure decision about migration intent, not a config flag.
 >
-> Never put a service-role / secret key in `.env` or the dialog: Vite inlines every
-> `VITE_*` value into the public bundle, and `dbService` refuses to use or store one.
+> A connection string is not a browser key. An `anon` JWT could be published; the Neon URL
+> is owner-level access to every row, so it must never be a `VITE_*` variable — Vite inlines
+> every one of those into the public bundle — and never in `.dev.vars`-adjacent files that
+> get committed (`.dev.vars` itself is gitignored).
 
 ### 2. Run the Full Verification Suite
-`npm test` runs all six suites — the live React engine, the dataset drift gate, the Supabase/RLS contract gate, the legacy JS engine, and both Python suites:
+`npm test` runs all six suites — 477 checks in total: the live React engine (144), the dataset drift gate (23), the submission-contract gate (165), the legacy JS engine (51), and both Python suites (12 and 82):
 ```bash
 cd "/home/zer0/Desktop/Projects/Nasa project"
 npm test
@@ -179,17 +184,23 @@ Individual suites:
 ```bash
 node src/lib/trendEngine.test.mjs            # 144 checks — the engine the app actually imports
 node src/data/terrapulseData.parity.test.mjs #  23 checks — src/data vs legacy/data.json drift gate
-node src/lib/rlsContract.test.mjs            # 103 checks — RLS policy vs. form/payload contract
+node src/lib/syncContract.test.mjs           # 165 checks — SQL policy ↔ validator ↔ form ↔ function
 node pipeline/test-legacy-engine.js          #  51 checks — legacy/trend-engine.js parity
 python3 pipeline/test_trend_engine.py        #  12 checks — Python statistical engine
 python3 pipeline/test_nasa_pipeline.py       #  82 checks — dataset artifacts & cross-runtime parity
 ```
 
-> **Why the RLS contract gate exists.** The policy lives in SQL, in another directory,
-> and is applied by hand, so nothing else in the repo can see it drift. Its `specialty`
-> and `gov` value lists, its `char_length` caps and its column list are asserted against
-> `src/lib/specialties.js`, `src/data/terrapulseData.js`, `PhysicianForm.jsx` and
-> `dbService.js` — an out-of-date list would 400 a legitimate report in production.
+> **Why the submission-contract gate exists.** The same row shape is written down four
+> times, in three languages, in places that are deployed separately: the `CHECK`s and the
+> RLS policy in `db/migrations/*.sql` (applied by hand in Neon), the validator in
+> `src/lib/reportLimits.js` (run by both the browser and the Pages Function), the caps bound
+> to the form's inputs, and the statement issued in `functions/api/reports.js`. Nothing
+> notices when they drift; an out-of-date list 400s a legitimate report, and a validator one
+> character looser than the table turns a 400 into a database error the UI has to describe as
+> a server fault. The gate asserts set equality on identifiers and numeric equality on caps
+> across all four, refuses each known poison payload locally, and pins the posture facts that
+> were measured against a live database rather than assumed (no `RETURNING`, one statement, no
+> read path, no credential in source).
 
 > **Why the drift gate exists.** `pipeline/fetch_nasa_data.py` regenerates `legacy/data.json`
 > only; `src/data/terrapulseData.js` is maintained by hand alongside it. The gate asserts the
@@ -228,7 +239,7 @@ python3 pipeline/fetch_nasa_data.py --offline
 ├── SUBMISSION_COPY.md           # Copy-paste submission package (storyboard & 7-slide deck)
 ├── ARCHITECTURE.md              # System design, module contracts & index specification
 ├── TECHNICAL_SIGNOFF.md         # Mathematical audit & verification record
-├── .env.example                 # Optional Supabase sync configuration
+├── .env.example                 # Server-side NEON_URL / IP_SALT — never a VITE_* value
 ├── src/                         # ── THE SHIPPED REACT APPLICATION ──
 │   ├── main.jsx                 # React root mount (bundles Leaflet CSS locally)
 │   ├── App.jsx                  # Main application orchestrator & state manager
@@ -241,8 +252,9 @@ python3 pipeline/fetch_nasa_data.py --offline
 │   │   ├── trendEngine.js       # OLS regression, Mann-Kendall, t-test, HNI/WNI & simulation
 │   │   ├── trendEngine.test.mjs # 144-check suite for the live engine (npm test)
 │   │   ├── chartAdapters.js     # Chart.js option/dataset builders per metric
-│   │   ├── dbService.js         # Supabase telemetry with local-storage fallback
-│   │   ├── rlsContract.test.mjs # 103-check gate: RLS policy vs. form & INSERT payload
+│   │   ├── reportLimits.js      # The submission contract: lists, caps & the shared validator
+│   │   ├── dbService.js         # POST to /api/reports, local-storage fallback, no credential
+│   │   ├── syncContract.test.mjs # 165-check gate: SQL ↔ validator ↔ form ↔ Pages Function
 │   │   ├── specialties.js       # Shared AR/EN specialty label registers
 │   │   └── translations.js      # Full English & Arabic localization dictionaries
 │   └── components/
@@ -254,14 +266,18 @@ python3 pipeline/fetch_nasa_data.py --offline
 │       ├── DoctorMatcher.jsx    # "Stay & Build" 8-specialty clinical impact matcher
 │       ├── PhysicianForm.jsx    # In-page clinical observation & migration intent form
 │       ├── DecisionMaker.jsx    # What-If simulator & 3 executive Chart.js dashboards
-│       ├── DbSyncModal.jsx      # Cloud telemetry status & configuration panel
+│       ├── DbSyncModal.jsx      # Endpoint posture view + the migration, verbatim
 │       ├── WizardModal.jsx      # 3-step Guided Trend Detective Wizard
 │       ├── MathModal.jsx        # Mathematical & statistical methodology guide
 │       ├── PrintBrief.jsx       # Official 1-page ministerial brief for @media print
 │       └── Footer.jsx           # NASA mission credits & hackathon branding
-├── supabase/
+├── db/
 │   └── migrations/
-│       └── 0001_init_physician_reports.sql  # Optional cloud schema (RLS on, INSERT-only anon)
+│       └── 0001_neon_physician_reports.sql  # Schema, INSERT-only role, RLS policy, quota fn
+├── functions/                   # ── CLOUDFLARE PAGES FUNCTIONS (the only writer) ──
+│   └── api/
+│       ├── reports.js           # POST /api/reports — validate, hash the address, one INSERT
+│       └── status.js            # GET  /api/status  — posture only, opens no connection
 ├── pipeline/                    # ── PYTHON DATA PIPELINE (generates legacy/ artifacts only) ──
 │   ├── fetch_nasa_data.py       # NASA POWER API fetcher & Mann-Kendall CLI pipeline
 │   ├── trend_engine.py          # Python statistical engine (parity with legacy JS engine)

@@ -9,7 +9,7 @@
 - **Arabic Title:** ابقَ وابنِ — محقق اتجاهات الأرض وبوصلة الأثر الصحي والبيئي في مصر  
 - **Challenge Track:** Be An Earth System Trend Detective!  
 - **Repository / Source Code:** [muhammadsaid16/Nasa-Space-App](https://github.com/muhammadsaid16/Nasa-Space-App)  
-- **Live Demo:** Zero-backend web application — all NASA datasets, the statistical engine, Leaflet and Chart.js are bundled client-side. Verified air-gapped: the app boots, all 5 choropleth polygons, all markers, all 4 charts and the time-lapse render with no network. Three things need internet: the ArcGIS dark-grey basemap tiles (offline the map falls back to a labelled grid canvas with a "basemap unavailable" notice — overlays and data are untouched), the Inter/Cairo webfonts (fall back to system fonts), and optional Supabase telemetry (stays off unless configured; reports keep saving to localStorage).
+- **Live Demo:** No server behind the analytics — all NASA datasets, the statistical engine, Leaflet and Chart.js are bundled client-side, and nothing needs a key or a login. Verified air-gapped: the app boots, all 5 choropleth polygons, all markers, all 4 charts and the time-lapse render with no network. Three things need internet: the ArcGIS dark-grey basemap tiles (offline the map falls back to a labelled grid canvas with a "basemap unavailable" notice — overlays and data are untouched), the Inter/Cairo webfonts (fall back to system fonts), and the optional physician-report endpoint — one Cloudflare Pages Function writing to Postgres, used only to submit and never to read. With it undeployed the form is local-only and says so; reports keep saving to localStorage either way.
 - **Team Name:** WhiteRoom Labs  
 - **Keywords / Tags:** `NASA Earth Observation`, `Climate Health`, `Trend Detective`, `Mann-Kendall Test`, `Deseasonalization`, `MODIS`, `MERRA-2`, `NASA POWER`, `GLDAS`, `SEDAC`, `Egypt Healthcare`, `Stay and Build`
 
@@ -75,7 +75,7 @@ Instead of stopping at scientific charts, TerraPulse addresses a national socio-
 - **Family Medicine & Pediatrics** are matched with Delta communities facing agro-environmental transitions.
 
 ### 4. Technical Execution & Accessibility
-The platform requires no backend setup, databases, or API keys to run. By compiling a complete 30-year dataset into client-side JavaScript, TerraPulse guarantees instantaneous 60fps chart rendering, offline resilience for its data, maps and analysis, and universal compatibility across devices and browsers. (The streamed Esri basemap tiles and the Google-hosted webfonts are the two exceptions — see *Live Demo* above; both degrade without an error.)
+Nothing has to be configured to run the platform: no credentials ship in the bundle, no backend is required for the data, the map, the charts or the statistics. By compiling a complete 30-year dataset into client-side JavaScript, TerraPulse guarantees instantaneous 60fps chart rendering, offline resilience for its data, maps and analysis, and universal compatibility across devices and browsers. (The streamed Esri basemap tiles and the Google-hosted webfonts are the two network exceptions — see *Live Demo* above; both degrade without an error. The third exception is opt-in and single-purpose: the report submission endpoint, one serverless function that can insert and cannot read.)
 
 ---
 
@@ -109,7 +109,7 @@ The platform requires no backend setup, databases, or API keys to run. By compil
 00:19 - 00:26 | TERRAPULSE LIVE DEMO
 [Visual]: Rapid UI interaction: Scrubbing the 30-year time slider, toggling deseasonalized anomalies,
           and moving the What-If policy sliders as HNI risk scores drop dynamically.
-[On-Screen Text]: "Health Need Index (HNI) | Deseasonalized Anomalies | Zero-Backend Speed"
+[On-Screen Text]: "Health Need Index (HNI) | Deseasonalized Anomalies | Client-Side Speed"
 [English VO]: "TerraPulse decodes NASA trends into clinical demand, matching doctors to where they matter most."
 [Arabic VO]: "تيرا بالس تُترجم بيانات الفضاء إلى أثر صحي حقيقي، لترشد كل طبيب لموقعه الأكثر حاجة."
 
@@ -180,7 +180,7 @@ The platform requires no backend setup, databases, or API keys to run. By compil
 ### Slide 7: Global Scalability & Roadmap
 - **Key Message:** A scalable blueprint for climate-vulnerable nations worldwide.
 - **Roadmap:**
-  * **Phase 1 (Complete):** 5 Egyptian governorates, 8 NASA variables, zero-backend bilingual platform.
+  * **Phase 1 (Complete):** 5 Egyptian governorates, 8 NASA variables, bilingual platform with every statistic computed in the browser.
   * **Phase 2 (Q2 2027):** Expansion to all 27 Egyptian governorates and integration with the Universal Health Insurance System (UHIS).
   * **Phase 3 (Global):** Pan-African and Middle Eastern rollout (MENA region) using identical NASA Earth observation pipelines.
 - **Call to Action:** *"Planetary science for human survival. Explore TerraPulse and join us to Stay & Build."*
@@ -197,7 +197,7 @@ The platform requires no backend setup, databases, or API keys to run. By compil
 2. **اكتشاف الاتجاهات المتعاكسة إقليمياً:** أثبتت المنصة بالدليل العلمي تبايناً حاداً بين الارتفاع القياسي في درجات الحرارة والموجات الحارة بصعيد مصر (+1.42 درجة/عقد) مقابل انحسار الغطاء النباتي وجفاف التربة في أطراف دلتا النيل.
 3. **الدقة الرياضية والإحصائية:** احتساب الشذوذ المناخي بعد إزالة التغيرات الموسمية، وتطبيق اختبار "مان-كيندال" اللامعلمي لتأكيد الدلالة الإحصائية للاتجاهات ($p < 0.01$)، بالإضافة لحساب ميل الانحدار الخطي لكل عقد وفترات الثقة.
 4. **ربط علوم الفضاء بالأثر الصحي والوطني:** ابتكار "مؤشر الاحتياج الصحي" (HNI) ومحرك "أنا طبيب" لتوجيه الأطباء المصريين إلى المحافظات الأكثر حاجة لتخصصاتهم الدقيقة، مما يمنحهم حافزاً إنسانياً ووطنياً للبقاء ومواجهة نزيف هجرة الكوادر الطبية.
-5. **منصة جاهزة بدون خوادم (Zero-Backend):** تعمل المنصة بالكامل داخل متصفح المستخدم دون الحاجة لاتصال دائم بالإنترنت أو خوادم خلفية، مما يضمن استمرارية عملها في المستشفيات والمراكز الريفية النائية.
+5. **تحليلات تعمل بالكامل داخل المتصفح (Client-Side Analytics):** تُحسَب المؤشرات وتُرسم الخرائط والمخططات داخل متصفح المستخدم دون خادم أو مفتاح أو تسجيل دخول، مما يضمن استمرارية عملها في المستشفيات والمراكز الريفية النائية. الاستثناء الوحيد اختياري ومحدود الغرض: نقطة إرسال بلاغات الأطباء — دالة واحدة تكتب في قاعدة البيانات ولا تقرأ منها شيئاً؛ وبدونها يبقى البلاغ على جهاز الطبيب ويخبره التطبيق بذلك.
 
 ---
 **Prepared by WhiteRoom Labs for the 2026 NASA Space Apps Challenge.**  

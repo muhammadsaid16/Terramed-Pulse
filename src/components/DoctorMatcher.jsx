@@ -1,6 +1,20 @@
 import React, { useState, useMemo } from 'react';
 import { Stethoscope, HeartPulse, Wind, AlertCircle, Baby, Users, ShieldAlert, Sparkles, CheckCircle2 } from 'lucide-react';
 import { matchSpecialty } from '../lib/trendEngine';
+import { SPECIALTY_FULL_LABELS } from '../lib/specialties';
+
+// Icons are presentation, so they stay here; the ids and both label registers come from
+// the module that owns the submission vocabulary.
+const SPECIALTY_ICONS = {
+  nephrology: HeartPulse,
+  pulmonology: Wind,
+  cardiology: HeartPulse,
+  emergency: AlertCircle,
+  pediatrics: Baby,
+  geriatrics: Users,
+  dermatology_ophthalmology: Sparkles,
+  occupational_preventive: ShieldAlert
+};
 
 export default function DoctorMatcher({
   data,
@@ -11,16 +25,7 @@ export default function DoctorMatcher({
 }) {
   const [selectedSpecialty, setSelectedSpecialty] = useState('nephrology');
 
-  const specialties = [
-    { id: 'nephrology', label_en: 'Nephrology', label_ar: 'أمراض الكلى والغسيل الكلوي', icon: HeartPulse },
-    { id: 'pulmonology', label_en: 'Pulmonology', label_ar: 'الأمراض الصدرية والجهاز التنفسي', icon: Wind },
-    { id: 'cardiology', label_en: 'Cardiology', label_ar: 'أمراض القلب والأوعية الدموية', icon: HeartPulse },
-    { id: 'emergency', label_en: 'Emergency & Critical Care', label_ar: 'طب الطوارئ والحالات الحرجة', icon: AlertCircle },
-    { id: 'pediatrics', label_en: 'Pediatrics', label_ar: 'طب الأطفال وحديثي الولادة', icon: Baby },
-    { id: 'geriatrics', label_en: 'Geriatrics', label_ar: 'طب وصحة المسنين', icon: Users },
-    { id: 'dermatology_ophthalmology', label_en: 'Derm / Ophthalmology', label_ar: 'الجلدية والعيون', icon: Sparkles },
-    { id: 'occupational_preventive', label_en: 'Occupational & Preventive', label_ar: 'الطب المهني والوقائي وطب الأسرة', icon: ShieldAlert }
-  ];
+  const specialties = SPECIALTY_FULL_LABELS.map(spec => ({ ...spec, icon: SPECIALTY_ICONS[spec.id] }));
 
   // Dynamic ranking based on MCDA weights
   const rankings = useMemo(() => {
@@ -75,7 +80,7 @@ export default function DoctorMatcher({
               >
                 <Icon className={`w-4 h-4 shrink-0 ${isSelected ? 'text-black' : 'text-white/50'}`} />
                 <span className="text-xs font-medium leading-tight">
-                  {lang === 'ar' ? spec.label_ar : spec.label_en}
+                  {lang === 'ar' ? spec.ar : spec.en}
                 </span>
               </button>
             );
@@ -90,7 +95,7 @@ export default function DoctorMatcher({
         <div className="lg:col-span-7 apple-card p-6 space-y-5">
           <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
             <h3 className="font-semibold text-sm text-white flex items-center gap-2">
-              <span>{lang === 'ar' ? currentSpecialtyObj?.label_ar : currentSpecialtyObj?.label_en}</span>
+              <span>{lang === 'ar' ? currentSpecialtyObj?.ar : currentSpecialtyObj?.en}</span>
             </h3>
             <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-medium bg-white/[0.06] text-sky-400 border border-white/10">
               <CheckCircle2 className="w-3.5 h-3.5" />

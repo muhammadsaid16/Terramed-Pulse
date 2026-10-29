@@ -82,10 +82,10 @@ This document provides formal technical sign-off confirming that:
 
 ### 2.6 Physician Reports — local store and optional cloud sync
 - **Local path (always on)**: `localStorage` key `terrapulse_reports` (`src/App.jsx`); seed = the 45 `survey_seed` records in the dataset.
-- **Cloud path (opt-in)**: `src/lib/dbService.js` talks to Supabase PostgREST with `fetch`. Configuration comes from `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` or the runtime "Cloud Database Sync" dialog.
-- **Schema**: `supabase/migrations/0001_init_physician_reports.sql`. **Created but not applied** — no Supabase project was reachable from the build environment, so the table, its RLS state and the column types below are unverified against a live database.
-- **Security posture**: Row Level Security is enabled with **no policies**, because the app has no authentication. Anon `SELECT` therefore returns 0 rows and anon `INSERT` is rejected; the migration carries a commented `auth.uid()` policy template for whoever adds sign-in. Unrestricted anon write policies were deliberately **not** shipped — the records name real physicians and record their migration intent.
-- **Failure taxonomy** (so a missing table is not reported as a network fault, and a rejected write is not reported as success): `SYNC_STATE` distinguishes `ok`, `schema_missing` (HTTP 404 or Postgres `42P01`), `forbidden` (401/403/`42501`/`PGRST301`), `unreachable` (no response) and `error`. A `schema_missing` verdict suppresses further probes for the session; concurrent startup probes are deduplicated. Submissions are written locally first, and the success toast only claims cloud sync when the insert returned 2xx.
+- **Cloud path (opt-in)**: `src/lib/dbService.js` talks to Supabase PostgREST with `fetch`. Configuration comes from `VITE_SUPABASE_URL` plus `VITE_SUPABASE_ANON_KEY` **or** `VITE_SUPABASE_PUBLISHABLE_KEY` (the same browser-safe value under the two names Supabase dashboards print), or the runtime "Cloud Database Sync" dialog. A key that looks like a service-role secret — `sb_secret_…` or a legacy JWT whose payload role is `service_role`/`supabase_admin` — is refused by `getDbConfig`, `saveDbConfig` and `testDbConnection` rather than sent from the browser.
+- **Schema**: `supabase/migrations/0001_init_physician_reports.sql`. **Created but not applied** — no Supabase CLI, `psql` or Management API credential is available in this environment, and a publishable key cannot execute SQL, so the migration has never been run against the live project. Confirmed from outside: `GET /rest/v1/physician_reports` answers HTTP 404 with `PGRST205`, i.e. the relation is absent from PostgREST's schema cache. The table's existence, RLS state and column types therefore remain **unverified against a live database**, and this file must not be read as certifying them.
+- **Security posture (what the migration asserts, once applied)**: RLS enabled; `anon` privileges are revoked and then granted explicitly, because PostgREST only caches relations the request role has *some* privilege on, and an ungranted table is indistinguishable from a missing one. `anon` holds exactly **INSERT**, guarded by a `WITH CHECK` that validates the governorate and specialty against the app's own value lists, the migration-intent vocabulary, `severity 0–5`, per-column `char_length` caps and a sane client-supplied `date`. No `SELECT`/`UPDATE`/`DELETE` for `anon`: an anonymous caller cannot read or alter another physician's submission. A commented `auth.uid()` policy template is carried for a later authenticated read path. The same value lists are gated by `src/lib/rlsContract.test.mjs`, so policy and form cannot drift apart silently.
+- **Failure taxonomy** (so a missing table is not reported as a network fault, and a rejected write is not reported as success): `SYNC_STATE` distinguishes `ok`, `schema_missing` (HTTP 404, Postgres `42P01` or `PGRST205`), `read_denied` (`42501` on a read — the shipped posture: the key authenticated and the table resolved, reads are not permitted), `forbidden` (401/403 or `PGRST301`, and `42501` on a *write*, which is a blocked submission, not the expected posture), `unreachable` (no response) and `error`. A `schema_missing` verdict suppresses further probes for the session; concurrent startup probes are deduplicated. Submissions are written locally first, and the success toast only claims cloud sync when the insert returned 2xx. The badge describes the *read* posture, so a 201 write does not promote it to "Cloud Synced".
 
 ---
 
@@ -103,7 +103,7 @@ Benchmarking executed on standard hardware (Node.js v26.8.1 runtime):
 
 ## 4. Test Suite Summary
 
-### Automated Test Runs (`npm test` runs all five):
+### Automated Test Runs (`npm test` runs all six):
 - **Live React Engine (`src/lib/trendEngine.test.mjs`)** — the module the shipped app imports:
   - 144 Test Assertions
   - **144 Passed, 0 Failed (100% Success)**
@@ -112,6 +112,10 @@ Benchmarking executed on standard hardware (Node.js v26.8.1 runtime):
   - 23 Test Assertions
   - **23 Passed, 0 Failed (100% Success)**
   - Recursively compares `src/data/terrapulseData.js` against `legacy/data.json` (series, statistics, indices, demographics, seed survey, metadata, specialties, case studies) and passes only when the **sole** divergence is governorate `lat`/`lng`, each within a sub-degree centroid nudge. Verified to fail: injecting a one-tenth change into Cairo's EPI baseline drops it to 21/23 and exits non-zero.
+- **RLS Contract Gate (`src/lib/rlsContract.test.mjs`)** — the hand-applied SQL policy vs. the code that must satisfy it:
+  - 93 Test Assertions
+  - **93 Passed, 0 Failed (100%)**
+  - Asserts the migration's `specialty` and `gov` value lists equal `SPECIALTY_SHORT_LABELS` and the dataset's governorate keys, that every `char_length` cap equals the matching input `maxLength`, that the `submitRemoteReport` payload only names declared columns and always supplies the `NOT NULL` ones, that every `SYNC_STATE` has a UI badge label in both locales, and that the posture itself holds (RLS on, `REVOKE` then an explicit `INSERT`-only grant, no anon `SELECT`/`UPDATE`/`DELETE` policy, no secret key in source). Verified to fail: replacing one policy specialty and dropping the comment cap to 500 drops it to 91/93 and exits non-zero. It reads the JSX as text because Node cannot parse it.
 - **Legacy JS Engine (`pipeline/test-legacy-engine.js`)**:
   - 51 Test Assertions
   - **51 Passed, 0 Failed (100% Success)**

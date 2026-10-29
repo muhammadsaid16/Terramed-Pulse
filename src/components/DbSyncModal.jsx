@@ -32,14 +32,19 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', onConfigUpda
       saveDbConfig(inputUrl, inputKey);
       const updated = getDbConfig();
       setConfig(updated);
-      // A readable table is not a writable one: with RLS enabled and no authenticated
-      // policy PostgREST answers 200 with zero rows and rejects INSERT, so this reports
-      // only what the probe actually verified.
-      setTestResult({
+      // The probe is a read, and the migration deliberately lets the browser key
+      // INSERT and nothing else. So a denied read means the setup landed correctly,
+      // and it is reported as such — without claiming that reports will come back down.
+      setTestResult(res.readable ? {
         success: true,
         message: isAr
-          ? 'تم العثور على الجدول وقراءته. الكتابة تتطلب سياسة وصول موثّقة (Supabase Auth)؛ بدونها يبقى الحفظ محلياً على هذا الجهاز.'
-          : `Table reachable and readable (${res.rowCount ?? 0} row(s) returned). Writes need an authenticated RLS policy — until then TerraPulse keeps saving locally.`
+          ? `تم الوصول إلى الجدول وقراءته (${res.rowCount ?? 0} صفّاً). البلاغات الجديدة تُرسل وتُقرأ من هذا الجدول.`
+          : `Table reachable and readable (${res.rowCount ?? 0} row(s) returned). Reports will both submit and sync from it.`
+      } : {
+        success: true,
+        message: isAr
+          ? 'المفتاح مُصادَق عليه والجدول موجود، لكن سياسة RLS تحجب القراءة عن المستخدمين المجهولين — وهذا هو الوضع المقصود. الإرسال يعمل؛ لا يمكنكم رؤية بلاغات الآخرين. النتيجة الفعلية لكل إرسال تظهر في شارة الحالة.'
+          : 'Key accepted and table present, but row-level security denies anonymous reads — the intended posture. Submissions are permitted; you cannot see other people\u2019s reports. Each submission still reports its own real outcome in the status badge.'
       });
       if (onConfigUpdated) onConfigUpdated(updated);
     } else {
@@ -107,6 +112,13 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', onConfigUpda
         </div>
 
         {/* Current Status Pill */}
+        {config.rejected === 'secret_key' && (
+          <div className="p-4 rounded-2xl border bg-rose-950/25 border-rose-500/35 text-rose-300 text-xs leading-relaxed">
+            {isAr
+              ? 'تم العثور على مفتاح سرّي (service_role) في متغيّرات البيئة، ولا يتم استخدامه في المتصفح: هذا المفتاح يتجاوز سياسة RLS بالكامل. استخدم المفتاح العام (publishable / anon).'
+              : 'A service-role / secret key was found in the environment variables and is NOT being used: that key bypasses row-level security entirely. Use the publishable (anon) key here instead.'}
+          </div>
+        )}
         <div className={`p-4 rounded-2xl border flex items-center justify-between ${
           config.isConfigured
             ? 'bg-emerald-950/20 border-emerald-500/30 text-emerald-300'
@@ -150,11 +162,11 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', onConfigUpda
         <div className="text-xs text-white/70 leading-relaxed font-normal bg-white/[0.02] p-3.5 rounded-2xl border border-white/[0.06]">
           {isAr ? (
             <p>
-              نظام <b>TerraPulse</b> مصمم ليعمل <span className="text-white font-medium">ذاتياً 100% بدون إنترنت</span> باستخدام بذور البيانات المدمجة. إذا أردت ربط بلاغات الأطباء بقاعدة بيانات سحابية حية (مثل مسابقة ناسا أو الاستخدام الوطني المشترك)، يمكنك وضع مفتاح مشروع <b>Supabase</b> المجاني أدناه.
+              نظام <b>TerraPulse</b> مصمم ليعمل <span className="text-white font-medium">بدون أي خادم خلفي</span>: البيانات والمخططات والخرائط تُعرض من بذور مدمجة، بينما تُحفظ البلاغات في المتصفح. ربط مشروع <b>Supabase</b> أدناه يضيف إرسال البلاغات إلى قاعدة بيانات مشتركة.
             </p>
           ) : (
             <p>
-              <b>TerraPulse</b> operates <span className="text-white font-medium">100% offline</span> out of the box with embedded seed records. To enable live crowdsourced telemetry between multiple clinicians across Egypt, enter your free <b>Supabase</b> credentials below.
+              <b>TerraPulse</b> needs <span className="text-white font-medium">no backend of its own</span>: indicators, charts and the map render from embedded seed records, and reports are saved in this browser. Entering free <b>Supabase</b> credentials below adds cloud submission of physician reports. (Map tiles and webfonts still come from the network on first visit.)
             </p>
           )}
         </div>
@@ -178,13 +190,13 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', onConfigUpda
 
           <div>
             <label className="block text-xs font-medium text-white/80 mb-1.5">
-              {isAr ? 'المفتاح العام للمشروع (Anon / Public API Key):' : 'Supabase Anon / Public API Key:'}
+              {isAr ? 'المفتاح العام للمشروع (Publishable / Anon API Key):' : 'Supabase Publishable / Anon API Key:'}
             </label>
             <input
               type="password"
               value={inputKey}
               onChange={(e) => setInputKey(e.target.value)}
-              placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+              placeholder="sb_publishable_… or the legacy anon JWT"
               dir="ltr"
               className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs font-mono text-white placeholder-white/30 outline-none focus:border-emerald-500/50 transition-colors"
               required

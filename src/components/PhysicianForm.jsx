@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { Edit3, Send, CheckCircle2, MapPin, Building, Database } from 'lucide-react';
 import { SPECIALTY_SHORT_LABELS, specialtyLabel } from '../lib/specialties';
 
+// Mirrors the WITH CHECK clause in supabase/migrations/0001_init_physician_reports.sql.
+// The browser stops the input where the policy stops the row, so a long note cannot
+// become a submission the server rejects after the user pressed Send.
+const LIMITS = { doctor: 120, hospital: 160, comment: 1000 };
+
 export default function PhysicianForm({
   reports,
   onAddReport,
@@ -19,6 +24,7 @@ export default function PhysicianForm({
     pending: t.syncPending,
     ok: t.dbBadgeCloud,
     schema_missing: t.syncSchemaMissing,
+    read_denied: t.syncSubmitOnly,
     forbidden: t.syncForbidden,
     unreachable: t.syncUnreachable,
     error: t.syncError
@@ -133,6 +139,7 @@ export default function PhysicianForm({
                 </label>
                 <input
                   type="text"
+                  maxLength={LIMITS.doctor}
                   placeholder={t.phDoctorName}
                   value={formData.doctor}
                   onChange={(e) => setFormData({ ...formData, doctor: e.target.value })}
@@ -183,6 +190,7 @@ export default function PhysicianForm({
                 </label>
                 <input
                   type="text"
+                  maxLength={LIMITS.hospital}
                   placeholder={t.phHospital}
                   value={formData.hospital}
                   onChange={(e) => setFormData({ ...formData, hospital: e.target.value })}
@@ -278,11 +286,17 @@ export default function PhysicianForm({
               </label>
               <textarea
                 rows={2}
+                maxLength={LIMITS.comment}
                 placeholder={t.phComment}
                 value={formData.comment}
                 onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
                 className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30 resize-none font-normal"
               />
+              {formData.comment.length > LIMITS.comment * 0.8 && (
+                <span className="block text-right text-[10px] text-white/40 tabular-nums mt-1" dir="ltr">
+                  {formData.comment.length} / {LIMITS.comment}
+                </span>
+              )}
             </div>
 
             {/* Submit Button */}

@@ -173,7 +173,12 @@ export default function App() {
     const result = await submitRemoteReport(newReport);
     setSyncStatus(s => ({
       ...s,
-      state: result.success ? SYNC_STATE.OK : result.state,
+      // A failed write changes the badge; a successful one does not. The badge describes
+      // what the app can do with the table, and the read probe answers that — promoting
+      // the state to "Cloud Synced" after a 201 would claim a read the app never made,
+      // since the shipped policy allows anon to INSERT and nothing else. The toast,
+      // driven by result.state, is where the write outcome is reported.
+      state: result.success ? s.state : result.state,
       detail: result.error || result.detail,
       lastResult: result.state,
       storedLocally: true

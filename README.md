@@ -153,14 +153,24 @@ npm run preview
 > mode on `localStorage`; nothing requests the network and the UI says so. To enable it:
 > create a Supabase project, run `supabase/migrations/0001_init_physician_reports.sql`
 > in the SQL Editor (the same SQL is copyable from the in-app *Cloud Database Sync* dialog),
-> then set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` — or enter them at runtime in
-> that dialog. The migration turns Row Level Security **on with no policies**, so the public
-> anon key can read zero rows and cannot write. That is deliberate: the app has no sign-in,
-> and the records name physicians and their migration intent. Add the commented
-> `auth.uid()` policy after implementing authentication before expecting cloud writes.
+> then set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (or
+> `VITE_SUPABASE_PUBLISHABLE_KEY` — the same browser-safe value under the name newer
+> Supabase dashboards print) — or enter them at runtime in that dialog.
+>
+> **What the migration actually allows.** Row Level Security is on, and the public
+> `anon` key holds exactly one right: **INSERT a report**, with every value re-validated
+> by the policy's `WITH CHECK`. It can never `SELECT`, `UPDATE` or `DELETE`, so a visitor
+> cannot enumerate other physicians' submissions. The feed consequently shows this
+> device's reports plus the embedded seed, and the status badge reads "cloud submits
+> allowed, reads blocked" — which is the intended posture, not a failure. A shared
+> cross-device feed needs Supabase Auth plus a read policy (commented `auth.uid()`
+> template in the migration); that is a disclosure decision, not a config flag.
+>
+> Never put a service-role / secret key in `.env` or the dialog: Vite inlines every
+> `VITE_*` value into the public bundle, and `dbService` refuses to use or store one.
 
 ### 2. Run the Full Verification Suite
-`npm test` runs all five suites — the live React engine, the dataset drift gate, the legacy JS engine, and both Python suites:
+`npm test` runs all six suites — the live React engine, the dataset drift gate, the Supabase/RLS contract gate, the legacy JS engine, and both Python suites:
 ```bash
 cd "/home/zer0/Desktop/Projects/Nasa project"
 npm test
@@ -169,10 +179,17 @@ Individual suites:
 ```bash
 node src/lib/trendEngine.test.mjs            # 144 checks — the engine the app actually imports
 node src/data/terrapulseData.parity.test.mjs #  23 checks — src/data vs legacy/data.json drift gate
+node src/lib/rlsContract.test.mjs            #  93 checks — RLS policy vs. form/payload contract
 node pipeline/test-legacy-engine.js          #  51 checks — legacy/trend-engine.js parity
 python3 pipeline/test_trend_engine.py        #  12 checks — Python statistical engine
 python3 pipeline/test_nasa_pipeline.py       #  82 checks — dataset artifacts & cross-runtime parity
 ```
+
+> **Why the RLS contract gate exists.** The policy lives in SQL, in another directory,
+> and is applied by hand, so nothing else in the repo can see it drift. Its `specialty`
+> and `gov` value lists, its `char_length` caps and its column list are asserted against
+> `src/lib/specialties.js`, `src/data/terrapulseData.js`, `PhysicianForm.jsx` and
+> `dbService.js` — an out-of-date list would 400 a legitimate report in production.
 
 > **Why the drift gate exists.** `pipeline/fetch_nasa_data.py` regenerates `legacy/data.json`
 > only; `src/data/terrapulseData.js` is maintained by hand alongside it. The gate asserts the
@@ -225,6 +242,7 @@ python3 pipeline/fetch_nasa_data.py --offline
 │   │   ├── trendEngine.test.mjs # 144-check suite for the live engine (npm test)
 │   │   ├── chartAdapters.js     # Chart.js option/dataset builders per metric
 │   │   ├── dbService.js         # Supabase telemetry with local-storage fallback
+│   │   ├── rlsContract.test.mjs # 93-check gate: RLS policy vs. form & INSERT payload
 │   │   ├── specialties.js       # Shared AR/EN specialty label registers
 │   │   └── translations.js      # Full English & Arabic localization dictionaries
 │   └── components/
@@ -243,7 +261,7 @@ python3 pipeline/fetch_nasa_data.py --offline
 │       └── Footer.jsx           # NASA mission credits & hackathon branding
 ├── supabase/
 │   └── migrations/
-│       └── 0001_init_physician_reports.sql  # Optional cloud schema (RLS on, no policies)
+│       └── 0001_init_physician_reports.sql  # Optional cloud schema (RLS on, INSERT-only anon)
 ├── pipeline/                    # ── PYTHON DATA PIPELINE (generates legacy/ artifacts only) ──
 │   ├── fetch_nasa_data.py       # NASA POWER API fetcher & Mann-Kendall CLI pipeline
 │   ├── trend_engine.py          # Python statistical engine (parity with legacy JS engine)

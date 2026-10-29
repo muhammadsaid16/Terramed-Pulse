@@ -111,21 +111,28 @@ NOTIFY pgrst, 'reload schema';
 --     from pg_class c join pg_namespace n on n.oid = c.relnamespace
 --    where n.nspname = 'public' and c.relname = 'physician_reports';
 --
---   select polname, polcmd, roles::text, polqual is not null as has_qual
+--   select policyname, cmd, roles, permissive
 --     from pg_policies where tablename = 'physician_reports';
+--   -- (pg_policies is the view: policyname/cmd/qual. polname/polcmd/polqual belong to
+--   --  the raw pg_policy catalog and are not valid here.)
 --
 --   select grantee, privilege_type
 --     from information_schema.role_table_grants
 --    where table_name = 'physician_reports';
 --
 -- Then confirm from outside the database, with the anon key the browser holds:
---   curl -s -o /dev/null -w '%{http_code}\n' \
+--   curl -s -w '\n%{http_code}\n' \
 --     -H "apikey: $ANON" -H "Authorization: Bearer $ANON" \
---     "$URL/rest/v1/physician_reports?select=id&limit=1"        -> 200 with []
+--     "$URL/rest/v1/physician_reports?select=id&limit=1"     -> 200 and body []
 --   curl -s -w '\n%{http_code}\n' -X POST \
 --     -H "apikey: $ANON" -H "Authorization: Bearer $ANON" -H 'Content-Type: application/json' \
---     -d '{"id":"probe","specialty":"probe","gov":"cairo"}' \
+--     -d '{"id":"rls-probe-delete-me","specialty":"probe","gov":"cairo"}' \
 --     "$URL/rest/v1/physician_reports"                           -> 401/403
--- A 2xx on the POST means an over-permissive policy is live; drop it before
--- shipping, since the rows name physicians and record migration intent.
+-- A 2xx on the POST means an over-permissive policy is live. It has also written a
+-- row, so delete it before anything else, then drop the policy:
+--   curl -s -w '\n%{http_code}\n' -X DELETE \
+--     -H "apikey: $ANON" -H "Authorization: Bearer $ANON" \
+--     "$URL/rest/v1/physician_reports?id=eq.rls-probe-delete-me"
+-- The rows name physicians and record migration intent; treat a permissive policy on
+-- this table as a disclosure, not a configuration detail.
 -- -----------------------------------------------------------------------------

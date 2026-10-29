@@ -124,24 +124,8 @@ TerraPulse Architecture
 
 ## 🚀 Quickstart & Usage
 
-### 1. Run the Web Application
-No build tools, bundlers, or servers required!
-Simply open `index.html` in any modern web browser:
-```bash
-# On Linux / macOS:
-xdg-open "/home/zer0/Desktop/Projects/Nasa project/index.html"
-# Or on Windows:
-start index.html
-```
-
-Or serve via Python's built-in HTTP server:
-```bash
-cd "/home/zer0/Desktop/Projects/Nasa project"
-python3 -m http.server 8080
-# Open http://localhost:8080 in your browser
-```
-
 ### 1. Launch the Vite + React Application
+The root `index.html` is the Vite **entry template** — it loads `/src/main.jsx` as an ES module, so opening it with a double-click renders a blank page. Serve it instead:
 ```bash
 cd "/home/zer0/Desktop/Projects/Nasa project"
 
@@ -156,20 +140,35 @@ npm run build
 npm run preview
 ```
 
-### 2. Run the NASA POWER Python Data Pipeline & Test Suite
-The included `fetch_nasa_data.py` script queries the real NASA POWER API, computes statistical trends, and outputs `data.json`:
+### 2. Run the Full Verification Suite
+`npm test` runs all four suites — the live React engine, the legacy JS engine, and both Python suites:
+```bash
+cd "/home/zer0/Desktop/Projects/Nasa project"
+npm test
+```
+Individual suites:
+```bash
+node src/lib/trendEngine.test.mjs        # 106 checks — the engine the app actually imports
+node pipeline/test-legacy-engine.js      #  51 checks — legacy/trend-engine.js parity
+python3 pipeline/test_trend_engine.py    #  12 checks — Python statistical engine
+python3 pipeline/test_nasa_pipeline.py   #  82 checks — dataset artifacts & cross-runtime parity
+```
+
+### 3. Run the NASA POWER Python Data Pipeline
+The `pipeline/fetch_nasa_data.py` script queries the real NASA POWER API, computes statistical trends, and exports `data.json`, `data.js` and `embedded-data.js` into `legacy/` (the default `--out-dir`):
 ```bash
 cd "/home/zer0/Desktop/Projects/Nasa project"
 
-# Run the 82-test backend verification suite
-python3 test_nasa_pipeline.py
+# Fetch live NASA POWER observations into legacy/
+python3 pipeline/fetch_nasa_data.py
 
-# Run the 51-test JavaScript statistical parity suite
-node test-trend-engine.js
-
-# Fetch live NASA POWER observations
-python3 fetch_nasa_data.py --output data.json
+# Or regenerate from the bundled calibrated cache, with no network
+python3 pipeline/fetch_nasa_data.py --offline
 ```
+
+> **Note:** this pipeline refreshes the **legacy** dataset only. The React app reads
+> `src/data/terrapulseData.js`, a separately maintained copy — re-running the pipeline does
+> **not** update the application. Reconciling the two into one generated dataset is open work.
 
 ---
 
@@ -177,39 +176,71 @@ python3 fetch_nasa_data.py --output data.json
 
 ```
 /home/zer0/Desktop/Projects/Nasa project/
-├── index.html                   # HTML5 entry with Inter & Cairo font stacks
+├── index.html                   # Vite entry template (loads /src/main.jsx; not double-clickable)
 ├── package.json                 # Vite + React 18, Tailwind, Lucide, Leaflet, Chart.js
 ├── vite.config.js               # Optimized Vite bundler configuration
 ├── tailwind.config.js           # Apple dark space theme tokens & typography
-├── data.json                    # Golden 30-year NASA datasets (1995-2025)
-├── fetch_nasa_data.py           # NASA POWER API fetcher & Mann-Kendall CLI pipeline
-├── test_nasa_pipeline.py        # 82-check verification suite (100% passing)
-├── test-trend-engine.js         # 51-check JS statistical verification suite (100% passing)
 ├── README.md                    # Bilingual documentation & architecture guide
 ├── SUBMISSION_COPY.md           # Copy-paste submission package (storyboard & 7-slide deck)
-└── src/
-    ├── main.jsx                 # React root mount
-    ├── App.jsx                  # Main application orchestrator & state manager
-    ├── index.css                # Apple Design fluid interactions, frosted glass, print styles
-    ├── data/
-    │   └── terrapulseData.js    # Continuous 31-yr records & 45 realistic physician reports
-    ├── lib/
-    │   ├── trendEngine.js       # OLS linear regression, Mann-Kendall test, t-test, HNI & simulation
-    │   └── translations.js      # Full English & Arabic localization dictionaries
-    └── components/
-        ├── Header.jsx           # Apple-style segmented tabs, 1-click cases, language toggle
-        ├── KpiStrip.jsx         # Executive metrics with tabular-nums & glowing cards
-        ├── MapModule.jsx        # Watermark-free Leaflet map (Esri Dark) + 1995-2025 time-lapse
-        ├── TrendChartModule.jsx # 30-yr Chart.js series, anomaly toggle, Mann-Kendall badge
-        ├── OppositeTrends.jsx   # Upper Egypt arid warming vs Nile Delta humidity/aerosols
-        ├── DoctorMatcher.jsx    # "Stay & Build" 8-specialty clinical impact matcher
-        ├── PhysicianForm.jsx    # In-page clinical observation & migration intent form
-        ├── DecisionMaker.jsx    # What-If simulator & 3 executive Chart.js dashboards
-        ├── WizardModal.jsx      # 3-step Guided Trend Detective Wizard
-        ├── MathModal.jsx        # Mathematical & statistical methodology guide
-        ├── PrintBrief.jsx       # Official 1-page ministerial brief for @media print
-        └── Footer.jsx           # NASA mission credits & hackathon branding
+├── ARCHITECTURE.md              # System design, module contracts & index specification
+├── TECHNICAL_SIGNOFF.md         # Mathematical audit & verification record
+├── .env.example                 # Optional Supabase sync configuration
+├── src/                         # ── THE SHIPPED REACT APPLICATION ──
+│   ├── main.jsx                 # React root mount (bundles Leaflet CSS locally)
+│   ├── App.jsx                  # Main application orchestrator & state manager
+│   ├── index.css                # Apple Design fluid interactions, frosted glass, print styles
+│   ├── data/
+│   │   ├── terrapulseData.js    # Continuous 31-yr records & 45 realistic physician reports
+│   │   └── egyptGovernoratesGeoJson.js  # Official UN OCHA / geoBoundaries polygons
+│   ├── lib/
+│   │   ├── trendEngine.js       # OLS regression, Mann-Kendall, t-test, HNI/WNI & simulation
+│   │   ├── trendEngine.test.mjs # 106-check suite for the live engine (npm test)
+│   │   ├── chartAdapters.js     # Chart.js option/dataset builders per metric
+│   │   ├── dbService.js         # Supabase telemetry with local-storage fallback
+│   │   ├── specialties.js       # Shared AR/EN specialty label registers
+│   │   └── translations.js      # Full English & Arabic localization dictionaries
+│   └── components/
+│       ├── Header.jsx           # Apple-style segmented tabs, 1-click cases, language toggle
+│       ├── KpiStrip.jsx         # Executive metrics with tabular-nums & glowing cards
+│       ├── MapModule.jsx        # Watermark-free Leaflet map (Esri Dark) + 1995-2025 time-lapse
+│       ├── TrendChartModule.jsx # 30-yr Chart.js series, anomaly toggle, Mann-Kendall badge
+│       ├── OppositeTrends.jsx   # Upper Egypt arid warming vs Nile Delta humidity/aerosols
+│       ├── DoctorMatcher.jsx    # "Stay & Build" 8-specialty clinical impact matcher
+│       ├── PhysicianForm.jsx    # In-page clinical observation & migration intent form
+│       ├── DecisionMaker.jsx    # What-If simulator & 3 executive Chart.js dashboards
+│       ├── DbSyncModal.jsx      # Cloud telemetry status & configuration panel
+│       ├── WizardModal.jsx      # 3-step Guided Trend Detective Wizard
+│       ├── MathModal.jsx        # Mathematical & statistical methodology guide
+│       ├── PrintBrief.jsx       # Official 1-page ministerial brief for @media print
+│       └── Footer.jsx           # NASA mission credits & hackathon branding
+├── pipeline/                    # ── PYTHON DATA PIPELINE (generates legacy/ artifacts only) ──
+│   ├── fetch_nasa_data.py       # NASA POWER API fetcher & Mann-Kendall CLI pipeline
+│   ├── trend_engine.py          # Python statistical engine (parity with legacy JS engine)
+│   ├── test_nasa_pipeline.py    # 82-check artifact & cross-runtime parity suite
+│   ├── test_trend_engine.py     # 12-check Python statistics suite
+│   └── test-legacy-engine.js    # 51-check suite for legacy/trend-engine.js
+└── legacy/                      # ── ARCHIVED PRE-REACT VANILLA BUILD (not shipped) ──
+    ├── index.html               # Archived UI; does NOT run standalone (see note below)
+    ├── app.js                   # Vanilla JS UI
+    ├── styles.css               # Vanilla stylesheet
+    ├── trend-engine.js          # Legacy statistical engine
+    ├── data.json                # Golden 30-year NASA datasets (1995-2025)
+    ├── data.js                  # Same dataset, ES module wrapper
+    └── embedded-data.js         # Same dataset, window global for file:// use
 ```
+
+> **Legacy status.** `legacy/` is kept for statistical parity against
+> `pipeline/trend_engine.py` and as a record of the pre-React implementation — it is **not**
+> a working demo. `legacy/index.html:969-970` load `data.js` and `trend-engine.js` with plain
+> `<script src>` tags, but `trend-engine.js:808` ends in `export default _engine`, so the
+> browser throws `SyntaxError: Unexpected token 'export'` and `app.js`'s two `TrendEngine`
+> references never resolve. It also pulls Tailwind, Leaflet, Chart.js and Lucide from CDNs,
+> so it is not offline-capable either. Both defects predate this cleanup and are unchanged by
+> it; fixing them is out of scope because nothing ships from this directory. Relocating the
+> files did repair one thing: `data.js`, `data.json`, `embedded-data.js`, `app.js` and
+> `styles.css` previously sat at the repo root while the archive pointed at them by relative
+> path, so it only resolved when served from the root. Serve it with `python3 -m http.server`
+> from inside `legacy/` if you want to read the old UI.
 
 ---
 

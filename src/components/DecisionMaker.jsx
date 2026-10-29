@@ -54,6 +54,7 @@ export default function DecisionMaker({
       baseIndices.epi,
       baseIndices.fsi,
       baseIndices.wni,
+      baseIndices.ppi,
       clinics,
       stipendPct,
       greeningPct

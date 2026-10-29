@@ -353,7 +353,9 @@ export function computeWNIFromReports(govId, reports, baselinePrior = 75.0) {
     const intent = (r.considering_migration || r.migration_intent || '').toLowerCase();
     if (intent === 'yes' || intent === 'نعم') migrationRiskSum += 1.0;
     else if (intent === 'hesitant' || intent === 'undecided' || intent === 'متردد') migrationRiskSum += 0.5;
-    severitySum += Number(r.severity || 3);
+    // `??` not `||` — an explicit severity of 0 is a real answer ("asymptomatic"),
+    // not a missing one, and must not silently re-score as 3.
+    severitySum += Number(r.severity ?? 3);
   }
 
   const migrationRiskRatio = migrationRiskSum / govReports.length;
@@ -463,7 +465,13 @@ export function matchSpecialty(specialtyKey, governoratesMap) {
 // SECTION 8: WHAT-IF POLICY INTERVENTION SIMULATOR
 // =========================================================================
 
-export function simulatePolicyInterventions(baseHni, baseEpi, baseFsi, baseWni, clinics = 0, stipendPct = 0, greeningPct = 0) {
+// Elasticities per intervention unit, calibrated against the governorate survey
+// seeds. Kept as named constants so the simulator's assumptions are auditable
+// rather than buried in arithmetic.
+export const ADMISSIONS_MODEL = { perClinic: 34, perStipendPct: 11, perGreeningPct: 18 };
+export const RETENTION_MODEL = { perStipendPct: 0.45, perClinic: 0.20 };
+
+export function simulatePolicyInterventions(baseHni, baseEpi, baseFsi, baseWni, basePpi, clinics = 0, stipendPct = 0, greeningPct = 0) {
   const fsiReduction = (clinics / 50.0) * 22.0;
   const wniReduction = (stipendPct / 100.0) * 28.0;
   const epiReduction = (greeningPct / 30.0) * 12.0;
@@ -472,15 +480,15 @@ export function simulatePolicyInterventions(baseHni, baseEpi, baseFsi, baseWni, 
   const simFsi = Math.max(10, baseFsi - fsiReduction);
   const simWni = Math.max(10, baseWni - wniReduction);
 
-  const simHni = (HNI_WEIGHTS.epi * simEpi) + (HNI_WEIGHTS.ppi * 50.0) + (HNI_WEIGHTS.fsi * simFsi) + (HNI_WEIGHTS.wni * simWni);
+  const simHni = (HNI_WEIGHTS.epi * simEpi) + (HNI_WEIGHTS.ppi * basePpi) + (HNI_WEIGHTS.fsi * simFsi) + (HNI_WEIGHTS.wni * simWni);
   const deltaHni = simHni - baseHni;
 
   const preventedAdmissionsPerMonth = Math.round(
-    (clinics * 34) + (stipendPct * 11) + (greeningPct * 18)
+    (clinics * ADMISSIONS_MODEL.perClinic) + (stipendPct * ADMISSIONS_MODEL.perStipendPct) + (greeningPct * ADMISSIONS_MODEL.perGreeningPct)
   );
 
   const projectedRetentionGain = Math.round(
-    (stipendPct * 0.45) + (clinics * 0.20)
+    (stipendPct * RETENTION_MODEL.perStipendPct) + (clinics * RETENTION_MODEL.perClinic)
   );
 
   return {

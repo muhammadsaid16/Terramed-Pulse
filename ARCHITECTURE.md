@@ -14,8 +14,8 @@ TerraPulse is a high-performance, client-first, zero-backend geospatial analytic
 The platform directly solves the challenge prompt by empowering researchers, healthcare professionals, and policy leaders to detect opposite-direction Earth system trends across Egypt over a 30-year window (1995–2025). It bridges planetary observations from NASA missions (NASA POWER, MERRA-2, MODIS, GLDAS, SEDAC) with socio-demographic indicators from CAPMAS and WHO to calculate the **Health Need Index (HNI)**. In doing so, it provides actionable evidence to retain and strategically deploy Egyptian medical talent ("Stay & Build Egypt").
 
 ### Core Architectural Pillars
-1. **Zero-Backend Determinism & Offline Parity**:
-   The application operates 100% in-browser with zero mandatory server dependencies. Double-clicking `index.html` on a desktop without internet yields full interactive analytical parity, powered by pre-compiled 30-year Earth observation datasets and Web Worker / synchronous micro-statistical pipelines.
+1. **Zero-Backend Determinism**:
+   The application operates 100% in-browser with zero mandatory server dependencies — there is no application backend; every statistic is computed in the page. Serving requires a static HTTP origin (`npm run preview` after build) because the shipped entry is the Vite template, which loads `/src/main.jsx` as an ES module and renders blank over `file://`. The datasets, Leaflet and Chart.js are bundled, so maps and charts work without internet; the two Google Fonts (Inter + Cairo) are the only remaining network dependency and are needed on first visit.
 2. **Mathematical Precision with In-Browser JS Math**:
    Every trend statistic—Ordinary Least Squares (OLS) slope, Student's $t$-test $p$-value, Mann-Kendall non-parametric test ($S$, $Var(S)$, $Z$, and exact two-tailed $p$-value), Theil-Sen robust estimator, and Min-Max HNI composite weighting—is computed deterministically on-the-fly in JavaScript without external math libraries.
 3. **Bilingual Bi-Directional UX (English LTR & Arabic RTL)**:
@@ -38,16 +38,16 @@ flowchart TD
     end
 
     subgraph Data Pipeline [Python Offline / Online Refresher]
-        FETCH_PY["fetch_nasa_data.py<br/>REST Client + Fallback Cache"]
-        PY_MATH["trend_engine.py<br/>Python Statistical Engine"]
-        DATA_JSON["data.json / embedded-data.js<br/>30-Year Normalized Records (1995-2025)"]
+        FETCH_PY["pipeline/fetch_nasa_data.py<br/>REST Client + Fallback Cache"]
+        PY_MATH["pipeline/trend_engine.py<br/>Python Statistical Engine"]
+        DATA_JSON["legacy/data.json / embedded-data.js<br/>30-Year Normalized Records (1995-2025)"]
     end
 
     subgraph Browser Client [Zero-Backend Standalone Web App]
         STORE["Application State & Reactive Store<br/>(localStorage + Bayesian Prior)"]
         
         subgraph Core Engines
-            MATH_JS["trend-engine.js<br/>- Mann-Kendall Z & p-value<br/>- OLS Regression & t-test<br/>- HNI Composite & MinMax"]
+            MATH_JS["src/lib/trendEngine.js<br/>- Mann-Kendall Z & p-value<br/>- OLS Regression & t-test<br/>- HNI Composite & MinMax"]
             ROUTER["Bilingual & Theme Controller<br/>(EN LTR / AR RTL, Dark Theme)"]
             DOCTOR_MCDA["Specialty Impact Matcher<br/>(8 Specialties Sensitivity Matrix)"]
             SIMULATOR["What-If Policy Simulator<br/>(Convoys, Incentives, Greening)"]
@@ -81,7 +81,7 @@ flowchart TD
 
 ## 3. Module Decomposition & Layer Contracts
 
-### Module 1: Trend & Statistics Engine (`trend-engine.js` / `trend-engine.py`)
+### Module 1: Trend & Statistics Engine (`src/lib/trendEngine.js` — live; `legacy/trend-engine.js` and `pipeline/trend_engine.py` are parity copies)
 Provides analytical guarantees across all datasets. Zero external dependencies.
 
 #### Mathematical Contracts:
@@ -109,11 +109,15 @@ Provides analytical guarantees across all datasets. Zero external dependencies.
      - $p \ge 0.05$: `Non-Significant Fluctuation (p >= 0.05)`
 
 3. **Deseasonalization & Anomaly Detection**:
-   - Multi-year climatological baseline: $\mu_{base} = \frac{1}{N} \sum_{i=1}^N y_i$
+   - Climatological baseline normal (1995–2005 window, per WMO convention): $\mu_{base} = \frac{1}{N} \sum_{i \in [1995,2005]} y_i$
    - Anomaly time series: $\Delta y_i = y_i - \mu_{base}$
+   - The legacy `trend-engine.js` / `trend_engine.py` implementations subtract the full-series mean instead; their anomalies are not comparable with the React app's.
 
 4. **Health Need Index (HNI) Specification**:
    $$\text{HNI} = 0.35 \times \text{EPI} + 0.30 \times \text{PPI} + 0.20 \times \text{FSI} + 0.15 \times \text{WNI}$$
+
+   > **Implementation status.** This block is the *design specification*. In the shipped React app only **HNI** and **WNI** are computed at runtime (`computeHNI`, `computeWNIFromReports` in `src/lib/trendEngine.js`). **EPI, PPI and FSI are shipped as pre-computed constants** in `src/data/terrapulseData.js` under `baseline_indices` — the formulas below are not currently executed against the 31-year series, and the animated map layer uses its own variant (see Module 2 note). Implementing the derivation is the primary outstanding work item.
+
    - **EPI (Environmental Pressure Index)**:
      $$EPI = 0.45 \cdot \text{Norm}(T2M\_MAX) + 0.35 \cdot \text{Norm}(AOD) + 0.20 \cdot (100 - \text{Norm}(NDVI))$$
    - **PPI (Population Pressure Index)**:
@@ -122,7 +126,7 @@ Provides analytical guarantees across all datasets. Zero external dependencies.
      $$FSI = 0.50 \cdot (100 - \text{Norm}(\text{HospBedsPer10k})) + 0.50 \cdot (100 - \text{Norm}(\text{PhysiciansPer10k}))$$
    - **WNI (Workforce Need Index)** with Bayesian Prior:
      $$WNI = \frac{N_0 \cdot WNI_0 + \sum_{k=1}^M \text{SurveyRiskScore}_k}{N_0 + M}$$
-     where $N_0 = 10$ prior weight, $WNI_0$ is governorate initial baseline (Cairo: 48, Giza: 54, Alex: 42, Assiut: 78, Aswan: 85), and $M$ is survey count.
+     where $N_0 = 15$ prior weight (equivalent to `sampleWeight = min(1, M/15)` in `computeWNIFromReports`, result clamped to $[10,100]$), and $WNI_0$ is the governorate cold-start prior actually shipped in `src/data/terrapulseData.js`: Cairo 58, Giza 65, Alexandria 52, Assiut 82, Aswan 90. $M$ is the survey count.
 
 ---
 
@@ -130,6 +134,7 @@ Provides analytical guarantees across all datasets. Zero external dependencies.
 - **Map Library**: `Leaflet.js` (v1.9.4)
 - **Map Base**: CARTO Dark Matter (`https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png`) with OpenStreetMap standard fallback.
 - **Governorate Vector Polygons**: GeoJSON boundaries for Cairo, Giza, Alexandria, Assiut, and Aswan with dynamic choropleth shading based on selected metric or HNI score.
+- **Known divergence — animated EPI layer**: `src/components/MapModule.jsx` computes its per-year map EPI inline as `0.50·Norm(EXTREME_HEAT_DAYS) + 0.30·Norm(T2M_MAX) + 0.20·Norm(AOD_550)`. This differs from the Module 1 specification, which weights `T2M_MAX`/`AOD`/`NDVI` at `0.45/0.35/0.20` and omits heat days. The map layer therefore shows a heat-frequency-weighted exposure surface, not the specified EPI, and its PPI channel applies an undocumented linear population-growth ramp. Reconciling `MapModule.jsx` with the engine is an open item; the KPI strip, matcher, and policy brief use the shipped `baseline_indices` instead.
 - **Chart Library**: `Chart.js` (v4.4.1)
   - Time-series mode toggle: Raw NASA values vs. Deseasonalized Anomaly.
   - Trend line overlay: OLS regression line with confidence intervals.
@@ -162,9 +167,11 @@ Multi-Criteria Decision Analysis (MCDA) linking NASA environmental exposures wit
 
 ### Module 5: What-If Policy Intervention Simulator
 Allows health ministers and governorate leadership to model real-world interventions:
-1. **Mobile Medical Convoys** ($0 \dots 25$ convoys): Decreases Facility Shortage Index ($FSI$).
-2. **Specialty Retention Incentives** ($0\% \dots 50\%$ bonus): Decreases Workforce Need Index ($WNI$) and migration risk.
-3. **Urban Greening & Heat Mitigation** ($-0.0^\circ\text{C} \dots -1.5^\circ\text{C}$): Reduces Environmental Pressure Index ($EPI$).
+1. **Primary Healthcare Clinics & Mobile Convoys** ($0 \dots 50$ units, UI default 15): decreases Facility Shortage Index, up to $-22$ FSI points at the cap.
+2. **Specialty Retention Stipend** ($0\% \dots 100\%$ bonus, UI default 40): decreases Workforce Need Index and migration risk, up to $-28$ WNI points at the cap.
+3. **Urban Greening & Heat Mitigation** ($0\% \dots 30\%$ canopy coverage, UI default 10): reduces Environmental Pressure Index, up to $-12$ EPI points at the cap.
+
+The governorate PPI enters the simulated composite unchanged (`simulatePolicyInterventions` takes `basePpi` explicitly), so $\Delta HNI$ reflects the real population pressure of the selected governorate rather than a fixed constant.
 - Displays real-time delta: $\Delta HNI = HNI_{\text{simulated}} - HNI_{\text{baseline}}$ and projected lives impacted.
 
 ---
@@ -175,7 +182,9 @@ Allows health ministers and governorate leadership to model real-world intervent
 
 ---
 
-## 4. Canonical Data Schema (`data.json`)
+## 4. Canonical Data Schema (`src/data/terrapulseData.js` for the React app; `legacy/data.json` for the pipeline and legacy build)
+
+Two physical copies of this schema exist and are maintained independently: `pipeline/fetch_nasa_data.py` regenerates only the `legacy/` artifacts, while `src/data/terrapulseData.js` is hand-maintained and differs in governorate `lat`/`lng` (manually nudged to polygon centroids for marker placement).
 
 ```typescript
 interface TerraPulseDatabase {

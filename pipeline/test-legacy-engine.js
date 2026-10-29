@@ -3,7 +3,7 @@
  * Run with: node test-trend-engine.js
  */
 
-import engine from './trend-engine.js';
+import engine from '../legacy/trend-engine.js';
 
 let passedTests = 0;
 let totalTests = 0;

@@ -827,7 +827,8 @@ def main():
     parser = argparse.ArgumentParser(description="TerraPulse NASA POWER API Data Ingestion & Statistical Pipeline")
     parser.add_argument("--live", action="store_true", default=True, help="Query live NASA POWER API (default: True)")
     parser.add_argument("--offline", action="store_true", default=False, help="Force offline mode using verified calibrated cache")
-    parser.add_argument("--out-dir", type=str, default=".", help="Directory to export data.json and data.js")
+    default_out = str((Path(__file__).resolve().parent.parent / "legacy"))
+    parser.add_argument("--out-dir", type=str, default=default_out, help="Directory to export data.json and data.js")
     parser.add_argument("--verify", action="store_true", default=True, help="Run validation assertions")
     parser.add_argument("--quiet", action="store_true", default=False, help="Suppress detailed console logs")
 

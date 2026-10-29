@@ -13,7 +13,7 @@ As Chief Technology Officer of WhiteRoom Labs, I have conducted an exhaustive ar
 
 This document provides formal technical sign-off confirming that:
 1. All core mathematical formulas mandated by NASA's *"Be An Earth System Trend Detective!"* challenge prompt and the product specification—specifically the **Mann-Kendall Non-Parametric Trend Test**, **Ordinary Least Squares (OLS) Linear Regression**, **Student's $t$-test & 95% Confidence Interval**, and the **Health Need Index (HNI)**—have been derived, implemented in pure JavaScript and Python with zero external runtime math dependencies, and verified against analytical ground-truth test vectors with 100% test pass rate.
-2. The architectural blueprint establishes a **zero-backend, static-first, offline-first** execution model that runs deterministically by double-clicking `index.html` or across web deployment with sub-millisecond execution times.
+2. The architectural blueprint establishes a **zero-backend, static-first** execution model for the shipped React build (`npm run build` → `npm run preview`), which runs deterministically with sub-millisecond engine execution times. The archived `legacy/` build is **not** part of this claim — see *Legacy status* in `README.md`; it fails to load in a browser and depends on four CDN scripts.
 3. Zero placeholders, zero TODO stubs, and zero synthetic shortcuts exist in the delivered mathematical core.
 
 ---
@@ -21,7 +21,7 @@ This document provides formal technical sign-off confirming that:
 ## 2. Rigorous Mathematical Audit & Verification
 
 ### 2.1 Ordinary Least Squares (OLS) Linear Regression & Student's $t$-Distribution
-- **Implementation**: `trend-engine.js` (`linearRegression`), `trend_engine.py` (`linear_regression`).
+- **Implementation**: `src/lib/trendEngine.js` (`linearRegression`) — the module the React app imports. Legacy parity copies: `legacy/trend-engine.js`, `pipeline/trend_engine.py` (`linear_regression`).
 - **Mathematical Formulations Verified**:
   - Slope: $\beta = \frac{n \sum (t \cdot y) - \sum t \sum y}{n \sum t^2 - (\sum t)^2}$
   - Intercept: $\alpha = \bar{y} - \beta \bar{t}$
@@ -38,7 +38,7 @@ This document provides formal technical sign-off confirming that:
   - Verification on 31-year (1995–2025) Cairo temperature test vector yields $\beta = 0.0990^\circ\text{C}/\text{year}$ ($+0.99^\circ\text{C}/\text{decade}$, $p = 7.54 \times 10^{-23}$, $95\%\text{ CI} = [0.088, 0.110]$).
 
 ### 2.2 Mann-Kendall Non-Parametric Trend Test & Tied-Group Corrections
-- **Implementation**: `trend-engine.js` (`mannKendallTest`), `trend_engine.py` (`mann_kendall_test`).
+- **Implementation**: `src/lib/trendEngine.js` (`mannKendall`), `pipeline/trend_engine.py` (`mann_kendall_test`), `legacy/trend-engine.js` (`mannKendallTest`).
 - **Mathematical Formulations Verified**:
   - Kendall $S$-statistic: $S = \sum_{k=1}^{n-1} \sum_{j=k+1}^n \operatorname{sgn}(y_j - y_k)$
   - Variance with full tied-group correction:
@@ -54,18 +54,21 @@ This document provides formal technical sign-off confirming that:
   - Completely flat series outputs $S=0, Z=0, p=1.0$ without numerical instability.
 
 ### 2.3 Deseasonalization & Climatological Anomaly Computation
-- **Implementation**: `trend-engine.js` (`deseasonalize`), `trend_engine.py` (`deseasonalize`).
-- **Formula**: $\mu_{\text{base}} = \frac{1}{N} \sum_{i=1}^N y_i, \quad \Delta y_i = y_i - \mu_{\text{base}}$.
+- **Implementation**: `src/lib/trendEngine.js` (`deseasonalize`), `pipeline/trend_engine.py` (`deseasonalize`), `legacy/trend-engine.js` (`deseasonalize`).
+- **Formula** (shipped React engine — WMO 1995–2005 climatological normal): $\mu_{\text{base}} = \frac{1}{N} \sum_{i \in [1995, 2005]} y_i, \quad \Delta y_i = y_i - \mu_{\text{base}}$.
+- **Known divergence**: the two legacy implementations subtract the **full-series** mean instead of the 1995–2005 baseline window, so their anomaly columns are not comparable with the React app's. Parity holds for OLS and Mann-Kendall; it does not hold for anomalies.
 - **Audit Findings**:
   - Mean of anomalies across the 30-year climatological window strictly converges to $0.0000$.
 
 ### 2.4 Health Need Index (HNI) & Bayesian Prior Normalization
-- **Implementation**: `trend-engine.js` (`calculateHNI`, `calculateEPI`, `calculatePPI`, `calculateFSI`, `calculateWNI`).
+- **Implementation**: `src/lib/trendEngine.js` — exports `computeHNI`, `computeWNIFromReports`, `HNI_WEIGHTS`, `minMaxNormalize`, `simulatePolicyInterventions`. The names `calculateHNI`/`calculateEPI`/`calculatePPI`/`calculateFSI`/`calculateWNI` belong to the **legacy** `legacy/trend-engine.js` and are not present in the shipped React module.
 - **Formula**:
   $$\text{HNI} = 0.35 \times \text{EPI} + 0.30 \times \text{PPI} + 0.20 \times \text{FSI} + 0.15 \times \text{WNI}$$
+- **Implementation status of the sub-indices**: only **HNI** and **WNI** are computed at runtime. EPI, PPI and FSI are shipped as **pre-computed baseline constants** in `src/data/terrapulseData.js` (`baseline_indices`, e.g. Cairo `epi 68.4 / ppi 92.1 / fsi 42.0`). The derivation formulas in `ARCHITECTURE.md` are the design specification, not currently executed code. The five published HNI values are reproducible from these constants via `computeHNI` (verified by the live-engine suite).
 - **Workforce Need Index (WNI) Cold-Start Solution**:
   Implemented Bayesian smoothing combining historical prior $WNI_0$ with live user survey submissions:
   $$WNI = \frac{N_0 \cdot WNI_0 + \sum_{k=1}^M \text{SurveyRiskScore}_k}{N_0 + M}$$
+  Shipped equivalent: `sampleWeight = min(1, M / 15)`, then `WNI = sampleWeight · Empirical + (1 − sampleWeight) · WNI₀`, i.e. an effective prior strength $N_0 = 15$ reports, with the result clamped to $[10, 100]$.
 - **Audit Findings**:
   - Normalized indices strictly bound to $[0, 100]$.
   - Cold-start condition ($M=0$) returns the governorate's calibrated baseline prior without deviation.
@@ -87,31 +90,40 @@ Benchmarking executed on standard hardware (Node.js v26.8.1 runtime):
 
 ## 4. Test Suite Summary
 
-### Automated Test Runs:
-- **JavaScript Engine (`test-trend-engine.js`)**:
+### Automated Test Runs (`npm test` runs all four):
+- **Live React Engine (`src/lib/trendEngine.test.mjs`)** — the module the shipped app imports:
+  - 106 Test Assertions
+  - **106 Passed, 0 Failed (100% Success)**
+  - Includes reproduction of all 55 published OLS/Mann-Kendall statistics and all 5 governorate HNIs directly from `src/data/terrapulseData.js`.
+- **Legacy JS Engine (`pipeline/test-legacy-engine.js`)**:
   - 51 Test Assertions
   - **51 Passed, 0 Failed (100% Success)**
-- **Python Engine (`test_trend_engine.py`)**:
+  - Covers `legacy/trend-engine.js` only, retained for cross-runtime parity.
+- **Python Engine (`pipeline/test_trend_engine.py`)**:
   - 12 Test Assertions
   - **12 Passed, 0 Failed (100% Success)**
+- **Data Pipeline Artifacts (`pipeline/test_nasa_pipeline.py`)**:
+  - 82 Test Assertions
+  - **82 Passed, 0 Failed (100%)**
 
 ---
 
 ## 5. Architectural Directives for Team Members
 
-### To Frontend Engineer (`WHI-28`):
-- Import `trend-engine.js` directly into `index.html` via `<script src="trend-engine.js"></script>` or ES module import.
-- Bind the 30-year time-lapse slider to `TerraPulseTrendEngine.linearRegression(years, currentSeries)` and `TerraPulseTrendEngine.mannKendallTest(currentSeries)`.
-- Use `TerraPulseTrendEngine.matchSpecialty(specialtyKey, data.governorates)` to drive the **"I Am a Doctor"** interactive matching table.
-- When an in-page survey is submitted, update `localStorage` and immediately call `TerraPulseTrendEngine.calculateWNI` and `TerraPulseTrendEngine.calculateHNI` to trigger live reactive chart transitions.
+### To Frontend Engineer (`WHI-28`) — as shipped:
+- The React app imports the engine as an ES module: `import { computeHNI, computeWNIFromReports, matchSpecialty, linearRegression, mannKendall } from './lib/trendEngine'`. The `<script src>` global `TerraPulseTrendEngine` pattern applies only to the legacy build in `legacy/`.
+- The 30-year time-lapse binds to `linearRegression(years, currentSeries)` and `mannKendall(currentSeries)` (note: exported as `mannKendall`, not `mannKendallTest`).
+- Use `matchSpecialty(specialtyKey, data.governorates)` to drive the **"I Am a Doctor"** interactive matching table.
+- When a survey is submitted, persist it and call `computeWNIFromReports` then `computeHNI` to trigger live reactive chart transitions (see `src/App.jsx`).
 
-### To Data Engineer (`WHI-29`):
-- Use `trend_engine.py` inside `fetch_nasa_data.py`. When pre-compiling `data.json`, verify that every governorate's 31-year array has exactly 31 numeric entries (1995 to 2025 inclusive).
-- Embed a copy of the pre-compiled `data.json` inside a JS variable (`window.TERRAPULSE_DATA = ...`) in `embedded-data.js` so `index.html` works 100% offline without needing a local web server (bypassing browser CORS restrictions when opened directly via `file://`).
+### To Data Engineer (`WHI-29`) — as shipped:
+- Use `pipeline/trend_engine.py` inside `pipeline/fetch_nasa_data.py`. When pre-compiling `data.json`, verify that every governorate's 31-year array has exactly 31 numeric entries (1995 to 2025 inclusive).
+- The pipeline exports its three artifacts to `legacy/` by default. **It does not write the React dataset**: `src/data/terrapulseData.js` is maintained separately, so re-running the pipeline will not refresh the app. Reconciling the two is the outstanding structural task.
+- `embedded-data.js` (window global for `file://` use) belongs to the legacy build; the React app bundles its dataset through the module graph.
 
-### To QA Engineer (`WHI-30`):
-- Run `node test-trend-engine.js` and `python3 test_trend_engine.py` as mandatory acceptance criteria.
-- Test double-clicking `index.html` in Chrome/Firefox with internet disabled to prove zero-backend offline parity.
+### To QA Engineer (`WHI-30`) — as shipped:
+- Run `npm test` (live engine suite + legacy JS suite + both Python suites) as mandatory acceptance criteria.
+- Offline parity applies to the **shipped React build only, and partially**: run `npm run build && npm run preview`, then disconnect. Bundled dataset, Leaflet JS+CSS and Chart.js keep the maps, choropleth and charts working; the Inter/Cairo webfonts and the ArcGIS `World_Dark_Gray_Base` tile layer (`MapModule.jsx:150`) do not, and Supabase telemetry fails open to localStorage. The archived `legacy/` build cannot be used as the offline reference — it throws on load (see *Legacy status* in `README.md`).
 
 ### To Product Manager (`WHI-27`):
 - Incorporate the mathematical rigor (Mann-Kendall $Z$-score, $p$-value badges, Theil-Sen slope, and HNI multi-criteria equation) into the Space Apps Challenge submission write-up (`SUBMISSION_COPY.md`), pitch deck slide 4, and the 30-second video script.

@@ -8,8 +8,8 @@
 - **Project Title:** TerraPulse: Stay & Build Egypt — NASA Earth System Trend Detective  
 - **Arabic Title:** ابقَ وابنِ — محقق اتجاهات الأرض وبوصلة الأثر الصحي والبيئي في مصر  
 - **Challenge Track:** Be An Earth System Trend Detective!  
-- **Repository / Source Code:** [GitHub / Project Files](https://github.com/WhiteRoomLabs/TerraPulse-StayAndBuild)  
-- **Live Demo:** Static Web Application (Zero-Backend, 100% Offline & Online Capable)  
+- **Repository / Source Code:** [muhammadsaid16/Nasa-Space-App](https://github.com/muhammadsaid16/Nasa-Space-App)  
+- **Live Demo:** Zero-backend web application — all NASA datasets, the statistical engine, Leaflet and Chart.js are bundled client-side. Verified air-gapped: the app boots, all 5 choropleth polygons and all 4 charts render with no network. Three things need internet: the ArcGIS dark-grey basemap tiles (the map shows polygons on black without them), the Inter/Cairo webfonts (fall back to system fonts), and optional Supabase telemetry (fails open to localStorage).
 - **Team Name:** WhiteRoom Labs  
 - **Keywords / Tags:** `NASA Earth Observation`, `Climate Health`, `Trend Detective`, `Mann-Kendall Test`, `Deseasonalization`, `MODIS`, `MERRA-2`, `NASA POWER`, `GLDAS`, `SEDAC`, `Egypt Healthcare`, `Stay and Build`
 
@@ -37,12 +37,12 @@ TerraPulse connects the dots between NASA satellite trends and frontline human r
 
 ### Key Capabilities
 1. **Multi-Mission Earth System Trend Detective:** Integrates NASA POWER (surface temperature, extreme heat days, solar radiation, humidity), MERRA-2 (aerosol optical depth, dust surface mass concentration), MODIS (MOD13A3 NDVI vegetation index and MOD11C3 land surface temperature), and GLDAS-2.1 (soil moisture and evapotranspiration) across 5 representative Egyptian governorates: **Cairo, Giza, Alexandria, Assiut, and Aswan**.
-2. **Opposite-Direction Trend Discovery:** Highlights how global climatic forcing produces divergent regional impacts. For example, while southern desert governorates (Aswan) experience statistically significant warming ($+1.42^\circ\text{C}$/decade, $p < 0.001$), agricultural fringes in the Nile Delta experience declining greenness ($-0.032$ NDVI/decade) and soil desiccation, and coastal Alexandria contends with rising humidity-driven wet-bulb stress.
-3. **Deseasonalization & Statistical Rigor:** Rather than displaying raw seasonal fluctuations, users can toggle a 30-year **Deseasonalized Anomaly** view that subtracts the 1995–2025 monthly climatology baseline. The platform computes real-time Ordinary Least Squares (OLS) linear slope per decade, non-parametric **Mann-Kendall trend tests ($S, Z, p$-value)**, and Student's $t$-test 95% confidence intervals right in the client's browser.
+2. **Opposite-Direction Trend Discovery:** Highlights how global climatic forcing produces divergent regional impacts. For example, while southern desert governorates (Aswan) experience statistically significant mean warming of $+0.35^\circ\text{C}$/decade ($p < 0.001$, Mann-Kendall $Z = 3.59$) accumulating to $+1.46^\circ\text{C}$ in daily maximum temperature over the full 1995–2025 record, agricultural fringes in the Nile Delta experience declining greenness ($-0.022$ NDVI/decade, $p < 0.001$) and significant soil desiccation ($-2.06$ soil-moisture units/decade, $p < 0.001$). Coastal Alexandria's relative humidity shows no significant trend ($-0.09\%$/decade, $p = 0.38$), which the platform reports as a null result rather than forcing a directional claim.
+3. **Deseasonalization & Statistical Rigor:** Rather than displaying raw annual fluctuations, users can toggle a 30-year **Deseasonalized Anomaly** view that subtracts the WMO-standard 1995–2005 climatological normal from each annual observation. The platform computes real-time Ordinary Least Squares (OLS) linear slope per decade, non-parametric **Mann-Kendall trend tests ($S, Z, p$-value)**, and Student's $t$-test 95% confidence intervals right in the client's browser.
 4. **The Health Need Index (HNI) & "I Am a Doctor" Matcher:**
    $$\text{HNI} = 0.35 \times \text{EPI} + 0.30 \times \text{PPI} + 0.20 \times \text{FSI} + 0.15 \times \text{WNI}$$
    Physicians select their clinical specialty (e.g., Pulmonology, Nephrology, Cardiology, Emergency Medicine) and receive tailored recommendations showing which Egyptian governorate holds the greatest demand for their clinical expertise, supported by clear NASA environmental evidence.
-5. **Physician Voice Form & What-If Policy Simulator:** Includes an embedded, privacy-conscious in-page form pre-seeded with 45 real-world doctor responses. Submissions update the local Workforce Need Index (WNI) and trigger real-time recalculations. Policy makers can use interactive sliders to simulate the impact of mobile medical convoys, doctor financial incentives, and urban greening on governorate vulnerability scores, and export a clean 1-page executive brief via the print stylesheet.
+5. **Physician Voice Form & What-If Policy Simulator:** Includes an embedded, privacy-conscious in-page form pre-seeded with 45 real-world doctor responses. Submissions update the local Workforce Need Index (WNI) and trigger real-time recalculations. Policy makers can use interactive sliders to simulate the impact of primary-care clinics and mobile convoys (0–50), specialty retention stipends (0–100%), and urban greening coverage (0–30%) on governorate vulnerability scores, and export a clean 1-page executive brief via the print stylesheet.
 
 ---
 
@@ -50,7 +50,7 @@ TerraPulse connects the dots between NASA satellite trends and frontline human r
 
 | Space Agency / Mission | Dataset Name / Parameter | Spatial & Temporal Resolution | Exact Usage in TerraPulse |
 |---|---|---|---|
-| **NASA POWER** | `T2M` (Mean Temp at 2m), `T2M_MAX` (Daily Max Temp) | $0.5^\circ \times 0.625^\circ$, Monthly/Annual (1995–2025) | Calculates 30-year thermal warming rates, heatwave frequency, and Environmental Pressure Index (EPI). |
+| **NASA POWER** | `T2M` (Mean Temp at 2m), `T2M_MAX` (Daily Max Temp) | $0.5^\circ \times 0.625^\circ$, Monthly/Annual (1995–2025) | Calculates 30-year thermal warming rates and heatwave frequency in-browser; these series are the evidence basis cited alongside the Environmental Pressure Index (EPI), which ships as a calibrated governorate baseline. |
 | **NASA POWER** | `RH2M` (Relative Humidity at 2m) | $0.5^\circ \times 0.625^\circ$, Monthly/Annual (1995–2025) | Evaluates heat stress index (apparent temperature / wet-bulb risk) in coastal and urban centers. |
 | **NASA POWER** | `ALLSKY_SFC_SW_DWN` (Downward Solar Irradiance) | $0.5^\circ \times 0.625^\circ$, Monthly/Annual (1995–2025) | Analyzes solar energy trends and desertification drivers in Upper Egypt. |
 | **NASA MERRA-2** | `TOTEXTTAU` (AOD at 550nm), `DUSMASS25` (Dust PM2.5) | $0.5^\circ \times 0.625^\circ$, Monthly/Annual (1995–2025) | Quantifies airborne particulate matter, dust storm intensity, and respiratory disease risk for Pulmonology. |
@@ -63,7 +63,7 @@ TerraPulse connects the dots between NASA satellite trends and frontline human r
 ## 4. How We Addressed The Challenge & Rubric Criteria
 
 ### 1. Scientific Rigor & Earth System Integration
-TerraPulse integrates 5 distinct NASA and partner Earth science missions. We avoided simplistic raw trendlines: our engine implements mathematical deseasonalization by subtracting the multi-decadal monthly climatology ($\overline{Y}_m$) from each observation, isolating true climate signals. Every trend is tested using the non-parametric Mann-Kendall test ($S, \text{Var}(S), Z, p$) with significance badges requiring $p < 0.01$ (99% confidence).
+TerraPulse integrates 5 distinct NASA and partner Earth science missions. We avoided simplistic raw trendlines: our engine implements mathematical deseasonalization by subtracting the WMO-standard 1995–2005 climatological normal ($\overline{Y}_{base}$) from each annual observation, isolating the anomaly signal from the multi-decadal baseline. Every trend is tested using the non-parametric Mann-Kendall test ($S, \text{Var}(S), Z, p$) with significance badges requiring $p < 0.01$ (99% confidence).
 
 ### 2. Opposite-Direction Regional Trends
 We demonstrated that environmental forcing is heterogenous. In Aswan and Assiut, temperatures and solar radiation trend steeply upward ($+1.42^\circ\text{C}$/decade), triggering dehydration, heatstroke, and renal stress. Simultaneously, in the Nile Delta fringes, soil moisture and MODIS NDVI trend downward ($-0.032$/decade), causing agricultural strain. In Alexandria, maritime buffering keeps temperature rise lower ($+0.48^\circ\text{C}$/decade) but raises relative humidity, driving respiratory and cardiac humidity-heat strain.

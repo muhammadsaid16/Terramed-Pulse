@@ -21,7 +21,7 @@ import json
 import subprocess
 from pathlib import Path
 
-BASE_DIR = Path(__file__).parent.resolve()
+BASE_DIR = (Path(__file__).resolve().parent.parent / "legacy")
 
 def run_tests():
     print("=" * 80)

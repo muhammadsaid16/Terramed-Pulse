@@ -81,10 +81,10 @@ This document provides formal technical sign-off confirming that:
 - **Non-finite handling**: levers coerce to `0` and baselines to `NEUTRAL_INDICES` when a caller hands over `undefined`/`NaN` (a component reset does). Values are never silently zeroed — the UI shows a "using neutral baseline" badge while the reading is absent. Levers outside the slider range are **not** clamped by the engine; the documented guards are the `max(10, …)` sub-index floor and the `min(85, …)` retention ceiling.
 
 ### 2.6 Physician Reports — local store and a write-only cloud path
-- **Local path (always on)**: `localStorage` key `terrapulse_reports` (`src/App.jsx`); seed = the 45 `survey_seed` records in the dataset. The local write happens first and is authoritative; the remote send is an extra that reports its own outcome.
+- **Local path (always on)**: `localStorage` key `terrapulse_reports` (`src/App.jsx`), which starts empty — nothing is seeded into it, and the dataset no longer carries a survey fixture. The local write happens first and is authoritative; the remote send is an extra that reports its own outcome.
 - **Cloud path (opt-in, one direction)**: browser → `POST /api/reports` → Cloudflare Pages Function (`functions/api/reports.js`) → Neon Postgres. `src/lib/dbService.js` carries no key and no project URL: the two secrets are `NEON_URL` and `IP_SALT`, held in the Pages Function's environment, and the browser cannot reach the database directly at any address. `functions/api/status.js` answers the posture without opening a connection. Supabase/PostgREST is gone; the `VITE_SUPABASE_*` variables, the pasted-key dialog and the service-role-key detector went with it.
 - **Schema**: `db/migrations/0001_neon_physician_reports.sql`. **Applied to a live Neon branch and re-applied** (PostgreSQL 18.6, default database), through the driver and printing only server output. The second application emits nothing but `… already exists, skipping` NOTICEs plus `guard: web_writer holds exactly INSERT; this file re-asserts the same posture` and no `RAISE EXCEPTION`, which is the idempotency claim. PART 1 preflight, PART 2a `DO $guard$` apply guard, PART 2b schema/policy/grants, PART 2c abuse-protection notes, PART 3b–3f the post-apply checks.
-- **Security posture — measured with a real `web_writer` login, not `SET ROLE`**: `INSERT` succeeds; `SELECT`, `UPDATE`, `DELETE`, `TRUNCATE` answer `42501`; `SET ROLE neondb_owner`, `GRANT` and DDL are refused; a self-issued `GRANT` is *accepted but inert* (relacl unchanged, `has_table_privilege` still false). The table's `CHECK`s reject a forged governorate, the seed register's `obgyn`, `severity` 9 and 3.5, migration intent `maybe`, a 1001-character comment, dates in 2099 and 2019, `2026-02-31`, and a raw IP in `ip_hash` — and they do so **for the owner too**, which is the layer that survives somebody later connecting with the wrong role. `SET ROLE` from an owner session is not an acceptable substitute for the login test: that session can hop back out and read every row, so it measures nothing.
+- **Security posture — measured with a real `web_writer` login, not `SET ROLE`**: `INSERT` succeeds; `SELECT`, `UPDATE`, `DELETE`, `TRUNCATE` answer `42501`; `SET ROLE neondb_owner`, `GRANT` and DDL are refused; a self-issued `GRANT` is *accepted but inert* (relacl unchanged, `has_table_privilege` still false). The table's `CHECK`s reject a forged governorate, `obgyn` (an id no form can produce), `severity` 9 and 3.5, migration intent `maybe`, a 1001-character comment, dates in 2099 and 2019, `2026-02-31`, and a raw IP in `ip_hash` — and they do so **for the owner too**, which is the layer that survives somebody later connecting with the wrong role. `SET ROLE` from an owner session is not an acceptable substitute for the login test: that session can hop back out and read every row, so it measures nothing.
 - **Quota**: `public.admit_submission(ip_hash)` is `STABLE SECURITY DEFINER` with a pinned `search_path`, takes `pg_advisory_xact_lock(hashtext(…))`, and reads its limit from `public.submission_quota` — a table, because Neon refuses `ALTER DATABASE SET` for an unknown custom GUC with `42501`. `web_writer` holds no privilege on that table and cannot widen its own window. Measured through the endpoint: 6 × `201` then `429` from one address inside a minute, and the refused attempts left **no rows** (`count(*)` per hash was exactly 6).
 - **HTTP surface** (23 probes against the function under `wrangler pages dev`): valid → `201 {"stored":true,"date":…}`; every poison payload → `400` with the reason; >32 KiB → `413`; non-JSON and wrong content-type → `400`; `GET`/`PUT`/`DELETE` on the write endpoint → `405` with `Allow: POST`. Client-supplied `id`, `ip_hash` and `submitted_at` are rejected as unknown fields, so neither the quota key nor the feed ordering can be chosen by a caller.
 - **End-to-end**: submitted from the form in a real browser through the Vite proxy to the function to Neon; the row landed with the right types (`smallint` severity, `date`, `uuid` generated server-side) and an Arabic `doctor` name and `comment` intact (`char_length` 22 for a 22-code-point string, 23+ bytes on disk). Probe rows were then deleted and `count(*)` re-read as 0.
@@ -112,9 +112,9 @@ Benchmarking executed on standard hardware (Node.js v26.8.1 runtime):
   - **144 Passed, 0 Failed (100% Success)**
   - Includes reproduction of all 55 published OLS/Mann-Kendall statistics and all 5 governorate HNIs directly from `src/data/terrapulseData.js`, plus non-finite input guards and the What-If simulator contract.
 - **Dataset Drift Gate (`src/data/terrapulseData.parity.test.mjs`)** — the two physical copies of the dataset:
-  - 23 Test Assertions
-  - **23 Passed, 0 Failed (100% Success)**
-  - Recursively compares `src/data/terrapulseData.js` against `legacy/data.json` (series, statistics, indices, demographics, seed survey, metadata, specialties, case studies) and passes only when the **sole** divergence is governorate `lat`/`lng`, each within a sub-degree centroid nudge. Verified to fail: injecting a one-tenth change into Cairo's EPI baseline drops it to 21/23 and exits non-zero.
+  - 22 Test Assertions
+  - **22 Passed, 0 Failed (100% Success)**
+  - Recursively compares `src/data/terrapulseData.js` against `legacy/data.json` (series, statistics, indices, demographics, metadata, specialties, case studies) and passes only when the **sole** divergence is governorate `lat`/`lng`, each within a sub-degree centroid nudge. It also asserts that `survey_seed` is absent from **both** copies, so a one-sided re-add of the deleted fixture fails the gate. Verified to fail: injecting a one-tenth change into Cairo's EPI baseline drops it to 20/22 and exits non-zero.
 - **Submission Contract Gate (`src/lib/syncContract.test.mjs`)** — the hand-applied SQL policy vs. the validator vs. the form vs. the Pages Function:
   - 165 Test Assertions
   - **165 Passed, 0 Failed (100%)**
@@ -127,8 +127,9 @@ Benchmarking executed on standard hardware (Node.js v26.8.1 runtime):
   - 12 Test Assertions
   - **12 Passed, 0 Failed (100% Success)**
 - **Data Pipeline Artifacts (`pipeline/test_nasa_pipeline.py`)**:
-  - 82 Test Assertions
-  - **82 Passed, 0 Failed (100%)**
+  - 80 Test Assertions
+  - **80 Passed, 0 Failed (100%)**
+  - Three assertions used to certify the fabricated fixture (45 rows, 5-governorate coverage, 8-specialty coverage); they now assert its **absence** from the shipped artifact, because a check that the invented data is well-formed is worth less than a check that it is not there. Specialty coverage remains guarded by the `specialties == 8` assertion.
 
 ---
 
@@ -146,7 +147,7 @@ Benchmarking executed on standard hardware (Node.js v26.8.1 runtime):
 - `embedded-data.js` (window global for `file://` use) belongs to the legacy build; the React app bundles its dataset through the module graph.
 
 ### To QA Engineer (`WHI-30`) — as shipped:
-- Run `npm test` (live engine suite + dataset drift gate + submission contract gate + legacy JS suite + both Python suites — 477 assertions) as mandatory acceptance criteria.
+- Run `npm test` (live engine suite + dataset drift gate + submission contract gate + legacy JS suite + both Python suites — 474 assertions) as mandatory acceptance criteria.
 - Offline parity applies to the **shipped React build only, and partially**: run `npm run build && npm run preview`, then disconnect. Bundled dataset, Leaflet JS+CSS and Chart.js keep the choropleth polygons, markers, legend, time-lapse and charts working — the map swaps the Esri basemap for a grid canvas and shows an accessible "basemap unavailable" notice instead of retrying; the Inter/Cairo webfonts and the ArcGIS `World_Dark_Gray_Base` tile layer (`MapModule.jsx`) do not load; and with no `/api/reports` reachable the form is local-only, which the badge and the toast say out loud rather than reporting a send nothing received (see §2.6). The archived `legacy/` build cannot be used as the offline reference — it throws on load (see *Legacy status* in `README.md`).
 
 ### To Product Manager (`WHI-27`):

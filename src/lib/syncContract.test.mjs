@@ -116,14 +116,15 @@ check(sameSet(SPECIALTY_FULL_LABELS.map(s => s.id), SPECIALTY_IDS),
 check(/SPECIALTY_FULL_LABELS/.test(MATCHER) && !/\{ id: 'nephrology', label_en:/.test(MATCHER),
   'DoctorMatcher imports the id list rather than keeping a fourth inline copy');
 
-// The 45 embedded survey_seed rows use a different register (obgyn / family_medicine /
-// general_surgery, `governorate` not `gov`, no date). They are display fixtures and are
-// never submitted; the contract must keep matching the writer, not the fixture.
-const seedSpecialties = [...new Set((TERRAPULSE_DATA.survey_seed ?? []).map(r => r.specialty))];
-const seedOnly = seedSpecialties.filter(s => !SPECIALTY_IDS.includes(s));
-check(seedOnly.length > 0, `survey_seed uses ${seedOnly.length} specialty ids the validator rejects (expected)`);
-check(/survey_seed/.test(SQL) && /obgyn/.test(SQL),
-  'the migration documents that survey_seed is not this table\u2019s shape');
+// The 45 fabricated survey_seed rows were the only thing in this app using a second
+// specialty register (obgyn / family_medicine / general_surgery, `governorate` not `gov`,
+// no date). They are gone, and the two invariants that replaced the old "fixture is not
+// this table's shape" note: nothing invented ships in the dataset, and the migration
+// stops documenting a fixture that no longer exists.
+check(!('survey_seed' in TERRAPULSE_DATA),
+  'no fabricated report register rides in the shipped dataset');
+check(!/survey_seed/.test(SQL) && /obgyn/.test(SQL),
+  'the migration dropped the deleted fixture but kept obgyn as a measured rejection');
 
 // ---------------------------------------------------------------------------
 // 2. Caps: a number written three times must be one number.

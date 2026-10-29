@@ -85,14 +85,16 @@ export default function App() {
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
     } catch {
-      // fallback to seed
+      // An unreadable key means "no reports on this device", not an error state.
     }
-    return TERRAPULSE_DATA.survey_seed || [];
+    // Nothing is seeded. This list is this device's own submissions or nothing; the 45
+    // invented reports the dataset used to carry here have been deleted.
+    return [];
   });
 
   // Ask the submission endpoint what it is, once at startup. There is no report to
   // fetch: the shipped posture has no read path, so `reports` stays this device's
-  // localStorage plus the seed, and the badge describes only whether a write would be
+  // localStorage, and the badge describes only whether a write would be
   // accepted. A probe that fails is reported as failing rather than as local mode.
   useEffect(() => {
     let isMounted = true;
@@ -116,7 +118,16 @@ export default function App() {
         // line below writes `wni` back into the clone. Reading it back on the next
         // report would blend the previous *result* as if it were the prior, so the score
         // would drift with every submission in a session instead of depending only on n.
-        const priorWni = TERRAPULSE_DATA.governorates[govId]?.baseline_indices?.wni ?? WNI_PRIOR_DEFAULT;
+        // The shipped key is `wni_prior`; bare `wni` is what this effect publishes.
+        const priorWni = TERRAPULSE_DATA.governorates[govId]?.baseline_indices?.wni_prior ?? WNI_PRIOR_DEFAULT;
+        const localCount = reports.filter(r => (r.gov || r.governorate) === govId).length;
+        if (localCount === 0) {
+          // No field signal for this governorate: publish the prior and leave the
+          // published HNI untouched. computeHNI(epi, ppi, fsi, wni_prior) reproduces the
+          // shipped hni exactly, so this branch is an identity, not a shortcut.
+          gov.baseline_indices.wni = priorWni;
+          return;
+        }
         const newWni = computeWNIFromReports(govId, reports, priorWni);
         gov.baseline_indices.wni = newWni;
 

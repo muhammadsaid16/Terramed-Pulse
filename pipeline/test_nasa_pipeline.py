@@ -8,7 +8,7 @@ Verifies:
   2. Completeness of 31-year continuous records (1995-2025)
   3. Accuracy of Mann-Kendall and OLS Linear Regression calculations
   4. Opposite-direction regional trend detection (Upper Egypt warming vs Delta NDVI decline)
-  5. Physician survey seed responses (45 authentic Egyptian responses)
+  5. No fabricated physician survey fixture ships in the artifact
   6. Health Need Index (HNI) calculations and sensitivity weights
   7. Cross-runtime parity (Python trend_engine vs JS trend-engine)
 
@@ -92,13 +92,9 @@ def run_tests():
     assert_true(alex_ndvi["ols"]["slope"] < 0, "Alexandria NDVI slope is negative (opposite-direction trend)")
     assert_true(alex_soil["ols"]["slope"] < 0, "Alexandria Soil Moisture slope is negative (opposite-direction trend)")
 
-    # 8. Check physician survey seed responses
-    surveys = data.get("survey_seed", [])
-    assert_true(len(surveys) == 45, f"Expected 45 seed responses, got {len(surveys)}")
-    survey_govs = set(s["governorate"] for s in surveys)
-    assert_true(survey_govs == set(expected_govs), "Seed responses cover all 5 governorates")
-    survey_specs = set(s["specialty"] for s in surveys)
-    assert_true(len(survey_specs) == 8, f"Seed responses cover all 8 specialties (got {len(survey_specs)})")
+    # 8. The physician survey fixture must NOT be in the shipped artifact. The 45
+    # "authentic" seed responses were invented, so the invariant here is absence.
+    assert_true("survey_seed" not in data, "no fabricated survey fixture in the shipped artifact")
 
     # 9. Check specialties & sensitivity weights
     specialties = data.get("specialties", {})

@@ -42,7 +42,7 @@ const KPIS = [
     valueClass: 'text-3xl font-bold tracking-tight text-white telemetry-mono',
     Value: ({ t, reportsCount }) => (
       <>
-        {reportsCount}+ <span className="text-sm font-normal text-white/50">{t.kpiTotalDoctors}</span>
+        {reportsCount} <span className="text-sm font-normal text-white/50">{t.kpiTotalDoctors}</span>
       </>
     ),
     dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-sky-400',
@@ -66,7 +66,7 @@ const KPIS = [
   }
 ];
 
-export default function KpiStrip({ t, reportsCount = 45 }) {
+export default function KpiStrip({ t, reportsCount = 0 }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 mb-8">
       {KPIS.map(kpi => {

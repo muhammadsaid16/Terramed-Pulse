@@ -126,7 +126,7 @@ for (const govId of appGovs) {
 check(statsDiffs === 0, `published statistics identical on both sides (${statsDiffs} diverged)`);
 
 // =========================================================================
-section('3. Indices, demographics and seed survey agree');
+section('3. Indices and demographics agree');
 
 const idxOut = [];
 appGovs.forEach(g => walk(APP.governorates[g].baseline_indices, legacy.governorates[g]?.baseline_indices, `${g}.baseline_indices`, idxOut));
@@ -136,10 +136,12 @@ const demoOut = [];
 appGovs.forEach(g => walk(APP.governorates[g].demographics, legacy.governorates[g]?.demographics, `${g}.demographics`, demoOut));
 check(demoOut.length === 0, `demographics agree for every governorate (${demoOut.length} diverged)`);
 
-const seedOut = [];
-walk(APP.survey_seed, legacy.survey_seed, 'survey_seed', seedOut);
-check(APP.survey_seed.length === legacy.survey_seed.length, `same seed report count (${APP.survey_seed.length} vs ${legacy.survey_seed.length})`);
-check(seedOut.length === 0, `seed survey is identical (${seedOut.length} diverged)`);
+// The 45 fabricated survey_seed rows were deleted from every copy. The key has to stay
+// absent on BOTH sides: a one-sided re-add would start shipping invented physician
+// reports again, and that is the failure this check exists to catch. Row-level seed
+// parity is no longer a thing that can be tested — there are no rows.
+check(!('survey_seed' in APP) && !('survey_seed' in legacy),
+  `survey_seed absent from both copies (app:${'survey_seed' in APP} legacy:${'survey_seed' in legacy})`);
 
 const restOut = [];
 ['metadata', 'specialties', 'case_studies'].forEach(k => walk(APP[k], legacy[k], k, restOut));

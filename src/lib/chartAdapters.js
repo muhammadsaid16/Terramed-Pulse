@@ -11,6 +11,10 @@ const TURNOVER_REASONS = [
 ];
 
 export function buildTurnoverChartData(reports, lang, t) {
+  // No reports, no drivers. Returning null makes the caller say "no field data"
+  // rather than plot an empty ring that reads like a measured result.
+  if (!reports.length) return null;
+
   const counts = Object.fromEntries(TURNOVER_REASONS.map(r => [r.id, 0]));
 
   reports.forEach(r => {
@@ -51,25 +55,30 @@ const MIGRATION_SERIES = [
 const CLINICAL_DEMAND_PCT = [85, 78, 72, 90, 68];
 
 export function buildMigrationChartData(reports, lang, t) {
-  const riskValues = MIGRATION_SERIES.map((spec, i) => {
+  // A specialty with no reports has no migration rate. The old code returned
+  // `40 + i * 8` for those bars, which is a fabricated ranking, so a specialty is
+  // plotted only when it has at least one report behind it.
+  const series = MIGRATION_SERIES.map((spec, i) => {
     const specReports = reports.filter(r => (r.specialty || '').toLowerCase().includes(spec.id));
-    if (!specReports.length) return 40 + i * 8;
+    if (!specReports.length) return null;
     const migrating = specReports.filter(r => (r.considering_migration || '').toLowerCase() === 'yes').length;
-    return Math.round((migrating / specReports.length) * 100);
-  });
+    return { spec, risk: Math.round((migrating / specReports.length) * 100), demand: CLINICAL_DEMAND_PCT[i] };
+  }).filter(Boolean);
+
+  if (!series.length) return null;
 
   return {
-    labels: MIGRATION_SERIES.map(spec => lang === 'ar' ? spec.ar : spec.en),
+    labels: series.map(x => lang === 'ar' ? x.spec.ar : x.spec.en),
     datasets: [
       {
         label: t.chartMigrationRisk,
-        data: riskValues,
+        data: series.map(x => x.risk),
         backgroundColor: 'rgba(255, 69, 58, 0.85)',
         borderRadius: 6
       },
       {
         label: t.chartClimateDemand,
-        data: [...CLINICAL_DEMAND_PCT],
+        data: series.map(x => x.demand),
         backgroundColor: 'rgba(10, 132, 255, 0.85)',
         borderRadius: 6
       }

@@ -186,7 +186,7 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
               </>
             ) : (
               <>
-                <b>TerraPulse</b> needs no server for its data, map and charts: indicators compute from embedded seed records and render with no network. The report feed is the one exception — <span className="text-white font-medium">static browser → Pages Function → Neon</span> — and the function is the only thing allowed to write.
+                <b>TerraPulse</b> needs no server for its data, map and charts: indicators compute from the embedded satellite dataset and render with no network. The report feed is the one exception — <span className="text-white font-medium">static browser → Pages Function → Neon</span> — and the function is the only thing allowed to write.
               </>
             )}
           </p>

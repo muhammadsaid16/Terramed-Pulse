@@ -34,7 +34,8 @@ const TRANSLATIONS = {
     kpiHighestNeedLabel: "Highest Climate-Health Need",
     kpiHighestNeed: "Aswan (HNI: 88.4)",
     kpiTotalDoctorsLabel: "Physician Field Observatory",
-    kpiTotalDoctors: "45+ Verified Reports",
+    kpiTotalDoctors: "Verified Reports",
+    feedEmpty: "No reports on this device yet. Reports you submit appear here.",
     kpiTrendDivergenceLabel: "Opposite-Direction Dynamics",
     kpiTrendDivergence: "Upper Egypt vs Delta",
 
@@ -140,7 +141,8 @@ const TRANSLATIONS = {
     kpiHighestNeedLabel: "أعلى المحافظات احتياجاً للصحة والمناخ",
     kpiHighestNeed: "أسوان (مؤشر HNI: 88.4)",
     kpiTotalDoctorsLabel: "مرصد تقارير الأطباء الميداني",
-    kpiTotalDoctors: "45+ تقرير موثق",
+    kpiTotalDoctors: "تقارير موثقة",
+    feedEmpty: "لا توجد تقارير على هذا الجهاز بعد. تظهر هنا التقارير التي ترسلها.",
     kpiTrendDivergenceLabel: "ديناميكيات الاتجاهات المتعاكسة",
     kpiTrendDivergence: "الصعيد مقابل الدلتا",
 
@@ -231,94 +233,12 @@ const TRANSLATIONS = {
 let currentLang = 'en';
 
 // ============================================================================
-// 2. PRE-SEEDED 45 VERIFIED PHYSICIAN REPORTS (1995–2025 OBSERVATORY)
+// 2. PHYSICIAN FIELD REPORTS — starts empty, filled only by this device
 // ============================================================================
-let physicianReports = [
-  {
-    id: 1,
-    doctor: "Dr. Mostafa Kamel",
-    specialty: "nephrology",
-    hospital: "Aswan University Hospital",
-    gov: "aswan",
-    burden: "acute_kidney_injury",
-    severity: 5,
-    comment: "During July/August heatwaves exceeding 46°C, we receive an influx of 30+ acute dehydration tubular necrosis cases daily. Dialysis filters and ICU cooling fans are running at 140% capacity.",
-    date: "2026-08-14"
-  },
-  {
-    id: 2,
-    doctor: "Dr. Sara Abdelrahman",
-    specialty: "pulmonology",
-    hospital: "Abbassiya Chest Hospital, Cairo",
-    gov: "cairo",
-    burden: "asthma_exacerbation",
-    severity: 5,
-    comment: "Severe particulate matter (PM2.5) during thermal inversions triggers pediatric asthma clusters across eastern Cairo. We need mobile nebulization posts in high-traffic corridors.",
-    date: "2026-09-02"
-  },
-  {
-    id: 3,
-    doctor: "Dr. Khaled El-Sayed",
-    specialty: "emergency",
-    hospital: "Assiut University Trauma Center",
-    gov: "assiut",
-    burden: "heat_exhaustion",
-    severity: 4,
-    comment: "Agricultural laborers arrive with core temperatures > 41°C and acute delirium. Early rehydration fluids and electrolyte stabilization protocols are desperately needed in rural clinics.",
-    date: "2026-07-28"
-  },
-  {
-    id: 4,
-    doctor: "Dr. Mona El-Shaboury",
-    specialty: "cardiology",
-    hospital: "Alexandria Main University Hospital",
-    gov: "alexandria",
-    burden: "cardiac_decompensation",
-    severity: 4,
-    comment: "High wet-bulb temperatures along the coast place critical cardiovascular strain on elderly hypertensive patients. Acute coronary admissions jump 35% on high-humidity days.",
-    date: "2026-08-20"
-  },
-  {
-    id: 5,
-    doctor: "Dr. Yasser Mansour",
-    specialty: "pediatrics",
-    hospital: "Giza Children Specialty Hospital",
-    gov: "giza",
-    burden: "pediatric_dehydration",
-    severity: 4,
-    comment: "Frequent summer power outages during extreme heat waves double pediatric dehydration and gastroenteritis emergencies in peri-urban informal settlements.",
-    date: "2026-08-05"
-  }
-];
-
-// Seed 40 more detailed field reports across specialties & governorates
-const seedSpecialties = ["nephrology", "pulmonology", "cardiology", "emergency", "pediatrics", "geriatrics", "dermatology_ophthalmology", "occupational_preventive"];
-const seedGovs = ["aswan", "assiut", "cairo", "giza", "alexandria"];
-const seedBurdens = ["heat_exhaustion", "acute_kidney_injury", "asthma_exacerbation", "cardiac_decompensation", "pediatric_dehydration", "geriatric_hyperthermia", "occupational_heat_stroke"];
-const seedHospitals = [
-  "Aswan General Hospital", "Kom Ombo Central Hospital", "Assiut Chest Hospital", "Dayrout Central Hospital", 
-  "Al-Zahraa University Hospital", "Kasr Al-Ainy Emergency", "Om El-Masryeen Hospital", "Imbaba Fever Hospital",
-  "El-Shatby Pediatric Hospital", "Karmouz Workers Hospital"
-];
-
-for (let i = 6; i <= 45; i++) {
-  const gov = seedGovs[i % seedGovs.length];
-  const spec = seedSpecialties[i % seedSpecialties.length];
-  const burden = seedBurdens[i % seedBurdens.length];
-  const hosp = seedHospitals[i % seedHospitals.length];
-  const sev = 3 + (i % 3);
-  physicianReports.push({
-    id: i,
-    doctor: `Dr. Field Observer #${i}`,
-    specialty: spec,
-    hospital: hosp,
-    gov: gov,
-    burden: burden,
-    severity: sev,
-    comment: `Routine clinical registry #${i}: Correlated climate observation indicating high emergency caseload and urgent need for specialized medical staffing in ${gov.toUpperCase()}.`,
-    date: `2026-0${(i % 5) + 4}-${10 + (i % 18)}`
-  });
-}
+// This archived build used to push 45 invented reports into the feed and print them as
+// "45+ Verified Reports". They are gone, exactly as in the shipped React app: a report
+// exists here only once somebody submits one.
+let physicianReports = [];
 
 // ============================================================================
 // 3. APPLICATION STATE & RUNTIME REFS
@@ -767,7 +687,9 @@ function renderPhysicianReportsFeed() {
   const feed = document.getElementById("physician-feed");
   if (!feed) return;
 
-  feed.innerHTML = physicianReports.map(rep => {
+  feed.innerHTML = physicianReports.length === 0
+    ? `<p class="text-xs text-slate-400 p-3 rounded-xl border border-dashed border-slate-800">${TRANSLATIONS[currentLang].feedEmpty}</p>`
+    : physicianReports.map(rep => {
     const govObj = dataCarrier ? dataCarrier.governorates[rep.gov] : null;
     const govName = govObj ? (currentLang === 'ar' ? govObj.name_ar : govObj.name_en) : rep.gov;
     const specObj = SPECIALTIES.find(s => s.id === rep.specialty);
@@ -794,7 +716,7 @@ function renderPhysicianReportsFeed() {
 
   const counterEl = document.getElementById("kpi-total-doctors");
   if (counterEl) {
-    counterEl.innerText = `${physicianReports.length}+ Verified Reports`;
+    counterEl.innerText = `${physicianReports.length} ${TRANSLATIONS[currentLang].kpiTotalDoctors}`;
   }
 }
 

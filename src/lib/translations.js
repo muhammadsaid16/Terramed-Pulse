@@ -145,6 +145,8 @@ export const TRANSLATIONS = {
     syncError: "Cloud error — local only",
     reportsFeedTitle: "Real-Time Physician Field Reports Feed",
     feedSubLocal: "Local Feed (this device)",
+    feedEmptyTitle: "No reports on this device yet",
+    feedEmptySub: "This list holds only what has been submitted from this browser — there is no cross-device read path. Reports you send appear here, and an accepted submission moves this device's indices.",
 
     // Module 4: Decision-Maker
     module4Title: 'Module 4: Decision-Maker & "What-If" Policy Lab',
@@ -168,6 +170,7 @@ export const TRANSLATIONS = {
     execChartsTitle: "Executive Policy Intelligence Dashboards",
     chartTurnoverTitle: "Primary Drivers of Physician Turnover (Live Form Feed)",
     chartMigrationTitle: "Top Specialties at Risk of Migration vs Climate Demand",
+    chartNoFieldData: "No field reports on this device yet. These charts are computed only from submitted reports.",
     chartPriorityTitle: "Governorate Vulnerability & Priority Matrix (HNI vs EPI)",
 
     // Wizard Modal
@@ -220,8 +223,6 @@ export const TRANSLATIONS = {
     defaultDoctor: "Verified Field Doctor",
     defaultHospital: "Public / University Hospital",
     defaultComment: "Routine clinical record reporting intense triage pressure during extreme weather.",
-    consultantPrefix: "Consultant Physician #",
-    hospitalFallbackPrefix: "General / University Hospital, ",
     migrationIntentBadge: "Migration Intent",
     dbBadgeTooltip: "Submission endpoint (Neon, written through a Cloudflare Pages Function)",
     dbBadgeLocal: "Local Mode",
@@ -459,6 +460,8 @@ export const TRANSLATIONS = {
     syncError: "خطأ في السحابة — محلي فقط",
     reportsFeedTitle: "سجل البلاغات الميدانية الحية للأطباء",
     feedSubLocal: "تغذية محلية (هذا الجهاز)",
+    feedEmptyTitle: "لا توجد بلاغات على هذا الجهاز بعد",
+    feedEmptySub: "هذه القائمة تقتصر على ما أُرسل من هذا المتصفح، فلا يوجد مسار للقراءة عبر الأجهزة. تظهر هنا بلاغاتك، ويحرّك أي بلاغ مقبول مؤشرات هذا الجهاز.",
 
     // Module 4: Decision-Maker
     module4Title: 'الوحدة 4: لوحة صانع القرار ومختبر "ماذا لو؟" للسياسات',
@@ -482,6 +485,7 @@ export const TRANSLATIONS = {
     execChartsTitle: "لوحات المعلومات الذكية لصناع القرار",
     chartTurnoverTitle: "أبرز دوافع تسرب الأطباء (محدث لحظياً من المرصد)",
     chartMigrationTitle: "التخصصات الأكثر عرضة للهجرة مقابل الطلب المناخي",
+    chartNoFieldData: "لا توجد بلاغات ميدانية على هذا الجهاز بعد. تُحسب هذه الرسوم من البلاغات المُرسلة فقط.",
     chartPriorityTitle: "مصفوفة هشاشة المحافظات (مؤشر HNI مقابل مؤشر الضغط البيئي EPI)",
 
     // Wizard Modal
@@ -543,8 +547,6 @@ export const TRANSLATIONS = {
     dbBadgeLocal: "محلي (Offline)",
     basemapOffline: "يتطلب بلاط الخريطة اتصالاً بالإنترنت. أما تظليل المحافظات والعلامات ومفتاح الخريطة وأدوات التحكم فمحسوبة محلياً وتبقى كاملة الاستخدام.",
     migrationIntentBadge: "نية الهجرة",
-    consultantPrefix: "طبيب استشاري #",
-    hospitalFallbackPrefix: "مستشفى عام / جامعي، ",
 
     // Satellite map (module 1)
     layerHni: "HNI (الاحتياج السنوي)",

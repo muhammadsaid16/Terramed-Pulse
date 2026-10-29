@@ -86,19 +86,22 @@ export default function PrintBrief({
   const deltaHni = (simHni - baseHni).toFixed(1);
   const livesImpacted = Math.round((ppi * 16.5 * 1000)).toLocaleString();
 
-  // Field reports in target governorate
-  const govReports = reports.filter(r => (r.gov || r.governorate) === selectedGov);
-  const totalReportsCount = govReports.length || 8;
+  // Field reports in target governorate. Counted as they are: an empty governorate
+  // prints as empty. The old `|| 8` and `: 78` invented a registry and a cause.
+  const govReports = reports.filter(r => r.gov === selectedGov);
+  const totalReportsCount = govReports.length;
   const highIntentCount = govReports.filter(r => (r.considering_migration || '').toLowerCase() === 'yes' || (r.considering_migration || '').toLowerCase() === 'high').length;
-  const migrationPct = govReports.length > 0 ? Math.round((highIntentCount / govReports.length) * 100) : 78;
+  const migrationPct = govReports.length > 0 ? Math.round((highIntentCount / govReports.length) * 100) : null;
 
   const coords = GOV_COORDINATES[selectedGov] || '26.8206° N, 30.8025° E';
   const briefConfig = GOV_BRIEF_CONFIG[selectedGov] || GOV_BRIEF_CONFIG.aswan;
 
   // Grammatically correct Arabic report count
-  const reportsLabelAr = totalReportsCount >= 3 && totalReportsCount <= 10
-    ? `${totalReportsCount} تقارير موثقة`
-    : `${totalReportsCount} تقريراً موثقاً`;
+  const reportsLabelAr = totalReportsCount === 0
+    ? 'لا توجد تقارير موثقة'
+    : totalReportsCount >= 3 && totalReportsCount <= 10
+      ? `${totalReportsCount} تقارير موثقة`
+      : `${totalReportsCount} تقريراً موثقاً`;
 
   // Risk Classification
   const riskTierEn = baseHni >= 72 ? 'TIER 1 — CRITICAL CLIMATE-HEALTH CRISIS' : baseHni >= 60 ? 'TIER 2 — HIGH VULNERABILITY ALERT' : 'TIER 3 — ACTIVE SURVEILLANCE';
@@ -327,7 +330,10 @@ export default function PrintBrief({
           </div>
           <div>
             <b>{isAr ? 'معدل التفكير في الهجرة:' : 'Migration Propensity:'}</b>{' '}
-            <span dir="ltr" className="inline-block font-mono font-bold text-slate-950">{migrationPct}%</span> {isAr ? '(بسبب فجوة الحوافز)' : '(Due to compensation gap)'}
+            <span dir="ltr" className="inline-block font-mono font-bold text-slate-950">
+              {migrationPct === null ? (isAr ? 'لا توجد بيانات ميدانية' : 'no field data') : `${migrationPct}%`}
+            </span>
+            {migrationPct !== null && (isAr ? '(بسبب فجوة الحوافز)' : '(Due to compensation gap)')}
           </div>
           <div>
             <b>{isAr ? 'المطلب التدخلي الأول للأطباء:' : 'Primary Doctor Demand:'}</b>{' '}

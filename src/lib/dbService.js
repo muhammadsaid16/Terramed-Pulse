@@ -16,7 +16,7 @@
  * secret and only ever in the function. What the browser holds is a URL path.
  *
  * There is also no read path, in this file or anywhere in the deployed system. Reports
- * come from this device's localStorage plus the shipped seed; a submission that reaches
+ * come from this device's localStorage and nowhere else; a submission that reaches
  * the cloud is acknowledged and never fetched back.
  *
  * The schema is imported as text so the copy-to-clipboard SQL in the sync modal and the

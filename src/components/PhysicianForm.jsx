@@ -355,14 +355,20 @@ export default function PhysicianForm({
           </div>
 
           <div className="space-y-3 max-h-[540px] overflow-y-auto pr-1">
+            {reports.length === 0 && (
+              <div className="py-12 px-5 text-center rounded-2xl border border-dashed border-white/12 bg-white/[0.02]">
+                <p className="text-sm font-semibold text-white/70">{t.feedEmptyTitle}</p>
+                <p className="text-xs text-white/45 mt-2 leading-relaxed max-w-md mx-auto">{t.feedEmptySub}</p>
+              </div>
+            )}
             {reports.map((rep, idx) => {
-              const govKey = rep.gov || rep.governorate;
+              const govKey = rep.gov;
               const govObj = governorates?.[govKey];
               const govName = govObj ? (lang === 'ar' ? govObj.name_ar : govObj.name_en) : govKey;
-              const docName = rep.doctor || `${t.consultantPrefix}${idx + 1}`;
-              const hospitalName = rep.hospital || `${t.hospitalFallbackPrefix}${govName}`;
+              const docName = rep.doctor;
+              const hospitalName = rep.hospital;
               const isMigrating = (rep.considering_migration || '').toLowerCase() === 'yes';
-              const repDate = rep.date || `2026-0${(idx % 5) + 4}-${10 + (idx % 18)}`;
+              const repDate = rep.date || '—';
 
               const displaySpecialty = specialtyLabel(rep.specialty, lang);
 
@@ -405,7 +411,7 @@ export default function PhysicianForm({
                   </div>
 
                   <p className="text-xs text-white/70 leading-relaxed bg-white/[0.02] p-3 rounded-xl border border-white/[0.05] font-normal">
-                    "{lang === 'ar' ? (rep.note_ar || rep.comment) : (rep.note_en || rep.comment)}"
+                    "{rep.comment}"
                   </p>
                 </div>
               );

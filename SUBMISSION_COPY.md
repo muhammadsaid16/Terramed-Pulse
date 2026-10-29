@@ -42,7 +42,7 @@ TerraPulse connects the dots between NASA satellite trends and frontline human r
 4. **The Health Need Index (HNI) & "I Am a Doctor" Matcher:**
    $$\text{HNI} = 0.35 \times \text{EPI} + 0.30 \times \text{PPI} + 0.20 \times \text{FSI} + 0.15 \times \text{WNI}$$
    Physicians select their clinical specialty (e.g., Pulmonology, Nephrology, Cardiology, Emergency Medicine) and receive tailored recommendations showing which Egyptian governorate holds the greatest demand for their clinical expertise, supported by clear NASA environmental evidence.
-5. **Physician Voice Form & What-If Policy Simulator:** Includes an embedded, privacy-conscious in-page form pre-seeded with 45 real-world doctor responses. Submissions update the local Workforce Need Index (WNI) and trigger real-time recalculations. Policy makers can use interactive sliders to simulate the impact of primary-care clinics and mobile convoys (0–50), specialty retention stipends (0–100%), and urban greening coverage (0–30%) on governorate vulnerability scores, and export a clean 1-page executive brief via the print stylesheet. The simulator is a **transparent planning heuristic** — its coefficients are documented assumptions, not parameters fitted to outcome data — and the app states that limitation in an on-screen "model assumptions" disclosure next to every simulated figure.
+5. **Physician Voice Form & What-If Policy Simulator:** Includes an embedded, privacy-conscious in-page form that starts empty and holds only what physicians submit on that device — no invented responses. Submissions update the local Workforce Need Index (WNI) and trigger real-time recalculations. Policy makers can use interactive sliders to simulate the impact of primary-care clinics and mobile convoys (0–50), specialty retention stipends (0–100%), and urban greening coverage (0–30%) on governorate vulnerability scores, and export a clean 1-page executive brief via the print stylesheet. The simulator is a **transparent planning heuristic** — its coefficients are documented assumptions, not parameters fitted to outcome data — and the app states that limitation in an on-screen "model assumptions" disclosure next to every simulated figure.
 
 ---
 
@@ -172,7 +172,7 @@ Nothing has to be configured to run the platform: no credentials ship in the bun
 ### Slide 6: Actionable Policy & Interactive Tools
 - **Key Message:** Immediate utility for physicians, governors, and researchers.
 - **Interactive Features:**
-  * **Embedded Physician Voice Form:** Instant crowdsourced feedback updating local WNI with 45 realistic seed entries.
+  * **Embedded Physician Voice Form:** Crowdsourced feedback that updates the local WNI, built only from reports submitted on the device.
   * **"What-If" Policy Simulator:** Dynamic sliders for mobile clinics, financial incentives, and urban greening showing live HNI score reductions.
   * **1-Click Executive PDF Brief:** Formatted print stylesheet providing immediate documentation for hospital boards and ministries.
 - **Visuals:** Workflow animation showing a doctor submitting feedback and the policy simulator recalculating regional vulnerability.

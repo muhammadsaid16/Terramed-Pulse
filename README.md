@@ -105,7 +105,7 @@ TerraPulse Architecture
 │
 ├── Module 3: Voice of Egyptian Physicians In-Page Observatory
 │   ├── Interactive Case Logging Form (Specialty, Governorate, Burden, Severity 1-5, Notes)
-│   ├── 45 Pre-Seeded Realistic Egyptian Hospital Reports
+│   ├── Feed Starts Empty: Only Reports Submitted on This Device
 │   └── Real-Time Recalculation of WNI and HNI via localStorage
 │
 ├── Module 4: Decision-Maker & "What-If" Policy Lab
@@ -164,7 +164,8 @@ npm run preview
 > `UPDATE`, `DELETE`, `TRUNCATE`; it cannot read the quota table it is rate-limited by, and
 > a real login test confirmed every one of those refusals. There is no read endpoint at
 > all, so nobody — including this app — can enumerate other physicians' submissions. The
-> feed consequently shows this device's reports plus the embedded seed, and the badge reads
+> feed consequently shows this device's own reports — nothing else, and nothing invented —
+> and the badge reads
 > "cloud submits allowed, reads blocked", which is the intended posture rather than a
 > failure. A shared cross-device feed needs authentication plus a read policy; that is a
 > disclosure decision about migration intent, not a config flag.
@@ -175,7 +176,7 @@ npm run preview
 > get committed (`.dev.vars` itself is gitignored).
 
 ### 2. Run the Full Verification Suite
-`npm test` runs all six suites — 477 checks in total: the live React engine (144), the dataset drift gate (23), the submission-contract gate (165), the legacy JS engine (51), and both Python suites (12 and 82):
+`npm test` runs all six suites — 474 checks in total: the live React engine (144), the dataset drift gate (22), the submission-contract gate (165), the legacy JS engine (51), and both Python suites (12 and 80):
 ```bash
 cd "/home/zer0/Desktop/Projects/Nasa project"
 npm test
@@ -183,11 +184,11 @@ npm test
 Individual suites:
 ```bash
 node src/lib/trendEngine.test.mjs            # 144 checks — the engine the app actually imports
-node src/data/terrapulseData.parity.test.mjs #  23 checks — src/data vs legacy/data.json drift gate
+node src/data/terrapulseData.parity.test.mjs #  22 checks — src/data vs legacy/data.json drift gate
 node src/lib/syncContract.test.mjs           # 165 checks — SQL policy ↔ validator ↔ form ↔ function
 node pipeline/test-legacy-engine.js          #  51 checks — legacy/trend-engine.js parity
 python3 pipeline/test_trend_engine.py        #  12 checks — Python statistical engine
-python3 pipeline/test_nasa_pipeline.py       #  82 checks — dataset artifacts & cross-runtime parity
+python3 pipeline/test_nasa_pipeline.py       #  80 checks — dataset artifacts & cross-runtime parity
 ```
 
 > **Why the submission-contract gate exists.** The same row shape is written down four
@@ -245,8 +246,8 @@ python3 pipeline/fetch_nasa_data.py --offline
 │   ├── App.jsx                  # Main application orchestrator & state manager
 │   ├── index.css                # Apple Design fluid interactions, frosted glass, print styles
 │   ├── data/
-│   │   ├── terrapulseData.js    # Continuous 31-yr records & 45 realistic physician reports
-│   │   ├── terrapulseData.parity.test.mjs # 23-check drift gate vs legacy/data.json
+│   │   ├── terrapulseData.js    # Continuous 31-yr records (no survey fixture ships)
+│   │   ├── terrapulseData.parity.test.mjs # 22-check drift gate vs legacy/data.json
 │   │   └── egyptGovernoratesGeoJson.js  # Official UN OCHA / geoBoundaries polygons
 │   ├── lib/
 │   │   ├── trendEngine.js       # OLS regression, Mann-Kendall, t-test, HNI/WNI & simulation

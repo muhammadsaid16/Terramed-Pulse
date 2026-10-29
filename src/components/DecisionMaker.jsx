@@ -354,10 +354,14 @@ export default function DecisionMaker({
               </h4>
             </div>
             <div className="h-[180px] w-full flex items-center justify-center">
-              <Doughnut
-                data={turnoverChartData}
-                options={doughnutChartOptions()}
-              />
+              {turnoverChartData ? (
+                <Doughnut
+                  data={turnoverChartData}
+                  options={doughnutChartOptions()}
+                />
+              ) : (
+                <p className="text-xs text-white/45 px-4 text-center leading-relaxed">{t.chartNoFieldData}</p>
+              )}
             </div>
           </div>
 
@@ -370,10 +374,14 @@ export default function DecisionMaker({
               </h4>
             </div>
             <div className="h-[180px] w-full">
-              <Bar
-                data={migrationChartData}
-                options={barChartOptions()}
-              />
+              {migrationChartData ? (
+                <Bar
+                  data={migrationChartData}
+                  options={barChartOptions()}
+                />
+              ) : (
+                <p className="h-full flex items-center justify-center text-xs text-white/45 px-4 text-center leading-relaxed">{t.chartNoFieldData}</p>
+              )}
             </div>
           </div>
 

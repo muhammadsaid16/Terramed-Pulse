@@ -58,7 +58,7 @@ flowchart TD
             MAP_VIEW["Leaflet.js Geospatial Map<br/>(5 Egyptian Governorates & Choropleths)"]
             CHART_VIEW["Chart.js Time Series<br/>(30-Year Trend + Deseasonalized Anomaly)"]
             WIZARD["Trend Detective Wizard<br/>(3-Step Discovery Flow)"]
-            FORM_VIEW["Embedded Physician Survey<br/>(45 Seed Responses + Real-time Reactive Input)"]
+            FORM_VIEW["Physician Survey Form<br/>(Empty Local Feed + Real-time Reactive Input)"]
             BRIEF_VIEW["Executive Policy Brief<br/>(Print Stylesheet @media print 1-Page PDF)"]
         end
     end
@@ -116,8 +116,8 @@ Four facts shaped it, each measured against the live branch rather than assumed:
 `ip_hash` is SHA-256 of `cf-connecting-ip` + a secret salt + the UTC day, so the stored value
 identifies neither a person nor a device permanently, and a caller cannot choose their own
 quota key. What this path does **not** do is read: `GET /api/status` reports the posture
-without opening a connection, and the feed in the UI stays this device's `localStorage` plus
-the 45 embedded seed records. A cross-device feed would need authentication and a read policy
+without opening a connection, and the feed in the UI stays this device's `localStorage`
+and nothing else. A cross-device feed would need authentication and a read policy
 — a disclosure decision about physicians' migration intent, not a configuration flag.
 
 ---
@@ -202,11 +202,11 @@ Multi-Criteria Decision Analysis (MCDA) linking NASA environmental exposures wit
 ---
 
 ### Module 4: In-Page Physician Survey & Reactive State
-- **Storage**: In-browser `localStorage` key `terrapulse_reports` (set in `src/App.jsx`; the 45 `survey_seed` records are the fallback when the key is absent). The local write is authoritative and always happens; the cloud write is attempted after it and reports its own outcome, so a refused or unreachable submission is visible as such instead of being silently kept.
+- **Storage**: In-browser `localStorage` key `terrapulse_reports` (set in `src/App.jsx`, starting empty — nothing is seeded into it). The local write is authoritative and always happens; the cloud write is attempted after it and reports its own outcome, so a refused or unreachable submission is visible as such instead of being silently kept.
 - **Identifier split**: the browser's `report-${Date.now()}` key stays local and never goes on
   the wire. The database generates `id uuid DEFAULT gen_random_uuid()` — two devices submitting
   in the same millisecond would otherwise collide on the primary key.
-- **Pre-seeded Dataset**: 45 authentic Egyptian physician responses distributed across the 5 governorates.
+- **No fabricated responses**: the dataset ships no survey fixture. The 45 invented `survey_seed` records (and the archived build's separate 45) were deleted from every copy, so a governorate with no reports prints no count. With zero reports the WNI blend reduces to its own prior — `sampleWeight = min(1, 0/15) = 0` — which is why `src/App.jsx` publishes `wni_prior` directly and leaves the published HNI intact instead of recomputing it (the identity `computeHNI(epi, ppi, fsi, wni_prior) === hni` holds for all five governorates).
 - **Reactivity**: Adding a new response triggers immediate re-computation of $WNI$, recalculation of $HNI$, and animated updates across all charts, map tooltips, and ranking tables.
 
 ---
@@ -276,7 +276,6 @@ interface TerraPulseDatabase {
     };
   };
   governorates: Record<string, GovernorateRecord>;
-  survey_seed: PhysicianSurveyResponse[];
 }
 
 interface GovernorateRecord {

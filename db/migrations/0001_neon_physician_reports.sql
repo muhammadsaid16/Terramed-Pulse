@@ -52,12 +52,11 @@
 -- CHECK enforces the 64-hex shape so that a raw address cannot be stored in that
 -- column even by the owner. It exists to make the quota work and nothing else.
 --
--- Vocabulary warning, carried over because it caused a wrong policy once: this app
--- holds TWO specialty registers. The form and the matcher use the eight ids in
--- src/lib/specialties.js — the only values admitted below. The 45 `survey_seed`
--- rows in src/data/terrapulseData.js use different keys (`governorate`,
--- `note_en`/`note_ar`, no date) and three specialties the form cannot produce. They
--- are display fixtures. Do not widen the lists below to "load the demo data".
+-- Vocabulary warning, carried over because it caused a wrong policy once: only the
+-- eight ids in src/lib/specialties.js are admitted below. obgyn, family_medicine and
+-- general_surgery are NOT among them — they came from a display fixture that has since
+-- been deleted from the dataset, and PART 3 still inserts one of them so the CHECK is
+-- measured rather than assumed. Do not widen the lists below to "make a label work".
 -- =============================================================================
 
 -- -----------------------------------------------------------------------------

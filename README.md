@@ -179,7 +179,7 @@ Individual suites:
 ```bash
 node src/lib/trendEngine.test.mjs            # 144 checks — the engine the app actually imports
 node src/data/terrapulseData.parity.test.mjs #  23 checks — src/data vs legacy/data.json drift gate
-node src/lib/rlsContract.test.mjs            #  93 checks — RLS policy vs. form/payload contract
+node src/lib/rlsContract.test.mjs            # 103 checks — RLS policy vs. form/payload contract
 node pipeline/test-legacy-engine.js          #  51 checks — legacy/trend-engine.js parity
 python3 pipeline/test_trend_engine.py        #  12 checks — Python statistical engine
 python3 pipeline/test_nasa_pipeline.py       #  82 checks — dataset artifacts & cross-runtime parity
@@ -242,7 +242,7 @@ python3 pipeline/fetch_nasa_data.py --offline
 │   │   ├── trendEngine.test.mjs # 144-check suite for the live engine (npm test)
 │   │   ├── chartAdapters.js     # Chart.js option/dataset builders per metric
 │   │   ├── dbService.js         # Supabase telemetry with local-storage fallback
-│   │   ├── rlsContract.test.mjs # 93-check gate: RLS policy vs. form & INSERT payload
+│   │   ├── rlsContract.test.mjs # 103-check gate: RLS policy vs. form & INSERT payload
 │   │   ├── specialties.js       # Shared AR/EN specialty label registers
 │   │   └── translations.js      # Full English & Arabic localization dictionaries
 │   └── components/

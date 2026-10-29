@@ -27,6 +27,7 @@ const read = (rel) => readFileSync(join(ROOT, rel), 'utf8');
 
 const SQL = read('supabase/migrations/0001_init_physician_reports.sql');
 const FORM = read('src/components/PhysicianForm.jsx');
+const MATCHER = read('src/components/DoctorMatcher.jsx');
 const DB = read('src/lib/dbService.js');
 const TRANSLATIONS = read('src/lib/translations.js');
 
@@ -81,6 +82,28 @@ check(formMigrationValues.length === 3, 'form offers exactly yes / no / hesitant
 check(
   formMigrationValues.every((v) => policyMigration.includes(v)),
   'every migration-intent value the form sends is allowed by the policy'
+);
+
+// DoctorMatcher keeps its own inline copy of the specialty ids and hands one of
+// them straight to the form via onVoiceNeeds -> preselectedSpecialty, which the form
+// applies with a useEffect that bypasses the <select>. So it is a third writer of
+// this column, and it has to agree too.
+const matcherSpecialties = [...MATCHER.matchAll(/\{ id: '(\w+)', label_en:/g)].map((m) => m[1]);
+check(matcherSpecialties.length === 8, `matcher declares ${matcherSpecialties.length} specialties`);
+check(
+  matcherSpecialties.every((v) => (policySpecialties ?? []).includes(v)),
+  'every specialty the matcher can preselect is allowed by the policy'
+);
+
+// The 45 embedded survey_seed rows use a different register (obgyn / family_medicine
+// / general_surgery, `governorate` not `gov`, no `date`). They are display fixtures
+// and are never submitted; the policy must keep matching the writer, not the fixture.
+const seedSpecialties = [...new Set((TERRAPULSE_DATA.survey_seed ?? []).map((r) => r.specialty))];
+const seedOnly = seedSpecialties.filter((s) => !(policySpecialties ?? []).includes(s));
+check(seedOnly.length > 0, `survey_seed uses ${seedOnly.length} specialty ids the policy rejects (expected)`);
+check(
+  /survey_seed/.test(SQL) && /obgyn/.test(SQL),
+  'the migration documents that survey_seed is not this table\'s shape'
 );
 
 const formReasons = [...FORM.matchAll(/<option value="(\w+)">/g)].map((m) => m[1]);
@@ -193,6 +216,17 @@ check(
 check(/isSecretKey/.test(DB), 'dbService can recognise a service-role key');
 check(/if \(isSecretKey\(key\)\) return false/.test(DB), 'saveDbConfig refuses to persist a secret key');
 check(!/sb_secret_[A-Za-z0-9]/.test(`${SQL}\n${DB}\n${FORM}`), 'no secret key value appears in the source');
+
+// A submission always carries a date, so the policy says so rather than leaving it
+// to three-valued logic; and the app must never be able to post without one.
+check(/"date" IS NOT NULL/.test(SQL), 'the policy requires a reporting date explicitly');
+check(/date: report\.date \|\| new Date\(\)\.toISOString\(\)\.split\('T'\)\[0\]/.test(DB), 'the payload always supplies a date');
+
+// CREATE TABLE IF NOT EXISTS alone would silently keep an incompatible existing object.
+check(/DO \$guard\$/.test(SQL), 'the migration carries an apply guard');
+check(/RAISE EXCEPTION/.test(SQL), 'the guard aborts rather than adapting');
+check(/expected_columns/.test(SQL) && /information_schema\.columns/.test(SQL), 'the guard checks column names and types');
+check(/policyname <> 'anon may submit a physician report'/.test(SQL), 'the guard rejects any other anon policy');
 
 // ---------------------------------------------------------------------------
 console.log(`\n${passed}/${total} rls-contract checks passed.`);

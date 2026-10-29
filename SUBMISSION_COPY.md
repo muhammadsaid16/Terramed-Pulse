@@ -9,7 +9,7 @@
 - **Arabic Title:** ابقَ وابنِ — محقق اتجاهات الأرض وبوصلة الأثر الصحي والبيئي في مصر  
 - **Challenge Track:** Be An Earth System Trend Detective!  
 - **Repository / Source Code:** [muhammadsaid16/Nasa-Space-App](https://github.com/muhammadsaid16/Nasa-Space-App)  
-- **Live Demo:** Zero-backend web application — all NASA datasets, the statistical engine, Leaflet and Chart.js are bundled client-side. Verified air-gapped: the app boots, all 5 choropleth polygons and all 4 charts render with no network. Three things need internet: the ArcGIS dark-grey basemap tiles (the map shows polygons on black without them), the Inter/Cairo webfonts (fall back to system fonts), and optional Supabase telemetry (fails open to localStorage).
+- **Live Demo:** Zero-backend web application — all NASA datasets, the statistical engine, Leaflet and Chart.js are bundled client-side. Verified air-gapped: the app boots, all 5 choropleth polygons, all markers, all 4 charts and the time-lapse render with no network. Three things need internet: the ArcGIS dark-grey basemap tiles (offline the map falls back to a labelled grid canvas with a "basemap unavailable" notice — overlays and data are untouched), the Inter/Cairo webfonts (fall back to system fonts), and optional Supabase telemetry (stays off unless configured; reports keep saving to localStorage).
 - **Team Name:** WhiteRoom Labs  
 - **Keywords / Tags:** `NASA Earth Observation`, `Climate Health`, `Trend Detective`, `Mann-Kendall Test`, `Deseasonalization`, `MODIS`, `MERRA-2`, `NASA POWER`, `GLDAS`, `SEDAC`, `Egypt Healthcare`, `Stay and Build`
 
@@ -42,7 +42,7 @@ TerraPulse connects the dots between NASA satellite trends and frontline human r
 4. **The Health Need Index (HNI) & "I Am a Doctor" Matcher:**
    $$\text{HNI} = 0.35 \times \text{EPI} + 0.30 \times \text{PPI} + 0.20 \times \text{FSI} + 0.15 \times \text{WNI}$$
    Physicians select their clinical specialty (e.g., Pulmonology, Nephrology, Cardiology, Emergency Medicine) and receive tailored recommendations showing which Egyptian governorate holds the greatest demand for their clinical expertise, supported by clear NASA environmental evidence.
-5. **Physician Voice Form & What-If Policy Simulator:** Includes an embedded, privacy-conscious in-page form pre-seeded with 45 real-world doctor responses. Submissions update the local Workforce Need Index (WNI) and trigger real-time recalculations. Policy makers can use interactive sliders to simulate the impact of primary-care clinics and mobile convoys (0–50), specialty retention stipends (0–100%), and urban greening coverage (0–30%) on governorate vulnerability scores, and export a clean 1-page executive brief via the print stylesheet.
+5. **Physician Voice Form & What-If Policy Simulator:** Includes an embedded, privacy-conscious in-page form pre-seeded with 45 real-world doctor responses. Submissions update the local Workforce Need Index (WNI) and trigger real-time recalculations. Policy makers can use interactive sliders to simulate the impact of primary-care clinics and mobile convoys (0–50), specialty retention stipends (0–100%), and urban greening coverage (0–30%) on governorate vulnerability scores, and export a clean 1-page executive brief via the print stylesheet. The simulator is a **transparent planning heuristic** — its coefficients are documented assumptions, not parameters fitted to outcome data — and the app states that limitation in an on-screen "model assumptions" disclosure next to every simulated figure.
 
 ---
 
@@ -75,7 +75,7 @@ Instead of stopping at scientific charts, TerraPulse addresses a national socio-
 - **Family Medicine & Pediatrics** are matched with Delta communities facing agro-environmental transitions.
 
 ### 4. Technical Execution & Accessibility
-The platform requires no backend setup, databases, or API keys to run. By compiling a complete 30-year dataset into client-side JavaScript, TerraPulse guarantees instantaneous 60fps chart rendering, offline resilience, and universal compatibility across devices and browsers.
+The platform requires no backend setup, databases, or API keys to run. By compiling a complete 30-year dataset into client-side JavaScript, TerraPulse guarantees instantaneous 60fps chart rendering, offline resilience for its data, maps and analysis, and universal compatibility across devices and browsers. (The streamed Esri basemap tiles and the Google-hosted webfonts are the two exceptions — see *Live Demo* above; both degrade without an error.)
 
 ---
 

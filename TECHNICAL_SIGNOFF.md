@@ -74,6 +74,19 @@ This document provides formal technical sign-off confirming that:
   - Cold-start condition ($M=0$) returns the governorate's calibrated baseline prior without deviation.
   - Incoming physician migration responses dynamically shift WNI and animate HNI in real time.
 
+### 2.5 What-If Policy Simulator (heuristic scenario model, not an estimator)
+- **Implementation**: `src/lib/trendEngine.js::simulatePolicyInterventions`, driven by `src/components/DecisionMaker.jsx`.
+- **Coefficients, units and formulas** are tabulated in `ARCHITECTURE.md` §5.1 and pinned by the *"What-If simulator contract"* section of `src/lib/trendEngine.test.mjs` (zero intervention reproduces the baseline HNI exactly for all 5 governorates; each lever moves only its own sub-index; the governorate PPI is used, never a constant).
+- **Status of the outputs**: the coefficients are authored planning heuristics, **not** parameters fitted to an Egyptian health dataset. Prevented-admission and retention-gain figures are illustrative projections; they are not causal effects, and they have not been validated against any outcome series. The app says so in a "model assumptions" disclosure and the executive brief labels them simulated.
+- **Non-finite handling**: levers coerce to `0` and baselines to `NEUTRAL_INDICES` when a caller hands over `undefined`/`NaN` (a component reset does). Values are never silently zeroed — the UI shows a "using neutral baseline" badge while the reading is absent. Levers outside the slider range are **not** clamped by the engine; the documented guards are the `max(10, …)` sub-index floor and the `min(85, …)` retention ceiling.
+
+### 2.6 Physician Reports — local store and optional cloud sync
+- **Local path (always on)**: `localStorage` key `terrapulse_reports` (`src/App.jsx`); seed = the 45 `survey_seed` records in the dataset.
+- **Cloud path (opt-in)**: `src/lib/dbService.js` talks to Supabase PostgREST with `fetch`. Configuration comes from `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` or the runtime "Cloud Database Sync" dialog.
+- **Schema**: `supabase/migrations/0001_init_physician_reports.sql`. **Created but not applied** — no Supabase project was reachable from the build environment, so the table, its RLS state and the column types below are unverified against a live database.
+- **Security posture**: Row Level Security is enabled with **no policies**, because the app has no authentication. Anon `SELECT` therefore returns 0 rows and anon `INSERT` is rejected; the migration carries a commented `auth.uid()` policy template for whoever adds sign-in. Unrestricted anon write policies were deliberately **not** shipped — the records name real physicians and record their migration intent.
+- **Failure taxonomy** (so a missing table is not reported as a network fault, and a rejected write is not reported as success): `SYNC_STATE` distinguishes `ok`, `schema_missing` (HTTP 404 or Postgres `42P01`), `forbidden` (401/403/`42501`/`PGRST301`), `unreachable` (no response) and `error`. A `schema_missing` verdict suppresses further probes for the session; concurrent startup probes are deduplicated. Submissions are written locally first, and the success toast only claims cloud sync when the insert returned 2xx.
+
 ---
 
 ## 3. Performance & Benchmark Audit
@@ -92,9 +105,9 @@ Benchmarking executed on standard hardware (Node.js v26.8.1 runtime):
 
 ### Automated Test Runs (`npm test` runs all four):
 - **Live React Engine (`src/lib/trendEngine.test.mjs`)** — the module the shipped app imports:
-  - 106 Test Assertions
-  - **106 Passed, 0 Failed (100% Success)**
-  - Includes reproduction of all 55 published OLS/Mann-Kendall statistics and all 5 governorate HNIs directly from `src/data/terrapulseData.js`.
+  - 144 Test Assertions
+  - **144 Passed, 0 Failed (100% Success)**
+  - Includes reproduction of all 55 published OLS/Mann-Kendall statistics and all 5 governorate HNIs directly from `src/data/terrapulseData.js`, plus non-finite input guards and the What-If simulator contract.
 - **Legacy JS Engine (`pipeline/test-legacy-engine.js`)**:
   - 51 Test Assertions
   - **51 Passed, 0 Failed (100% Success)**
@@ -123,7 +136,7 @@ Benchmarking executed on standard hardware (Node.js v26.8.1 runtime):
 
 ### To QA Engineer (`WHI-30`) — as shipped:
 - Run `npm test` (live engine suite + legacy JS suite + both Python suites) as mandatory acceptance criteria.
-- Offline parity applies to the **shipped React build only, and partially**: run `npm run build && npm run preview`, then disconnect. Bundled dataset, Leaflet JS+CSS and Chart.js keep the maps, choropleth and charts working; the Inter/Cairo webfonts and the ArcGIS `World_Dark_Gray_Base` tile layer (`MapModule.jsx:150`) do not, and Supabase telemetry fails open to localStorage. The archived `legacy/` build cannot be used as the offline reference — it throws on load (see *Legacy status* in `README.md`).
+- Offline parity applies to the **shipped React build only, and partially**: run `npm run build && npm run preview`, then disconnect. Bundled dataset, Leaflet JS+CSS and Chart.js keep the choropleth polygons, markers, legend, time-lapse and charts working — the map swaps the Esri basemap for a grid canvas and shows an accessible "basemap unavailable" notice instead of retrying; the Inter/Cairo webfonts and the ArcGIS `World_Dark_Gray_Base` tile layer (`MapModule.jsx`) do not load, and Supabase telemetry is off unless explicitly configured, in which case it degrades to the local-only state described in §2.6. The archived `legacy/` build cannot be used as the offline reference — it throws on load (see *Legacy status* in `README.md`).
 
 ### To Product Manager (`WHI-27`):
 - Incorporate the mathematical rigor (Mann-Kendall $Z$-score, $p$-value badges, Theil-Sen slope, and HNI multi-criteria equation) into the Space Apps Challenge submission write-up (`SUBMISSION_COPY.md`), pitch deck slide 4, and the 30-second video script.

@@ -3,8 +3,7 @@ import { Database, X, Check, Copy, AlertCircle, RefreshCw, CheckCircle2, ShieldC
 import { getDbConfig, saveDbConfig, clearDbConfig, testDbConnection, SQL_TABLE_SCHEMA } from '../lib/dbService';
 
 export default function DbSyncModal({ isOpen, onClose, lang = 'en', onConfigUpdated }) {
-  if (!isOpen) return null;
-
+  // Hooks run unconditionally; the closed state is handled by the return below.
   const isAr = lang === 'ar';
   const [config, setConfig] = useState(getDbConfig());
   const [inputUrl, setInputUrl] = useState(config.url || '');
@@ -33,11 +32,14 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', onConfigUpda
       saveDbConfig(inputUrl, inputKey);
       const updated = getDbConfig();
       setConfig(updated);
+      // A readable table is not a writable one: with RLS enabled and no authenticated
+      // policy PostgREST answers 200 with zero rows and rejects INSERT, so this reports
+      // only what the probe actually verified.
       setTestResult({
         success: true,
         message: isAr
-          ? 'تم التحقق من الاتصال بنجاح وتفعيل المزامنة السحابية الحية!'
-          : 'Successfully connected to Supabase! Real-time telemetry sync is active.'
+          ? 'تم العثور على الجدول وقراءته. الكتابة تتطلب سياسة وصول موثّقة (Supabase Auth)؛ بدونها يبقى الحفظ محلياً على هذا الجهاز.'
+          : `Table reachable and readable (${res.rowCount ?? 0} row(s) returned). Writes need an authenticated RLS policy — until then TerraPulse keeps saving locally.`
       });
       if (onConfigUpdated) onConfigUpdated(updated);
     } else {
@@ -72,6 +74,8 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', onConfigUpda
       // fallback
     }
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
@@ -237,7 +241,9 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', onConfigUpda
         <div className="pt-2 border-t border-white/[0.08] space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-medium text-white/60">
-              {isAr ? 'سكربت تهيئة الجدول في SQL Editor الخاص بـ Supabase:' : 'Supabase SQL Editor Table Setup Script:'}
+              {isAr
+                ? 'نفس محتوى supabase/migrations/0001_init_physician_reports.sql — الصقه في SQL Editor:'
+                : 'Verbatim from supabase/migrations/0001_init_physician_reports.sql — paste into the SQL Editor:'}
             </span>
             <button
               type="button"

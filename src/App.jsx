@@ -16,8 +16,8 @@ import Footer from './components/Footer';
 
 import { TERRAPULSE_DATA } from './data/terrapulseData';
 import { TRANSLATIONS } from './lib/translations';
-import { computeWNIFromReports, computeHNI } from './lib/trendEngine';
-import { getDbConfig, fetchRemoteReports, submitRemoteReport } from './lib/dbService';
+import { computeWNIFromReports, computeHNI, WNI_PRIOR_DEFAULT } from './lib/trendEngine';
+import { getDbConfig, fetchRemoteReports, submitRemoteReport, SYNC_STATE } from './lib/dbService';
 
 export default function App() {
   const [lang, setLang] = useState(() => {
@@ -69,6 +69,11 @@ export default function App() {
     } catch { return false; }
   });
   const [dbConfig, setDbConfig] = useState(() => getDbConfig());
+  const [syncStatus, setSyncStatus] = useState(() => ({
+    // Until the first probe answers, nothing is claimed about the cloud.
+    state: dbConfig.isConfigured ? 'pending' : SYNC_STATE.LOCAL,
+    reportsSynced: 0
+  }));
 
   // App Data copy with dynamic updates
   const [appData, setAppData] = useState(() => JSON.parse(JSON.stringify(TERRAPULSE_DATA)));
@@ -87,28 +92,35 @@ export default function App() {
     return TERRAPULSE_DATA.survey_seed || [];
   });
 
-  // Sync remote crowdsourced reports from Supabase if configured
+  // Sync remote crowdsourced reports from Supabase if configured. The result is
+  // published to `syncStatus` so the UI can say what actually happened; a failed
+  // read is never displayed as "cloud synced".
   useEffect(() => {
     let isMounted = true;
     async function syncRemote() {
-      if (!dbConfig.isConfigured) return;
-      try {
-        const remote = await fetchRemoteReports();
-        if (remote && remote.length > 0 && isMounted) {
-          setReports(prev => {
-            const map = new Map();
-            remote.forEach(r => { if (r && r.id) map.set(r.id, r); });
-            prev.forEach(r => { if (r && r.id && !map.has(r.id)) map.set(r.id, r); });
-            const merged = Array.from(map.values());
-            try {
-              localStorage.setItem('terrapulse_reports', JSON.stringify(merged));
-            } catch {}
-            return merged;
-          });
-        }
-      } catch (err) {
-        console.warn('Initial remote reports sync error:', err);
+      if (!dbConfig.isConfigured) {
+        setSyncStatus({ state: SYNC_STATE.LOCAL, reportsSynced: 0 });
+        return;
       }
+      const result = await fetchRemoteReports();
+      if (!isMounted) return;
+      setSyncStatus({ state: result.state, detail: result.detail, error: result.error, reportsSynced: 0 });
+      if (result.state !== SYNC_STATE.OK) return;
+
+      const remote = result.rows;
+      if (remote.length === 0) return;
+
+      setReports(prev => {
+        const map = new Map();
+        remote.forEach(r => { if (r && r.id) map.set(r.id, r); });
+        prev.forEach(r => { if (r && r.id && !map.has(r.id)) map.set(r.id, r); });
+        const merged = Array.from(map.values());
+        try {
+          localStorage.setItem('terrapulse_reports', JSON.stringify(merged));
+        } catch {}
+        setSyncStatus(s => ({ ...s, reportsSynced: merged.length - prev.length }));
+        return merged;
+      });
     }
     syncRemote();
     return () => { isMounted = false; };
@@ -124,8 +136,12 @@ export default function App() {
 
       Object.keys(govs).forEach(govId => {
         const gov = govs[govId];
-        const baseWni = gov.baseline_indices?.wni || 75;
-        const newWni = computeWNIFromReports(govId, reports, baseWni);
+        // The prior must come from the immutable import, never from `gov`, because the
+        // line below writes `wni` back into the clone. Reading it back on the next
+        // report would blend the previous *result* as if it were the prior, so the score
+        // would drift with every submission in a session instead of depending only on n.
+        const priorWni = TERRAPULSE_DATA.governorates[govId]?.baseline_indices?.wni ?? WNI_PRIOR_DEFAULT;
+        const newWni = computeWNIFromReports(govId, reports, priorWni);
         gov.baseline_indices.wni = newWni;
 
         const epi = gov.baseline_indices.epi;
@@ -138,8 +154,9 @@ export default function App() {
     });
   }, [reports]);
 
-  // Handle new in-page report with optional Supabase live sync
-  const handleAddReport = (newReport) => {
+  // Local write is authoritative and happens first; the cloud write is an extra that
+  // reports its own outcome. Returns the remote state so the form can tell the truth.
+  const handleAddReport = async (newReport) => {
     const updated = [newReport, ...reports];
     setReports(updated);
     try {
@@ -147,11 +164,21 @@ export default function App() {
     } catch (e) {
       console.warn('LocalStorage save failed:', e);
     }
-    if (dbConfig.isConfigured) {
-      submitRemoteReport(newReport).catch(err => {
-        console.warn('Remote sync error:', err);
-      });
+
+    if (!dbConfig.isConfigured) {
+      setSyncStatus(s => ({ ...s, state: SYNC_STATE.LOCAL, lastResult: SYNC_STATE.LOCAL }));
+      return { state: SYNC_STATE.LOCAL, storedLocally: true };
     }
+
+    const result = await submitRemoteReport(newReport);
+    setSyncStatus(s => ({
+      ...s,
+      state: result.success ? SYNC_STATE.OK : result.state,
+      detail: result.error || result.detail,
+      lastResult: result.state,
+      storedLocally: true
+    }));
+    return { state: result.state, storedLocally: true };
   };
 
   // 1-Click Demonstration Case Handler
@@ -391,7 +418,7 @@ export default function App() {
           preselectedSpecialty={formSpecialty}
           lang={lang}
           t={t}
-          isDbConnected={dbConfig.isConfigured}
+          syncStatus={syncStatus}
           onOpenDbModal={() => setIsDbModalOpen(true)}
         />
 

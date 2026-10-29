@@ -159,7 +159,7 @@ Multi-Criteria Decision Analysis (MCDA) linking NASA environmental exposures wit
 ---
 
 ### Module 4: In-Page Physician Survey & Reactive State
-- **Storage**: In-browser `localStorage` key `terrapulse_physician_survey_v1`.
+- **Storage**: In-browser `localStorage` key `terrapulse_reports` (set in `src/App.jsx`; the 45 `survey_seed` records are the fallback when the key is absent).
 - **Pre-seeded Dataset**: 45 authentic Egyptian physician responses distributed across the 5 governorates.
 - **Reactivity**: Adding a new response triggers immediate re-computation of $WNI$, recalculation of $HNI$, and animated updates across all charts, map tooltips, and ranking tables.
 
@@ -173,6 +173,34 @@ Allows health ministers and governorate leadership to model real-world intervent
 
 The governorate PPI enters the simulated composite unchanged (`simulatePolicyInterventions` takes `basePpi` explicitly), so $\Delta HNI$ reflects the real population pressure of the selected governorate rather than a fixed constant.
 - Displays real-time delta: $\Delta HNI = HNI_{\text{simulated}} - HNI_{\text{baseline}}$ and projected lives impacted.
+
+#### 5.1 Exact model, coefficients and units
+
+Everything the simulator computes, in `src/lib/trendEngine.js::simulatePolicyInterventions`:
+
+| Quantity | Formula | Units | Source of the constant |
+|---|---|---|---|
+| $\Delta FSI$ | $(\text{clinics} / 50) \times 22$ | index points | `22` = cap at 50 units |
+| $\Delta WNI$ | $(\text{stipend} / 100) \times 28$ | index points | `28` = cap at 100 % |
+| $\Delta EPI$ | $(\text{greening} / 30) \times 12$ | index points | `12` = cap at 30 % |
+| $HNI_{sim}$ | $0.35\,EPI_{sim} + 0.30\,PPI + 0.20\,FSI_{sim} + 0.15\,WNI_{sim}$ | index (0–100) | `HNI_WEIGHTS` |
+| $\Delta HNI$ | $HNI_{sim} - HNI_{base}$ | index points | — |
+| Prevented admissions / month | $\text{clinics}\times34 + \text{stipend}\times11 + \text{greening}\times18$ | patient-visits averted per month | `ADMISSIONS_MODEL` |
+| Projected retention gain | $\text{stipend}\times0.45 + \text{clinics}\times0.20$ | percentage points of the workforce retained | `RETENTION_MODEL` |
+
+Each simulated sub-index is clamped from below at `Math.max(10, …)`; prevented admissions at `Math.max(0, …)`; retention gain at `Math.min(85, Math.max(0, …))`. All outputs are rounded to 1 decimal (integers for the two derived counts).
+
+Input handling: a non-finite lever (undefined/NaN from a reset component) coerces to `0`; a non-finite baseline coerces to `NEUTRAL_INDICES`. Levers are **not** range-clamped inside the engine — the sliders in `DecisionMaker.jsx` own the ranges, and the model is defined to extrapolate linearly beyond them, with the sub-index floor and the retention ceiling as the only guards.
+
+#### 5.2 Assumptions and limitations (read before quoting any number)
+
+- These coefficients are **planning heuristics authored for this project**, not parameters estimated from an Egyptian health dataset. Nothing here is fitted, cross-validated, or causal.
+- Each lever is linear and independent: doubling clinics doubles the FSI reduction and never touches EPI or WNI. Real interventions interact, saturate and take years to land; this model has no time dimension and assumes the full effect is instant.
+- Population Pressure Index is held constant — the simulator never models a policy changing migration-driven population pressure.
+- Baseline EPI/PPI/FSI are shipped as pre-computed constants (`src/data/terrapulseData.js`), so a simulation moves the composite score only; the underlying satellite series and charts are unchanged.
+- "Prevented admissions" and "retention gain" are illustrative projections. They must not be presented as proven causal effects, validated forecasts, or evaluated policy outcomes.
+- The UI states this limit explicitly: `DecisionMaker.jsx` renders a "model assumptions" disclosure under the sub-index bars, and the translations mark the outputs as simulated, not observed.
+- Contract tests for every row of the table above live in `src/lib/trendEngine.test.mjs` under *"What-If simulator contract"*.
 
 ---
 

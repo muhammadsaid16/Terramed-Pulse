@@ -10,9 +10,22 @@ export default function PhysicianForm({
   preselectedSpecialty,
   lang,
   t,
-  isDbConnected = false,
+  syncStatus = { state: 'local' },
   onOpenDbModal
 }) {
+  const syncState = syncStatus?.state || 'local';
+  const syncBadge = {
+    local: t.dbBadgeLocal,
+    pending: t.syncPending,
+    ok: t.dbBadgeCloud,
+    schema_missing: t.syncSchemaMissing,
+    forbidden: t.syncForbidden,
+    unreachable: t.syncUnreachable,
+    error: t.syncError
+  }[syncState] || t.syncError;
+  // Only a table the app actually reached counts as "synced"; pending and every
+  // failure state read as local mode so the badge cannot over-report.
+  const cloudActive = syncState === 'ok';
   const [formData, setFormData] = useState({
     doctor: '',
     specialty: preselectedSpecialty || 'nephrology',
@@ -39,7 +52,7 @@ export default function PhysicianForm({
 
   const [toastMessage, setToastMessage] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newReport = {
@@ -56,10 +69,18 @@ export default function PhysicianForm({
       date: new Date().toISOString().split('T')[0]
     };
 
-    onAddReport(newReport);
+    const result = await onAddReport(newReport);
+    const state = result?.state;
 
-    // Show Apple-style toast
-    setToastMessage(t.submitToast);
+    // The toast names the storage the report actually landed in. A rejected cloud
+    // write is reported as such even though the local copy succeeded.
+    setToastMessage(
+      state === 'ok'
+        ? t.submitToastCloud
+        : state === 'local'
+          ? t.submitToastLocalMode
+          : t.submitToastLocalOnly
+    );
     setTimeout(() => setToastMessage(null), 4000);
 
     // Reset comment & doctor
@@ -297,23 +318,21 @@ export default function PhysicianForm({
                 type="button"
                 onClick={onOpenDbModal}
                 className={`inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-0.5 rounded-full border transition-all ${
-                  isDbConnected
+                  cloudActive
                     ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/25 hover:bg-emerald-500/20 shadow-sm'
-                    : 'bg-white/[0.04] text-white/70 border-white/10 hover:bg-white/[0.08]'
+                    : syncState === 'pending'
+                      ? 'bg-sky-500/10 text-sky-300 border-sky-500/25'
+                      : 'bg-white/[0.04] text-white/70 border-white/10 hover:bg-white/[0.08]'
                 }`}
                 title={t.dbBadgeTooltip}
               >
-                <Database className={`w-3 h-3 ${isDbConnected ? 'text-emerald-400' : 'text-amber-400'}`} />
-                <span>
-                  {isDbConnected
-                    ? (t.dbBadgeCloud)
-                    : (t.dbBadgeLocal)}
-                </span>
+                <Database className={`w-3 h-3 ${cloudActive ? 'text-emerald-400' : 'text-amber-400'}`} />
+                <span>{syncBadge}</span>
                 <span className="text-[10px] text-white/40">⚙</span>
               </button>
 
               <span className="text-[11px] text-white/60 font-medium bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-white/10">
-                {t.feedSub} ({reports.length})
+                {cloudActive ? t.feedSub : t.feedSubLocal} ({reports.length})
               </span>
             </div>
           </div>

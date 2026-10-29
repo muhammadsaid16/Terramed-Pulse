@@ -10,7 +10,8 @@ import {
   lnGamma, betacf, ibeta, erf, standardNormalCdf, getTCritical95, studentTPValue,
   linearRegression, mannKendall, theilSenSlope, deseasonalize, minMaxNormalize,
   HNI_WEIGHTS, computeHNI, computeWNIFromReports, SPECIALTY_WEIGHTS, matchSpecialty,
-  simulatePolicyInterventions, ADMISSIONS_MODEL, RETENTION_MODEL
+  simulatePolicyInterventions, ADMISSIONS_MODEL, RETENTION_MODEL,
+  NEUTRAL_INDICES, WNI_PRIOR_DEFAULT
 } from './trendEngine.js';
 import { TERRAPULSE_DATA } from '../data/terrapulseData.js';
 
@@ -277,6 +278,178 @@ const needLadder = ['alexandria', 'cairo', 'giza', 'assiut', 'aswan']
   .map(name => govs[name].baseline_indices.hni);
 check(needLadder.every((v, i) => i === 0 || v >= needLadder[i - 1]), 'need rises from coastal Cairo through Upper Egypt to Aswan');
 check(govs.aswan.baseline_indices.hni > govs.alexandria.baseline_indices.hni, 'Upper Egypt need exceeds Delta/Coastal need');
+
+// =========================================================================
+// SECTION: NON-FINITE INPUT GUARDS
+// `baseline_indices.wni` is written by an effect after first paint, so the engine
+// legitimately receives undefined on the first render. Nothing below may return NaN
+// or Infinity, because those values reach the DOM as the text "NaN".
+// =========================================================================
+section('Non-finite input guards');
+
+const isFiniteNum = (v) => typeof v === 'number' && Number.isFinite(v);
+
+check(Number.isFinite(computeHNI(68.4, 92.1, 42.0, undefined)), 'computeHNI survives an undefined wni');
+check(Number.isFinite(computeHNI(68.4, 92.1, 42.0, NaN)), 'computeHNI survives a NaN wni');
+check(Number.isFinite(computeHNI(Infinity, 92.1, 42.0, 77)), 'computeHNI survives an Infinity epi');
+check(Number.isFinite(computeHNI('68.4', 92.1, 42.0, 77)), 'computeHNI survives a numeric-string epi');
+check(
+  computeHNI(68.4, 92.1, 42.0, undefined) === computeHNI(68.4, 92.1, 42.0, NEUTRAL_INDICES.wni),
+  'a missing wni falls back to the documented neutral index, not to zero'
+);
+check(
+  computeHNI(68.4, 92.1, 42.0, 77) === 71.5,
+  `valid inputs are unchanged (Cairo vector -> ${computeHNI(68.4, 92.1, 42.0, 77)})`
+);
+
+const junkSeverity = [{
+  governorate: 'aswan', considering_migration: 'yes', severity: 'moderate'
+}, {
+  governorate: 'aswan', considering_migration: 'yes', severity: 4
+}];
+check(Number.isFinite(computeWNIFromReports('aswan', junkSeverity, 75)), 'WNI survives a non-numeric severity row');
+check(
+  computeWNIFromReports('aswan', junkSeverity, 75) === computeWNIFromReports('aswan', [
+    { governorate: 'aswan', considering_migration: 'yes', severity: 3 },
+    { governorate: 'aswan', considering_migration: 'yes', severity: 4 }
+  ], 75),
+  'an unreadable severity is scored as the neutral 3, matching a missing value'
+);
+const zeroVsThree = [
+  computeWNIFromReports('aswan', [{ governorate: 'aswan', considering_migration: 'no', severity: 0 }], 75),
+  computeWNIFromReports('aswan', [{ governorate: 'aswan', considering_migration: 'no' }], 75)
+];
+check(zeroVsThree[0] < zeroVsThree[1], `severity 0 scores below a missing severity (${zeroVsThree[0]} < ${zeroVsThree[1]})`);
+check(
+  computeWNIFromReports('cairo', [], NaN) === WNI_PRIOR_DEFAULT,
+  'a non-finite prior degrades to the documented default instead of NaN'
+);
+
+// =========================================================================
+// SECTION: WHAT-IF SIMULATOR CONTRACT
+// Coefficients and units are pinned to the values documented in ARCHITECTURE.md;
+// these tests exist so a future edit to the model has to be deliberate.
+// =========================================================================
+section('What-If simulator contract');
+
+const simFor = (govId, levers = {}) => {
+  const b = govs[govId].baseline_indices;
+  const wni = 77;
+  return simulatePolicyInterventions(
+    computeHNI(b.epi, b.ppi, b.fsi, wni), b.epi, b.fsi, wni, b.ppi,
+    levers.clinics ?? 0, levers.stipend ?? 0, levers.greening ?? 0
+  );
+};
+
+const zeroDeltas = Object.keys(govs).map(simFor);
+check(
+  zeroDeltas.every(s => s.deltaHni === 0 && s.pctReduction === 0),
+  `zero intervention leaves every governorate's HNI untouched (${zeroDeltas.map(s => s.deltaHni).join(',')})`
+);
+check(
+  Object.keys(govs).every(id => simFor(id).simHni === computeHNI(govs[id].baseline_indices.epi, govs[id].baseline_indices.ppi, govs[id].baseline_indices.fsi, 77)),
+  'zero intervention reproduces the baseline HNI exactly for every governorate'
+);
+
+const r1 = (v) => Math.round(v * 10) / 10;
+check(simFor('cairo', { clinics: 50 }).simFsi === r1(Math.max(10, govs.cairo.baseline_indices.fsi - 22)), '50 clinics cut FSI by the documented 22 points');
+check(simFor('cairo', { stipend: 100 }).simWni === r1(Math.max(10, 77 - 28)), 'a 100% incentive cut WNI by the documented 28 points');
+check(simFor('cairo', { greening: 30 }).simEpi === r1(Math.max(10, govs.cairo.baseline_indices.epi - 12)), '30% greening cuts EPI by the documented 12 points');
+check(
+  simFor('cairo', { clinics: 25 }).simFsi === r1(Math.max(10, govs.cairo.baseline_indices.fsi - 11)),
+  'a half-travelled clinic lever halves the FSI reduction (linear response)'
+);
+check(
+  simFor('cairo', { clinics: 50 }).simEpi === govs.cairo.baseline_indices.epi,
+  'the clinic lever does not touch EPI'
+);
+check(
+  simFor('cairo', { greening: 30 }).simWni === 77,
+  'the greening lever does not touch WNI'
+);
+
+const floorCase = simulatePolicyInterventions(20, 12, 14, 11, 50, 50, 100, 30);
+check(
+  floorCase.simEpi === 10 && floorCase.simFsi === 10 && floorCase.simWni === 10,
+  `reductions clamp at the 10-point floor (${floorCase.simEpi}/${floorCase.simFsi}/${floorCase.simWni})`
+);
+
+const ppiOnly = (ppi) => simulatePolicyInterventions(50, 60, 60, 60, ppi, 0, 0, 0);
+check(
+  closeTo(ppiOnly(92.1).simHni - ppiOnly(48).simHni, (92.1 - 48) * HNI_WEIGHTS.ppi, 0.1),
+  `PPI enters at its own weight, not a constant (${(ppiOnly(92.1).simHni - ppiOnly(48).simHni).toFixed(1)} vs ${(0.3 * 44.1).toFixed(1)})`
+);
+check(
+  ppiOnly(92.1).simHni !== ppiOnly(48).simHni,
+  'two governorates with identical EPI/FSI/WNI still simulate differently on PPI'
+);
+check(
+  simulatePolicyInterventions(computeHNI(68.4, 92.1, 42, 77), 68.4, 42, 77, 92.1, 0, 0, 0).deltaHni === 0,
+  'Cairo at zero policy shows no phantom reduction (the hardcoded-PPI regression)'
+);
+
+const maxed = simFor('aswan', { clinics: 50, stipend: 100, greening: 30 });
+check(
+  Object.values(maxed).every(v => isFiniteNum(v)),
+  `every simulator output is finite at maximum levers (${JSON.stringify(maxed)})`
+);
+check(
+  maxed.preventedAdmissions === 50 * ADMISSIONS_MODEL.perClinic + 100 * ADMISSIONS_MODEL.perStipendPct + 30 * ADMISSIONS_MODEL.perGreeningPct,
+  `prevented admissions follow ADMISSIONS_MODEL exactly (${maxed.preventedAdmissions})`
+);
+check(
+  maxed.retentionGainPct === 100 * RETENTION_MODEL.perStipendPct + 50 * RETENTION_MODEL.perClinic,
+  `retention at max UI levers follows RETENTION_MODEL (${maxed.retentionGainPct})`
+);
+check(
+  maxed.retentionGainPct < 85,
+  `the slider range alone never reaches the 85% ceiling (${maxed.retentionGainPct})`
+);
+check(
+  simFor('aswan', { clinics: 500, stipend: 500 }).retentionGainPct === 85,
+  'the 85% ceiling only binds on an out-of-range lever'
+);
+check(
+  simFor('aswan', { clinics: 50 }).preventedAdmissions === 50 * ADMISSIONS_MODEL.perClinic,
+  'a single lever contributes only its own admissions term'
+);
+
+const hostileLevers = [
+  ['undefined clinics', { clinics: undefined }],
+  ['NaN stipend', { stipend: NaN }],
+  ['negative clinics', { clinics: -20 }],
+  ['over-range greening', { greening: 999 }],
+  ['string lever', { clinics: '15' }]
+];
+for (const [label, levers] of hostileLevers) {
+  const out = simFor('aswan', levers);
+  check(
+    Object.values(out).every(isFiniteNum),
+    `simulator stays finite with ${label} (${out.simHni})`
+  );
+}
+check(
+  simFor('aswan', { clinics: -20 }).preventedAdmissions === 0 && simFor('aswan', { clinics: -20 }).retentionGainPct === 0,
+  'a negative lever cannot produce a negative benefit figure',
+);
+check(
+  simFor('aswan', { clinics: -20 }).simFsi > simFor('aswan', { clinics: 0 }).simFsi,
+  'out-of-range levers extrapolate the linear model rather than being silently clamped (the sliders own the range)',
+);
+check(
+  simFor('aswan', { greening: 999 }).simEpi === 10,
+  `an extreme greening lever is stopped by the 10-point EPI floor (${simFor('aswan', { greening: 999 }).simEpi})`,
+);
+check(
+  simFor('aswan', { clinics: '15' }).simHni === simFor('aswan', { clinics: 15 }).simHni,
+  'a numeric-string lever behaves like its numeric value'
+);
+
+const nonFiniteBaseline = simulatePolicyInterventions(undefined, undefined, undefined, undefined, undefined, 15, 40, 10);
+check(
+  Object.values(nonFiniteBaseline).every(isFiniteNum),
+  `an all-undefined baseline still yields finite output (${nonFiniteBaseline.simHni})`
+);
 
 // =========================================================================
 

@@ -140,6 +140,25 @@ npm run build
 npm run preview
 ```
 
+> **What needs a network, and what does not.** The dataset, the statistical engine,
+> Leaflet and its CSS, the governorate polygons, choropleth and every Chart.js chart are
+> bundled — they work with the cable unplugged. Three things are fetched at runtime:
+> the **Esri ArcGIS `World_Dark_Gray_Base` tile layer** (offline, the map keeps its polygons,
+> markers, legend and time-lapse on a plain grid canvas and shows a "basemap unavailable"
+> notice instead of retrying), the **Inter/Cairo webfonts** from Google Fonts (system-font
+> fallback), and **Supabase** when you configure it. TerraPulse is offline-*capable*, not
+> fully offline.
+>
+> **Cloud sync is optional and off by default.** With no `.env` the app runs in local-only
+> mode on `localStorage`; nothing requests the network and the UI says so. To enable it:
+> create a Supabase project, run `supabase/migrations/0001_init_physician_reports.sql`
+> in the SQL Editor (the same SQL is copyable from the in-app *Cloud Database Sync* dialog),
+> then set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` — or enter them at runtime in
+> that dialog. The migration turns Row Level Security **on with no policies**, so the public
+> anon key can read zero rows and cannot write. That is deliberate: the app has no sign-in,
+> and the records name physicians and their migration intent. Add the commented
+> `auth.uid()` policy after implementing authentication before expecting cloud writes.
+
 ### 2. Run the Full Verification Suite
 `npm test` runs all four suites — the live React engine, the legacy JS engine, and both Python suites:
 ```bash
@@ -148,7 +167,7 @@ npm test
 ```
 Individual suites:
 ```bash
-node src/lib/trendEngine.test.mjs        # 106 checks — the engine the app actually imports
+node src/lib/trendEngine.test.mjs        # 144 checks — the engine the app actually imports
 node pipeline/test-legacy-engine.js      #  51 checks — legacy/trend-engine.js parity
 python3 pipeline/test_trend_engine.py    #  12 checks — Python statistical engine
 python3 pipeline/test_nasa_pipeline.py   #  82 checks — dataset artifacts & cross-runtime parity
@@ -194,7 +213,7 @@ python3 pipeline/fetch_nasa_data.py --offline
 │   │   └── egyptGovernoratesGeoJson.js  # Official UN OCHA / geoBoundaries polygons
 │   ├── lib/
 │   │   ├── trendEngine.js       # OLS regression, Mann-Kendall, t-test, HNI/WNI & simulation
-│   │   ├── trendEngine.test.mjs # 106-check suite for the live engine (npm test)
+│   │   ├── trendEngine.test.mjs # 144-check suite for the live engine (npm test)
 │   │   ├── chartAdapters.js     # Chart.js option/dataset builders per metric
 │   │   ├── dbService.js         # Supabase telemetry with local-storage fallback
 │   │   ├── specialties.js       # Shared AR/EN specialty label registers
@@ -213,6 +232,9 @@ python3 pipeline/fetch_nasa_data.py --offline
 │       ├── MathModal.jsx        # Mathematical & statistical methodology guide
 │       ├── PrintBrief.jsx       # Official 1-page ministerial brief for @media print
 │       └── Footer.jsx           # NASA mission credits & hackathon branding
+├── supabase/
+│   └── migrations/
+│       └── 0001_init_physician_reports.sql  # Optional cloud schema (RLS on, no policies)
 ├── pipeline/                    # ── PYTHON DATA PIPELINE (generates legacy/ artifacts only) ──
 │   ├── fetch_nasa_data.py       # NASA POWER API fetcher & Mann-Kendall CLI pipeline
 │   ├── trend_engine.py          # Python statistical engine (parity with legacy JS engine)

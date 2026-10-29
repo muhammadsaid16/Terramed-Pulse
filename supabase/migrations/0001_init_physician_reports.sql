@@ -1,0 +1,102 @@
+-- =============================================================================
+-- TerraPulse — 0001: physician_reports
+-- =============================================================================
+-- Target: Supabase (PostgreSQL 15+) with the PostgREST "rest/v1" interface.
+--
+-- Apply with the Supabase SQL Editor, or:
+--   supabase db push            (if you manage the project with the CLI)
+--
+-- Column list is derived from the only two places the application touches this
+-- table:
+--   * INSERT payload in src/lib/dbService.js  -> submitRemoteReport()
+--   * SELECT in the same file                 -> select=*, order=created_at.desc
+--   * row consumption in src/App.jsx          -> merged by `id`, filtered by
+--                                                `gov`/`governorate` and scored by
+--                                                `considering_migration`/`severity`
+-- Nothing else is stored, so nothing else is declared here.
+--
+-- -----------------------------------------------------------------------------
+-- SECURITY POSTURE — READ THIS BEFORE ENABLING WRITES
+-- -----------------------------------------------------------------------------
+-- Row Level Security is ENABLED with NO policies, on purpose.
+--
+-- The application has no authentication: it ships an anon/public API key only,
+-- which is a *browser-readable* credential, not a user identity. Anonymous INSERT
+-- on a table of named physicians' migration intent would expose that data and let
+-- anyone forge rows, so the policies that would make cloud sync "work" are not
+-- provided here as if they were safe.
+--
+-- Effect of this migration as written:
+--   * anon SELECT  -> HTTP 200 with 0 rows (RLS filters everything out)
+--   * anon INSERT  -> rejected by RLS; the client reports the failure honestly and
+--                     keeps the report in localStorage
+-- TerraPulse therefore stays in local mode until an authenticated policy exists.
+--
+-- Prerequisite for multi-device sync: enable Supabase Auth (email/OTP or magic
+-- link is enough for this app), then adopt the policy template below, which scopes
+-- writes to an authenticated author and keeps the aggregate feed readable.
+-- Adjust `author_id` trust rules to match your own moderation model before use.
+--
+-- -- BEGIN AUTHENTICATED POLICY TEMPLATE (copy into a later migration)
+-- -- ALTER TABLE public.physician_reports ADD COLUMN author_id uuid;
+-- -- CREATE POLICY "authenticated can read the feed"
+-- --   ON public.physician_reports FOR SELECT TO authenticated USING (true);
+-- -- CREATE POLICY "authenticated authors write their own reports"
+-- --   ON public.physician_reports FOR INSERT TO authenticated
+-- --   WITH CHECK (author_id = auth.uid());
+-- -- CREATE POLICY "authors edit their own reports"
+-- --   ON public.physician_reports FOR UPDATE TO authenticated
+-- --   USING (author_id = auth.uid()) WITH CHECK (author_id = auth.uid());
+-- -- GRANT SELECT, INSERT, UPDATE ON public.physician_reports TO authenticated;
+-- -- END TEMPLATE
+--
+-- Free-text columns are stored verbatim. `comment` and `hospital` in particular
+-- can identify an individual clinic or doctor, so treat this table as personal
+-- data: keep it out of public exports and set a retention policy deliberately.
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS public.physician_reports (
+  -- client-generated as `report-${Date.now()}`; TEXT because the app owns the id
+  id                     text        NOT NULL,
+  doctor                 text,
+  specialty              text        NOT NULL,
+  -- governorate key: cairo | giza | alexandria | assiut | aswan
+  gov                    text        NOT NULL,
+  hospital               text,
+  -- yes | hesitant | no (Arabic equivalents are normalised client-side)
+  considering_migration  text,
+  primary_reason         text,
+  needed_support         text,
+  -- 1-5 in the UI; 0 is tolerated because the scoring engine treats an explicit
+  -- zero ("asymptomatic") as a real answer rather than a missing one
+  severity               smallint,
+  comment                text,
+  -- ISO calendar date supplied by the client; the app reads and writes the key
+  -- `date`, so the column keeps that exact name (quoted, since it is also a type
+  -- keyword) rather than forcing a rename in both request and response paths
+  "date"                 date,
+  created_at             timestamptz NOT NULL DEFAULT now(),
+
+  CONSTRAINT physician_reports_pkey PRIMARY KEY (id),
+  CONSTRAINT physician_reports_severity_range
+    CHECK (severity IS NULL OR (severity BETWEEN 0 AND 5)),
+  CONSTRAINT physician_reports_migration_values
+    CHECK (considering_migration IS NULL
+           OR considering_migration IN ('yes', 'no', 'hesitant', 'undecided',
+                                       'نعم', 'لا', 'متردد'))
+);
+
+-- The client reads `select=*` ordered by created_at desc, and the scoring engine
+-- filters by governorate; both of these exist for that reason only.
+CREATE INDEX IF NOT EXISTS physician_reports_created_at_desc
+  ON public.physician_reports (created_at DESC);
+
+CREATE INDEX IF NOT EXISTS physician_reports_gov_idx
+  ON public.physician_reports (gov);
+
+ALTER TABLE public.physician_reports ENABLE ROW LEVEL SECURITY;
+
+-- The PostgREST schema cache must be told a new table exists, otherwise the very
+-- first request from the client returns HTTP 404 "relation does not exist" even
+-- though the table is present.
+NOTIFY pgrst, 'reload schema';

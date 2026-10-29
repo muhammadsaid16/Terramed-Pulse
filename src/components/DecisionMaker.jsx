@@ -9,8 +9,8 @@ import {
   Legend
 } from 'chart.js';
 import { Doughnut, Bar } from 'react-chartjs-2';
-import { Sliders, ShieldCheck, BarChart3, PieChart } from 'lucide-react';
-import { simulatePolicyInterventions } from '../lib/trendEngine';
+import { Sliders, ShieldCheck, BarChart3, PieChart, AlertTriangle } from 'lucide-react';
+import { simulatePolicyInterventions, NEUTRAL_INDICES } from '../lib/trendEngine';
 import {
   buildTurnoverChartData,
   buildMigrationChartData,
@@ -39,12 +39,22 @@ export default function DecisionMaker({
   const [stipendPct, setStipendPct] = useState(40);
   const [greeningPct, setGreeningPct] = useState(10);
 
-  const baseIndices = govData?.baseline_indices || {
-    hni: 75,
-    epi: 70,
-    ppi: 50,
-    fsi: 65,
-    wni: 75
+  // Guard per-field, not per-object: App.jsx only writes `wni` in a post-paint effect,
+  // so on the first frame `baseline_indices.wni` is undefined and every product of it
+  // rendered as NaN. A missing reading falls back to the engine's neutral index, which
+  // is the same value the effect blends from, so the first frame matches steady state.
+  const rawIndices = govData?.baseline_indices;
+  const hasBaseline = !!rawIndices;
+  const pick = (key) => {
+    const n = Number(rawIndices?.[key]);
+    return Number.isFinite(n) ? n : NEUTRAL_INDICES[key];
+  };
+  const baseIndices = {
+    hni: pick('hni'),
+    epi: pick('epi'),
+    ppi: pick('ppi'),
+    fsi: pick('fsi'),
+    wni: pick('wni')
   };
 
   // Run What-If Simulation
@@ -116,6 +126,16 @@ export default function DecisionMaker({
               {govName}
             </span>
           </div>
+
+          {!hasBaseline && (
+            <div
+              role="status"
+              className="flex items-center gap-2 text-[11px] text-amber-300 bg-amber-500/10 border border-amber-500/25 rounded-xl px-3 py-2"
+            >
+              <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+              <span>{t.baselineMissingBadge}</span>
+            </div>
+          )}
 
           {/* Delta Indicator */}
           <div className="flex items-center justify-center gap-6 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08]">
@@ -212,6 +232,15 @@ export default function DecisionMaker({
               </div>
             </div>
           </div>
+
+          <details className="rounded-xl border border-white/[0.08] bg-white/[0.02] px-3.5 py-2.5">
+            <summary className="cursor-pointer text-[11px] font-medium text-white/60 select-none">
+              {t.modelAssumptionsTitle}
+            </summary>
+            <p className="mt-2 text-[11px] leading-relaxed text-white/50">
+              {t.modelAssumptionsBody}
+            </p>
+          </details>
 
         </div>
 

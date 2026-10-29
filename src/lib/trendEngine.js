@@ -335,15 +335,32 @@ export function minMaxNormalize(value, min, max, invert = false) {
 
 export const HNI_WEIGHTS = { epi: 0.35, ppi: 0.30, fsi: 0.20, wni: 0.15 };
 
+// `baseline_indices.wni` is written at runtime, so on the very first render it is
+// undefined. Without an explicit neutral value every downstream product becomes
+// NaN and the UI renders "NaN" for one frame. These mirror the fallback already
+// used by the components, so a neutral reading is identical to today's behaviour.
+export const NEUTRAL_INDICES = { hni: 75, epi: 70, ppi: 50, fsi: 65, wni: 75 };
+export const WNI_PRIOR_DEFAULT = NEUTRAL_INDICES.wni;
+
+function finiteIndex(value, fallback) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : fallback;
+}
+
 export function computeHNI(epi, ppi, fsi, wni) {
-  const score = (HNI_WEIGHTS.epi * epi) + (HNI_WEIGHTS.ppi * ppi) + (HNI_WEIGHTS.fsi * fsi) + (HNI_WEIGHTS.wni * wni);
+  const score =
+    (HNI_WEIGHTS.epi * finiteIndex(epi, NEUTRAL_INDICES.epi)) +
+    (HNI_WEIGHTS.ppi * finiteIndex(ppi, NEUTRAL_INDICES.ppi)) +
+    (HNI_WEIGHTS.fsi * finiteIndex(fsi, NEUTRAL_INDICES.fsi)) +
+    (HNI_WEIGHTS.wni * finiteIndex(wni, NEUTRAL_INDICES.wni));
   return Math.round(score * 10) / 10;
 }
 
-export function computeWNIFromReports(govId, reports, baselinePrior = 75.0) {
-  if (!reports || reports.length === 0) return baselinePrior;
+export function computeWNIFromReports(govId, reports, baselinePrior = WNI_PRIOR_DEFAULT) {
+  const prior = finiteIndex(baselinePrior, WNI_PRIOR_DEFAULT);
+  if (!reports || reports.length === 0) return prior;
   const govReports = reports.filter(r => (r.gov || r.governorate) === govId);
-  if (govReports.length === 0) return baselinePrior;
+  if (govReports.length === 0) return prior;
 
   let migrationRiskSum = 0;
   let severitySum = 0;
@@ -355,14 +372,18 @@ export function computeWNIFromReports(govId, reports, baselinePrior = 75.0) {
     else if (intent === 'hesitant' || intent === 'undecided' || intent === 'متردد') migrationRiskSum += 0.5;
     // `??` not `||` — an explicit severity of 0 is a real answer ("asymptomatic"),
     // not a missing one, and must not silently re-score as 3.
-    severitySum += Number(r.severity ?? 3);
+    // A stored report can also carry a non-numeric severity (remote row written by
+    // another client, or a hand-edited localStorage blob); one NaN would otherwise
+    // poison this governorate's WNI and therefore its HNI.
+    const severity = Number(r.severity ?? 3);
+    severitySum += Number.isFinite(severity) ? severity : 3;
   }
 
   const migrationRiskRatio = migrationRiskSum / govReports.length;
   const avgSeverity = severitySum / govReports.length;
   const empiricalWni = (migrationRiskRatio * 60.0) + (avgSeverity * 8.0);
   const sampleWeight = Math.min(1.0, govReports.length / 15.0);
-  const blendedWni = (sampleWeight * empiricalWni) + ((1.0 - sampleWeight) * baselinePrior);
+  const blendedWni = (sampleWeight * empiricalWni) + ((1.0 - sampleWeight) * prior);
 
   return Math.round(Math.max(10, Math.min(100, blendedWni)) * 10) / 10;
 }
@@ -472,23 +493,38 @@ export const ADMISSIONS_MODEL = { perClinic: 34, perStipendPct: 11, perGreeningP
 export const RETENTION_MODEL = { perStipendPct: 0.45, perClinic: 0.20 };
 
 export function simulatePolicyInterventions(baseHni, baseEpi, baseFsi, baseWni, basePpi, clinics = 0, stipendPct = 0, greeningPct = 0) {
-  const fsiReduction = (clinics / 50.0) * 22.0;
-  const wniReduction = (stipendPct / 100.0) * 28.0;
-  const epiReduction = (greeningPct / 30.0) * 12.0;
+  const bHni = finiteIndex(baseHni, NEUTRAL_INDICES.hni);
+  const bEpi = finiteIndex(baseEpi, NEUTRAL_INDICES.epi);
+  const bFsi = finiteIndex(baseFsi, NEUTRAL_INDICES.fsi);
+  const bWni = finiteIndex(baseWni, NEUTRAL_INDICES.wni);
+  const bPpi = finiteIndex(basePpi, NEUTRAL_INDICES.ppi);
 
-  const simEpi = Math.max(10, baseEpi - epiReduction);
-  const simFsi = Math.max(10, baseFsi - fsiReduction);
-  const simWni = Math.max(10, baseWni - wniReduction);
+  // Only non-finite lever values are coerced (a reset component can hand us undefined).
+  // In-range limits are deliberately NOT imposed here: the sliders own those, and the
+  // model is defined to extrapolate linearly outside them, with the sub-index floor and
+  // the retention ceiling as the documented guards.
+  const lever = (v) => finiteIndex(v, 0);
+  const nClinics = lever(clinics);
+  const nStipend = lever(stipendPct);
+  const nGreening = lever(greeningPct);
 
-  const simHni = (HNI_WEIGHTS.epi * simEpi) + (HNI_WEIGHTS.ppi * basePpi) + (HNI_WEIGHTS.fsi * simFsi) + (HNI_WEIGHTS.wni * simWni);
-  const deltaHni = simHni - baseHni;
+  const fsiReduction = (nClinics / 50.0) * 22.0;
+  const wniReduction = (nStipend / 100.0) * 28.0;
+  const epiReduction = (nGreening / 30.0) * 12.0;
+
+  const simEpi = Math.max(10, bEpi - epiReduction);
+  const simFsi = Math.max(10, bFsi - fsiReduction);
+  const simWni = Math.max(10, bWni - wniReduction);
+
+  const simHni = (HNI_WEIGHTS.epi * simEpi) + (HNI_WEIGHTS.ppi * bPpi) + (HNI_WEIGHTS.fsi * simFsi) + (HNI_WEIGHTS.wni * simWni);
+  const deltaHni = simHni - bHni;
 
   const preventedAdmissionsPerMonth = Math.round(
-    (clinics * ADMISSIONS_MODEL.perClinic) + (stipendPct * ADMISSIONS_MODEL.perStipendPct) + (greeningPct * ADMISSIONS_MODEL.perGreeningPct)
+    (nClinics * ADMISSIONS_MODEL.perClinic) + (nStipend * ADMISSIONS_MODEL.perStipendPct) + (nGreening * ADMISSIONS_MODEL.perGreeningPct)
   );
 
   const projectedRetentionGain = Math.round(
-    (stipendPct * RETENTION_MODEL.perStipendPct) + (clinics * RETENTION_MODEL.perClinic)
+    (nStipend * RETENTION_MODEL.perStipendPct) + (nClinics * RETENTION_MODEL.perClinic)
   );
 
   return {
@@ -497,7 +533,7 @@ export function simulatePolicyInterventions(baseHni, baseEpi, baseFsi, baseWni, 
     simWni: Math.round(simWni * 10) / 10,
     simHni: Math.round(simHni * 10) / 10,
     deltaHni: Math.round(deltaHni * 10) / 10,
-    pctReduction: Math.round((Math.abs(deltaHni) / baseHni) * 100),
+    pctReduction: bHni > 0 ? Math.round((Math.abs(deltaHni) / bHni) * 100) : 0,
     preventedAdmissions: Math.max(0, preventedAdmissionsPerMonth),
     retentionGainPct: Math.min(85, Math.max(0, projectedRetentionGain))
   };

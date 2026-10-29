@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import L from 'leaflet';
-import { Play, Pause, ChevronLeft, ChevronRight, Layers, Flame, Sparkles } from 'lucide-react';
+import { Play, Pause, ChevronLeft, ChevronRight, Layers, Flame, Sparkles, CloudOff } from 'lucide-react';
 
 import { EGYPT_GOVS_GEOJSON } from '../data/egyptGovernoratesGeoJson';
 import { HNI_WEIGHTS } from '../lib/trendEngine';
@@ -126,6 +126,9 @@ export default function MapModule({
   const [mapReady, setMapReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const playIntervalRef = useRef(null);
+  // 'unknown' until the first tile answers, then 'online' or 'unavailable'.
+  const [basemapState, setBasemapState] = useState('unknown');
+  const basemapSettledRef = useRef(false);
 
   // Initialize Map
   useEffect(() => {
@@ -147,10 +150,25 @@ export default function MapModule({
     });
 
     // High performance keyless Esri World Dark Gray Base
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+    const basemap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
       maxZoom: 16,
       subdomains: ['server']
     }).addTo(map);
+
+    // Tiles come from Esri, so an air-gapped machine loses the basemap but keeps every
+    // overlay. Leaflet does not retry a failed tile, so the only thing to control here is
+    // reporting: settle on the first definitive answer and ignore the rest, otherwise each
+    // visible tile error would re-render the module.
+    basemap.on('tileload', () => {
+      if (basemapSettledRef.current) return;
+      basemapSettledRef.current = true;
+      setBasemapState('online');
+    });
+    basemap.on('tileerror', () => {
+      if (basemapSettledRef.current) return;
+      basemapSettledRef.current = true;
+      setBasemapState('unavailable');
+    });
 
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 
@@ -165,6 +183,8 @@ export default function MapModule({
 
     return () => {
       clearTimeout(timer);
+      basemapSettledRef.current = false;
+      setBasemapState('unknown');
       setMapReady(false);
       if (layerGroupRef.current) {
         layerGroupRef.current.clearLayers();
@@ -176,6 +196,14 @@ export default function MapModule({
       }
     };
   }, []);
+
+  // Class is toggled imperatively because Leaflet owns this element's className; a
+  // React-written className attribute would strip `leaflet-container` and unstyle the map.
+  useEffect(() => {
+    const el = mapContainerRef.current;
+    if (!el) return;
+    el.classList.toggle('basemap-unavailable', basemapState === 'unavailable');
+  }, [basemapState]);
 
   // Synchronize Official GeoJSON Boundaries and Pulse Markers
   useEffect(() => {
@@ -328,6 +356,29 @@ export default function MapModule({
       {/* Map Viewport Container */}
       <div className="relative flex-1 min-h-[420px] rounded-3xl overflow-hidden border border-white/[0.08] shadow-2xl">
         <div ref={mapContainerRef} className="w-full h-full min-h-[420px]" />
+
+        {basemapState === 'unavailable' && (
+          <div
+            role="status"
+            aria-live="polite"
+            className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[450] max-w-[92%] flex items-start gap-2 bg-black/70 backdrop-blur-2xl px-3 py-2 rounded-xl border border-white/[0.14] shadow-xl"
+          >
+            <CloudOff className="w-3.5 h-3.5 shrink-0 text-amber-300 mt-0.5" />
+            <span className="text-[11px] leading-snug text-white/80">
+              {t.basemapOffline}
+            </span>
+          </div>
+        )}
+
+        {/* Basemap credit. Leaflet's attribution control is switched off for the dark UI,
+            so the Esri tile source has to be credited here instead. Lifted above the
+            bottom-right zoom stack, which it would otherwise sit under, and dropped when
+            no Esri tile is on screen. */}
+        {basemapState !== 'unavailable' && (
+          <div className="absolute bottom-[78px] right-2 z-[400] px-1.5 py-0.5 rounded-md bg-black/45 text-[9px] leading-none text-white/45 pointer-events-none">
+            © Esri — Source: Esri, Maxar, Earthstar Geographics
+          </div>
+        )}
 
         {/* Dynamic On-Map Year HUD Banner */}
         <div className="absolute top-3 left-3 right-3 z-[400] bg-black/65 backdrop-blur-2xl px-4 py-2 rounded-2xl border border-white/[0.12] shadow-2xl flex items-center justify-between gap-2">

@@ -212,7 +212,7 @@ Input handling: a non-finite lever (undefined/NaN from a reset component) coerce
 
 ## 4. Canonical Data Schema (`src/data/terrapulseData.js` for the React app; `legacy/data.json` for the pipeline and legacy build)
 
-Two physical copies of this schema exist and are maintained independently: `pipeline/fetch_nasa_data.py` regenerates only the `legacy/` artifacts, while `src/data/terrapulseData.js` is hand-maintained and differs in governorate `lat`/`lng` (manually nudged to polygon centroids for marker placement).
+Two physical copies of this schema exist and are maintained independently: `pipeline/fetch_nasa_data.py` regenerates only the `legacy/` artifacts, while `src/data/terrapulseData.js` is hand-maintained and differs in governorate `lat`/`lng` (manually nudged to polygon centroids for marker placement). That duplication is a decision, not an accident, and `src/data/terrapulseData.parity.test.mjs` enforces its boundary: the copies must be value-for-value identical everywhere except those ten coordinates, so silent drift between what the pipeline produces and what the app renders fails the build's test step.
 
 ```typescript
 interface TerraPulseDatabase {

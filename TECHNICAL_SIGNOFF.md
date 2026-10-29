@@ -103,11 +103,15 @@ Benchmarking executed on standard hardware (Node.js v26.8.1 runtime):
 
 ## 4. Test Suite Summary
 
-### Automated Test Runs (`npm test` runs all four):
+### Automated Test Runs (`npm test` runs all five):
 - **Live React Engine (`src/lib/trendEngine.test.mjs`)** — the module the shipped app imports:
   - 144 Test Assertions
   - **144 Passed, 0 Failed (100% Success)**
   - Includes reproduction of all 55 published OLS/Mann-Kendall statistics and all 5 governorate HNIs directly from `src/data/terrapulseData.js`, plus non-finite input guards and the What-If simulator contract.
+- **Dataset Drift Gate (`src/data/terrapulseData.parity.test.mjs`)** — the two physical copies of the dataset:
+  - 23 Test Assertions
+  - **23 Passed, 0 Failed (100% Success)**
+  - Recursively compares `src/data/terrapulseData.js` against `legacy/data.json` (series, statistics, indices, demographics, seed survey, metadata, specialties, case studies) and passes only when the **sole** divergence is governorate `lat`/`lng`, each within a sub-degree centroid nudge. Verified to fail: injecting a one-tenth change into Cairo's EPI baseline drops it to 21/23 and exits non-zero.
 - **Legacy JS Engine (`pipeline/test-legacy-engine.js`)**:
   - 51 Test Assertions
   - **51 Passed, 0 Failed (100% Success)**
@@ -131,11 +135,11 @@ Benchmarking executed on standard hardware (Node.js v26.8.1 runtime):
 
 ### To Data Engineer (`WHI-29`) — as shipped:
 - Use `pipeline/trend_engine.py` inside `pipeline/fetch_nasa_data.py`. When pre-compiling `data.json`, verify that every governorate's 31-year array has exactly 31 numeric entries (1995 to 2025 inclusive).
-- The pipeline exports its three artifacts to `legacy/` by default. **It does not write the React dataset**: `src/data/terrapulseData.js` is maintained separately, so re-running the pipeline will not refresh the app. Reconciling the two is the outstanding structural task.
+- The pipeline exports its three artifacts to `legacy/` by default. **It does not write the React dataset**: `src/data/terrapulseData.js` is maintained separately, so re-running the pipeline will not refresh the app. This split is an accepted decision, guarded by `src/data/terrapulseData.parity.test.mjs`, which fails if the two copies diverge on anything other than the ten hand-nudged centroid coordinates.
 - `embedded-data.js` (window global for `file://` use) belongs to the legacy build; the React app bundles its dataset through the module graph.
 
 ### To QA Engineer (`WHI-30`) — as shipped:
-- Run `npm test` (live engine suite + legacy JS suite + both Python suites) as mandatory acceptance criteria.
+- Run `npm test` (live engine suite + dataset drift gate + legacy JS suite + both Python suites) as mandatory acceptance criteria.
 - Offline parity applies to the **shipped React build only, and partially**: run `npm run build && npm run preview`, then disconnect. Bundled dataset, Leaflet JS+CSS and Chart.js keep the choropleth polygons, markers, legend, time-lapse and charts working — the map swaps the Esri basemap for a grid canvas and shows an accessible "basemap unavailable" notice instead of retrying; the Inter/Cairo webfonts and the ArcGIS `World_Dark_Gray_Base` tile layer (`MapModule.jsx`) do not load, and Supabase telemetry is off unless explicitly configured, in which case it degrades to the local-only state described in §2.6. The archived `legacy/` build cannot be used as the offline reference — it throws on load (see *Legacy status* in `README.md`).
 
 ### To Product Manager (`WHI-27`):

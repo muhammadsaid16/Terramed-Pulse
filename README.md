@@ -160,18 +160,25 @@ npm run preview
 > `auth.uid()` policy after implementing authentication before expecting cloud writes.
 
 ### 2. Run the Full Verification Suite
-`npm test` runs all four suites — the live React engine, the legacy JS engine, and both Python suites:
+`npm test` runs all five suites — the live React engine, the dataset drift gate, the legacy JS engine, and both Python suites:
 ```bash
 cd "/home/zer0/Desktop/Projects/Nasa project"
 npm test
 ```
 Individual suites:
 ```bash
-node src/lib/trendEngine.test.mjs        # 144 checks — the engine the app actually imports
-node pipeline/test-legacy-engine.js      #  51 checks — legacy/trend-engine.js parity
-python3 pipeline/test_trend_engine.py    #  12 checks — Python statistical engine
-python3 pipeline/test_nasa_pipeline.py   #  82 checks — dataset artifacts & cross-runtime parity
+node src/lib/trendEngine.test.mjs            # 144 checks — the engine the app actually imports
+node src/data/terrapulseData.parity.test.mjs #  23 checks — src/data vs legacy/data.json drift gate
+node pipeline/test-legacy-engine.js          #  51 checks — legacy/trend-engine.js parity
+python3 pipeline/test_trend_engine.py        #  12 checks — Python statistical engine
+python3 pipeline/test_nasa_pipeline.py       #  82 checks — dataset artifacts & cross-runtime parity
 ```
+
+> **Why the drift gate exists.** `pipeline/fetch_nasa_data.py` regenerates `legacy/data.json`
+> only; `src/data/terrapulseData.js` is maintained by hand alongside it. The gate asserts the
+> two copies are value-for-value identical **except** governorate `lat`/`lng`, which were
+> deliberately nudged to polygon centroids for marker placement — and it fails if any other
+> field, or any coordinate by more than a degree, diverges.
 
 ### 3. Run the NASA POWER Python Data Pipeline
 The `pipeline/fetch_nasa_data.py` script queries the real NASA POWER API, computes statistical trends, and exports `data.json`, `data.js` and `embedded-data.js` into `legacy/` (the default `--out-dir`):
@@ -187,7 +194,8 @@ python3 pipeline/fetch_nasa_data.py --offline
 
 > **Note:** this pipeline refreshes the **legacy** dataset only. The React app reads
 > `src/data/terrapulseData.js`, a separately maintained copy — re-running the pipeline does
-> **not** update the application. Reconciling the two into one generated dataset is open work.
+> **not** update the application. That split is deliberate (the React file carries hand-nudged
+> marker centroids), and the drift gate in suite 2 above is what keeps it honest.
 
 ---
 
@@ -210,6 +218,7 @@ python3 pipeline/fetch_nasa_data.py --offline
 │   ├── index.css                # Apple Design fluid interactions, frosted glass, print styles
 │   ├── data/
 │   │   ├── terrapulseData.js    # Continuous 31-yr records & 45 realistic physician reports
+│   │   ├── terrapulseData.parity.test.mjs # 23-check drift gate vs legacy/data.json
 │   │   └── egyptGovernoratesGeoJson.js  # Official UN OCHA / geoBoundaries polygons
 │   ├── lib/
 │   │   ├── trendEngine.js       # OLS regression, Mann-Kendall, t-test, HNI/WNI & simulation

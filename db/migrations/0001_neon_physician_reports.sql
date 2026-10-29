@@ -6,7 +6,7 @@
 --         project; the browser holds no database credential of any kind.
 --
 -- Probed against the live branch before writing this file:
---   server    PostgreSQL 18.6, database neondb, branch br-noisy-sky-b504yg0e
+--   server    PostgreSQL 18.6, default database, on a Neon branch of your own project
 --   login     neondb_owner — NOT superuser, but rolcreaterole = true
 --   objects   zero tables in neondb, so there is no pre-existing schema to merge
 --   roles     anon / authenticated / service_role do NOT exist here

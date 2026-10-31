@@ -549,15 +549,15 @@ export default function DecisionMaker({
                 <DonutChart
                   data={donutData}
                   layout="vertical"
-                  size={140}
-                  innerRadius={42}
-                  outerRadius={64}
-                  sliceGapAngle={3}
+                  size={164}
+                  innerRadius={50}
+                  outerRadius={72}
+                  strokeWidth={2.5}
                   hoverOffset={6}
                   totalLabel={lang === 'ar' ? 'الإجمالي' : 'Total'}
                   totalSuffix="%"
                   centerSublabel={lang === 'ar' ? 'نسبة' : 'Share'}
-                  legendClassName="w-full mt-1.5"
+                  legendClassName="w-full mt-2"
                 />
               ) : (
                 <p className="text-xs text-slate-500 dark:text-white/45 px-4 text-center leading-relaxed">{t.chartNoFieldData}</p>

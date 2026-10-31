@@ -1,6 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { cn } from '../../lib/utils';
 
+/** Helper to strip duplicate (XX%) from labels if present */
+export const cleanSliceLabel = (text) => {
+  if (!text) return '';
+  return text.replace(/\s*\(\d+%\)/g, '').trim();
+};
+
 /**
  * NameThatUI Donut Chart Component
  * Implements full anatomy:
@@ -13,10 +19,10 @@ import { cn } from '../../lib/utils';
  */
 export function DonutChart({
   data = [], // [{ label: string, value: number, color: string }]
-  size = 200,
-  innerRadius = 60, // Radius of the center hole
-  outerRadius = 88, // Radius of the outer ring
-  sliceGapAngle = 3, // Degrees of gap between slices
+  size = 180,
+  innerRadius = 52, // Radius of the center hole
+  outerRadius = 76, // Radius of the outer ring
+  strokeWidth = 2.5, // Even gap between slices
   hoverOffset = 7, // Radial outward offset on hover
   totalLabel = 'Total',
   totalSuffix = '%',
@@ -51,6 +57,7 @@ export function DonutChart({
       const startAngle = currentAngle;
       const endAngle = currentAngle + angle;
       const midAngle = startAngle + angle / 2;
+      const midRad = (midAngle * Math.PI) / 180;
       currentAngle = endAngle;
 
       return {
@@ -61,46 +68,34 @@ export function DonutChart({
         startAngle,
         endAngle,
         midAngle,
+        midRad,
         angle
       };
     });
   }, [data, total]);
 
-  // Helper to calculate SVG arc path with slice gap (angularInset)
-  const getArcPath = (slice, isHovered) => {
-    const gap = slice.angle > sliceGapAngle * 2 ? sliceGapAngle : 0;
-    const startDeg = slice.startAngle + gap / 2;
-    const endDeg = slice.endAngle - gap / 2;
-
-    const startRad = (startDeg * Math.PI) / 180;
-    const endRad = (endDeg * Math.PI) / 180;
-    const midRad = (slice.midAngle * Math.PI) / 180;
-
-    // Center coordinates
+  // Generate SVG path for a circular ring sector
+  const getArcPath = (slice) => {
     const center = size / 2;
-
-    // Apply radial outward translation if hovered
-    const offset = isHovered ? hoverOffset : 0;
-    const offsetX = Math.cos(midRad) * offset;
-    const offsetY = Math.sin(midRad) * offset;
-
-    const cx = center + offsetX;
-    const cy = center + offsetY;
+    const startRad = (slice.startAngle * Math.PI) / 180;
+    const endRad = (slice.endAngle * Math.PI) / 180;
 
     const rOut = outerRadius;
     const rIn = innerRadius;
 
-    // Coordinates
-    const x1 = cx + rOut * Math.cos(startRad);
-    const y1 = cy + rOut * Math.sin(startRad);
-    const x2 = cx + rOut * Math.cos(endRad);
-    const y2 = cy + rOut * Math.sin(endRad);
-    const x3 = cx + rIn * Math.cos(endRad);
-    const y3 = cy + rIn * Math.sin(endRad);
-    const x4 = cx + rIn * Math.cos(startRad);
-    const y4 = cy + rIn * Math.sin(startRad);
+    // Outer arc start/end
+    const x1 = center + rOut * Math.cos(startRad);
+    const y1 = center + rOut * Math.sin(startRad);
+    const x2 = center + rOut * Math.cos(endRad);
+    const y2 = center + rOut * Math.sin(endRad);
 
-    const largeArc = slice.angle - gap > 180 ? 1 : 0;
+    // Inner arc start/end
+    const x3 = center + rIn * Math.cos(endRad);
+    const y3 = center + rIn * Math.sin(endRad);
+    const x4 = center + rIn * Math.cos(startRad);
+    const y4 = center + rIn * Math.sin(startRad);
+
+    const largeArc = slice.angle > 180 ? 1 : 0;
 
     return `
       M ${x1} ${y1}
@@ -112,57 +107,78 @@ export function DonutChart({
   };
 
   const activeSlice = hoveredIndex !== null ? slices[hoveredIndex] : null;
+  const holeDiameter = innerRadius * 2 - 8;
 
   return (
     <div className={cn(layoutClasses[layout] || layoutClasses.auto, className)}>
       {/* Donut Chart Ring with Center Label */}
-      <div className="relative shrink-0 flex items-center justify-center" style={{ width: size, height: size }}>
+      <div
+        className="relative shrink-0 flex items-center justify-center select-none"
+        style={{ width: size, height: size }}
+      >
         <svg
           width={size}
           height={size}
           viewBox={`0 0 ${size} ${size}`}
-          className="overflow-visible select-none"
+          className="overflow-visible"
           role="img"
           aria-label="Donut Chart"
         >
           {slices.map((slice) => {
             const isHovered = hoveredIndex === slice.index;
+            const dx = isHovered ? Math.cos(slice.midRad) * hoverOffset : 0;
+            const dy = isHovered ? Math.sin(slice.midRad) * hoverOffset : 0;
+
             return (
-              <path
+              <g
                 key={slice.index}
-                d={getArcPath(slice, isHovered)}
-                fill={slice.color}
-                className={cn(
-                  'cursor-pointer transition-all duration-200 ease-[cubic-bezier(0.2,0,0,1)]',
-                  isHovered ? 'filter drop-shadow(0 4px 8px rgba(0,0,0,0.25)) opacity-100' : 'opacity-90 hover:opacity-100'
-                )}
-                onMouseEnter={() => setHoveredIndex(slice.index)}
-                onMouseLeave={() => setHoveredIndex(null)}
-                tabIndex={0}
-                role="graphics-symbol"
-                aria-label={`${slice.label}: ${slice.value}${totalSuffix}`}
-              />
+                style={{
+                  transform: `translate(${dx}px, ${dy}px)`,
+                  transition: 'transform 200ms cubic-bezier(0.2, 0, 0, 1)'
+                }}
+              >
+                <path
+                  d={getArcPath(slice)}
+                  fill={slice.color}
+                  strokeWidth={strokeWidth}
+                  strokeLinejoin="round"
+                  className={cn(
+                    'cursor-pointer stroke-white dark:stroke-[#090b12] transition-opacity duration-150',
+                    isHovered
+                      ? 'opacity-100 filter drop-shadow(0 4px 8px rgba(0,0,0,0.3))'
+                      : 'opacity-90 hover:opacity-100'
+                  )}
+                  onMouseEnter={() => setHoveredIndex(slice.index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  tabIndex={0}
+                  role="graphics-symbol"
+                  aria-label={`${cleanSliceLabel(slice.label)}: ${slice.value}${totalSuffix}`}
+                />
+              </g>
             );
           })}
         </svg>
 
-        {/* Center Label inside the Donut's Hole */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-4 text-center">
+        {/* Center Label inside the Donut's Hole - Constrained to prevent slice overlap */}
+        <div
+          className="absolute inset-0 m-auto rounded-full flex flex-col items-center justify-center text-center p-1.5 overflow-hidden pointer-events-none"
+          style={{ width: holeDiameter, height: holeDiameter }}
+        >
           {activeSlice ? (
-            <div className="animate-in fade-in zoom-in-95 duration-150 flex flex-col items-center justify-center">
-              <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">
+            <div className="animate-in fade-in zoom-in-95 duration-150 flex flex-col items-center justify-center max-w-full">
+              <span className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">
                 {activeSlice.value}{totalSuffix}
               </span>
-              <span className="text-[10px] text-slate-500 dark:text-white/60 font-medium truncate max-w-[110px] mt-0.5">
-                {activeSlice.label}
+              <span className="text-[10px] text-slate-600 dark:text-white/75 font-medium leading-tight max-w-[84px] mt-1 line-clamp-2 break-words">
+                {cleanSliceLabel(activeSlice.label)}
               </span>
             </div>
           ) : (
-            <div className="animate-in fade-in duration-150 flex flex-col items-center justify-center">
-              <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">
+            <div className="animate-in fade-in duration-150 flex flex-col items-center justify-center max-w-full">
+              <span className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">
                 {total}{totalSuffix}
               </span>
-              <span className="text-[10px] text-slate-500 dark:text-white/50 font-medium mt-0.5 uppercase tracking-wider">
+              <span className="text-[10px] text-slate-500 dark:text-white/50 font-medium uppercase tracking-wider mt-1">
                 {totalLabel}
               </span>
             </div>
@@ -175,6 +191,7 @@ export function DonutChart({
         <div className={cn('flex flex-col gap-1.5 w-full max-w-xs', legendClassName)}>
           {slices.map((slice) => {
             const isHovered = hoveredIndex === slice.index;
+            const displayLabel = cleanSliceLabel(slice.label);
             return (
               <div
                 key={slice.index}
@@ -196,7 +213,7 @@ export function DonutChart({
                     )}
                     style={{ backgroundColor: slice.color }}
                   />
-                  <span className="truncate">{slice.label}</span>
+                  <span className="truncate">{displayLabel}</span>
                 </div>
                 <span className="font-mono font-medium text-slate-900 dark:text-white shrink-0 ml-2 rtl:mr-2">
                   {slice.value}{totalSuffix}

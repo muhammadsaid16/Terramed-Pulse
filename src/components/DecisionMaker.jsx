@@ -180,10 +180,10 @@ export default function DecisionMaker({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* Left: Live Simulation Output Scoreboard (5 cols) */}
-        <div className="lg:col-span-5 apple-card p-6 space-y-5">
+        <div className="lg:col-span-5 apple-card p-6 space-y-5 lg:sticky lg:top-24">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-xs text-white/80">
               {t.simulationHeading}

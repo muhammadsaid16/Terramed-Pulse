@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Stethoscope, HeartPulse, Wind, AlertCircle, Baby, Users, ShieldAlert, Sparkles, CheckCircle2 } from 'lucide-react';
 import { matchSpecialty } from '../lib/trendEngine';
 import { SPECIALTY_FULL_LABELS } from '../lib/specialties';
-import { SpotlightCard, NumberTicker, BorderBeam, Button, Badge } from './ui';
+import { SpotlightCard, NumberTicker, Button, Badge } from './ui';
 
 // Icons are presentation, so they stay here; the ids and both label registers come from
 // the module that owns the submission vocabulary.
@@ -95,9 +95,11 @@ export default function DoctorMatcher({
         
         {/* Left: Clinical Evidence & Mechanism (7 cols) */}
         <SpotlightCard
-          borderBeam={{ duration: 14, colorFrom: '#38bdf8', colorTo: '#818cf8', borderWidth: 2 }}
-          className="lg:col-span-7 apple-card p-6 space-y-5 relative overflow-hidden"
+          className="lg:col-span-7 apple-card p-6 space-y-5 relative overflow-hidden border border-sky-400/30 dark:border-sky-400/40 shadow-[0_0_20px_-3px_rgba(14,165,233,0.15)]"
         >
+          {/* Top Neon Ambient Accent Bar */}
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-500 z-10" />
+
           <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] pb-3">
             <h3 className="font-semibold text-sm text-slate-900 dark:text-white flex items-center gap-2">
               <span>{lang === 'ar' ? currentSpecialtyObj?.ar : currentSpecialtyObj?.en}</span>

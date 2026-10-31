@@ -22,7 +22,6 @@ import { MIGRATION_RESEARCH_STUDIES, DOCUMENTED_MIGRATION_DRIVERS } from '../dat
 import {
   SpotlightCard,
   NumberTicker,
-  BorderBeam,
   GlowProgressBar,
   Button,
   Badge,
@@ -195,64 +194,67 @@ export default function DecisionMaker({
         
         {/* Left: Live Simulation Output Scoreboard (5 cols) */}
         <SpotlightCard
-          borderBeam={{ duration: 12, colorFrom: '#10b981', colorTo: '#0ea5e9', borderWidth: 2 }}
-          className="lg:col-span-5 apple-card p-6 space-y-5 lg:sticky lg:top-24 shadow-sm dark:shadow-md relative overflow-hidden border-emerald-300/80 dark:border-emerald-500/30"
+          className="lg:col-span-5 apple-card p-6 lg:sticky lg:top-24 shadow-sm dark:shadow-md relative overflow-hidden border border-emerald-400/40 dark:border-emerald-500/40 shadow-[0_0_25px_-5px_rgba(16,185,129,0.18)]"
         >
+          {/* Top Neon Ambient Accent Bar (Reliable, high-end alternative to BorderBeam) */}
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 z-10" />
 
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-xs text-slate-800 dark:text-white/80">
-              {t.simulationHeading}
-            </h3>
-            <span className="text-[11px] font-medium text-slate-700 dark:text-white/50 bg-slate-100 dark:bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-white/10">
-              {govName}
-            </span>
-          </div>
-
-          {!hasBaseline && (
-            <div
-              role="status"
-              className="flex items-center gap-2 text-[11px] text-amber-700 bg-amber-50 border border-amber-200 dark:text-amber-300 dark:bg-amber-500/10 dark:border-amber-500/25 rounded-xl px-3 py-2"
-            >
-              <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
-              <span>{t.baselineMissingBadge}</span>
-            </div>
-          )}
-
-          {/* Delta Indicator */}
-          <div className="flex items-center justify-center gap-6 p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.08]">
-            <div className="text-center">
-              <span className="text-[10px] text-slate-500 dark:text-white/45 block uppercase tracking-[0.05em] font-medium">
-                {t.baselineHni}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-xs text-slate-800 dark:text-white/80">
+                {t.simulationHeading}
+              </h3>
+              <span className="text-[11px] font-medium text-slate-700 dark:text-white/50 bg-slate-100 dark:bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-white/10">
+                {govName}
               </span>
-              <div className="text-3xl font-semibold text-slate-700 dark:text-white/70 tabular-nums">
-                <NumberTicker value={baseIndices.hni} decimalPlaces={1} />
+            </div>
+
+            {!hasBaseline && (
+              <div
+                role="status"
+                className="flex items-center gap-2 text-[11px] text-amber-700 bg-amber-50 border border-amber-200 dark:text-amber-300 dark:bg-amber-500/10 dark:border-amber-500/25 rounded-xl px-3 py-2"
+              >
+                <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                <span>{t.baselineMissingBadge}</span>
+              </div>
+            )}
+
+            {/* Delta Indicator */}
+            <div className="flex items-center justify-center gap-6 p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.08]">
+              <div className="text-center">
+                <span className="text-[10px] text-slate-500 dark:text-white/45 block uppercase tracking-[0.05em] font-medium">
+                  {t.baselineHni}
+                </span>
+                <div className="text-3xl font-semibold text-slate-700 dark:text-white/70 tabular-nums">
+                  <NumberTicker value={baseIndices.hni} decimalPlaces={1} />
+                </div>
+              </div>
+              <div className="text-slate-300 dark:text-white/30 font-light text-2xl select-none" aria-hidden="true">
+                {lang === 'ar' ? '←' : '→'}
+              </div>
+              <div className="text-center">
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 block uppercase tracking-[0.05em] font-medium">
+                  {t.simulatedHni}
+                </span>
+                <div className="text-3xl font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                  <NumberTicker value={sim.simHni} decimalPlaces={1} />
+                </div>
               </div>
             </div>
-            <div className="text-slate-300 dark:text-white/30 font-light text-2xl select-none" aria-hidden="true">
-              {lang === 'ar' ? '←' : '→'}
-            </div>
-            <div className="text-center">
-              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 block uppercase tracking-[0.05em] font-medium">
-                {t.simulatedHni}
-              </span>
-              <div className="text-3xl font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">
-                <NumberTicker value={sim.simHni} decimalPlaces={1} />
-              </div>
-            </div>
-          </div>
 
-          <div className="text-center">
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30 tabular-nums shadow-sm">
-              <span dir="ltr" className="font-mono font-bold">{sim.deltaHni}</span>
-              <span>{t.unitPts}</span>
-              <span className="opacity-80">
-                (<span dir="ltr" className="font-mono">{sim.pctReduction}%</span> {t.reductionWord})
+            {/* Clear breathing space between the numbers box and reduction pill */}
+            <div className="text-center pt-3 pb-1">
+              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30 tabular-nums shadow-sm">
+                <span dir="ltr" className="font-mono font-bold">{sim.deltaHni}</span>
+                <span>{t.unitPts}</span>
+                <span className="opacity-80">
+                  (<span dir="ltr" className="font-mono">{sim.pctReduction}%</span> {t.reductionWord})
+                </span>
               </span>
-            </span>
-          </div>
+            </div>
 
-          {/* Sub-indices Progress Bars using 21st.dev GlowProgressBar */}
-          <div className="space-y-3.5 pt-2 text-xs">
+            {/* Sub-indices Progress Bars using 21st.dev GlowProgressBar */}
+            <div className="space-y-3.5 pt-2 text-xs">
             <GlowProgressBar
               label={t.sliderEpi}
               value={sim.simEpi}
@@ -298,6 +300,7 @@ export default function DecisionMaker({
               {t.modelAssumptionsBody}
             </p>
           </details>
+          </div>
 
         </SpotlightCard>
 

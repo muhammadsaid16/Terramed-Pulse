@@ -43,9 +43,15 @@ const KPIS = [
     labelKey: 'kpiTotalDoctorsLabel',
     valueClass: 'text-3xl font-bold tracking-tight text-white telemetry-mono',
     Value: ({ t, reportsCount }) => (
-      <>
-        {reportsCount && reportsCount > 0 ? reportsCount : '1,735'} <span className="text-sm font-normal text-white/50">{t.kpiTotalDoctors}</span>
-      </>
+      <div className="flex flex-wrap items-baseline gap-1.5">
+        <span>1,735</span>
+        <span className="text-sm font-normal text-white/50">{t.kpiTotalDoctors}</span>
+        {reportsCount > 0 && (
+          <span className="text-[10px] font-sans font-medium text-sky-300 bg-sky-500/15 border border-sky-400/30 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+            +{reportsCount} {t.kpiLiveBadge}
+          </span>
+        )}
+      </div>
     ),
     dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-sky-400',
     subClass: 'text-xs text-sky-400/80 mt-1.5 font-medium flex items-center gap-1',

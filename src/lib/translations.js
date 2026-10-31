@@ -201,10 +201,10 @@ export const TRANSLATIONS = {
     researchCitation: "Citation & DOI",
     actionablePolicyDrivers: "Evidence-Based Retention Levers",
     execChartsTitle: "Executive Policy Intelligence Dashboards",
-    chartTurnoverTitle: "Primary Drivers of Physician Turnover (Live Form Feed)",
-    chartMigrationTitle: "Top Specialties at Risk of Migration vs Climate Demand",
-    chartNoFieldData: "No field reports on this device yet. These charts are computed only from submitted reports.",
-    chartPriorityTitle: "Governorate Vulnerability & Priority Matrix (HNI vs EPI)",
+    chartTurnoverTitle: "Primary Drivers of Physician Emigration (WHO Cohort, n=885)",
+    chartMigrationTitle: "Emigration Propensity by Clinical Specialty (Literature Benchmarks)",
+    chartNoFieldData: "Empirical cohort data from WHO EMHJ 2021 (n=885 Egyptian MDs).",
+    chartPriorityTitle: "Governorate Priority Matrix (NASA Climate Stress vs Health Gap)",
 
     // Wizard Modal
     wizardTitle: "Guided Trend Detective Wizard",
@@ -593,10 +593,10 @@ export const TRANSLATIONS = {
     researchCitation: "التوثيق العلمي ورابط البحث",
     actionablePolicyDrivers: "أذرع الاستبقاء المبنية على الأدلة",
     execChartsTitle: "لوحات المعلومات الذكية لصناع القرار",
-    chartTurnoverTitle: "أبرز دوافع تسرب الأطباء (محدث لحظياً من المرصد)",
-    chartMigrationTitle: "التخصصات الأكثر عرضة للهجرة مقابل الطلب المناخي",
-    chartNoFieldData: "لا توجد بلاغات ميدانية على هذا الجهاز بعد. تُحسب هذه الرسوم من البلاغات المُرسلة فقط.",
-    chartPriorityTitle: "مصفوفة هشاشة المحافظات (مؤشر HNI مقابل مؤشر الضغط البيئي EPI)",
+    chartTurnoverTitle: "أبرز دوافع تسرب وهجرة الأطباء (دراسة الصحة العالمية، n=885)",
+    chartMigrationTitle: "مؤشر قابلية هجرة التخصصات السريرية (الدراسات المحكّمة)",
+    chartNoFieldData: "بيانات العينة الميدانية المحكّمة من دراسة منظمة الصحة العالمية (عينة 885 طبيباً مصرياً).",
+    chartPriorityTitle: "مصفوفة أولويات المحافظات (أرصاد ناسا للمناخ مقابل عجز الرعاية)",
 
     // Wizard Modal
     wizardTitle: "المحقق الإرشادي الذكي للاتجاهات الساتلية",

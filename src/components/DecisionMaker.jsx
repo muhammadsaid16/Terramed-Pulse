@@ -12,8 +12,6 @@ import { Doughnut, Bar } from 'react-chartjs-2';
 import { Sliders, ShieldCheck, BarChart3, PieChart, AlertTriangle, BookOpen, FileText, ExternalLink, Info } from 'lucide-react';
 import { simulatePolicyInterventions, NEUTRAL_INDICES } from '../lib/trendEngine';
 import {
-  buildTurnoverChartData,
-  buildMigrationChartData,
   buildEmpiricalTurnoverChartData,
   buildEmpiricalMigrationChartData,
   buildPriorityChartData,
@@ -96,21 +94,15 @@ export default function DecisionMaker({
     return Array.from(map.values());
   }, [reports, communityReports]);
 
-  // Executive Chart 1: Primary Drivers of Turnover (verified empirical WHO breakdown)
+  // Executive Chart 1: Primary Drivers of Turnover (verified empirical WHO breakdown n=885)
   const turnoverChartData = useMemo(() => {
-    if (combinedReports && combinedReports.length > 0) {
-      return buildTurnoverChartData(combinedReports, lang, t);
-    }
     return buildEmpiricalTurnoverChartData(lang, t);
-  }, [combinedReports, lang, t]);
+  }, [lang, t]);
 
   // Executive Chart 2: Migration Risk vs Climate Demand (empirical literature benchmarks)
   const migrationChartData = useMemo(() => {
-    if (combinedReports && combinedReports.length > 0) {
-      return buildMigrationChartData(combinedReports, lang, t);
-    }
     return buildEmpiricalMigrationChartData(lang, t);
-  }, [combinedReports, lang, t]);
+  }, [lang, t]);
 
   // Executive Chart 3: Governorate Priority Matrix (Comparative)
   const priorityChartData = useMemo(

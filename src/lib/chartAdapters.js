@@ -82,11 +82,11 @@ export function buildMigrationChartData(reports, lang, t) {
 
 /** Verified empirical turnover drivers from WHO EMHJ 2021 cohort (n=885) */
 const EMPIRICAL_TURNOVER_BREAKDOWN = [
-  { id: 'salary', en: 'Salary & Compensation (WHO)', ar: 'الرواتب والأجور (الصحة العالمية)', pct: 45 },
-  { id: 'burnout', en: 'Workplace Assaults & Burnout', ar: 'الاعتداءات وبيئة العمل', pct: 25 },
-  { id: 'equipment', en: 'Medical Supplies Deficit', ar: 'نقص الأجهزة والمستلزمات', pct: 15 },
-  { id: 'workload', en: 'Overcrowded Patient Workload', ar: 'التكدس السكاني وضغط الحالات', pct: 10 },
-  { id: 'training', en: 'Fellowship & Training Gap', ar: 'غياب التدريب والزمالات', pct: 5 }
+  { id: 'salary', en: 'Salary & Compensation (45%)', ar: 'الرواتب والأجور (45%)', pct: 45 },
+  { id: 'burnout', en: 'Workplace Assaults & Burnout (25%)', ar: 'الاعتداءات وضغوط العمل (25%)', pct: 25 },
+  { id: 'equipment', en: 'Medical Supplies Deficit (15%)', ar: 'عجز الأجهزة والمستلزمات (15%)', pct: 15 },
+  { id: 'workload', en: 'Overcrowded Patient Workload (10%)', ar: 'التكدس السكاني وضغط الحالات (10%)', pct: 10 },
+  { id: 'training', en: 'Fellowship & Training Gap (5%)', ar: 'غياب التدريب والزمالات (5%)', pct: 5 }
 ];
 
 export function buildEmpiricalTurnoverChartData(lang, t) {
@@ -164,7 +164,14 @@ export function doughnutChartOptions() {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { position: 'bottom', labels: legendLabels() }
+      legend: { position: 'bottom', labels: legendLabels() },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return ` ${context.label}: ${context.raw}%`;
+          }
+        }
+      }
     }
   };
 }

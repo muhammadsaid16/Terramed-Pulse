@@ -373,18 +373,26 @@ export default function DecisionMaker({
               <span className="text-[11px] text-white/50 block font-medium">
                 {t.admissionsPrevented}
               </span>
-              <div className="text-2xl font-semibold text-white mt-1 tabular-nums">
-                {sim.preventedAdmissions.toLocaleString()}
+              <div className="text-xl sm:text-2xl font-semibold text-white mt-1 tabular-nums">
+                {lang === 'ar' 
+                  ? `~${(sim.preventedAdmissions / 1000).toFixed(1)} ألف حالة / شهرياً`
+                  : `~${(sim.preventedAdmissions / 1000).toFixed(1)}k cases / mo`}
               </div>
+              <span className="text-[10px] text-white/40 block mt-1">
+                {t.scenarioIllustrativeNote}
+              </span>
             </div>
 
             <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] text-center">
               <span className="text-[11px] text-white/50 block font-medium">
                 {t.retentionBoost}
               </span>
-              <div className="text-2xl font-semibold text-sky-400 mt-1 tabular-nums">
+              <div className="text-xl sm:text-2xl font-semibold text-sky-400 mt-1 tabular-nums">
                 +{sim.retentionGainPct}%
               </div>
+              <span className="text-[10px] text-sky-400/60 block mt-1">
+                {t.modeledResponseNote}
+              </span>
             </div>
           </div>
 
@@ -473,7 +481,7 @@ export default function DecisionMaker({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="apple-card p-5 border-l-4 border-l-emerald-400 space-y-2">
               <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-bold block">
-                WHO EMHJ (2021)
+                {lang === 'ar' ? 'الصحة العالمية EMHJ (2021)' : 'WHO EMHJ (2021)'}
               </span>
               <div className="text-2xl font-bold text-white tabular-nums">97.4%</div>
               <p className="text-xs text-white/70 leading-relaxed">
@@ -483,7 +491,7 @@ export default function DecisionMaker({
 
             <div className="apple-card p-5 border-l-4 border-l-sky-400 space-y-2">
               <span className="text-[10px] uppercase tracking-wider text-sky-400 font-bold block">
-                Oxford Int Health (2015)
+                {lang === 'ar' ? 'أكسفورد Int Health (2015)' : 'Oxford Int Health (2015)'}
               </span>
               <div className="text-2xl font-bold text-white tabular-nums">81.8%</div>
               <p className="text-xs text-white/70 leading-relaxed">
@@ -493,9 +501,11 @@ export default function DecisionMaker({
 
             <div className="apple-card p-5 border-l-4 border-l-amber-400 space-y-2">
               <span className="text-[10px] uppercase tracking-wider text-amber-400 font-bold block">
-                MDPI Social Sciences (2025)
+                {lang === 'ar' ? 'مجلة MDPI للعلوم الاجتماعية (2025)' : 'MDPI Social Sciences (2025)'}
               </span>
-              <div className="text-2xl font-bold text-white tabular-nums">20.0× Odds</div>
+              <div className="text-2xl font-bold text-white tabular-nums">
+                {lang === 'ar' ? '20.0× أرجحية' : '20.0× Odds'}
+              </div>
               <p className="text-xs text-white/70 leading-relaxed">
                 {t.evidenceMdpiStat}
               </p>
@@ -517,7 +527,7 @@ export default function DecisionMaker({
                   <div className="flex flex-wrap items-start justify-between gap-2 border-b border-white/[0.08] pb-3">
                     <div>
                       <span className="text-[10px] font-bold text-sky-400 uppercase tracking-wider bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">
-                        {study.journal} ({study.year})
+                        {(lang === 'ar' ? study.journal_ar : study.journal_en) || study.journal} ({study.year})
                       </span>
                       <h4 className="text-xs font-semibold text-white/95 mt-1.5 leading-snug">
                         {study.citation}
@@ -544,7 +554,7 @@ export default function DecisionMaker({
                         {t.researchStudyCohort}
                       </span>
                       <span className="text-white/85 text-[11px] leading-relaxed block">
-                        {study.cohort} (n = {study.sample_size})
+                        {(lang === 'ar' ? study.cohort_ar : study.cohort_en) || study.cohort} ({t.sampleSizeLabel} {study.sample_size})
                       </span>
                     </div>
 
@@ -554,27 +564,27 @@ export default function DecisionMaker({
                       </span>
                       <div className="space-y-1 text-[11px] text-white/85">
                         {study.key_findings.migration_intent_pct && (
-                          <div className="flex justify-between">
-                            <span className="text-white/60">Migration Intent:</span>
-                            <span className="font-semibold text-rose-300">{study.key_findings.migration_intent_pct}%</span>
+                          <div className="flex justify-between items-center">
+                            <span className="text-white/60">{t.metricMigrationIntent}</span>
+                            <span className="font-semibold text-rose-300 tabular-nums">{study.key_findings.migration_intent_pct}%</span>
                           </div>
                         )}
                         {study.key_findings.retention_willingness_if_improved_pct && (
-                          <div className="flex justify-between">
-                            <span className="text-white/60">Willing to Stay if Improved:</span>
-                            <span className="font-semibold text-emerald-300">{study.key_findings.retention_willingness_if_improved_pct}%</span>
+                          <div className="flex justify-between items-center">
+                            <span className="text-white/60">{t.metricWillingToStay}</span>
+                            <span className="font-semibold text-emerald-300 tabular-nums">{study.key_findings.retention_willingness_if_improved_pct}%</span>
                           </div>
                         )}
                         {study.key_findings.plan_to_return_after_training_pct && (
-                          <div className="flex justify-between">
-                            <span className="text-white/60">Plan to Return:</span>
-                            <span className="font-semibold text-sky-300">{study.key_findings.plan_to_return_after_training_pct}%</span>
+                          <div className="flex justify-between items-center">
+                            <span className="text-white/60">{t.metricPlanToReturn}</span>
+                            <span className="font-semibold text-sky-300 tabular-nums">{study.key_findings.plan_to_return_after_training_pct}%</span>
                           </div>
                         )}
                         {study.key_findings.work_dissatisfaction_odds_ratio && (
-                          <div className="flex justify-between">
-                            <span className="text-white/60">Work Dissatisfaction OR:</span>
-                            <span className="font-semibold text-amber-300">{study.key_findings.work_dissatisfaction_odds_ratio}×</span>
+                          <div className="flex justify-between items-center">
+                            <span className="text-white/60">{t.metricWorkDissatisfaction}</span>
+                            <span className="font-semibold text-amber-300 tabular-nums">{study.key_findings.work_dissatisfaction_odds_ratio}× {t.oddsUnit}</span>
                           </div>
                         )}
                       </div>

@@ -452,6 +452,7 @@ export default function App() {
       <WizardModal
         isOpen={isWizardOpen}
         onClose={() => setIsWizardOpen(false)}
+        lang={lang}
         t={t}
         onApplyPreset={handleApplyCase}
       />

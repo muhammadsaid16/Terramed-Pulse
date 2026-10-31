@@ -93,7 +93,7 @@ export default function DoctorMatcher({
         
         {/* Left: Clinical Evidence & Mechanism (7 cols) */}
         <SpotlightCard
-          className="lg:col-span-7 apple-card p-6 space-y-7 relative overflow-hidden border border-sky-400/30 dark:border-sky-400/40 shadow-[0_0_20px_-3px_rgba(14,165,233,0.15)]"
+          className="lg:col-span-7 apple-card p-6 space-y-8 relative overflow-hidden border border-sky-400/30 dark:border-sky-400/40 shadow-[0_0_20px_-3px_rgba(14,165,233,0.15)]"
         >
           <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] pb-3 -mb-2">
             <h3 className="font-semibold text-sm text-slate-900 dark:text-white flex items-center gap-2">
@@ -106,21 +106,21 @@ export default function DoctorMatcher({
           </div>
 
           {/* Biomedical Mechanism */}
-          <div className="space-y-1">
+          <div className="space-y-2">
             <h4 className="text-micro font-medium text-slate-500 dark:text-white/45 uppercase tracking-[0.05em]">
               {t.clinicalRationaleHeading}
             </h4>
-            <p className="text-xs text-slate-700 dark:text-white/80 leading-relaxed font-normal pt-0.5">
+            <p className="text-xs text-slate-700 dark:text-white/80 leading-relaxed font-normal">
               {lang === 'ar' ? topGov?.justification_ar : topGov?.justification_en}
             </p>
           </div>
 
           {/* NASA Satellite Drivers */}
-          <div className="space-y-1">
+          <div className="space-y-2">
             <h4 className="text-micro font-medium text-slate-500 dark:text-white/45 uppercase tracking-[0.05em]">
               {t.nasaDriversHeading}
             </h4>
-            <div className="flex flex-wrap gap-2 text-2xs font-medium pt-1">
+            <div className="flex flex-wrap gap-2 text-2xs font-medium">
               <Badge variant="destructive" className="py-0.5">
                 {t.driverHeat}
               </Badge>

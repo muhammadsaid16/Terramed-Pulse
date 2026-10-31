@@ -69,18 +69,16 @@ export default function OppositeTrends({ t }) {
           return (
             <SpotlightCard
               key={spot.id}
+              borderBeam={isUpperEgypt ? {
+                duration: 9,
+                colorFrom: '#f43f5e',
+                colorTo: '#fb923c',
+                borderWidth: 2
+              } : null}
               className={`bento-card p-4 sm:p-5 relative flex flex-col justify-between shadow-sm dark:shadow-md ${
                 isUpperEgypt ? 'border-rose-300/80 dark:border-rose-500/30' : ''
               }`}
             >
-              {isUpperEgypt && (
-                <BorderBeam
-                  duration={9}
-                  colorFrom="#f43f5e"
-                  colorTo="#fb923c"
-                  borderWidth={1.5}
-                />
-              )}
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <span className={spot.labelClass}>

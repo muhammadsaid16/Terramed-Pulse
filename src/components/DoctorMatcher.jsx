@@ -93,8 +93,10 @@ export default function DoctorMatcher({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* Left: Clinical Evidence & Mechanism (7 cols) */}
-        <SpotlightCard className="lg:col-span-7 apple-card p-6 space-y-5 relative overflow-hidden">
-          <BorderBeam size={220} duration={14} colorFrom="#38bdf8" colorTo="#818cf8" />
+        <SpotlightCard
+          borderBeam={{ duration: 14, colorFrom: '#38bdf8', colorTo: '#818cf8', borderWidth: 2 }}
+          className="lg:col-span-7 apple-card p-6 space-y-5 relative overflow-hidden"
+        >
           <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] pb-3">
             <h3 className="font-semibold text-sm text-slate-900 dark:text-white flex items-center gap-2">
               <span>{lang === 'ar' ? currentSpecialtyObj?.ar : currentSpecialtyObj?.en}</span>

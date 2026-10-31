@@ -1,8 +1,10 @@
 import React, { useRef, useState } from 'react';
+import BorderBeam from './BorderBeam';
 
 /**
  * 21st.dev Spotlight Card Component
  * Adds a cursor-tracking radial glow on hover using CSS variables for 60fps GPU acceleration.
+ * Supports optional `borderBeam` prop to align perimeter beam precisely along the card's outer border.
  */
 export default function SpotlightCard({
   children,
@@ -10,6 +12,7 @@ export default function SpotlightCard({
   spotlightColorLight = 'rgba(14, 165, 233, 0.08)',
   spotlightColorDark = 'rgba(56, 189, 248, 0.14)',
   as: Component = 'div',
+  borderBeam = null,
   ...props
 }) {
   const cardRef = useRef(null);
@@ -41,8 +44,14 @@ export default function SpotlightCard({
           background: `radial-gradient(480px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), var(--spotlight-glow, ${spotlightColorLight}), transparent 70%)`
         }}
       />
+
+      {/* 21st.dev Border Beam (aligned precisely on outer border) */}
+      {borderBeam && (
+        <BorderBeam {...(typeof borderBeam === 'object' ? borderBeam : {})} />
+      )}
+
       {/* Content wrapper */}
-      <div className="relative z-10 h-full">{children}</div>
+      <div className="relative z-10 w-full h-full">{children}</div>
     </Component>
   );
 }

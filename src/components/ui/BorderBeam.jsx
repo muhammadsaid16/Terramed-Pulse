@@ -2,8 +2,8 @@ import React from 'react';
 
 /**
  * 21st.dev Border Beam Component
- * Traces a continuous glowing beam of light along container borders.
- * Uses CSS mask-composite for zero content occlusion.
+ * Traces a luminous traveling comet of light exactly along container borders.
+ * Uses CSS mask-composite (content-box vs border-box) for zero content occlusion.
  */
 export default function BorderBeam({
   duration = 10,
@@ -14,19 +14,20 @@ export default function BorderBeam({
 }) {
   return (
     <div
-      className={`pointer-events-none absolute inset-0 rounded-[inherit] z-20 ${className}`}
+      className={`pointer-events-none absolute -inset-px rounded-[inherit] overflow-hidden z-20 ${className}`}
       style={{
         padding: `${borderWidth}px`,
-        WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-        WebkitMaskComposite: 'xor',
-        maskComposite: 'exclude'
+        mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) border-box',
+        maskComposite: 'exclude',
+        WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) border-box',
+        WebkitMaskComposite: 'xor'
       }}
     >
       <div
-        className="absolute inset-[-150%] animate-[spin_10s_linear_infinite]"
+        className="absolute left-1/2 top-1/2 w-[300%] aspect-square -translate-x-1/2 -translate-y-1/2 animate-border-beam-spin"
         style={{
-          background: `conic-gradient(from 0deg, transparent 0deg 330deg, ${colorFrom} 345deg, ${colorTo} 360deg)`,
-          animationDuration: `${duration}s`
+          '--beam-duration': `${duration}s`,
+          background: `conic-gradient(from 0deg, transparent 0deg 280deg, ${colorFrom} 320deg, ${colorTo} 355deg, transparent 360deg)`
         }}
       />
     </div>

@@ -126,6 +126,20 @@ html.dark {
   animation-play-state: paused;
 }
 
+/* 21st.dev Border Beam Animation */
+@keyframes border-beam-spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.animate-border-beam-spin {
+  animation: border-beam-spin var(--beam-duration, 12s) linear infinite;
+}
+
 /* Telemetry Typography */
 .telemetry-mono {
   font-family: var(--font-mono);

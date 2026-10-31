@@ -188,8 +188,10 @@ export default function DecisionMaker({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* Left: Live Simulation Output Scoreboard (5 cols) */}
-        <SpotlightCard className="lg:col-span-5 apple-card p-6 space-y-5 lg:sticky lg:top-24 shadow-sm dark:shadow-md relative overflow-hidden border-emerald-300/80 dark:border-emerald-500/30">
-          <BorderBeam duration={12} colorFrom="#10b981" colorTo="#0ea5e9" borderWidth={1.5} />
+        <SpotlightCard
+          borderBeam={{ duration: 12, colorFrom: '#10b981', colorTo: '#0ea5e9', borderWidth: 2 }}
+          className="lg:col-span-5 apple-card p-6 space-y-5 lg:sticky lg:top-24 shadow-sm dark:shadow-md relative overflow-hidden border-emerald-300/80 dark:border-emerald-500/30"
+        >
 
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-xs text-slate-800 dark:text-white/80">

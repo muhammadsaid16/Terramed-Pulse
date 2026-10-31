@@ -17,6 +17,9 @@ export const TRANSLATIONS = {
     btnMathExplain: "Math (?)",
     btnPrintBrief: "Print Brief",
     langBtn: "عربي",
+    themeLight: "Clean Lab Light",
+    themeDark: "Obsidian Lab Dark",
+    toggleTheme: "Toggle Light / Dark Theme",
 
     // Hero & Core Message (Docx Section 1 & 6)
     heroBadge: "STAY & BUILD EGYPT • NASA SPACE APPS 2026",
@@ -412,6 +415,9 @@ export const TRANSLATIONS = {
     btnMathExplain: "الرياضيات والمنهجية (?)",
     btnPrintBrief: "طباعة التقرير التنفيذي",
     langBtn: "English",
+    themeLight: "النمط المعملي الفاتح",
+    themeDark: "النمط المعملي المظلم",
+    toggleTheme: "تبديل المظهر (فاتح / مظلم)",
 
     // Hero & Core Message (Docx Section 1 & 6)
     heroBadge: "ابقَ وابنِ — تحدي ناسا لتطبيقات الفضاء 2026",

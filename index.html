@@ -1,17 +1,32 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" class="dark">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>ابقَ وابنِ — Stay & Build Egypt | منصة دعم قرار للكفاءات الصحية وصناع القرار</title>
     <meta name="description" content="TerraPulse: NASA Earth System Trend Detective & Climate-Health Compass. Empowering physicians and policy makers to detect 30-year climate shifts, reverse brain drain, and protect Egypt's vulnerable communities." />
 
+    <script>
+      (function() {
+        try {
+          var theme = localStorage.getItem('terrapulse_theme') || 'light';
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+          } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.add('light');
+          }
+        } catch (e) {}
+      })();
+    </script>
+
     <!-- Google Fonts: Inter & Cairo -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-space-950 text-slate-100 min-h-screen selection:bg-teal-500 selection:text-slate-950 antialiased overflow-x-hidden">
+  <body class="bg-slate-50 dark:bg-[#050811] text-slate-900 dark:text-slate-100 min-h-screen selection:bg-sky-500 selection:text-white antialiased overflow-x-hidden">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

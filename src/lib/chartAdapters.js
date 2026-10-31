@@ -89,7 +89,8 @@ const EMPIRICAL_TURNOVER_BREAKDOWN = [
   { id: 'training', en: 'Fellowship & Training Gap (5%)', ar: 'غياب التدريب والزمالات (5%)', pct: 5 }
 ];
 
-export function buildEmpiricalTurnoverChartData(lang, t) {
+export function buildEmpiricalTurnoverChartData(lang, t, theme = 'light') {
+  const isLight = theme === 'light';
   return {
     labels: EMPIRICAL_TURNOVER_BREAKDOWN.map(r => lang === 'ar' ? r.ar : r.en),
     datasets: [
@@ -102,7 +103,7 @@ export function buildEmpiricalTurnoverChartData(lang, t) {
           '#BF5AF2',
           '#30D158'
         ],
-        borderColor: '#07090F',
+        borderColor: isLight ? '#FFFFFF' : '#0c1222',
         borderWidth: 2
       }
     ]
@@ -157,15 +158,25 @@ export function buildPriorityChartData(allGovs, lang, t) {
   };
 }
 
-const legendLabels = () => ({ boxWidth: 8, font: { size: 9 }, color: 'rgba(255,255,255,0.6)' });
+const legendLabels = (theme = 'light') => ({
+  boxWidth: 8,
+  font: { size: 9 },
+  color: theme === 'light' ? '#475569' : 'rgba(255,255,255,0.6)'
+});
 
-export function doughnutChartOptions() {
+export function doughnutChartOptions(theme = 'light') {
+  const isLight = theme === 'light';
   return {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { position: 'bottom', labels: legendLabels() },
+      legend: { position: 'bottom', labels: legendLabels(theme) },
       tooltip: {
+        backgroundColor: isLight ? '#FFFFFF' : '#0c1222',
+        titleColor: isLight ? '#0F172A' : '#FFFFFF',
+        bodyColor: isLight ? '#334155' : '#CBD5E1',
+        borderColor: isLight ? '#E2E8F0' : 'rgba(255,255,255,0.1)',
+        borderWidth: 1,
         callbacks: {
           label: function(context) {
             return ` ${context.label}: ${context.raw}%`;
@@ -176,16 +187,24 @@ export function doughnutChartOptions() {
   };
 }
 
-export function barChartOptions() {
+export function barChartOptions(theme = 'light') {
+  const isLight = theme === 'light';
   return {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { position: 'bottom', labels: legendLabels() }
+      legend: { position: 'bottom', labels: legendLabels(theme) }
     },
     scales: {
-      x: { ticks: { font: { size: 9 }, color: 'rgba(255,255,255,0.45)' }, grid: { display: false } },
-      y: { max: 100, ticks: { font: { size: 9 }, color: 'rgba(255,255,255,0.45)' }, grid: { color: 'rgba(255,255,255,0.04)' } }
+      x: {
+        ticks: { font: { size: 9 }, color: isLight ? '#64748B' : 'rgba(255,255,255,0.45)' },
+        grid: { display: false }
+      },
+      y: {
+        max: 100,
+        ticks: { font: { size: 9 }, color: isLight ? '#64748B' : 'rgba(255,255,255,0.45)' },
+        grid: { color: isLight ? 'rgba(15,23,42,0.06)' : 'rgba(255,255,255,0.04)' }
+      }
     }
   };
 }

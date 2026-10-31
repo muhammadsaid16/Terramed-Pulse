@@ -81,6 +81,29 @@ export default function App() {
     state: 'pending'
   }));
 
+  // Clean Lab theme state ('light' | 'dark')
+  const [theme, setTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem('terrapulse_theme');
+      if (saved === 'dark' || saved === 'light') return saved;
+    } catch {}
+    return 'light'; // Clean Lab default
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+      root.classList.remove('light');
+    } else {
+      root.classList.remove('dark');
+      root.classList.add('light');
+    }
+    try {
+      localStorage.setItem('terrapulse_theme', theme);
+    } catch {}
+  }, [theme]);
+
   // App Data copy with dynamic updates
   const [appData, setAppData] = useState(() => JSON.parse(JSON.stringify(TERRAPULSE_DATA)));
 
@@ -244,7 +267,7 @@ export default function App() {
   const currentGovData = appData?.governorates?.[selectedGov] || null;
 
   return (
-    <div className={`min-h-screen flex flex-col ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
+    <div className={`min-h-screen flex flex-col bg-slate-50 dark:bg-[#050811] text-slate-900 dark:text-slate-100 transition-colors duration-200 ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
       
       {/* Official Government Print Brief Container */}
       <PrintBrief
@@ -262,6 +285,8 @@ export default function App() {
       <Header
         lang={lang}
         setLang={setLang}
+        theme={theme}
+        setTheme={setTheme}
         t={t}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -275,21 +300,21 @@ export default function App() {
             SECTION 1: HERO & CORE VISION (Docx Section 1 & 6)
             =================================================================== */}
         <section className="bento-card p-6 sm:p-10 mb-8 relative overflow-hidden">
-          {/* Subtle Cosmic ambient background glow */}
-          <div className="absolute top-0 right-0 -mr-24 -mt-24 w-96 h-96 bg-sky-500/15 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 -ml-24 -mb-24 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+          {/* Ambient background glow */}
+          <div className="absolute top-0 right-0 -mr-24 -mt-24 w-96 h-96 bg-sky-400/10 dark:bg-sky-500/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 -ml-24 -mb-24 w-96 h-96 bg-purple-400/5 dark:bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 max-w-4xl space-y-4 sm:space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-sky-950/50 text-sky-300 border border-sky-800/40 backdrop-blur-xl">
-              <Sparkles className="w-3.5 h-3.5 text-sky-400" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-sky-100 text-sky-800 border border-sky-200 dark:bg-sky-950/50 dark:text-sky-300 dark:border-sky-800/40 backdrop-blur-xl">
+              <Sparkles className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
               <span>{t.heroBadge}</span>
             </div>
 
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white via-white/95 to-white/60 leading-[1.15]">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-950 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-b dark:from-white dark:via-white/95 dark:to-white/60 leading-[1.15]">
               {t.heroMainTitle}
             </h1>
 
-            <p className="text-sm sm:text-base text-white/70 leading-relaxed font-normal max-w-3xl">
+            <p className="text-sm sm:text-base text-slate-600 dark:text-white/70 leading-relaxed font-normal max-w-3xl">
               {t.heroDesc}
             </p>
 
@@ -303,7 +328,7 @@ export default function App() {
                 }}
                 className="apple-btn-primary px-5 py-2.5 text-xs sm:text-sm flex items-center gap-2"
               >
-                <Stethoscope className="w-4 h-4 text-black" />
+                <Stethoscope className="w-4 h-4 text-white dark:text-black" />
                 <span>{t.btnDoctorCta}</span>
               </button>
 
@@ -315,21 +340,21 @@ export default function App() {
                 }}
                 className="apple-btn-secondary px-5 py-2.5 text-xs sm:text-sm flex items-center gap-2"
               >
-                <BarChart3 className="w-4 h-4 text-sky-400" />
+                <BarChart3 className="w-4 h-4 text-sky-600 dark:text-sky-400" />
                 <span>{t.btnDecisionCta}</span>
               </button>
             </div>
           </div>
 
           {/* Scientific Disclaimer Card (Docx Section 1 & 3: 10/10 Judging Criteria) */}
-          <div className="mt-7 pt-5 border-t border-white/[0.08]">
-            <div className="p-3.5 sm:p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] backdrop-blur-xl flex items-start gap-3">
-              <ShieldCheck className="w-5 h-5 text-sky-400 shrink-0 mt-0.5" />
+          <div className="mt-7 pt-5 border-t border-slate-200/80 dark:border-white/[0.08]">
+            <div className="p-3.5 sm:p-4 rounded-xl bg-slate-100/70 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/[0.06] backdrop-blur-xl flex items-start gap-3">
+              <ShieldCheck className="w-5 h-5 text-sky-600 dark:text-sky-400 shrink-0 mt-0.5" />
               <div className="space-y-1 text-xs">
-                <span className="font-semibold text-white/90 block">
+                <span className="font-semibold text-slate-900 dark:text-white/90 block">
                   {t.disclaimerTitle}
                 </span>
-                <p className="text-white/60 leading-relaxed font-normal">
+                <p className="text-slate-600 dark:text-white/60 leading-relaxed font-normal">
                   {t.disclaimerBody}
                 </p>
               </div>
@@ -344,16 +369,16 @@ export default function App() {
             MODULE 1: EARTH SYSTEM TREND DETECTIVE & SPATIAL MAP
             =================================================================== */}
         <section id="section-detective" className="bento-card p-5 sm:p-8 mb-8 space-y-6">
-          <div className="border-b border-white/[0.08] pb-4 flex flex-wrap items-center justify-between gap-2">
+          <div className="border-b border-slate-200/80 dark:border-white/[0.08] pb-4 flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h2 className="text-lg sm:text-xl font-semibold text-white tracking-tight flex items-center gap-2">
+              <h2 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
                 <span>{t.module1Title}</span>
               </h2>
-              <p className="text-xs text-white/50 font-normal mt-1">
+              <p className="text-xs text-slate-600 dark:text-white/50 font-normal mt-1">
                 {t.module1Subtitle}
               </p>
             </div>
-            <div className="satellite-chip text-sky-300 bg-sky-950/40 border-sky-800/40">
+            <div className="satellite-chip text-sky-700 bg-sky-50 border-sky-200 dark:text-sky-300 dark:bg-sky-950/40 dark:border-sky-800/40">
               {t.clickMarkerTip}
             </div>
           </div>
@@ -389,6 +414,7 @@ export default function App() {
                 currentYear={year}
                 t={t}
                 lang={lang}
+                theme={theme}
                 onOpenMath={() => setIsMathOpen(true)}
               />
             </div>
@@ -441,6 +467,7 @@ export default function App() {
           communityReports={communityReports}
           lang={lang}
           t={t}
+          theme={theme}
         />
 
       </main>

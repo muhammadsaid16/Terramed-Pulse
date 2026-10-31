@@ -1,69 +1,67 @@
 import React from 'react';
 import { Flame, AlertTriangle, Stethoscope, ArrowLeftRight } from 'lucide-react';
 
-// Four KPI cards, one shape. Class strings stay literal so Tailwind's scanner keeps them.
-// `Value` is the only slot that genuinely differs between the cards.
 const KPIS = [
   {
     id: 'warming',
-    chipClass: 'satellite-chip text-rose-300/80 bg-rose-950/40 border-rose-800/40',
+    chipClass: 'satellite-chip text-rose-700 bg-rose-50 border-rose-200 dark:text-rose-300/80 dark:bg-rose-950/40 dark:border-rose-800/40',
     chipLabelKey: 'kpiChipPower',
-    iconBoxClass: 'w-7 h-7 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400',
+    iconBoxClass: 'w-7 h-7 rounded-lg bg-rose-100 text-rose-600 border border-rose-200 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20 flex items-center justify-center',
     Icon: Flame,
     labelKey: 'kpiWarmingLabel',
-    valueClass: 'text-3xl font-bold tracking-tight text-white telemetry-mono',
+    valueClass: 'text-3xl font-bold tracking-tight text-slate-900 dark:text-white telemetry-mono',
     Value: ({ t }) => t.kpiWarmingRate,
-    dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse',
-    subClass: 'text-xs text-rose-400/80 mt-1.5 font-medium flex items-center gap-1',
+    dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-rose-500 dark:bg-rose-400 animate-pulse',
+    subClass: 'text-xs text-rose-600 dark:text-rose-400/80 mt-1.5 font-medium flex items-center gap-1',
     subKey: 'kpiWarmingSub',
     sourceKey: 'kpiSource1',
     glowClass: 'absolute top-0 right-0 w-24 h-24 bg-rose-500/5 rounded-full blur-2xl pointer-events-none'
   },
   {
     id: 'highest-need',
-    chipClass: 'satellite-chip text-amber-300/80 bg-amber-950/40 border-amber-800/40',
+    chipClass: 'satellite-chip text-amber-700 bg-amber-50 border-amber-200 dark:text-amber-300/80 dark:bg-amber-950/40 dark:border-amber-800/40',
     chipLabelKey: 'kpiChipModis',
-    iconBoxClass: 'w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400',
+    iconBoxClass: 'w-7 h-7 rounded-lg bg-amber-100 text-amber-600 border border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20 flex items-center justify-center',
     Icon: AlertTriangle,
     labelKey: 'kpiHighestNeedLabel',
-    valueClass: 'text-2xl sm:text-3xl font-bold tracking-tight text-amber-300 telemetry-mono',
+    valueClass: 'text-2xl sm:text-3xl font-bold tracking-tight text-amber-600 dark:text-amber-300 telemetry-mono',
     Value: ({ t }) => t.kpiHighestNeed,
-    dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-amber-400',
-    subClass: 'text-xs text-amber-400/80 mt-1.5 font-medium flex items-center gap-1',
+    dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-400',
+    subClass: 'text-xs text-amber-600 dark:text-amber-400/80 mt-1.5 font-medium flex items-center gap-1',
     subKey: 'kpiHighestNeedSub',
     sourceKey: 'kpiSource2',
     glowClass: 'absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl pointer-events-none'
   },
   {
     id: 'field-doctors',
-    chipClass: 'satellite-chip text-sky-300/80 bg-sky-950/40 border-sky-800/40',
+    chipClass: 'satellite-chip text-sky-700 bg-sky-50 border-sky-200 dark:text-sky-300/80 dark:bg-sky-950/40 dark:border-sky-800/40',
     chipLabelKey: 'kpiChipField',
-    iconBoxClass: 'w-7 h-7 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400',
+    iconBoxClass: 'w-7 h-7 rounded-lg bg-sky-100 text-sky-600 border border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 flex items-center justify-center',
     Icon: Stethoscope,
     labelKey: 'kpiTotalDoctorsLabel',
-    valueClass: 'text-3xl font-bold tracking-tight text-white telemetry-mono',
+    valueClass: 'text-3xl font-bold tracking-tight text-slate-900 dark:text-white telemetry-mono',
     Value: ({ t }) => (
       <>
-        1,735 <span className="text-sm font-normal text-white/50">{t.kpiTotalDoctors}</span>
+        1,735 <span className="text-sm font-normal text-slate-500 dark:text-white/50">{t.kpiTotalDoctors}</span>
       </>
     ),
-    dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-sky-400',
-    subClass: 'text-xs text-sky-400/80 mt-1.5 font-medium flex items-center gap-1',
+    dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-sky-500 dark:bg-sky-400',
+    subClass: 'text-xs text-sky-600 dark:text-sky-400/80 mt-1.5 font-medium flex items-center gap-1',
     subKey: 'kpiTotalDoctorsSub',
     sourceKey: 'kpiSource3',
     glowClass: 'absolute top-0 right-0 w-24 h-24 bg-sky-500/5 rounded-full blur-2xl pointer-events-none'
   },
   {
     id: 'divergence',
-    chipClass: 'satellite-chip text-purple-300/80 bg-purple-950/40 border-purple-800/40',
+    chipClass: 'satellite-chip text-purple-700 bg-purple-50 border-purple-200 dark:text-purple-300/80 dark:bg-purple-950/40 dark:border-purple-800/40',
     chipLabelKey: 'kpiChipSpatial',
-    iconBoxClass: 'w-7 h-7 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400',
+    iconBoxClass: 'w-7 h-7 rounded-lg bg-purple-100 text-purple-600 border border-purple-200 dark:bg-purple-500/10 dark:text-purple-400 dark:border-purple-500/20 flex items-center justify-center',
     Icon: ArrowLeftRight,
     labelKey: 'kpiTrendDivergenceLabel',
-    valueClass: 'text-xl sm:text-2xl font-bold tracking-tight text-white',
+    valueClass: 'text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white',
     Value: ({ t }) => t.kpiTrendDivergence,
-    dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-purple-400',
-    subClass: 'text-xs text-purple-400/80 mt-1.5 font-medium flex items-center gap-1',
+    dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-purple-500 dark:bg-purple-400',
+    subClass: 'text-xs text-purple-600 dark:text-purple-400/80 mt-1.5 font-medium flex items-center gap-1',
     subKey: 'kpiTrendDivergenceSub',
     sourceKey: 'kpiSource4',
     glowClass: 'absolute top-0 right-0 w-24 h-24 bg-purple-500/5 rounded-full blur-2xl pointer-events-none'
@@ -85,7 +83,7 @@ export default function KpiStrip({ t }) {
                   <Icon className="w-4 h-4" />
                 </div>
               </div>
-              <div className="text-xs text-white/50 mb-1 font-medium">
+              <div className="text-xs text-slate-500 dark:text-white/50 mb-1 font-medium">
                 {t[kpi.labelKey]}
               </div>
               <div className={kpi.valueClass}>
@@ -98,8 +96,8 @@ export default function KpiStrip({ t }) {
             </div>
             
             {/* Explicit Empirical Provenance Footnote */}
-            <div className="mt-3 pt-2.5 border-t border-white/[0.06] flex items-start gap-1.5 text-[10px] text-white/50 font-medium leading-relaxed">
-              <span className="text-sky-400 font-semibold shrink-0">{t.sourcePrefix || 'المصدر:'}</span>
+            <div className="mt-3 pt-2.5 border-t border-slate-200/80 dark:border-white/[0.06] flex items-start gap-1.5 text-[10px] text-slate-500 dark:text-white/50 font-medium leading-relaxed">
+              <span className="text-sky-600 dark:text-sky-400 font-semibold shrink-0">{t.sourcePrefix || 'المصدر:'}</span>
               <span>{t[kpi.sourceKey]}</span>
             </div>
 

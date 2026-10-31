@@ -338,7 +338,7 @@ export default function App() {
         </section>
 
         {/* Executive KPI Summary Strip */}
-        <KpiStrip t={t} reportsCount={reports.length} />
+        <KpiStrip t={t} />
 
         {/* ===================================================================
             MODULE 1: EARTH SYSTEM TREND DETECTIVE & SPATIAL MAP

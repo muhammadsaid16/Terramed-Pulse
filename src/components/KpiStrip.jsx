@@ -42,16 +42,10 @@ const KPIS = [
     Icon: Stethoscope,
     labelKey: 'kpiTotalDoctorsLabel',
     valueClass: 'text-3xl font-bold tracking-tight text-white telemetry-mono',
-    Value: ({ t, reportsCount }) => (
-      <div className="flex flex-wrap items-baseline gap-1.5">
-        <span>1,735</span>
-        <span className="text-sm font-normal text-white/50">{t.kpiTotalDoctors}</span>
-        {reportsCount > 0 && (
-          <span className="text-[10px] font-sans font-medium text-sky-300 bg-sky-500/15 border border-sky-400/30 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
-            +{reportsCount} {t.kpiLiveBadge}
-          </span>
-        )}
-      </div>
+    Value: ({ t }) => (
+      <>
+        1,735 <span className="text-sm font-normal text-white/50">{t.kpiTotalDoctors}</span>
+      </>
     ),
     dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-sky-400',
     subClass: 'text-xs text-sky-400/80 mt-1.5 font-medium flex items-center gap-1',
@@ -76,7 +70,7 @@ const KPIS = [
   }
 ];
 
-export default function KpiStrip({ t, reportsCount = 0 }) {
+export default function KpiStrip({ t }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 mb-8">
       {KPIS.map(kpi => {
@@ -95,7 +89,7 @@ export default function KpiStrip({ t, reportsCount = 0 }) {
                 {t[kpi.labelKey]}
               </div>
               <div className={kpi.valueClass}>
-                <Value t={t} reportsCount={reportsCount} />
+                <Value t={t} />
               </div>
               <p className={kpi.subClass}>
                 <span className={kpi.dotClass} />

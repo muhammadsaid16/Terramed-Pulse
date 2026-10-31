@@ -34,7 +34,7 @@ export default function MathModal({ isOpen, onClose, t }) {
           <p className="text-xs text-slate-600 dark:text-white/70 leading-relaxed font-normal">
             {t.mathLinearBody}
           </p>
-          <div className="p-3 bg-white dark:bg-black/40 rounded-xl font-mono text-[11px] text-sky-800 dark:text-sky-200 border border-slate-200/80 dark:border-white/5 overflow-x-auto shadow-2xs dark:shadow-none">
+          <div className="p-3 bg-white dark:bg-black/40 rounded-xl font-mono text-micro text-sky-800 dark:text-sky-200 border border-slate-200/80 dark:border-white/5 overflow-x-auto shadow-2xs dark:shadow-none">
             m = Σ(x - x̄)(y - ȳ) / Σ(x - x̄)² | SE(m) = √[SS_res / (df · Σ(x - x̄)²)] | CI_95 = m ± t_(crit) · SE(m)
           </div>
         </div>
@@ -47,7 +47,7 @@ export default function MathModal({ isOpen, onClose, t }) {
           <p className="text-xs text-slate-600 dark:text-white/70 leading-relaxed font-normal">
             {t.mathMKBody}
           </p>
-          <div className="p-3 bg-white dark:bg-black/40 rounded-xl font-mono text-[11px] text-sky-800 dark:text-sky-200 border border-slate-200/80 dark:border-white/5 overflow-x-auto shadow-2xs dark:shadow-none">
+          <div className="p-3 bg-white dark:bg-black/40 rounded-xl font-mono text-micro text-sky-800 dark:text-sky-200 border border-slate-200/80 dark:border-white/5 overflow-x-auto shadow-2xs dark:shadow-none">
             S = Σ Σ sgn(x_j - x_k) | Var(S) = [n(n-1)(2n+5) - Σ t(t-1)(2t+5)] / 18 | Z = (S ± 1) / √Var(S)
           </div>
         </div>
@@ -60,7 +60,7 @@ export default function MathModal({ isOpen, onClose, t }) {
           <p className="text-xs text-slate-600 dark:text-white/70 leading-relaxed font-normal">
             {t.mathHNIBody}
           </p>
-          <div className="p-3 bg-white dark:bg-black/40 rounded-xl font-mono text-[11px] text-sky-800 dark:text-sky-200 border border-slate-200/80 dark:border-white/5 overflow-x-auto shadow-2xs dark:shadow-none">
+          <div className="p-3 bg-white dark:bg-black/40 rounded-xl font-mono text-micro text-sky-800 dark:text-sky-200 border border-slate-200/80 dark:border-white/5 overflow-x-auto shadow-2xs dark:shadow-none">
             HNI = (0.35 · EPI) + (0.30 · PPI) + (0.20 · FSI) + (0.15 · WNI)
           </div>
         </div>
@@ -73,7 +73,7 @@ export default function MathModal({ isOpen, onClose, t }) {
           <p className="text-xs text-slate-600 dark:text-white/70 leading-relaxed font-normal">
             {t.mathWNIBody}
           </p>
-          <div className="p-3 bg-white dark:bg-black/40 rounded-xl font-mono text-[11px] text-sky-800 dark:text-sky-200 border border-slate-200/80 dark:border-white/5 overflow-x-auto shadow-2xs dark:shadow-none">
+          <div className="p-3 bg-white dark:bg-black/40 rounded-xl font-mono text-micro text-sky-800 dark:text-sky-200 border border-slate-200/80 dark:border-white/5 overflow-x-auto shadow-2xs dark:shadow-none">
             WNI_post = (n_prior · WNI_prior + Σ w_i · Score_i) / (n_prior + N_obs)
           </div>
         </div>

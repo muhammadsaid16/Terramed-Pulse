@@ -14,12 +14,14 @@ import DbSyncModal from './components/DbSyncModal';
 import PrintBrief from './components/PrintBrief';
 import Footer from './components/Footer';
 
-import { SpotlightCard, ShimmerButton, PulsingBadge, DotPattern, Marquee } from './components/ui';
+import { SpotlightCard, ShimmerButton, DotPattern, Marquee } from './components/ui';
+import WarmingStripes from './components/WarmingStripes';
 
 import { TERRAPULSE_DATA } from './data/terrapulseData';
 import { TRANSLATIONS } from './lib/translations';
 import { computeWNIFromReports, computeHNI, WNI_PRIOR_DEFAULT } from './lib/trendEngine';
 import { getSyncStatus, submitRemoteReport, fetchCommunityReports } from './lib/dbService';
+import { scrollBehavior } from './lib/motionTokens';
 
 export default function App() {
   const [lang, setLang] = useState(() => {
@@ -326,27 +328,36 @@ export default function App() {
             SECTION 1: HERO & CORE VISION (Docx Section 1 & 6)
             =================================================================== */}
         <SpotlightCard as="section" className="bento-card p-6 sm:p-10 mb-6 relative overflow-hidden">
-          {/* Subtle 21st.dev Dot Pattern & Ambient Glow */}
+          {/* Subtle 21st.dev Dot Pattern */}
           <DotPattern className="opacity-70" />
-          <div className="absolute top-0 right-0 -mr-24 -mt-24 w-96 h-96 bg-sky-400/10 dark:bg-sky-500/15 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 -ml-24 -mb-24 w-96 h-96 bg-purple-400/5 dark:bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 max-w-4xl space-y-4 sm:space-y-5">
-            <PulsingBadge
-              label={t.heroBadge}
-              sublabel="NASA POWER • MODIS Terra/Aqua • SEDAC"
-              pulseColor="bg-sky-500"
-              pingColor="bg-sky-400"
-              className="mb-1"
-            />
+            {/* Console status line */}
+            <div className="flex items-center gap-2.5 font-mono text-micro uppercase tracking-[0.08em] text-slate-500 dark:text-white/45">
+              <span className="relative flex h-2 w-2 shrink-0">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+              </span>
+              <span dir="ltr">LINK NOMINAL · MODIS TERRA/AQUA · SEDAC</span>
+            </div>
 
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-950 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-b dark:from-white dark:via-white/95 dark:to-white/60 leading-[1.15]">
-              {t.heroMainTitle}
-            </h1>
+            <div>
+              <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold tracking-[-0.02em] leading-[1.05] text-slate-950 dark:text-white">
+                {t.heroMainTitle}
+              </h1>
+              <p className="mt-2.5 text-micro sm:text-sm text-slate-500 dark:text-white/50 font-medium">
+                {t.heroSubTitle}
+              </p>
+            </div>
 
             <p className="text-sm sm:text-base text-slate-600 dark:text-white/70 leading-relaxed font-normal max-w-3xl">
               {t.heroDesc}
             </p>
+
+            {/* First light: the actual data — 31 years of MODIS land surface temperature */}
+            <div className="pt-1 sm:pt-2 max-w-3xl">
+              <WarmingStripes />
+            </div>
 
             {/* The 2 Primary Hero Call-to-Actions from Docx Section 6 */}
             <div className="pt-2 flex flex-wrap items-center gap-3">
@@ -354,7 +365,7 @@ export default function App() {
                 onClick={() => {
                   setActiveTab('doctor');
                   const el = document.getElementById('section-doctor');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  if (el) el.scrollIntoView({ behavior: scrollBehavior() });
                 }}
                 className="text-xs sm:text-sm"
               >
@@ -366,7 +377,7 @@ export default function App() {
                 onClick={() => {
                   setActiveTab('decision');
                   const el = document.getElementById('section-decision');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  if (el) el.scrollIntoView({ behavior: scrollBehavior() });
                 }}
                 className="apple-btn-secondary px-5 py-2.5 text-xs sm:text-sm flex items-center gap-2"
               >
@@ -399,7 +410,7 @@ export default function App() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
-            <span className="text-[10px] font-mono font-bold tracking-wider text-sky-700 dark:text-sky-300 uppercase">
+            <span className="text-2xs font-mono font-bold tracking-wider text-sky-700 dark:text-sky-300 uppercase">
               {lang === 'ar' ? 'بث حي' : 'LIVE'}
             </span>
           </div>
@@ -421,18 +432,21 @@ export default function App() {
             MODULE 1: EARTH SYSTEM TREND DETECTIVE & SPATIAL MAP
             =================================================================== */}
         <section id="section-detective" className="bento-card p-5 sm:p-8 mb-8 space-y-6">
-          <div className="border-b border-slate-200/80 dark:border-white/[0.08] pb-4 flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <h2 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-                <span>{t.module1Title}</span>
-              </h2>
-              <p className="text-xs text-slate-600 dark:text-white/50 font-normal mt-1">
-                {t.module1Subtitle}
-              </p>
+          <div className="border-b border-slate-200/80 dark:border-white/[0.08] pb-4 flex flex-wrap items-start justify-between gap-2">
+            <div className="flex items-start gap-3">
+              <span aria-hidden="true" className="font-mono text-2xs tracking-[0.18em] text-slate-400 dark:text-white/35 pt-1.5">01</span>
+              <div>
+                <h2 className="font-display text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">
+                  {t.module1Title}
+                </h2>
+                <p className="text-micro text-slate-600 dark:text-white/50 font-normal mt-1">
+                  {t.module1Subtitle}
+                </p>
+              </div>
             </div>
-            <div className="satellite-chip text-sky-700 bg-sky-50 border-sky-200 dark:text-sky-300 dark:bg-sky-950/40 dark:border-sky-800/40">
+            <span className="font-mono text-2xs tracking-[0.08em] text-slate-400 dark:text-white/35 pt-1.5" dir="ltr">
               {t.clickMarkerTip}
-            </div>
+            </span>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -487,14 +501,14 @@ export default function App() {
             setSelectedGov(id);
             setActiveTab('detective');
             const el = document.getElementById('section-detective');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
+            if (el) el.scrollIntoView({ behavior: scrollBehavior() });
           }}
           onVoiceNeeds={(govId, specId) => {
             setSelectedGov(govId);
             if (specId) setFormSpecialty(specId);
             setActiveTab('physicians');
             const el = document.getElementById('section-physicians');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
+            if (el) el.scrollIntoView({ behavior: scrollBehavior() });
           }}
         />
 

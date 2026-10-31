@@ -24,7 +24,7 @@ export default function PulsingBadge({
       </span>
 
       {sublabel && (
-        <span className="text-[10px] font-mono text-slate-500 dark:text-white/50 border-l border-slate-200 dark:border-white/10 pl-1.5 rtl:border-l-0 rtl:border-r rtl:pl-0 rtl:pr-1.5">
+        <span className="text-2xs font-mono text-slate-500 dark:text-white/50 border-l border-slate-200 dark:border-white/10 pl-1.5 rtl:border-l-0 rtl:border-r rtl:pl-0 rtl:pr-1.5">
           {sublabel}
         </span>
       )}

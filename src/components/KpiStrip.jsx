@@ -89,14 +89,18 @@ const KPIS = [
 export default function KpiStrip({ t }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 mb-8">
-      {KPIS.map(kpi => {
+      {KPIS.map((kpi, idx) => {
         const Icon = kpi.Icon;
         const Value = kpi.Value;
         return (
-          <SpotlightCard key={kpi.id} className="bento-card p-5 flex flex-col justify-between">
+          <SpotlightCard
+            key={kpi.id}
+            className="bento-card p-5 flex flex-col justify-between enter-pop"
+            style={{ animationDelay: `${idx * 40}ms` }}
+          >
             <div>
               <div className="flex items-center justify-between mb-3">
-                <Badge variant={kpi.badgeVariant} pulse={kpi.pulse} className="text-[10px] py-0.5">
+                <Badge variant={kpi.badgeVariant} pulse={kpi.pulse} className="text-2xs py-0.5">
                   {t[kpi.chipLabelKey]}
                 </Badge>
                 <div className={kpi.iconBoxClass}>
@@ -116,7 +120,7 @@ export default function KpiStrip({ t }) {
             </div>
             
             {/* Explicit Empirical Provenance Footnote */}
-            <div className="mt-3 pt-2.5 border-t border-slate-200/80 dark:border-white/[0.06] flex items-start gap-1.5 text-[10px] text-slate-500 dark:text-white/50 font-medium leading-relaxed">
+            <div className="mt-3 pt-2.5 border-t border-slate-200/80 dark:border-white/[0.06] flex items-start gap-1.5 text-2xs text-slate-500 dark:text-white/50 font-medium leading-relaxed">
               <span className="text-sky-600 dark:text-sky-400 font-semibold shrink-0">{t.sourcePrefix || 'المصدر:'}</span>
               <span>{t[kpi.sourceKey]}</span>
             </div>

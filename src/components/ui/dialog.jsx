@@ -62,8 +62,7 @@ export function DialogContent({ className, children, ...props }) {
         className={cn(
           'relative z-50 w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl border border-slate-200/80',
           'dark:bg-[#0c101d] dark:border-white/10 dark:text-white',
-          'transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)]',
-          'animate-in zoom-in-95 fade-in',
+          'modal-spring',
           'motion-reduce:animate-none',
           className
         )}

@@ -45,6 +45,7 @@ export default function PhysicianForm({
   });
 
   const [errors, setErrors] = useState({});
+  const [errorNonce, setErrorNonce] = useState(0);
 
   React.useEffect(() => {
     if (selectedGov) {
@@ -72,6 +73,7 @@ export default function PhysicianForm({
 
     if (Object.keys(newErrors).length) {
       setErrors(newErrors);
+      setErrorNonce(n => n + 1);
       return;
     }
     setErrors({});
@@ -157,7 +159,7 @@ export default function PhysicianForm({
             {/* Doctor Name & Governorate */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <div>
-                <label className="text-[11px] font-medium text-white/50 block mb-1">
+                <label className="text-micro font-medium text-white/50 block mb-1">
                   {t.inputDoctorName}
                 </label>
                 <input
@@ -179,12 +181,12 @@ export default function PhysicianForm({
                     }}
                     className="rounded border-white/20 bg-[#0E1320] text-sky-400 focus:ring-0 w-3 h-3"
                   />
-                  <span className="text-[10px] text-white/50">{t.anonymousToggle}</span>
+                  <span className="text-2xs text-white/50">{t.anonymousToggle}</span>
                 </label>
               </div>
 
               <div>
-                <label className="text-[11px] font-medium text-white/50 block mb-1">
+                <label className="text-micro font-medium text-white/50 block mb-1">
                   {t.inputGov}
                 </label>
                 <select
@@ -207,7 +209,7 @@ export default function PhysicianForm({
             {/* Specialty & Hospital */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <div>
-                <label className="text-[11px] font-medium text-white/50 block mb-1">
+                <label className="text-micro font-medium text-white/50 block mb-1">
                   {t.inputSpecialty}
                 </label>
                 <select
@@ -224,7 +226,7 @@ export default function PhysicianForm({
               </div>
 
               <div>
-                <label className="text-[11px] font-medium text-white/50 block mb-1">
+                <label className="text-micro font-medium text-white/50 block mb-1">
                   {t.inputHospital}
                 </label>
                 <input
@@ -240,7 +242,7 @@ export default function PhysicianForm({
 
             {/* Migration Intent (Apple Segmented Style) */}
             <div className="p-3 bg-white/[0.03] rounded-2xl border border-white/[0.08] space-y-2">
-              <label className="text-[11px] font-medium text-white/70 block">
+              <label className="text-micro font-medium text-white/70 block">
                 {t.inputMigration}
               </label>
               <div className="apple-segmented-track grid grid-cols-3 gap-1">
@@ -267,7 +269,7 @@ export default function PhysicianForm({
 
             {/* Primary Driver */}
             <div>
-              <label className="text-[11px] font-medium text-white/50 block mb-1">
+              <label className="text-micro font-medium text-white/50 block mb-1">
                 {t.inputReason}
               </label>
               <select
@@ -285,7 +287,7 @@ export default function PhysicianForm({
 
             {/* Needed Support */}
             <div>
-              <label className="text-[11px] font-medium text-white/50 block mb-1">
+              <label className="text-micro font-medium text-white/50 block mb-1">
                 {t.inputSupport}
               </label>
               <select
@@ -302,7 +304,7 @@ export default function PhysicianForm({
 
             {/* Severity Rating */}
             <div>
-              <label className="text-[11px] font-medium text-white/50 block mb-1">
+              <label className="text-micro font-medium text-white/50 block mb-1">
                 {t.inputSeverity}
               </label>
               <select
@@ -320,7 +322,7 @@ export default function PhysicianForm({
 
             {/* Notes */}
             <div>
-              <label className="text-[11px] font-medium text-white/50 block mb-1">
+              <label className="text-micro font-medium text-white/50 block mb-1">
                 {t.inputComment}
               </label>
               <textarea
@@ -332,14 +334,14 @@ export default function PhysicianForm({
                 className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30 resize-none font-normal"
               />
               {formData.comment.length > LIMITS.comment * 0.8 && (
-                <span className="block text-right text-[10px] text-white/40 tabular-nums mt-1" dir="ltr">
+                <span className="block text-right text-2xs text-white/40 tabular-nums mt-1" dir="ltr">
                   {formData.comment.length} / {LIMITS.comment}
                 </span>
               )}
             </div>
 
             {Object.keys(errors).length > 0 && (
-              <div className="text-[11px] text-rose-300 bg-rose-500/10 border border-rose-500/20 rounded-xl px-3 py-2 space-y-1">
+              <div key={errorNonce} className="enter-shake text-micro text-rose-300 bg-rose-500/10 border border-rose-500/20 rounded-xl px-3 py-2 space-y-1">
                 {Object.values(errors).map((msg, i) => (
                   <div key={i}>{msg}</div>
                 ))}
@@ -359,7 +361,7 @@ export default function PhysicianForm({
 
           {/* Toast Notification */}
           {toastMessage && (
-            <div className="p-3 bg-white/[0.08] border border-white/15 rounded-xl text-xs text-white flex items-center gap-2 shadow-xl animate-fade-in">
+            <div className="p-3 bg-white/[0.08] border border-white/15 rounded-xl text-xs text-white flex items-center gap-2 shadow-xl enter-success-pop">
               <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
               <span>{toastMessage}</span>
             </div>
@@ -378,7 +380,7 @@ export default function PhysicianForm({
               <button
                 type="button"
                 onClick={onOpenDbModal}
-                className={`inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-0.5 rounded-full border transition-all ${
+                className={`inline-flex items-center gap-1.5 text-micro font-medium px-2.5 py-0.5 rounded-full border transition-all ${
                   writesEnabled
                     ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/25 hover:bg-emerald-500/20 shadow-sm'
                     : syncState === 'pending'
@@ -389,7 +391,7 @@ export default function PhysicianForm({
               >
                 <Database className={`w-3 h-3 ${writesEnabled ? 'text-emerald-400' : 'text-amber-400'}`} />
                 <span>{syncBadge}</span>
-                <span className="text-[10px] text-white/40">⚙</span>
+                <span className="text-2xs text-white/40">⚙</span>
               </button>
 
               {communityReports.length > 0 ? (
@@ -397,7 +399,7 @@ export default function PhysicianForm({
                   <button
                     type="button"
                     onClick={() => setActiveFeedTab('local')}
-                    className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full transition-all ${
+                    className={`text-micro font-medium px-2.5 py-0.5 rounded-full transition-all ${
                       activeFeedTab === 'local'
                         ? 'bg-white/[0.12] text-white shadow-sm'
                         : 'text-white/50 hover:text-white/80'
@@ -408,7 +410,7 @@ export default function PhysicianForm({
                   <button
                     type="button"
                     onClick={() => setActiveFeedTab('community')}
-                    className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full transition-all ${
+                    className={`text-micro font-medium px-2.5 py-0.5 rounded-full transition-all ${
                       activeFeedTab === 'community'
                         ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30 shadow-sm'
                         : 'text-white/50 hover:text-white/80'
@@ -418,7 +420,7 @@ export default function PhysicianForm({
                   </button>
                 </div>
               ) : (
-                <span className="text-[11px] text-white/60 font-medium bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-white/10">
+                <span className="text-micro text-white/60 font-medium bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-white/10">
                   {t.feedSubLocal} ({reports.length})
                 </span>
               )}
@@ -448,31 +450,32 @@ export default function PhysicianForm({
               return (
                 <div
                   key={rep.id || idx}
-                  className="apple-card p-4 space-y-2.5"
+                  className="apple-card p-4 space-y-2.5 enter-pop"
+                  style={{ animationDelay: `${Math.min(idx, 10) * 20}ms` }}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-semibold text-white">
                         {docName}
                       </span>
-                      <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/[0.06] text-white/70 border border-white/10">
+                      <span className="text-2xs font-medium px-2 py-0.5 rounded-full bg-white/[0.06] text-white/70 border border-white/10">
                         {displaySpecialty}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-2">
                       {isMigrating && (
-                        <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-300 border border-rose-500/20">
+                        <span className="text-2xs font-medium px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-300 border border-rose-500/20">
                           {t.migrationIntentBadge}
                         </span>
                       )}
-                      <span className="text-[10px] text-white/40 tabular-nums">
+                      <span className="text-2xs text-white/40 tabular-nums">
                         {repDate}
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 text-[11px] text-white/50">
+                  <div className="flex items-center gap-3 text-micro text-white/50">
                     <span className="flex items-center gap-1 text-sky-400 font-medium">
                       <MapPin className="w-3 h-3" />
                       {govName}

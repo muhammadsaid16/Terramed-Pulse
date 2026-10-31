@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Activity, Stethoscope, FileText, Sliders, Globe, Compass, Printer, Menu, X, Satellite, Sun, Moon } from 'lucide-react';
 import { Button, Badge } from './ui';
+import { scrollBehavior } from '../lib/motionTokens';
 
 export default function Header({
   lang,
@@ -33,7 +34,7 @@ export default function Header({
     setMobileMenuOpen(false);
     const el = document.getElementById(`section-${tabId}`);
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+      el.scrollIntoView({ behavior: scrollBehavior() });
     }
   };
 
@@ -53,7 +54,7 @@ export default function Header({
             <span className="font-semibold text-sm sm:text-base tracking-tight text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-300 transition-colors">
               {t.appTitle}
             </span>
-            <Badge variant="default" pulse={true} className="hidden xs:inline-flex items-center gap-1 text-[10px] py-0.5">
+            <Badge variant="default" pulse={true} className="hidden xs:inline-flex items-center gap-1 text-2xs py-0.5">
               <Satellite className="w-2.5 h-2.5 text-sky-500 dark:text-sky-400" />
               <span>{t.nasaBadge}</span>
             </Badge>
@@ -122,7 +123,7 @@ export default function Header({
             ) : (
               <Moon className="w-3.5 h-3.5 text-slate-700 hover:-rotate-12 transition-transform duration-200 shrink-0" />
             )}
-            <span className="hidden md:inline-block whitespace-nowrap text-[11px]">
+            <span className="hidden md:inline-block whitespace-nowrap text-micro">
               {theme === 'dark' ? t.themeLight : t.themeDark}
             </span>
           </Button>

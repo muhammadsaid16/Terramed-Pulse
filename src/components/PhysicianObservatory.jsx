@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Stethoscope,
   Building2,
   ShieldAlert,
   FileCheck,
@@ -49,25 +48,23 @@ export default function PhysicianObservatory({
     <section id="section-physicians" className="bento-card p-5 sm:p-8 mb-8 space-y-6">
       
       {/* Header bar */}
-      <div className="border-b border-slate-200/80 dark:border-white/[0.08] pb-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-sky-100 text-sky-600 border border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20">
-              <Stethoscope className="w-5 h-5" />
-            </span>
-            <h2 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white tracking-tight">
+      <div className="border-b border-slate-200/80 dark:border-white/[0.08] pb-4 flex flex-wrap items-start justify-between gap-3">
+        <div className="flex items-start gap-3">
+          <span aria-hidden="true" className="font-mono text-2xs tracking-[0.18em] text-slate-400 dark:text-white/35 pt-1.5">03</span>
+          <div>
+            <h2 className="font-display text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">
               {t?.module3Title || (isAr ? 'الوحدة 3: مرصد القوى البشرية الصحية واستبقاء الأطباء' : 'Module 3: Healthcare Workforce & Physician Retention Observatory')}
             </h2>
+            <p className="text-micro text-slate-600 dark:text-white/60 font-normal max-w-3xl leading-relaxed mt-1">
+              {t?.module3Subtitle || (isAr
+                ? 'تحليل تجريبي محكّم لدراسات هجرة الأطباء (منظمة الصحة العالمية، جامعة أكسفورد، MDPI) ومؤشرات التوزيع الجغرافي للجهاز المركزي للتعبئة العامة والإحصاء — مبني بنسبة 100% على بيانات رصدية موثقة ودراسات سريرية منشورة.'
+                : 'Empirical synthesis of peer-reviewed physician migration cohorts (WHO EMHJ, Oxford University Press, MDPI) and CAPMAS healthcare capacity benchmarks — 100% founded on published empirical cohorts and official census records.')}
+            </p>
           </div>
-          <p className="text-xs text-slate-600 dark:text-white/60 font-normal max-w-3xl leading-relaxed">
-            {t?.module3Subtitle || (isAr
-              ? 'تحليل تجريبي محكّم لدراسات هجرة الأطباء (منظمة الصحة العالمية، جامعة أكسفورد، MDPI) ومؤشرات التوزيع الجغرافي للجهاز المركزي للتعبئة العامة والإحصاء — مبني بنسبة 100% على بيانات رصدية موثقة ودراسات سريرية منشورة.'
-              : 'Empirical synthesis of peer-reviewed physician migration cohorts (WHO EMHJ, Oxford University Press, MDPI) and CAPMAS healthcare capacity benchmarks — 100% founded on published empirical cohorts and official census records.')}
-          </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="satellite-chip text-emerald-700 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-950/40 dark:border-emerald-800/40 text-[11px] font-medium flex items-center gap-1.5">
+          <span className="satellite-chip text-emerald-700 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-950/40 dark:border-emerald-800/40 text-micro font-medium flex items-center gap-1.5">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
             <span>{isAr ? 'بيانات محكّمة وتعداد رسمي 100%' : '100% Empirical & Official Censuses'}</span>
           </span>
@@ -78,10 +75,10 @@ export default function PhysicianObservatory({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
         
         {/* Stat 1: Total Cohort */}
-        <SpotlightCard className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-sky-500/40 dark:bg-white/[0.02] dark:border-white/[0.06] dark:hover:border-sky-500/30 transition-all flex flex-col justify-between space-y-1 shadow-sm">
+        <SpotlightCard className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-sky-500/40 dark:bg-white/[0.02] dark:border-white/[0.06] dark:hover:border-sky-500/30 transition-[border-color,box-shadow] flex flex-col justify-between space-y-1 shadow-sm enter-pop">
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-medium text-slate-500 dark:text-white/50 uppercase tracking-wider">
+              <span className="text-micro font-medium text-slate-500 dark:text-white/50 uppercase tracking-wider">
                 {isAr ? 'إجمالي عينة الأطباء المستطلعة' : 'Surveyed Physician Cohort'}
               </span>
               <Users className="w-4 h-4 text-sky-600 dark:text-sky-400" />
@@ -89,20 +86,20 @@ export default function PhysicianObservatory({
             <div className="text-2xl font-bold text-slate-900 dark:text-white telemetry-mono mt-1 flex items-baseline gap-1">
               <NumberTicker value={1735} /> <span className="text-xs font-normal text-slate-500 dark:text-white/50">{isAr ? 'طبيباً مصرياً' : 'MDs in Egypt'}</span>
             </div>
-            <div className="text-[11px] text-sky-600 dark:text-sky-400/90 font-medium flex items-center gap-1 mt-1">
+            <div className="text-micro text-sky-600 dark:text-sky-400/90 font-medium flex items-center gap-1 mt-1">
               <span>WHO ($n=885$) + Oxford ($400$) + MDPI ($450$)</span>
             </div>
           </div>
-          <div className="mt-2 pt-2 border-t border-slate-200/80 dark:border-white/[0.06] text-[10px] text-slate-500 dark:text-white/40 font-medium">
+          <div className="mt-2 pt-2 border-t border-slate-200/80 dark:border-white/[0.06] text-2xs text-slate-500 dark:text-white/40 font-medium">
             <span className="text-sky-600 dark:text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> WHO 885 + Oxford 400 + MDPI 450
           </div>
         </SpotlightCard>
 
         {/* Stat 2: Stay Willingness */}
-        <SpotlightCard className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-emerald-500/40 dark:bg-white/[0.02] dark:border-white/[0.06] dark:hover:border-emerald-500/30 transition-all flex flex-col justify-between space-y-1 shadow-sm">
+        <SpotlightCard style={{ animationDelay: '40ms' }} className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-emerald-500/40 dark:bg-white/[0.02] dark:border-white/[0.06] dark:hover:border-emerald-500/30 transition-[border-color,box-shadow] flex flex-col justify-between space-y-1 shadow-sm enter-pop">
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-medium text-slate-500 dark:text-white/50 uppercase tracking-wider">
+              <span className="text-micro font-medium text-slate-500 dark:text-white/50 uppercase tracking-wider">
                 {isAr ? 'الاستعداد للبقاء حال تحسين المنظومة' : 'Willingness to Stay (If Improved)'}
               </span>
               <HeartPulse className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
@@ -110,7 +107,7 @@ export default function PhysicianObservatory({
             <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 telemetry-mono mt-1">
               <NumberTicker value={97.4} suffix="%" decimalPlaces={1} />
             </div>
-            <div className="text-[11px] text-slate-600 dark:text-white/60 font-normal mt-1">
+            <div className="text-micro text-slate-600 dark:text-white/60 font-normal mt-1">
               {isAr ? 'من الأطباء المقيمين مستعدون للبقاء (الصحة العالمية)' : 'Of resident physicians ready to stay (WHO EMHJ)'}
             </div>
           </div>
@@ -118,7 +115,7 @@ export default function PhysicianObservatory({
             href="https://doi.org/10.26719/emhj.21.070"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 pt-2 border-t border-slate-200/80 dark:border-white/[0.06] text-[10px] text-emerald-600 dark:text-emerald-400/90 font-medium flex items-center justify-between hover:underline"
+            className="mt-2 pt-2 border-t border-slate-200/80 dark:border-white/[0.06] text-2xs text-emerald-600 dark:text-emerald-400/90 font-medium flex items-center justify-between hover:underline"
           >
             <span><span className="text-slate-500 dark:text-white/40">{t.sourcePrefix || 'المصدر:'}</span> WHO EMHJ 2021 (n=885)</span>
             <ExternalLink className="w-3 h-3 shrink-0" />
@@ -126,10 +123,10 @@ export default function PhysicianObservatory({
         </SpotlightCard>
 
         {/* Stat 3: Return Intent */}
-        <SpotlightCard className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-amber-500/40 dark:bg-white/[0.02] dark:border-white/[0.06] dark:hover:border-amber-500/30 transition-all flex flex-col justify-between space-y-1 shadow-sm">
+        <SpotlightCard style={{ animationDelay: '80ms' }} className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-amber-500/40 dark:bg-white/[0.02] dark:border-white/[0.06] dark:hover:border-amber-500/30 transition-[border-color,box-shadow] flex flex-col justify-between space-y-1 shadow-sm enter-pop">
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-medium text-slate-500 dark:text-white/50 uppercase tracking-wider">
+              <span className="text-micro font-medium text-slate-500 dark:text-white/50 uppercase tracking-wider">
                 {isAr ? 'نية العودة لخدمة مصر بعد التدريب' : 'Intent to Return After Training'}
               </span>
               <TrendingUp className="w-4 h-4 text-amber-600 dark:text-amber-400" />
@@ -137,7 +134,7 @@ export default function PhysicianObservatory({
             <div className="text-2xl font-bold text-amber-600 dark:text-amber-400 telemetry-mono mt-1">
               <NumberTicker value={81.8} suffix="%" decimalPlaces={1} />
             </div>
-            <div className="text-[11px] text-slate-600 dark:text-white/60 font-normal mt-1">
+            <div className="text-micro text-slate-600 dark:text-white/60 font-normal mt-1">
               {isAr ? 'رغبة وطنية للعودة بعلم متقدم (جامعة أكسفورد)' : 'Patriotic desire to return with expertise (Oxford)'}
             </div>
           </div>
@@ -145,7 +142,7 @@ export default function PhysicianObservatory({
             href="https://doi.org/10.1093/inthealth/ihv042"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 pt-2 border-t border-slate-200/80 dark:border-white/[0.06] text-[10px] text-amber-600 dark:text-amber-400/90 font-medium flex items-center justify-between hover:underline"
+            className="mt-2 pt-2 border-t border-slate-200/80 dark:border-white/[0.06] text-2xs text-amber-600 dark:text-amber-400/90 font-medium flex items-center justify-between hover:underline"
           >
             <span><span className="text-slate-500 dark:text-white/40">{t.sourcePrefix || 'المصدر:'}</span> Oxford Int Health 2015 (n=400)</span>
             <ExternalLink className="w-3 h-3 shrink-0" />
@@ -153,10 +150,10 @@ export default function PhysicianObservatory({
         </SpotlightCard>
 
         {/* Stat 4: Dissatisfaction Multiplier */}
-        <SpotlightCard className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-rose-500/40 dark:bg-white/[0.02] dark:border-white/[0.06] dark:hover:border-rose-500/30 transition-all flex flex-col justify-between space-y-1 shadow-sm">
+        <SpotlightCard style={{ animationDelay: '120ms' }} className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-rose-500/40 dark:bg-white/[0.02] dark:border-white/[0.06] dark:hover:border-rose-500/30 transition-[border-color,box-shadow] flex flex-col justify-between space-y-1 shadow-sm enter-pop">
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-medium text-slate-500 dark:text-white/50 uppercase tracking-wider">
+              <span className="text-micro font-medium text-slate-500 dark:text-white/50 uppercase tracking-wider">
                 {isAr ? 'تأثير بيئة العمل على الهجرة' : 'Work Dissatisfaction Impact'}
               </span>
               <ShieldAlert className="w-4 h-4 text-rose-600 dark:text-rose-400" />
@@ -164,7 +161,7 @@ export default function PhysicianObservatory({
             <div className="text-2xl font-bold text-rose-600 dark:text-rose-400 telemetry-mono mt-1 flex items-baseline gap-1">
               <NumberTicker value={20.0} suffix="×" decimalPlaces={1} /> <span className="text-xs font-normal text-slate-500 dark:text-white/50">{isAr ? 'أرجحية (OR)' : 'Odds Ratio'}</span>
             </div>
-            <div className="text-[11px] text-slate-600 dark:text-white/60 font-normal mt-1">
+            <div className="text-micro text-slate-600 dark:text-white/60 font-normal mt-1">
               {isAr ? 'تضاعف رغبة الهجرة لسوء بيئة العمل (MDPI 2025)' : 'Multiplied emigration intent from hospital distress'}
             </div>
           </div>
@@ -172,7 +169,7 @@ export default function PhysicianObservatory({
             href="https://doi.org/10.3390/soc15050112"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 pt-2 border-t border-slate-200/80 dark:border-white/[0.06] text-[10px] text-rose-600 dark:text-rose-400/90 font-medium flex items-center justify-between hover:underline"
+            className="mt-2 pt-2 border-t border-slate-200/80 dark:border-white/[0.06] text-2xs text-rose-600 dark:text-rose-400/90 font-medium flex items-center justify-between hover:underline"
           >
             <span><span className="text-slate-500 dark:text-white/40">{t.sourcePrefix || 'المصدر:'}</span> MDPI Societies 2025 (n=450)</span>
             <ExternalLink className="w-3 h-3 shrink-0" />
@@ -197,7 +194,7 @@ export default function PhysicianObservatory({
                   {isAr ? 'بيئة العمل الميدانية للأطباء (دراسة الصحة العالمية، n=885)' : 'Frontline Working Conditions (WHO EMHJ Cohort, n=885)'}
                 </h3>
               </div>
-              <span className="text-[10px] text-slate-500 dark:text-white/40 telemetry-mono">
+              <span className="text-2xs text-slate-500 dark:text-white/40 telemetry-mono">
                 EMHJ 2021;27(12)
               </span>
             </div>
@@ -219,7 +216,7 @@ export default function PhysicianObservatory({
                   gradientTo="to-red-600"
                   glowColor="shadow-rose-500/25"
                 />
-                <span className="text-[9px] text-slate-500 dark:text-white/40 block font-medium">
+                <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium">
                   {isAr ? 'المصدر: دراسة منظمة الصحة العالمية EMHJ 2021 (عينة 885 طبيباً)' : 'Source: WHO EMHJ 2021 (n=885 Egyptian MDs)'}
                 </span>
               </div>
@@ -233,7 +230,7 @@ export default function PhysicianObservatory({
                   gradientTo="to-orange-500"
                   glowColor="shadow-rose-500/25"
                 />
-                <span className="text-[9px] text-slate-500 dark:text-white/40 block font-medium">
+                <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium">
                   {isAr ? 'المصدر: دراسة منظمة الصحة العالمية EMHJ 2021 (عينة 885 طبيباً)' : 'Source: WHO EMHJ 2021 (n=885 Egyptian MDs)'}
                 </span>
               </div>
@@ -247,7 +244,7 @@ export default function PhysicianObservatory({
                   gradientTo="to-orange-500"
                   glowColor="shadow-amber-500/25"
                 />
-                <span className="text-[9px] text-slate-500 dark:text-white/40 block font-medium">
+                <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium">
                   {isAr ? 'المصدر: دراسة منظمة الصحة العالمية EMHJ 2021 (عينة 885 طبيباً)' : 'Source: WHO EMHJ 2021 (n=885 Egyptian MDs)'}
                 </span>
               </div>
@@ -261,7 +258,7 @@ export default function PhysicianObservatory({
                   gradientTo="to-blue-600"
                   glowColor="shadow-sky-500/25"
                 />
-                <span className="text-[9px] text-slate-500 dark:text-white/40 block font-medium">
+                <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium">
                   {isAr ? 'المصدر: منظمة الصحة العالمية EMHJ 2021 وسجلات التعبئة والإحصاء 2024' : 'Source: WHO EMHJ 2021 & CAPMAS Health Census 2024'}
                 </span>
               </div>
@@ -275,7 +272,7 @@ export default function PhysicianObservatory({
                   gradientTo="to-indigo-600"
                   glowColor="shadow-purple-500/25"
                 />
-                <span className="text-[9px] text-slate-500 dark:text-white/40 block font-medium">
+                <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium">
                   {isAr ? 'المصدر: دراسة منظمة الصحة العالمية EMHJ 2021 (عينة 885 طبيباً)' : 'Source: WHO EMHJ 2021 (n=885 Egyptian MDs)'}
                 </span>
               </div>
@@ -289,7 +286,7 @@ export default function PhysicianObservatory({
                   gradientTo="to-teal-600"
                   glowColor="shadow-emerald-500/25"
                 />
-                <span className="text-[9px] text-slate-500 dark:text-white/40 block font-medium">
+                <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium">
                   {isAr ? 'المصدر: دراسة منظمة الصحة العالمية EMHJ 2021 (عينة 885 طبيباً)' : 'Source: WHO EMHJ 2021 (n=885 Egyptian MDs)'}
                 </span>
               </div>
@@ -311,14 +308,14 @@ export default function PhysicianObservatory({
               {DOCUMENTED_MIGRATION_DRIVERS.slice(0, 4).map((driver) => (
                 <div key={driver.id} className="p-3.5 rounded-xl bg-white border border-slate-200/80 dark:bg-white/[0.02] dark:border-white/[0.05] space-y-2 shadow-xs">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-semibold text-slate-900 dark:text-white/90">
+                    <span className="text-micro font-semibold text-slate-900 dark:text-white/90">
                       {isAr ? driver.ar : driver.en}
                     </span>
                   </div>
-                  <div className="text-[10px] text-rose-600 dark:text-rose-300/90 font-medium">
+                  <div className="text-2xs text-rose-600 dark:text-rose-300/90 font-medium">
                     {isAr ? `الشاهد الرصدي: ${driver.evidence_stat_ar}` : `Empirical Finding: ${driver.evidence_stat}`}
                   </div>
-                  <div className="p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 dark:bg-emerald-950/20 dark:border-emerald-800/30 dark:text-emerald-300 text-[11px] font-medium">
+                  <div className="p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 dark:bg-emerald-950/20 dark:border-emerald-800/30 dark:text-emerald-300 text-micro font-medium">
                     {isAr ? `الحل الموصى به: ${driver.policy_lever_ar}` : `Actionable Lever: ${driver.policy_lever}`}
                   </div>
                 </div>
@@ -342,7 +339,7 @@ export default function PhysicianObservatory({
                   {isAr ? 'التوزيع الإقليمي للكوادر (بيانات التعبئة والإحصاء)' : 'Regional Healthcare Capacity (CAPMAS Censuses)'}
                 </h3>
               </div>
-              <span className="text-[10px] text-sky-700 dark:text-sky-300 telemetry-mono font-medium">
+              <span className="text-2xs text-sky-700 dark:text-sky-300 telemetry-mono font-medium">
                 {isAr ? 'تعداد CAPMAS 2024' : 'CAPMAS 2024'}
               </span>
             </div>
@@ -356,7 +353,7 @@ export default function PhysicianObservatory({
                   <button
                     key={govKey}
                     onClick={() => onSelectGov && onSelectGov(govKey)}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
+                    className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
                       isSelected
                         ? 'bg-slate-900 text-white font-semibold shadow-sm dark:bg-sky-500 dark:text-black dark:shadow-sky-500/20'
                         : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200/80 dark:bg-white/[0.04] dark:text-white/70 dark:hover:bg-white/[0.08] dark:hover:text-white dark:border-white/[0.06]'
@@ -377,7 +374,7 @@ export default function PhysicianObservatory({
                     {isAr ? currentGov?.name_ar : currentGov?.name_en}
                   </span>
                 </div>
-                <span className="text-[11px] text-slate-500 dark:text-white/50 telemetry-mono">
+                <span className="text-micro text-slate-500 dark:text-white/50 telemetry-mono">
                   {isAr
                     ? `${(currentGov?.demographics?.population / 1000000).toFixed(1)} مليون نسمة`
                     : `${(currentGov?.demographics?.population / 1000000).toFixed(1)}M citizens`}
@@ -396,7 +393,7 @@ export default function PhysicianObservatory({
                     {currentGov?.demographics?.physicians_per_10k || '—'} / 10k
                   </span>
                 </div>
-                <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-white/40">
+                <div className="flex items-center justify-between text-2xs text-slate-500 dark:text-white/40">
                   <span>{isAr ? 'الحد الأدنى لمنظمة الصحة العالمية:' : 'WHO minimum threshold:'}</span>
                   <span className="text-emerald-600 dark:text-emerald-400/80 telemetry-mono">23.0 / 10k</span>
                 </div>
@@ -474,13 +471,13 @@ export default function PhysicianObservatory({
                   href={study.doi}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block p-2.5 rounded-lg bg-white hover:bg-slate-100 border border-slate-200/80 dark:bg-white/[0.02] dark:hover:bg-white/[0.05] dark:border-white/[0.04] transition-all group shadow-xs"
+                  className="block p-2.5 rounded-lg bg-white hover:bg-slate-100 border border-slate-200/80 dark:bg-white/[0.02] dark:hover:bg-white/[0.05] dark:border-white/[0.04] transition-colors group shadow-xs"
                 >
                   <div className="flex items-center justify-between text-slate-900 dark:text-white/90 group-hover:text-sky-600 dark:group-hover:text-sky-300 font-medium">
                     <span>{isAr ? study.journal_ar : study.journal_en} ({study.year})</span>
                     <ExternalLink className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 shrink-0" />
                   </div>
-                  <div className="text-[11px] text-slate-500 dark:text-white/50 mt-1 line-clamp-2">
+                  <div className="text-micro text-slate-500 dark:text-white/50 mt-1 line-clamp-2">
                     {study.citation}
                   </div>
                 </a>
@@ -492,7 +489,7 @@ export default function PhysicianObservatory({
                     ? 'الجهاز المركزي للتعبئة العامة والإحصاء (CAPMAS)'
                     : 'Central Agency for Public Mobilization & Statistics (CAPMAS)'}
                 </span>
-                <span className="text-[11px] text-slate-500 dark:text-white/50 block mt-1">
+                <span className="text-micro text-slate-500 dark:text-white/50 block mt-1">
                   {isAr
                     ? 'النشرة السنوية للإحصاءات الصحية وتعداد المنشآت والأسرة والكوادر الطبية حسب المحافظات (2020–2024).'
                     : 'Annual Health Services and Medical Human Resources Census Bulletins (2020–2024).'}

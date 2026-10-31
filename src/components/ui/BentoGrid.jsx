@@ -32,11 +32,11 @@ export function BentoCard({
 }) {
   return (
     <div
-      className={`group relative col-span-1 flex flex-col justify-between overflow-hidden rounded-2xl md:rounded-3xl border border-slate-200/80 bg-white/80 p-5 sm:p-6 shadow-sm backdrop-blur-xl transition-all duration-300 hover:shadow-md dark:border-white/[0.08] dark:bg-[#0a0f1d]/70 dark:hover:border-white/[0.15] dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] ${className}`}
+      className={`group relative col-span-1 flex flex-col justify-between overflow-hidden rounded-2xl md:rounded-3xl border border-slate-200/80 bg-white/80 p-5 sm:p-6 shadow-sm backdrop-blur-xl transition-[border-color,box-shadow] duration-200 ease-[cubic-bezier(0.2,0,0,1)] hover:shadow-md dark:border-white/[0.08] dark:bg-[#0a0f1d]/70 dark:hover:border-white/[0.15] dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] enter-pop ${className}`}
       {...props}
     >
       {background && (
-        <div className="absolute inset-0 z-0 pointer-events-none transition-transform duration-500 ease-out group-hover:scale-105 opacity-80 dark:opacity-60">
+        <div className="absolute inset-0 z-0 pointer-events-none opacity-80 dark:opacity-60">
           {background}
         </div>
       )}
@@ -50,7 +50,7 @@ export function BentoCard({
               </div>
             )}
             {badge && (
-              <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200 dark:bg-sky-500/10 dark:text-sky-300 dark:border-sky-500/20">
+              <span className="text-2xs font-semibold px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200 dark:bg-sky-500/10 dark:text-sky-300 dark:border-sky-500/20">
                 {badge}
               </span>
             )}

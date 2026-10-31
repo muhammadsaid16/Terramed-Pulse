@@ -268,12 +268,12 @@ export default function MapModule({
       const iconHtml = `
         <div class="relative flex items-center justify-center cursor-pointer group" style="width: 52px; height: 52px;">
           <div class="marker-pulse-ring" style="width: 52px; height: 52px; border: 2px solid ${color};"></div>
-          <div class="w-10 h-10 rounded-full flex flex-col items-center justify-center text-[12px] font-semibold text-white transition-all duration-300 ${
+          <div class="w-10 h-10 rounded-full flex flex-col items-center justify-center text-xs font-semibold text-white transition-all duration-300 ${
             isSelected ? 'scale-125 ring-2 ring-white shadow-[0_0_30px_rgba(255,255,255,0.45)]' : 'group-hover:scale-110'
           }" style="background-color: ${color}; box-shadow: 0 6px 20px ${color}80, inset 0 1px 1px rgba(255,255,255,0.4);">
             <span class="leading-none tabular-nums font-semibold">${displayVal}</span>
           </div>
-          <div class="absolute -bottom-6 px-2.5 py-0.5 rounded-full text-[10px] font-medium whitespace-nowrap border transition-all ${
+          <div class="absolute -bottom-6 px-2.5 py-0.5 rounded-full text-2xs font-medium whitespace-nowrap border transition-all ${
             isSelected
               ? 'bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-black dark:border-white scale-105 font-semibold shadow-md dark:shadow-[0_4px_16px_rgba(255,255,255,0.3)]'
               : 'bg-white/95 text-slate-800 border-slate-200/90 shadow-md dark:bg-[#07090F]/90 dark:backdrop-blur-md dark:text-white/90 dark:border-white/10 dark:shadow-lg'
@@ -356,7 +356,7 @@ export default function MapModule({
             <button
               key={metric.id}
               onClick={() => setMapMetric(metric.id)}
-              className={`apple-segmented-item px-2.5 py-1 text-[11px] font-medium transition-all ${
+              className={`apple-segmented-item px-2.5 py-1 text-micro font-medium transition-all ${
                 mapMetric === metric.id
                   ? 'apple-segmented-item-active'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 dark:text-white/60 dark:hover:text-white dark:hover:bg-white/[0.04]'
@@ -369,7 +369,7 @@ export default function MapModule({
       </div>
 
       {/* Active Layer Empirical Sensor Attribution Pill */}
-      <div className="flex items-center justify-between text-[11px] bg-slate-50 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/[0.06] rounded-xl px-3 py-1.5 font-medium">
+      <div className="flex items-center justify-between text-micro bg-slate-50 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/[0.06] rounded-xl px-3 py-1.5 font-medium">
         <span className="text-slate-500 dark:text-white/40">{t.sourcePrefix || 'المصدر:'}</span>
         <span className="text-sky-700 dark:text-sky-300/90 text-right rtl:text-left truncate font-semibold">
           {mapMetric === 'var'
@@ -389,7 +389,7 @@ export default function MapModule({
             className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[450] max-w-[92%] flex items-start gap-2 bg-white/90 dark:bg-black/70 backdrop-blur-2xl px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.14] shadow-xl"
           >
             <CloudOff className="w-3.5 h-3.5 shrink-0 text-amber-600 dark:text-amber-300 mt-0.5" />
-            <span className="text-[11px] leading-snug text-slate-800 dark:text-white/80">
+            <span className="text-micro leading-snug text-slate-800 dark:text-white/80">
               {t.basemapOffline}
             </span>
           </div>
@@ -397,7 +397,7 @@ export default function MapModule({
 
         {/* Basemap credit */}
         {creditedTilesVisible && (
-          <div className="absolute bottom-[78px] right-2 z-[400] px-1.5 py-0.5 rounded-md bg-white/70 text-slate-700 border border-slate-200/60 dark:border-transparent dark:bg-black/45 text-[9px] leading-none dark:text-white/45 pointer-events-none">
+          <div className="absolute bottom-[78px] right-2 z-[400] px-1.5 py-0.5 rounded-md bg-white/70 text-slate-700 border border-slate-200/60 dark:border-transparent dark:bg-black/45 text-2xs leading-none dark:text-white/45 pointer-events-none">
             © Esri — Source: Esri, Maxar, Earthstar Geographics
           </div>
         )}
@@ -414,7 +414,7 @@ export default function MapModule({
             <span className={`text-xs font-semibold tabular-nums ${timelinePhase.color}`}>
               {timelinePhase.anomaly}
             </span>
-            <span className={`text-[10px] font-medium uppercase tracking-wider px-2 py-0.5 rounded-full border ${timelinePhase.bgColor}`}>
+            <span className={`text-2xs font-medium uppercase tracking-wider px-2 py-0.5 rounded-full border ${timelinePhase.bgColor}`}>
               {timelinePhase.badge}
             </span>
           </div>
@@ -422,12 +422,12 @@ export default function MapModule({
 
         {/* Dynamic Live Heatmap Legend */}
         <div className="absolute bottom-4 left-4 z-[400] bg-white/90 dark:bg-black/75 backdrop-blur-2xl p-3.5 rounded-2xl border border-slate-200/80 dark:border-white/[0.12] shadow-lg dark:shadow-2xl text-xs space-y-1.5">
-          <div className="font-semibold text-[11px] text-slate-900 dark:text-white/90 flex items-center gap-1.5">
+          <div className="font-semibold text-micro text-slate-900 dark:text-white/90 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
             <span>{t.heatScaleTitle} ({year})</span>
           </div>
           {HEAT_TIERS.map(tier => (
-            <div key={tier.labelKey} className="flex items-center gap-2 text-[10px]">
+            <div key={tier.labelKey} className="flex items-center gap-2 text-2xs">
               <span className={`w-2.5 h-2.5 rounded-full ${tier.dot}`}></span>
               <span className="text-slate-700 dark:text-white/80 font-medium">
                 {t[tier.labelKey]}
@@ -487,7 +487,7 @@ export default function MapModule({
             }}
             className="slider-teal"
           />
-          <div className="flex justify-between text-[11px] font-medium text-slate-500 dark:text-white/45 px-1 tabular-nums">
+          <div className="flex justify-between text-micro font-medium text-slate-500 dark:text-white/45 px-1 tabular-nums">
             <span className="text-emerald-600 dark:text-emerald-400/90 font-medium">
               {t.yearBaselineCaption}
             </span>

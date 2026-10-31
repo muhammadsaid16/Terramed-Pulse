@@ -13,19 +13,35 @@ export default function ShimmerButton({
   type = 'button',
   ...props
 }) {
+  const buttonRef = React.useRef(null);
+  const [onScreen, setOnScreen] = React.useState(true);
+
+  React.useEffect(() => {
+    const el = buttonRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(
+      ([entry]) => setOnScreen(entry.isIntersecting),
+      { rootMargin: '100px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
     <button
+      ref={buttonRef}
       type={type}
       onClick={onClick}
-      className={`relative inline-flex items-center justify-center overflow-hidden rounded-full p-[1.5px] font-semibold transition-all duration-200 active:scale-95 group focus:outline-none focus:ring-2 focus:ring-sky-500/50 ${className}`}
+      className={`relative inline-flex items-center justify-center overflow-hidden rounded-full p-[1.5px] font-semibold transition-transform duration-100 ease-out active:scale-95 group focus:outline-none focus:ring-2 focus:ring-sky-500/50 ${className}`}
       {...props}
     >
-      {/* 21st.dev Traveling Shimmer Background */}
+      {/* 21st.dev Traveling Shimmer Background (paused off-viewport) */}
       <span
         className="absolute inset-[-100%] animate-[spin_3s_linear_infinite]"
         style={{
           background: `conic-gradient(from 0deg, transparent 0 300deg, ${shimmerColor} 340deg, transparent 360deg)`,
-          animationDuration: shimmerDuration
+          animationDuration: shimmerDuration,
+          animationPlayState: onScreen ? 'running' : 'paused'
         }}
       />
 

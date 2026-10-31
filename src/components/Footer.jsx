@@ -23,7 +23,7 @@ export default function Footer({ lang, t }) {
           </span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5 text-slate-500 dark:text-white/40 text-[11px] font-normal">
+        <div className="flex flex-wrap items-center gap-2.5 text-slate-500 dark:text-white/40 text-micro font-normal">
           {DATA_SOURCES.map((source, i) => (
             <React.Fragment key={source.id}>
               {i > 0 && <span className="text-slate-300 dark:text-white/20">•</span>}

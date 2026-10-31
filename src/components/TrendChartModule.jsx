@@ -165,7 +165,7 @@ export default function TrendChartModule({
         
         {/* Governorate Selector */}
         <div className="sm:col-span-3">
-          <label className="text-[11px] font-medium text-slate-600 dark:text-white/50 block mb-1">
+          <label className="text-micro font-medium text-slate-600 dark:text-white/50 block mb-1">
             {t.govSelectorLabel}
           </label>
           <select
@@ -183,7 +183,7 @@ export default function TrendChartModule({
 
         {/* NASA Variable Selector */}
         <div className="sm:col-span-6">
-          <label className="text-[11px] font-medium text-slate-600 dark:text-white/50 block mb-1">
+          <label className="text-micro font-medium text-slate-600 dark:text-white/50 block mb-1">
             {t.varSelectorLabel}
           </label>
           <select
@@ -203,7 +203,7 @@ export default function TrendChartModule({
         <div className="sm:col-span-3 flex flex-col justify-end">
           <button
             onClick={() => setIsAnomaly(!isAnomaly)}
-            className={`apple-chip w-full py-1.5 px-3 rounded-xl text-[11px] font-medium border transition-all flex items-center justify-center gap-1.5 shadow-sm ${
+            className={`apple-chip w-full py-1.5 px-3 rounded-xl text-micro font-medium border transition-all flex items-center justify-center gap-1.5 shadow-sm ${
               isAnomaly
                 ? 'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/40'
                 : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50 dark:bg-white/[0.05] dark:text-white/70 dark:border-white/10 dark:hover:bg-white/[0.1] dark:hover:text-white'
@@ -218,7 +218,7 @@ export default function TrendChartModule({
 
       {/* Sensor Operational Window Note (MODIS Terra 2000-2025 vs 1995-1999 baseline) */}
       {(selectedVar === 'NDVI' || selectedVar === 'LST_DAY') && (
-        <div className="flex items-center gap-2 text-[11px] text-amber-800 bg-amber-50 border border-amber-200 dark:text-amber-300 dark:bg-amber-500/10 dark:border-amber-500/25 px-3.5 py-2 rounded-xl">
+        <div className="flex items-center gap-2 text-micro text-amber-800 bg-amber-50 border border-amber-200 dark:text-amber-300 dark:bg-amber-500/10 dark:border-amber-500/25 px-3.5 py-2 rounded-xl">
           <Info className="w-3.5 h-3.5 shrink-0 text-amber-600 dark:text-amber-400" />
           <span>{t.sensorModisNote}</span>
         </div>
@@ -233,13 +233,13 @@ export default function TrendChartModule({
               {govName} — {t[`var_${selectedVar}`] || selectedVar} (1995-2025)
             </span>
           </div>
-          <span className="satellite-chip text-[9px] text-slate-500 dark:text-white/50">
+          <span className="satellite-chip text-2xs text-slate-500 dark:text-white/50">
             {isAnomaly ? t.anomalyBaselineChip : t.continuousOrbitChip}
           </span>
         </div>
 
         {/* Dedicated Sensor Micro-Badge */}
-        <div className="mb-2 text-[10px] text-slate-500 dark:text-white/40 flex items-center gap-1.5 font-medium">
+        <div className="mb-2 text-2xs text-slate-500 dark:text-white/40 flex items-center gap-1.5 font-medium">
           <span className="text-sky-600 dark:text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span>
           <span>{t[`sensorSource_${selectedVar}`] || 'NASA Earth Observation Telemetry'}</span>
         </div>
@@ -260,7 +260,7 @@ export default function TrendChartModule({
 
           <button
             onClick={onOpenMath}
-            className="text-[11px] text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 flex items-center gap-1 font-medium transition-colors"
+            className="text-micro text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 flex items-center gap-1 font-medium transition-colors"
           >
             <Info className="w-3.5 h-3.5" />
             <span>{t.methodologyLink}</span>
@@ -289,29 +289,29 @@ export default function TrendChartModule({
         {/* Telemetry Math Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs pt-1">
           <div className="bg-slate-50 dark:bg-white/[0.03] p-2.5 rounded-xl border border-slate-200/80 dark:border-white/[0.06]">
-            <span className="text-[10px] text-slate-500 dark:text-white/40 block font-medium mb-0.5">{t.mkStatLabel}</span>
+            <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium mb-0.5">{t.mkStatLabel}</span>
             <span className="font-bold text-slate-900 dark:text-white telemetry-mono text-sm">
               {mkTest.s > 0 ? `+${mkTest.s}` : mkTest.s}
             </span>
           </div>
 
           <div className="bg-slate-50 dark:bg-white/[0.03] p-2.5 rounded-xl border border-slate-200/80 dark:border-white/[0.06]">
-            <span className="text-[10px] text-slate-500 dark:text-white/40 block font-medium mb-0.5">{t.zScoreLabel}</span>
+            <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium mb-0.5">{t.zScoreLabel}</span>
             <span className="font-bold text-sky-600 dark:text-sky-400 telemetry-mono text-sm">
               {mkTest.z.toFixed(2)}
             </span>
           </div>
 
           <div className="bg-slate-50 dark:bg-white/[0.03] p-2.5 rounded-xl border border-slate-200/80 dark:border-white/[0.06]">
-            <span className="text-[10px] text-slate-500 dark:text-white/40 block font-medium mb-0.5">{t.pValueLabel}</span>
+            <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium mb-0.5">{t.pValueLabel}</span>
             <span className="font-bold text-amber-600 dark:text-amber-300 telemetry-mono text-sm">
               {mkTest.pValue < 0.0001 ? '< 0.0001' : mkTest.pValue.toFixed(4)}
             </span>
           </div>
 
           <div className="bg-slate-50 dark:bg-white/[0.03] p-2.5 rounded-xl border border-slate-200/80 dark:border-white/[0.06]">
-            <span className="text-[10px] text-slate-500 dark:text-white/40 block font-medium mb-0.5">{t.ci95Label}</span>
-            <span className="font-bold text-slate-700 dark:text-white/80 telemetry-mono text-[11px]">
+            <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium mb-0.5">{t.ci95Label}</span>
+            <span className="font-bold text-slate-700 dark:text-white/80 telemetry-mono text-micro">
               [{regression.ci95Lower.toFixed(2)}, {regression.ci95Upper.toFixed(2)}]
             </span>
           </div>

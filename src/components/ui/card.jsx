@@ -7,7 +7,7 @@ export const Card = React.forwardRef(({ className, interactive = false, children
     className={cn(
       'rounded-2xl border border-slate-200/80 bg-white/90 shadow-sm backdrop-blur-sm',
       'dark:border-white/[0.08] dark:bg-slate-900/85',
-      'transition-all duration-200 ease-[cubic-bezier(0.2,0,0,1)]',
+      'transition-[transform,box-shadow,border-color] duration-200 ease-[cubic-bezier(0.2,0,0,1)]',
       interactive && 'hover:-translate-y-0.5 hover:shadow-md dark:hover:border-white/20',
       'motion-reduce:transform-none motion-reduce:transition-none',
       className

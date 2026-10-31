@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRight, ArrowDownRight, Compass } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import SpotlightCard from './ui/SpotlightCard';
 
 // The two hotspot cards are the same component shape; only accent colors, icon and telemetry chips differ.
@@ -42,21 +42,16 @@ const HOTSPOTS = [
 export default function OppositeTrends({ t }) {
   return (
     <div className="bento-card p-5 sm:p-7 mb-8 space-y-5">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/80 dark:border-white/[0.08] pb-3">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-sky-100 text-sky-600 border border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 flex items-center justify-center">
-            <Compass className="w-4 h-4" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
-              {t.oppositeTitle}
-            </h3>
-            <p className="text-xs text-slate-600 dark:text-white/50 font-normal mt-0.5">
-              {t.oppositeDesc}
-            </p>
-          </div>
+      <div className="flex flex-wrap items-start justify-between gap-2 border-b border-slate-200/80 dark:border-white/[0.08] pb-3">
+        <div>
+          <h3 className="font-display font-bold text-base sm:text-lg text-slate-900 dark:text-white tracking-tight">
+            {t.oppositeTitle}
+          </h3>
+          <p className="text-micro text-slate-600 dark:text-white/50 font-normal mt-0.5">
+            {t.oppositeDesc}
+          </p>
         </div>
-        <span className="satellite-chip text-sky-700 bg-sky-50 border-sky-200 dark:text-sky-300 dark:bg-sky-950/40 dark:border-sky-800/40">
+        <span className="font-mono text-2xs tracking-[0.08em] text-slate-400 dark:text-white/35 pt-1" dir="ltr">
           {t.spatialChip}
         </span>
       </div>
@@ -72,9 +67,6 @@ export default function OppositeTrends({ t }) {
                 isUpperEgypt ? 'border border-rose-300/80 dark:border-rose-500/30 shadow-[0_0_20px_-3px_rgba(244,63,94,0.15)]' : ''
               }`}
             >
-              {isUpperEgypt && (
-                <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-rose-500 to-amber-500 z-10" />
-              )}
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <span className={spot.labelClass}>
@@ -88,7 +80,7 @@ export default function OppositeTrends({ t }) {
                 <p className="text-xs text-slate-700 dark:text-white/70 leading-relaxed font-normal">
                   {t[spot.detailKey]}
                 </p>
-                <div className="mt-4 flex flex-wrap items-center gap-2 text-[11px] font-medium telemetry-mono">
+                <div className="mt-4 flex flex-wrap items-center gap-2 text-micro font-medium telemetry-mono">
                   {spot.chips.map(chip => (
                     <span key={chip.labelKey} className={`px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 dark:bg-white/[0.04] ${chip.tone} dark:border-white/[0.08]`}>
                       {t[chip.labelKey]}
@@ -98,7 +90,7 @@ export default function OppositeTrends({ t }) {
               </div>
 
               {/* Source Provenance Footnote */}
-              <div className="mt-4 pt-2.5 border-t border-slate-200/80 dark:border-white/[0.06] flex items-center gap-1.5 text-[10px] text-slate-500 dark:text-white/45 font-medium">
+              <div className="mt-4 pt-2.5 border-t border-slate-200/80 dark:border-white/[0.06] flex items-center gap-1.5 text-2xs text-slate-500 dark:text-white/45 font-medium">
                 <span className="text-sky-600 dark:text-sky-400 font-semibold shrink-0">{t.sourcePrefix || 'المصدر:'}</span>
                 <span>{t[spot.sourceKey]}</span>
               </div>

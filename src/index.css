@@ -15,14 +15,22 @@
 html {
   scroll-behavior: smooth;
   font-family: var(--font-en);
+  font-optical-sizing: auto;
   letter-spacing: -0.011em;
 }
 
-body[dir="rtl"] {
+/* dir is set on <html> (App/Header) — the old body[] selector never matched */
+[dir="rtl"] {
   font-family: var(--font-ar);
   direction: rtl;
   text-align: right;
   letter-spacing: 0;
+}
+
+/* Arabic display type: Cairo 800 carries headings, never the Latin face */
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3, [dir="rtl"] .font-display {
+  font-family: var(--font-ar);
+  font-weight: 800;
 }
 
 /* ==========================================================================
@@ -31,7 +39,7 @@ body[dir="rtl"] {
 @layer components {
   /* Bento & Hero Cards */
   .bento-card {
-    @apply bg-white dark:bg-[#0c1222]/90 border border-slate-200/90 dark:border-white/[0.08] rounded-3xl shadow-sm dark:shadow-2xl transition-all duration-200;
+    @apply bg-white dark:bg-[#0c1222]/90 border border-slate-200/90 dark:border-white/[0.08] rounded-[14px] shadow-sm dark:shadow-2xl transition-[border-color] duration-200;
   }
   .bento-card:hover {
     @apply border-sky-400/40 dark:border-sky-400/25;
@@ -39,7 +47,7 @@ body[dir="rtl"] {
 
   /* Apple & Nested Bento Cards */
   .apple-card {
-    @apply bg-slate-50/70 dark:bg-[#11182c]/75 border border-slate-200/80 dark:border-white/[0.07] rounded-2xl shadow-sm dark:shadow-xl transition-all duration-200;
+    @apply bg-slate-50/70 dark:bg-[#11182c]/75 border border-slate-200/80 dark:border-white/[0.07] rounded-[12px] shadow-sm dark:shadow-xl transition-[border-color,transform] duration-200;
   }
   .apple-card:hover {
     @apply border-sky-400/40 dark:border-sky-400/30 -translate-y-0.5;
@@ -62,7 +70,7 @@ body[dir="rtl"] {
 
   /* Satellite Telemetry Chips */
   .satellite-chip {
-    @apply font-mono text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 dark:bg-white/[0.05] dark:text-white/70 dark:border-white/10;
+    @apply font-mono text-2xs font-semibold uppercase tracking-[0.08em] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 dark:bg-white/[0.05] dark:text-white/70 dark:border-white/10;
   }
 
   /* Segmented Track & Items */
@@ -305,6 +313,105 @@ html:not(.dark) .leaflet-control-zoom a:hover {
   0% { opacity: 0; transform: scale(0.95) translateY(14px); }
   100% { opacity: 1; transform: scale(1) translateY(0); }
 }
+
+/* ==========================================================================
+   Entrance Utilities — real CSS (the tailwindcss-animate plugin is NOT installed,
+   so animate-in / fade-in / zoom-in-95 classes were silently dead).
+   Entrance = decelerate; scale via the standalone `scale` property so it
+   composes with Tailwind translate utilities instead of clobbering them.
+   ========================================================================== */
+@keyframes ui-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes ui-enter-pop {
+  from { opacity: 0; scale: 0.96; }
+  to { opacity: 1; scale: 1; }
+}
+
+.animate-fadeIn {
+  animation: ui-fade-in 200ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+.enter-pop {
+  animation: ui-enter-pop 140ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Error: firm 2.5 oscillations, no overshoot. Success: pop with slight overshoot. */
+@keyframes ui-shake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-10px); }
+  30% { transform: translateX(8px); }
+  45% { transform: translateX(-6px); }
+  60% { transform: translateX(4px); }
+  75% { transform: translateX(-2px); }
+}
+
+@keyframes ui-success-pop {
+  0% { opacity: 0; scale: 0.92; }
+  55% { opacity: 1; scale: 1.04; }
+  100% { opacity: 1; scale: 1; }
+}
+
+.enter-shake {
+  animation: ui-shake 360ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.enter-success-pop {
+  animation: ui-success-pop 320ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* ==========================================================================
+   Reduced Motion — respect prefers-reduced-motion globally (Apple-style).
+   Slides/springs/pulses/marquee collapse; entrances keep a gentle cross-fade.
+   ========================================================================== */
+@keyframes reduced-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Cross-fade instead of instant collapse where an entrance carries meaning */
+  .modal-spring, .animate-fadeIn, .enter-pop, .enter-shake, .enter-success-pop {
+    animation: reduced-fade-in 150ms linear forwards !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* ==========================================================================
+   Reduced Transparency & High Contrast — translucent chrome turns solid.
+   ========================================================================== */
+@media (prefers-reduced-transparency: reduce) {
+  [class*='backdrop-blur'] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .modal-overlay {
+    background: rgb(15 23 42 / 0.95) !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  [class*='backdrop-blur'] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgb(255 255 255 / 0.98) !important;
+    border: 1px solid rgb(100 116 139 / 0.6) !important;
+  }
+  .dark [class*='backdrop-blur'] {
+    background: rgb(5 8 17 / 0.98) !important;
+    border-color: rgb(148 163 184 / 0.5) !important;
+  }
+}
+
 
 /* ==========================================================================
    Official Government Brief Print Engine

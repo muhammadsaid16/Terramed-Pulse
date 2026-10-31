@@ -140,19 +140,17 @@ export default function DecisionMaker({
     <section id="section-decision" className="bento-card p-5 sm:p-8 mb-8 space-y-6">
       
       {/* Header */}
-      <div className="border-b border-slate-200/80 dark:border-white/[0.08] pb-4 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-sky-100 text-sky-600 border border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 flex items-center justify-center shadow-sm">
-              <Sliders className="w-4 h-4" />
-            </div>
-            <h2 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white tracking-tight">
+      <div className="border-b border-slate-200/80 dark:border-white/[0.08] pb-4 flex flex-wrap items-start justify-between gap-3">
+        <div className="flex items-start gap-3">
+          <span aria-hidden="true" className="font-mono text-2xs tracking-[0.18em] text-slate-400 dark:text-white/35 pt-1.5">04</span>
+          <div>
+            <h2 className="font-display text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">
               {t.module4Title}
             </h2>
+            <p className="text-micro text-slate-600 dark:text-white/50 font-normal mt-1">
+              {t.module4Subtitle} — {govName}
+            </p>
           </div>
-          <p className="text-xs text-slate-600 dark:text-white/50 font-normal mt-1">
-            {t.module4Subtitle} — {govName}
-          </p>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
@@ -176,15 +174,15 @@ export default function DecisionMaker({
       </div>
 
       {activeSubTab === 'simulation' && (
-        <div className="space-y-6 animate-fade-in">
+        <div className="space-y-6 animate-fadeIn">
           {/* Policy Scenario Model Notice */}
           <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/[0.08] text-xs">
             <Info className="w-4 h-4 text-sky-600 dark:text-sky-400 shrink-0 mt-0.5" />
             <div>
-              <span className="font-semibold text-slate-900 dark:text-white/90 block text-[11px] uppercase tracking-wider">
+              <span className="font-semibold text-slate-900 dark:text-white/90 block text-micro uppercase tracking-wider">
                 {t.policyScenarioBadge}
               </span>
-              <span className="text-[11px] text-slate-600 dark:text-white/50 leading-relaxed block mt-0.5">
+              <span className="text-micro text-slate-600 dark:text-white/50 leading-relaxed block mt-0.5">
                 {t.policyScenarioNotice}
               </span>
             </div>
@@ -196,15 +194,12 @@ export default function DecisionMaker({
         <SpotlightCard
           className="lg:col-span-5 apple-card p-6 lg:sticky lg:top-24 shadow-sm dark:shadow-md relative overflow-hidden border border-emerald-400/40 dark:border-emerald-500/40 shadow-[0_0_25px_-5px_rgba(16,185,129,0.18)]"
         >
-          {/* Top Neon Ambient Accent Bar (Reliable, high-end alternative to BorderBeam) */}
-          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 z-10" />
-
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-xs text-slate-800 dark:text-white/80">
                 {t.simulationHeading}
               </h3>
-              <span className="text-[11px] font-medium text-slate-700 dark:text-white/50 bg-slate-100 dark:bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-white/10">
+              <span className="text-micro font-medium text-slate-700 dark:text-white/50 bg-slate-100 dark:bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-white/10">
                 {govName}
               </span>
             </div>
@@ -212,7 +207,7 @@ export default function DecisionMaker({
             {!hasBaseline && (
               <div
                 role="status"
-                className="flex items-center gap-2 text-[11px] text-amber-700 bg-amber-50 border border-amber-200 dark:text-amber-300 dark:bg-amber-500/10 dark:border-amber-500/25 rounded-xl px-3 py-2"
+                className="flex items-center gap-2 text-micro text-amber-700 bg-amber-50 border border-amber-200 dark:text-amber-300 dark:bg-amber-500/10 dark:border-amber-500/25 rounded-xl px-3 py-2"
               >
                 <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
                 <span>{t.baselineMissingBadge}</span>
@@ -222,7 +217,7 @@ export default function DecisionMaker({
             {/* Delta Indicator */}
             <div className="flex items-center justify-center gap-6 p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.08]">
               <div className="text-center">
-                <span className="text-[10px] text-slate-500 dark:text-white/45 block uppercase tracking-[0.05em] font-medium">
+                <span className="text-2xs text-slate-500 dark:text-white/45 block uppercase tracking-[0.05em] font-medium">
                   {t.baselineHni}
                 </span>
                 <div className="text-3xl font-semibold text-slate-700 dark:text-white/70 tabular-nums">
@@ -233,7 +228,7 @@ export default function DecisionMaker({
                 {lang === 'ar' ? '←' : '→'}
               </div>
               <div className="text-center">
-                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 block uppercase tracking-[0.05em] font-medium">
+                <span className="text-2xs text-emerald-600 dark:text-emerald-400 block uppercase tracking-[0.05em] font-medium">
                   {t.simulatedHni}
                 </span>
                 <div className="text-3xl font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">
@@ -293,10 +288,10 @@ export default function DecisionMaker({
           </div>
 
           <details className="rounded-xl border border-slate-200/80 dark:border-white/[0.08] bg-slate-50 dark:bg-white/[0.02] px-3.5 py-2.5">
-            <summary className="cursor-pointer text-[11px] font-medium text-slate-600 dark:text-white/60 select-none">
+            <summary className="cursor-pointer text-micro font-medium text-slate-600 dark:text-white/60 select-none">
               {t.modelAssumptionsTitle}
             </summary>
-            <p className="mt-2 text-[11px] leading-relaxed text-slate-500 dark:text-white/50">
+            <p className="mt-2 text-micro leading-relaxed text-slate-500 dark:text-white/50">
               {t.modelAssumptionsBody}
             </p>
           </details>
@@ -310,7 +305,7 @@ export default function DecisionMaker({
             <h3 className="font-semibold text-xs text-slate-900 dark:text-white/80">
               {t.leversTitle}
             </h3>
-            <span className="text-[11px] text-slate-500 dark:text-white/50">{t.leversSub}</span>
+            <span className="text-micro text-slate-500 dark:text-white/50">{t.leversSub}</span>
           </div>
 
           {/* TRACK 1: DIRECT FINANCIAL & COMPENSATION PACKAGE */}
@@ -326,7 +321,7 @@ export default function DecisionMaker({
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
                 <label className="text-slate-800 dark:text-white/80">{t.sliderSalaryHike}</label>
-                <span className="font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-white/10 text-[11px]">
+                <span className="font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-white/10 text-micro">
                   +{salaryHikePct}%
                 </span>
               </div>
@@ -338,7 +333,7 @@ export default function DecisionMaker({
                 onChange={setSalaryHikePct}
                 ariaLabel={t.sliderSalaryHike}
               />
-              <p className="text-[10px] text-slate-500 dark:text-white/45 leading-relaxed font-normal">
+              <p className="text-2xs text-slate-500 dark:text-white/45 leading-relaxed font-normal">
                 {t.sourceRationaleSalary}
               </p>
             </div>
@@ -347,7 +342,7 @@ export default function DecisionMaker({
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
                 <label className="text-slate-800 dark:text-white/80">{t.sliderHazardPay}</label>
-                <span className="font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-white/10 text-[11px]">
+                <span className="font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-white/10 text-micro">
                   +{hazardPayPct}%
                 </span>
               </div>
@@ -359,7 +354,7 @@ export default function DecisionMaker({
                 onChange={setHazardPayPct}
                 ariaLabel={t.sliderHazardPay}
               />
-              <p className="text-[10px] text-slate-500 dark:text-white/45 leading-relaxed font-normal">
+              <p className="text-2xs text-slate-500 dark:text-white/45 leading-relaxed font-normal">
                 {t.sourceRationaleHazard}
               </p>
             </div>
@@ -368,7 +363,7 @@ export default function DecisionMaker({
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
                 <label className="text-slate-800 dark:text-white/80">{t.sliderIncentive}</label>
-                <span className="font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-white/10 text-[11px]">
+                <span className="font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-white/10 text-micro">
                   +{stipendPct}%
                 </span>
               </div>
@@ -380,7 +375,7 @@ export default function DecisionMaker({
                 onChange={setStipendPct}
                 ariaLabel={t.sliderIncentive}
               />
-              <p className="text-[10px] text-slate-500 dark:text-white/45 leading-relaxed font-normal">
+              <p className="text-2xs text-slate-500 dark:text-white/45 leading-relaxed font-normal">
                 {t.sourceRationaleStipend}
               </p>
             </div>
@@ -399,7 +394,7 @@ export default function DecisionMaker({
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
                 <label className="text-slate-800 dark:text-white/80">{t.sliderSecurity}</label>
-                <span className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-[11px]">
+                <span className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-micro">
                   {securityPct}%
                 </span>
               </div>
@@ -411,7 +406,7 @@ export default function DecisionMaker({
                 onChange={setSecurityPct}
                 ariaLabel={t.sliderSecurity}
               />
-              <p className="text-[10px] text-slate-500 dark:text-white/45 leading-relaxed font-normal">
+              <p className="text-2xs text-slate-500 dark:text-white/45 leading-relaxed font-normal">
                 {t.sourceRationaleSecurity}
               </p>
             </div>
@@ -420,7 +415,7 @@ export default function DecisionMaker({
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
                 <label className="text-slate-800 dark:text-white/80">{t.sliderEquipment}</label>
-                <span className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-[11px]">
+                <span className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-micro">
                   {equipmentPct}%
                 </span>
               </div>
@@ -432,7 +427,7 @@ export default function DecisionMaker({
                 onChange={setEquipmentPct}
                 ariaLabel={t.sliderEquipment}
               />
-              <p className="text-[10px] text-slate-500 dark:text-white/45 leading-relaxed font-normal">
+              <p className="text-2xs text-slate-500 dark:text-white/45 leading-relaxed font-normal">
                 {t.sourceRationaleEquipment}
               </p>
             </div>
@@ -441,7 +436,7 @@ export default function DecisionMaker({
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
                 <label className="text-slate-800 dark:text-white/80">{t.sliderClinics}</label>
-                <span className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-[11px]">
+                <span className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-micro">
                   {clinics}
                 </span>
               </div>
@@ -453,7 +448,7 @@ export default function DecisionMaker({
                 onChange={setClinics}
                 ariaLabel={t.sliderClinics}
               />
-              <p className="text-[10px] text-slate-500 dark:text-white/45 leading-relaxed font-normal">
+              <p className="text-2xs text-slate-500 dark:text-white/45 leading-relaxed font-normal">
                 {t.sourceRationaleClinics}
               </p>
             </div>
@@ -462,7 +457,7 @@ export default function DecisionMaker({
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
                 <label className="text-slate-800 dark:text-white/80">{t.sliderGreening}</label>
-                <span className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-[11px]">
+                <span className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-micro">
                   +{greeningPct}%
                 </span>
               </div>
@@ -474,7 +469,7 @@ export default function DecisionMaker({
                 onChange={setGreeningPct}
                 ariaLabel={t.sliderGreening}
               />
-              <p className="text-[10px] text-slate-500 dark:text-white/45 leading-relaxed font-normal">
+              <p className="text-2xs text-slate-500 dark:text-white/45 leading-relaxed font-normal">
                 {t.sourceRationaleGreening}
               </p>
             </div>
@@ -483,7 +478,7 @@ export default function DecisionMaker({
           {/* Projected Dividends */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
             <SpotlightCard className="p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.08] text-center shadow-xs">
-              <span className="text-[11px] text-slate-500 dark:text-white/50 block font-medium">
+              <span className="text-micro text-slate-500 dark:text-white/50 block font-medium">
                 {t.admissionsPrevented}
               </span>
               <div className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white mt-1 tabular-nums">
@@ -493,25 +488,25 @@ export default function DecisionMaker({
                   <>~<NumberTicker value={Number((sim.preventedAdmissions / 1000).toFixed(1))} decimalPlaces={1} />k cases / mo</>
                 )}
               </div>
-              <span className="text-[10px] text-slate-500 dark:text-white/40 block mt-1">
+              <span className="text-2xs text-slate-500 dark:text-white/40 block mt-1">
                 {t.scenarioIllustrativeNote}
               </span>
-              <span className="text-[9px] text-slate-500 dark:text-white/45 block mt-1 pt-1.5 border-t border-slate-200/80 dark:border-white/[0.06]">
+              <span className="text-2xs text-slate-500 dark:text-white/45 block mt-1 pt-1.5 border-t border-slate-200/80 dark:border-white/[0.06]">
                 <span className="text-sky-600 dark:text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceAdmissionsPrevented}
               </span>
             </SpotlightCard>
 
             <SpotlightCard className="p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.08] text-center shadow-xs">
-              <span className="text-[11px] text-slate-500 dark:text-white/50 block font-medium">
+              <span className="text-micro text-slate-500 dark:text-white/50 block font-medium">
                 {t.retentionBoost}
               </span>
               <div className="text-xl sm:text-2xl font-semibold text-sky-600 dark:text-sky-400 mt-1 tabular-nums">
                 +<NumberTicker value={sim.retentionGainPct} decimalPlaces={1} suffix="%" />
               </div>
-              <span className="text-[10px] text-sky-600/80 dark:text-sky-400/60 block mt-1">
+              <span className="text-2xs text-sky-600/80 dark:text-sky-400/60 block mt-1">
                 {t.modeledResponseNote}
               </span>
-              <span className="text-[9px] text-sky-600/90 dark:text-sky-400/80 block mt-1 pt-1.5 border-t border-slate-200/80 dark:border-white/[0.06]">
+              <span className="text-2xs text-sky-600/90 dark:text-sky-400/80 block mt-1 pt-1.5 border-t border-slate-200/80 dark:border-white/[0.06]">
                 <span className="text-slate-500 dark:text-white/40">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceProjectedRetention}
               </span>
             </SpotlightCard>
@@ -543,7 +538,7 @@ export default function DecisionMaker({
                   {t.chartTurnoverTitle}
                 </h4>
               </div>
-              <span className="text-[10px] text-slate-500 dark:text-white/45 block mb-2 font-medium">
+              <span className="text-2xs text-slate-500 dark:text-white/45 block mb-2 font-medium">
                 <span className="text-rose-600 dark:text-rose-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceExecTurnover}
               </span>
             </div>
@@ -577,7 +572,7 @@ export default function DecisionMaker({
                   {t.chartMigrationTitle}
                 </h4>
               </div>
-              <span className="text-[10px] text-slate-500 dark:text-white/45 block mb-2 font-medium">
+              <span className="text-2xs text-slate-500 dark:text-white/45 block mb-2 font-medium">
                 <span className="text-sky-600 dark:text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceExecMigration}
               </span>
             </div>
@@ -602,7 +597,7 @@ export default function DecisionMaker({
                   {t.chartPriorityTitle}
                 </h4>
               </div>
-              <span className="text-[10px] text-slate-500 dark:text-white/45 block mb-2 font-medium">
+              <span className="text-2xs text-slate-500 dark:text-white/45 block mb-2 font-medium">
                 <span className="text-amber-600 dark:text-amber-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceExecPriority}
               </span>
             </div>
@@ -621,11 +616,11 @@ export default function DecisionMaker({
 
       {/* Peer-Reviewed Research Evidence View */}
       {activeSubTab === 'evidence' && (
-        <div className="space-y-6 animate-fade-in">
+        <div className="space-y-6 animate-fadeIn">
           {/* Top 3 Empirical Highlights */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <SpotlightCard className="p-5 border-l-4 border-l-emerald-500 space-y-2">
-              <Badge variant="success" className="text-[10px] font-bold py-0.5">
+              <Badge variant="success" className="text-2xs font-bold py-0.5">
                 {lang === 'ar' ? 'الصحة العالمية EMHJ (2021)' : 'WHO EMHJ (2021)'}
               </Badge>
               <div className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
@@ -637,7 +632,7 @@ export default function DecisionMaker({
             </SpotlightCard>
 
             <SpotlightCard className="p-5 border-l-4 border-l-sky-500 space-y-2">
-              <Badge variant="default" className="text-[10px] font-bold py-0.5">
+              <Badge variant="default" className="text-2xs font-bold py-0.5">
                 {lang === 'ar' ? 'أكسفورد Int Health (2015)' : 'Oxford Int Health (2015)'}
               </Badge>
               <div className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
@@ -649,7 +644,7 @@ export default function DecisionMaker({
             </SpotlightCard>
 
             <SpotlightCard className="p-5 border-l-4 border-l-amber-500 space-y-2">
-              <Badge variant="warning" className="text-[10px] font-bold py-0.5">
+              <Badge variant="warning" className="text-2xs font-bold py-0.5">
                 {lang === 'ar' ? 'مجلة MDPI للعلوم الاجتماعية (2025)' : 'MDPI Social Sciences (2025)'}
               </Badge>
               <div className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
@@ -679,7 +674,7 @@ export default function DecisionMaker({
                 <div key={study.id} className="apple-card p-5 space-y-3">
                   <div className="flex flex-wrap items-start justify-between gap-2 border-b border-slate-200/80 dark:border-white/[0.08] pb-3">
                     <div>
-                      <Badge variant="default" className="text-[10px] font-bold py-0.5">
+                      <Badge variant="default" className="text-2xs font-bold py-0.5">
                         {(lang === 'ar' ? study.journal_ar : study.journal_en) || study.journal} ({study.year})
                       </Badge>
                       <h4 className="text-xs font-semibold text-slate-900 dark:text-white/95 mt-1.5 leading-snug">
@@ -690,7 +685,7 @@ export default function DecisionMaker({
                       href={study.doi}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[11px] text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 flex items-center gap-1 font-medium transition-colors shrink-0"
+                      className="text-micro text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 flex items-center gap-1 font-medium transition-colors shrink-0"
                     >
                       <span>DOI</span>
                       <ExternalLink className="w-3 h-3" />
@@ -703,19 +698,19 @@ export default function DecisionMaker({
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-1">
                     <div className="bg-slate-50 dark:bg-white/[0.03] p-3 rounded-xl border border-slate-200/80 dark:border-white/[0.06]">
-                      <span className="text-[10px] text-slate-500 dark:text-white/40 block font-medium mb-1">
+                      <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium mb-1">
                         {t.researchStudyCohort}
                       </span>
-                      <span className="text-slate-800 dark:text-white/85 text-[11px] leading-relaxed block">
+                      <span className="text-slate-800 dark:text-white/85 text-micro leading-relaxed block">
                         {(lang === 'ar' ? study.cohort_ar : study.cohort_en) || study.cohort} ({t.sampleSizeLabel} {study.sample_size})
                       </span>
                     </div>
 
                     <div className="bg-slate-50 dark:bg-white/[0.03] p-3 rounded-xl border border-slate-200/80 dark:border-white/[0.06]">
-                      <span className="text-[10px] text-slate-500 dark:text-white/40 block font-medium mb-1">
+                      <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium mb-1">
                         {t.researchKeyMetrics}
                       </span>
-                      <div className="space-y-1 text-[11px] text-slate-800 dark:text-white/85">
+                      <div className="space-y-1 text-micro text-slate-800 dark:text-white/85">
                         {study.key_findings.migration_intent_pct && (
                           <div className="flex justify-between items-center">
                             <span className="text-slate-600 dark:text-white/60">{t.metricMigrationIntent}</span>
@@ -763,10 +758,10 @@ export default function DecisionMaker({
                   <span className="text-xs font-semibold text-slate-900 dark:text-white block">
                     {lang === 'ar' ? driver.ar : driver.en}
                   </span>
-                  <div className="text-[11px] text-rose-600 dark:text-rose-300/90 font-medium">
+                  <div className="text-micro text-rose-600 dark:text-rose-300/90 font-medium">
                     📌 {lang === 'ar' ? driver.evidence_stat_ar : driver.evidence_stat}
                   </div>
-                  <div className="text-[11px] text-emerald-700 dark:text-emerald-300 font-medium pt-1 border-t border-slate-200/80 dark:border-white/[0.06]">
+                  <div className="text-micro text-emerald-700 dark:text-emerald-300 font-medium pt-1 border-t border-slate-200/80 dark:border-white/[0.06]">
                     🎯 {lang === 'ar' ? driver.policy_lever_ar : driver.policy_lever}
                   </div>
                 </div>

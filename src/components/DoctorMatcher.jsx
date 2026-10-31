@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Stethoscope, HeartPulse, Wind, AlertCircle, Baby, Users, ShieldAlert, Sparkles, CheckCircle2 } from 'lucide-react';
+import { HeartPulse, Wind, AlertCircle, Baby, Users, ShieldAlert, Sparkles, CheckCircle2 } from 'lucide-react';
 import { matchSpecialty } from '../lib/trendEngine';
 import { SPECIALTY_FULL_LABELS } from '../lib/specialties';
 import { SpotlightCard, NumberTicker, Button, Badge } from './ui';
@@ -41,23 +41,21 @@ export default function DoctorMatcher({
     <section id="section-doctor" className="bento-card p-5 sm:p-8 mb-8 space-y-6">
       
       {/* Module Header */}
-      <div className="border-b border-slate-200/80 dark:border-white/[0.08] pb-4 flex flex-wrap items-center justify-between gap-2">
-        <div>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-sky-100 text-sky-600 border border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 flex items-center justify-center shadow-sm">
-              <Stethoscope className="w-4 h-4" />
-            </div>
-            <h2 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white tracking-tight">
+      <div className="border-b border-slate-200/80 dark:border-white/[0.08] pb-4 flex flex-wrap items-start justify-between gap-2">
+        <div className="flex items-start gap-3">
+          <span aria-hidden="true" className="font-mono text-2xs tracking-[0.18em] text-slate-400 dark:text-white/35 pt-1.5">02</span>
+          <div>
+            <h2 className="font-display text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">
               {t.module2Title}
             </h2>
+            <p className="text-micro text-slate-600 dark:text-white/50 font-normal mt-1">
+              {t.module2Subtitle}
+            </p>
           </div>
-          <p className="text-xs text-slate-600 dark:text-white/50 font-normal mt-1">
-            {t.module2Subtitle}
-          </p>
         </div>
-        <Badge variant="default" pulse={true} className="text-xs py-1">
+        <span className="font-mono text-2xs tracking-[0.08em] text-emerald-600/80 dark:text-emerald-400/60 pt-1.5" dir="ltr">
           {t.impactChip}
-        </Badge>
+        </span>
       </div>
 
       {/* Specialty Selector Buttons */}
@@ -97,9 +95,6 @@ export default function DoctorMatcher({
         <SpotlightCard
           className="lg:col-span-7 apple-card p-6 space-y-5 relative overflow-hidden border border-sky-400/30 dark:border-sky-400/40 shadow-[0_0_20px_-3px_rgba(14,165,233,0.15)]"
         >
-          {/* Top Neon Ambient Accent Bar */}
-          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-500 z-10" />
-
           <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] pb-3">
             <h3 className="font-semibold text-sm text-slate-900 dark:text-white flex items-center gap-2">
               <span>{lang === 'ar' ? currentSpecialtyObj?.ar : currentSpecialtyObj?.en}</span>
@@ -112,7 +107,7 @@ export default function DoctorMatcher({
 
           {/* Biomedical Mechanism */}
           <div className="space-y-1.5">
-            <h4 className="text-[11px] font-medium text-slate-500 dark:text-white/45 uppercase tracking-[0.05em]">
+            <h4 className="text-micro font-medium text-slate-500 dark:text-white/45 uppercase tracking-[0.05em]">
               {t.clinicalRationaleHeading}
             </h4>
             <p className="text-xs text-slate-700 dark:text-white/80 leading-relaxed font-normal">
@@ -122,10 +117,10 @@ export default function DoctorMatcher({
 
           {/* NASA Satellite Drivers */}
           <div className="space-y-1.5">
-            <h4 className="text-[11px] font-medium text-slate-500 dark:text-white/45 uppercase tracking-[0.05em]">
+            <h4 className="text-micro font-medium text-slate-500 dark:text-white/45 uppercase tracking-[0.05em]">
               {t.nasaDriversHeading}
             </h4>
-            <div className="flex flex-wrap gap-2 text-[10px] font-medium">
+            <div className="flex flex-wrap gap-2 text-2xs font-medium">
               <Badge variant="destructive" className="py-0.5">
                 {t.driverHeat}
               </Badge>
@@ -194,7 +189,7 @@ export default function DoctorMatcher({
                     <span className="text-xs font-semibold text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
                       {lang === 'ar' ? r.name_ar : r.name_en}
                     </span>
-                    <span className="text-[10px] text-slate-500 dark:text-white/45 block tabular-nums font-normal mt-0.5">
+                    <span className="text-2xs text-slate-500 dark:text-white/45 block tabular-nums font-normal mt-0.5">
                       {t.hniScoreLabel}: <NumberTicker value={r.hni} decimalPlaces={1} />
                     </span>
                   </div>
@@ -213,7 +208,7 @@ export default function DoctorMatcher({
       </div>
 
       {/* Provenance Attribution Bar */}
-      <div className="pt-3 border-t border-slate-200/80 dark:border-white/[0.06] flex items-center gap-1.5 text-[10px] text-slate-500 dark:text-white/45 font-medium">
+      <div className="pt-3 border-t border-slate-200/80 dark:border-white/[0.06] flex items-center gap-1.5 text-2xs text-slate-500 dark:text-white/45 font-medium">
         <span className="text-sky-600 dark:text-sky-400 font-semibold shrink-0">{t.sourcePrefix || 'المصدر:'}</span>
         <span>{t.doctorMatcherSource}</span>
       </div>

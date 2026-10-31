@@ -104,7 +104,7 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
               <h3 className="font-semibold text-base text-slate-900 dark:text-white">
                 {isAr ? 'نقطة إرسال البلاغات' : 'Report Submission Endpoint'}
               </h3>
-              <p className="text-[11px] text-slate-500 dark:text-white/50">
+              <p className="text-micro text-slate-500 dark:text-white/50">
                 {isAr
                   ? 'Neon (Postgres) خلف دالة Cloudflare Pages — مسار كتابة فقط'
                   : 'Neon (Postgres) behind a Cloudflare Pages Function — write path only'}
@@ -144,7 +144,7 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
                     ? (isAr ? 'جارٍ التحقق…' : 'Checking the endpoint…')
                     : (isAr ? 'وضع المحليات المحلي' : 'Local mode (this device)')}
               </span>
-              <span className="text-[10px] block opacity-75 font-mono" dir="ltr">
+              <span className="text-2xs block opacity-75 font-mono" dir="ltr">
                 {isAr ? '/api/status' : `${state} · reads: none exist`}
               </span>
             </div>
@@ -154,7 +154,7 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
             type="button"
             onClick={handleRecheck}
             disabled={checking}
-            className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-200/80 hover:bg-slate-200 text-slate-800 dark:bg-white/10 dark:hover:bg-white/15 dark:text-white/80 transition-colors inline-flex items-center gap-1.5 disabled:opacity-50"
+            className="text-micro px-2.5 py-1 rounded-lg bg-slate-200/80 hover:bg-slate-200 text-slate-800 dark:bg-white/10 dark:hover:bg-white/15 dark:text-white/80 transition-colors inline-flex items-center gap-1.5 disabled:opacity-50"
           >
             <RefreshCw className={`w-3 h-3 ${checking ? 'animate-spin' : ''}`} />
             {isAr ? 'إعادة الفحص' : 'Re-check'}
@@ -203,7 +203,7 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
         {/* Schema, for whoever holds the database console */}
         <div className="pt-2 border-t border-slate-200/80 dark:border-white/[0.08] space-y-2">
           <div className="flex items-center justify-between gap-3">
-            <span className="text-[11px] font-medium text-slate-600 dark:text-white/60">
+            <span className="text-micro font-medium text-slate-600 dark:text-white/60">
               {isAr
                 ? 'نفس ملف db/migrations/0001_neon_physician_reports.sql — يُنفَّذ في محرر Neon SQL:'
                 : 'Verbatim from db/migrations/0001_neon_physician_reports.sql — run in the Neon SQL Editor:'}
@@ -211,7 +211,7 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
             <button
               type="button"
               onClick={handleCopySql}
-              className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 dark:bg-white/[0.06] dark:hover:bg-white/10 dark:text-white/80 dark:border-white/10 transition-colors shrink-0"
+              className="inline-flex items-center gap-1.5 text-micro font-medium px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 dark:bg-white/[0.06] dark:hover:bg-white/10 dark:text-white/80 dark:border-white/10 transition-colors shrink-0"
             >
               {copiedSql ? (
                 <>
@@ -227,7 +227,7 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
             </button>
           </div>
 
-          <p className="text-[11px] text-slate-500 dark:text-white/45 leading-relaxed">
+          <p className="text-micro text-slate-500 dark:text-white/45 leading-relaxed">
             {isAr
               ? 'يقرأ هذا الملف أي جدول موجود مسبقاً ويرفض التعديل عليه بدل الصمت. بعد التطبيق تُنشأ كلمة مرور للـ role web_writer من محرر SQL أو لوحة Neon، ثم توضع في Cloudflare كـ Secret باسم NEON_URL مع IP_SALT — ولا تضع أيّاً منهما في متغيّرات VITE_* لأن أي قيمة VITE تُدمج في الحزمة العامة.'
               : 'The file reads whatever table already exists and refuses to adapt to it rather than proceeding silently. After it is applied, set the web_writer password in the SQL Editor or the Neon dashboard, then attach it to Cloudflare as the NEON_URL secret alongside IP_SALT — and never as a VITE_* variable, because every VITE value is inlined into the public bundle.'}
@@ -235,7 +235,7 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
 
           <pre
             dir="ltr"
-            className="p-3 bg-slate-900 text-emerald-400 dark:bg-black/50 dark:text-emerald-300/80 rounded-xl font-mono text-[10px] border border-slate-800 dark:border-white/5 overflow-x-auto max-h-32 select-all"
+            className="p-3 bg-slate-900 text-emerald-400 dark:bg-black/50 dark:text-emerald-300/80 rounded-xl font-mono text-2xs border border-slate-800 dark:border-white/5 overflow-x-auto max-h-32 select-all"
           >
             {SQL_TABLE_SCHEMA}
           </pre>

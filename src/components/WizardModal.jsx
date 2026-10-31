@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Compass, X, ArrowRight, ArrowLeft, Check, Sparkles, MapPin, Activity, Stethoscope } from 'lucide-react';
 import { ShimmerButton } from './ui';
+import { scrollBehavior } from '../lib/motionTokens';
 
 export default function WizardModal({ isOpen, onClose, lang, t, onApplyPreset }) {
   const [step, setStep] = useState(1);
@@ -61,7 +62,7 @@ export default function WizardModal({ isOpen, onClose, lang, t, onApplyPreset })
     setTimeout(() => {
       const el = document.getElementById('section-detective');
       if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        el.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
       }
     }, 100);
   };
@@ -144,7 +145,7 @@ export default function WizardModal({ isOpen, onClose, lang, t, onApplyPreset })
                 <span className="font-semibold text-xs text-slate-900 group-hover:text-sky-600 dark:text-white dark:group-hover:text-sky-400 flex items-center gap-1.5">
                   🩺 {t.rolePhysician}
                 </span>
-                <span className="text-[11px] text-slate-500 dark:text-white/50 block font-normal leading-normal">
+                <span className="text-micro text-slate-500 dark:text-white/50 block font-normal leading-normal">
                   {t.rolePhysicianSub}
                 </span>
               </button>
@@ -164,13 +165,13 @@ export default function WizardModal({ isOpen, onClose, lang, t, onApplyPreset })
                 <span className="font-semibold text-xs text-slate-900 group-hover:text-sky-600 dark:text-white dark:group-hover:text-sky-400 flex items-center gap-1.5">
                   📊 {t.roleDecision}
                 </span>
-                <span className="text-[11px] text-slate-500 dark:text-white/50 block font-normal leading-normal">
+                <span className="text-micro text-slate-500 dark:text-white/50 block font-normal leading-normal">
                   {t.roleDecisionSub}
                 </span>
               </button>
             </div>
             {t.step1Tip && (
-              <div className="text-[11px] text-slate-600 dark:text-white/45 bg-slate-50 dark:bg-white/[0.03] p-2.5 rounded-xl border border-slate-200/80 dark:border-white/[0.06] leading-relaxed">
+              <div className="text-micro text-slate-600 dark:text-white/45 bg-slate-50 dark:bg-white/[0.03] p-2.5 rounded-xl border border-slate-200/80 dark:border-white/[0.06] leading-relaxed">
                 {t.step1Tip}
               </div>
             )}
@@ -205,7 +206,7 @@ export default function WizardModal({ isOpen, onClose, lang, t, onApplyPreset })
                       }`}>
                         {preset.label}
                       </span>
-                      <span className="text-[11px] text-slate-500 dark:text-white/50 block font-normal leading-normal">
+                      <span className="text-micro text-slate-500 dark:text-white/50 block font-normal leading-normal">
                         {preset.sub}
                       </span>
                     </div>
@@ -226,7 +227,7 @@ export default function WizardModal({ isOpen, onClose, lang, t, onApplyPreset })
               })}
             </div>
             {t.step2Tip && (
-              <div className="text-[11px] text-slate-600 dark:text-white/45 bg-slate-50 dark:bg-white/[0.03] p-2.5 rounded-xl border border-slate-200/80 dark:border-white/[0.06] leading-relaxed">
+              <div className="text-micro text-slate-600 dark:text-white/45 bg-slate-50 dark:bg-white/[0.03] p-2.5 rounded-xl border border-slate-200/80 dark:border-white/[0.06] leading-relaxed">
                 {t.step2Tip}
               </div>
             )}
@@ -250,7 +251,7 @@ export default function WizardModal({ isOpen, onClose, lang, t, onApplyPreset })
                   <Sparkles className="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" />
                   {activePreset.label}
                 </span>
-                <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-sky-100 dark:bg-sky-400/10 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-400/20">
+                <span className="text-2xs uppercase font-mono px-2 py-0.5 rounded-full bg-sky-100 dark:bg-sky-400/10 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-400/20">
                   {isAr ? 'حالة التحقيق المختارة' : 'Selected Case'}
                 </span>
               </div>
@@ -259,7 +260,7 @@ export default function WizardModal({ isOpen, onClose, lang, t, onApplyPreset })
                 <div className="flex items-start gap-2 text-slate-700 dark:text-white/70">
                   <MapPin className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-slate-500 dark:text-white/40 text-[11px] block">{isAr ? 'المحافظة المستهدفة:' : 'Target Governorate:'}</span>
+                    <span className="text-slate-500 dark:text-white/40 text-micro block">{isAr ? 'المحافظة المستهدفة:' : 'Target Governorate:'}</span>
                     <span className="text-slate-900 dark:text-white font-medium">{activePreset.gov}</span>
                   </div>
                 </div>
@@ -267,7 +268,7 @@ export default function WizardModal({ isOpen, onClose, lang, t, onApplyPreset })
                 <div className="flex items-start gap-2 text-slate-700 dark:text-white/70">
                   <Activity className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-slate-500 dark:text-white/40 text-[11px] block">{isAr ? 'رصد أقمار ناسا المتسارع:' : 'NASA Satellite Telemetry:'}</span>
+                    <span className="text-slate-500 dark:text-white/40 text-micro block">{isAr ? 'رصد أقمار ناسا المتسارع:' : 'NASA Satellite Telemetry:'}</span>
                     <span className="text-slate-900 dark:text-white font-medium">{activePreset.metric}</span>
                   </div>
                 </div>
@@ -275,19 +276,19 @@ export default function WizardModal({ isOpen, onClose, lang, t, onApplyPreset })
                 <div className="flex items-start gap-2 text-slate-700 dark:text-white/70">
                   <Stethoscope className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-slate-500 dark:text-white/40 text-[11px] block">{isAr ? 'التخصص الطبي الأكثر حاجة واستبقاءً:' : 'Priority Retention Specialty:'}</span>
+                    <span className="text-slate-500 dark:text-white/40 text-micro block">{isAr ? 'التخصص الطبي الأكثر حاجة واستبقاءً:' : 'Priority Retention Specialty:'}</span>
                     <span className="text-emerald-700 dark:text-emerald-300 font-semibold">{activePreset.specialty}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="text-[11px] text-slate-700 dark:text-white/70 bg-white dark:bg-black/30 p-2.5 rounded-xl border border-slate-200/80 dark:border-white/[0.06] leading-relaxed">
+              <div className="text-micro text-slate-700 dark:text-white/70 bg-white dark:bg-black/30 p-2.5 rounded-xl border border-slate-200/80 dark:border-white/[0.06] leading-relaxed">
                 {activePreset.impact}
               </div>
             </div>
 
             {t.step3Tip && (
-              <div className="text-[11px] text-amber-800 dark:text-amber-300/90 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 p-2.5 rounded-xl flex items-start gap-2 leading-relaxed">
+              <div className="text-micro text-amber-800 dark:text-amber-300/90 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 p-2.5 rounded-xl flex items-start gap-2 leading-relaxed">
                 {t.step3Tip}
               </div>
             )}

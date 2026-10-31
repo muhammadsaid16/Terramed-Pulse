@@ -165,20 +165,20 @@ export function DonutChart({
           style={{ width: holeDiameter, height: holeDiameter }}
         >
           {activeSlice ? (
-            <div className="animate-in fade-in zoom-in-95 duration-150 flex flex-col items-center justify-center max-w-full">
+            <div className="enter-pop motion-reduce:animate-none flex flex-col items-center justify-center max-w-full">
               <span className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">
                 {activeSlice.value}{totalSuffix}
               </span>
-              <span className="text-[10px] text-slate-600 dark:text-white/75 font-medium leading-tight max-w-[84px] mt-1 line-clamp-2 break-words">
+              <span className="text-2xs text-slate-600 dark:text-white/75 font-medium leading-tight max-w-[84px] mt-1 line-clamp-2 break-words">
                 {cleanSliceLabel(activeSlice.label)}
               </span>
             </div>
           ) : (
-            <div className="animate-in fade-in duration-150 flex flex-col items-center justify-center max-w-full">
+            <div className="animate-fadeIn motion-reduce:animate-none flex flex-col items-center justify-center max-w-full">
               <span className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">
                 {total}{totalSuffix}
               </span>
-              <span className="text-[10px] text-slate-500 dark:text-white/50 font-medium uppercase tracking-wider mt-1">
+              <span className="text-2xs text-slate-500 dark:text-white/50 font-medium uppercase tracking-wider mt-1">
                 {totalLabel}
               </span>
             </div>

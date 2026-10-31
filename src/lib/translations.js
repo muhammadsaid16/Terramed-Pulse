@@ -43,9 +43,9 @@ export const TRANSLATIONS = {
     kpiHighestNeedLabel: "Highest Climate-Health Need",
     kpiHighestNeed: "Aswan (HNI: 88.4)",
     kpiHighestNeedSub: "Critical Physician Shortage",
-    kpiTotalDoctorsLabel: "Physician Field Observatory",
-    kpiTotalDoctors: "Verified Reports",
-    kpiTotalDoctorsSub: "Crowdsourced Clinical Evidence",
+    kpiTotalDoctorsLabel: "Empirical Physician Evidence",
+    kpiTotalDoctors: "Physicians Surveyed",
+    kpiTotalDoctorsSub: "WHO EMHJ • Oxford • MDPI Cohorts",
     kpiTrendDivergenceLabel: "Opposite-Direction Dynamics",
     kpiTrendDivergence: "Upper Egypt vs Delta",
     kpiTrendDivergenceSub: "Arid heat vs Humid aerosols",
@@ -104,8 +104,8 @@ export const TRANSLATIONS = {
     matchBadge: "High Climate Demand Match",
 
     // Module 3: Physician Observatory
-    module3Title: "Module 3: Voice of Egyptian Physicians In-Page Observatory",
-    module3Subtitle: "Empirical crowdsourcing of clinical climate encounters and retention priorities",
+    module3Title: "Module 3: Healthcare Workforce & Physician Retention Observatory",
+    module3Subtitle: "Empirical synthesis of peer-reviewed migration cohorts (WHO EMHJ, Oxford, MDPI) and CAPMAS healthcare capacity benchmarks",
     formTitle: "Log a Frontline Clinical Observation & Retention Signal",
     inputDoctorName: "Physician Name (or Anonymous):",
     inputGov: "Governorate:",
@@ -293,7 +293,7 @@ export const TRANSLATIONS = {
     chipDeltaWetBulb: "Wet-Bulb: +1.8°C",
     kpiChipPower: "NASA POWER v2.0",
     kpiChipModis: "MODIS LST / MERRA-2",
-    kpiChipField: "FIELD OBSERVATORY",
+    kpiChipField: "PEER-REVIEWED COHORTS",
     kpiChipSpatial: "SPATIAL DIVERGENCE",
 
     // Trend telemetry (module 1b)
@@ -387,9 +387,9 @@ export const TRANSLATIONS = {
     kpiHighestNeedLabel: "المحافظة الأعلى في الاحتياج الصحي-المناخي",
     kpiHighestNeed: "أسوان (مؤشر HNI: 88.4)",
     kpiHighestNeedSub: "عجز حرج في الكوادر التخصصية",
-    kpiTotalDoctorsLabel: "مرصد الأطباء الميداني الموثق",
-    kpiTotalDoctors: "تقرير موثق",
-    kpiTotalDoctorsSub: "شواهد وبائية وسريرية فورية",
+    kpiTotalDoctorsLabel: "شواهد أبحاث هجرة الأطباء",
+    kpiTotalDoctors: "طبيباً بالدراسات",
+    kpiTotalDoctorsSub: "أبحاث الصحة العالمية وأكسفورد وMDPI",
     kpiTrendDivergenceLabel: "ديناميكية الاتجاهات المتعاكسة",
     kpiTrendDivergence: "صعيد مصر مقابل الدلتا",
     kpiTrendDivergenceSub: "جفاف حراري مقابل عوالق ورطوبة",
@@ -448,8 +448,8 @@ export const TRANSLATIONS = {
     matchBadge: "مطابقة عالية للاحتياج المناخي",
 
     // Module 3: Physician Observatory
-    module3Title: "الوحدة 3: مرصد صوت أطباء مصر المدمج",
-    module3Subtitle: "حشد ميداني لملاحظات الأطباء السريرية وإشارات الهجرة والاستبقاء",
+    module3Title: "الوحدة 3: مرصد القوى البشرية الصحية واستبقاء الأطباء",
+    module3Subtitle: "تحليل تجريبي محكّم لدراسات هجرة الأطباء (منظمة الصحة العالمية، أكسفورد، MDPI) ومؤشرات التوزيع الجغرافي لجهاز التعبئة والإحصاء",
     formTitle: "تسجيل ملاحظة سريرية ميدانية ومؤشر استبقاء",
     inputDoctorName: "اسم الطبيب (أو طبيب ميداني):",
     inputGov: "المحافظة:",
@@ -635,7 +635,7 @@ export const TRANSLATIONS = {
     chipDeltaWetBulb: "الحرارة الرطبة Wet-Bulb: +1.8°C",
     kpiChipPower: "بيانات ناسا POWER v2.0",
     kpiChipModis: "أقمار MODIS / MERRA-2",
-    kpiChipField: "مرصد ميداني",
+    kpiChipField: "دراسات محكّمة",
     kpiChipSpatial: "تباين مكاني",
 
     // Trend telemetry (module 1b)

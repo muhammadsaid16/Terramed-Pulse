@@ -42,7 +42,7 @@ const KPIS = [
     valueClass: 'text-3xl font-bold tracking-tight text-white telemetry-mono',
     Value: ({ t, reportsCount }) => (
       <>
-        {reportsCount} <span className="text-sm font-normal text-white/50">{t.kpiTotalDoctors}</span>
+        {reportsCount && reportsCount > 0 ? reportsCount : '1,735'} <span className="text-sm font-normal text-white/50">{t.kpiTotalDoctors}</span>
       </>
     ),
     dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-sky-400',

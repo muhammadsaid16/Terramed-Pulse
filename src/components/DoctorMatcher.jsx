@@ -149,8 +149,8 @@ export default function DoctorMatcher({
               <HeartPulse className="w-4 h-4 text-black" />
               <span>
                 {lang === 'ar'
-                  ? `الخطوة التالية: سجّل صوتك واحتياجك الميداني في ${topGov?.name_ar} ⬅`
-                  : `Next Step: Voice Your Needs in ${topGov?.name_en} ➔`}
+                  ? `الخطوة التالية: معاينة بيانات وأدلة الاستبقاء في ${topGov?.name_ar} ⬅`
+                  : `Next Step: Explore Retention Evidence for ${topGov?.name_en} ➔`}
               </span>
             </button>
           </div>

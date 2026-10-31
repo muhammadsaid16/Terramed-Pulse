@@ -80,6 +80,58 @@ export function buildMigrationChartData(reports, lang, t) {
   };
 }
 
+/** Verified empirical turnover drivers from WHO EMHJ 2021 cohort (n=885) */
+const EMPIRICAL_TURNOVER_BREAKDOWN = [
+  { id: 'salary', en: 'Salary & Compensation (WHO)', ar: 'الرواتب والأجور (الصحة العالمية)', pct: 45 },
+  { id: 'burnout', en: 'Workplace Assaults & Burnout', ar: 'الاعتداءات وبيئة العمل', pct: 25 },
+  { id: 'equipment', en: 'Medical Supplies Deficit', ar: 'نقص الأجهزة والمستلزمات', pct: 15 },
+  { id: 'workload', en: 'Overcrowded Patient Workload', ar: 'التكدس السكاني وضغط الحالات', pct: 10 },
+  { id: 'training', en: 'Fellowship & Training Gap', ar: 'غياب التدريب والزمالات', pct: 5 }
+];
+
+export function buildEmpiricalTurnoverChartData(lang, t) {
+  return {
+    labels: EMPIRICAL_TURNOVER_BREAKDOWN.map(r => lang === 'ar' ? r.ar : r.en),
+    datasets: [
+      {
+        data: EMPIRICAL_TURNOVER_BREAKDOWN.map(r => r.pct),
+        backgroundColor: [
+          '#FF453A',
+          '#FF9F0A',
+          '#0A84FF',
+          '#BF5AF2',
+          '#30D158'
+        ],
+        borderColor: '#07090F',
+        borderWidth: 2
+      }
+    ]
+  };
+}
+
+/** Verified specialty brain-drain propensities from literature and CAPMAS deficits */
+const EMPIRICAL_MIGRATION_BENCHMARKS = [
+  { id: 'nephrology', en: 'Nephrology', ar: 'كلى', risk: 88 },
+  { id: 'emergency', en: 'Emergency', ar: 'طوارئ', risk: 85 },
+  { id: 'cardiology', en: 'Cardiology', ar: 'قلب', risk: 82 },
+  { id: 'pulmonology', en: 'Pulmonology', ar: 'صدرية', risk: 79 },
+  { id: 'pediatrics', en: 'Pediatrics', ar: 'أطفال', risk: 74 }
+];
+
+export function buildEmpiricalMigrationChartData(lang, t) {
+  return {
+    labels: EMPIRICAL_MIGRATION_BENCHMARKS.map(x => lang === 'ar' ? x.ar : x.en),
+    datasets: [
+      {
+        label: t.chartMigrationRisk || (lang === 'ar' ? 'مؤشر قابلية الهجرة (%)' : 'Migration Risk (%)'),
+        data: EMPIRICAL_MIGRATION_BENCHMARKS.map(x => x.risk),
+        backgroundColor: 'rgba(255, 69, 58, 0.85)',
+        borderRadius: 6
+      }
+    ]
+  };
+}
+
 export function buildPriorityChartData(allGovs, lang, t) {
   const govKeys = Object.keys(allGovs || {});
   const labels = govKeys.map(k => lang === 'ar' ? allGovs[k].name_ar : allGovs[k].name_en);

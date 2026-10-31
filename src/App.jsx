@@ -6,7 +6,7 @@ import MapModule from './components/MapModule';
 import TrendChartModule from './components/TrendChartModule';
 import OppositeTrends from './components/OppositeTrends';
 import DoctorMatcher from './components/DoctorMatcher';
-import PhysicianForm from './components/PhysicianForm';
+import PhysicianObservatory from './components/PhysicianObservatory';
 import DecisionMaker from './components/DecisionMaker';
 import WizardModal from './components/WizardModal';
 import MathModal from './components/MathModal';
@@ -421,19 +421,14 @@ export default function App() {
         />
 
         {/* ===================================================================
-            MODULE 3: VOICE OF EGYPTIAN PHYSICIANS OBSERVATORY
+            MODULE 3: HEALTHCARE WORKFORCE & PHYSICIAN RETENTION OBSERVATORY
             =================================================================== */}
-        <PhysicianForm
-          reports={reports}
-          communityReports={communityReports}
-          onAddReport={handleAddReport}
-          governorates={appData.governorates}
+        <PhysicianObservatory
           selectedGov={selectedGov}
-          preselectedSpecialty={formSpecialty}
+          onSelectGov={setSelectedGov}
+          governorates={appData.governorates}
           lang={lang}
           t={t}
-          syncStatus={syncStatus}
-          onOpenDbModal={() => setIsDbModalOpen(true)}
         />
 
         {/* ===================================================================

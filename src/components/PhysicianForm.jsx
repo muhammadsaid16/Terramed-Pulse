@@ -443,7 +443,7 @@ export default function PhysicianForm({
               const docName = rep.doctor || t.anonymousDoctorName || (lang === 'ar' ? 'طبيب مجهول' : 'Anonymous Physician');
               const hospitalName = rep.hospital;
               const isMigrating = (rep.considering_migration || '').toLowerCase() === 'yes';
-              const repDate = rep.date || '—';
+              const repDate = rep.date || '-';
 
               const displaySpecialty = specialtyLabel(rep.specialty, lang);
 

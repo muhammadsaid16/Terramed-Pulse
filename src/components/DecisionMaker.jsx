@@ -148,7 +148,7 @@ export default function DecisionMaker({
               {t.module4Title}
             </h2>
             <p className="text-micro text-slate-600 dark:text-white/50 font-normal mt-1">
-              {t.module4Subtitle} — {govName}
+              {t.module4Subtitle} ({govName})
             </p>
           </div>
         </div>

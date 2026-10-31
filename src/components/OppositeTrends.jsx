@@ -12,7 +12,7 @@ const HOTSPOTS = [
     sourceKey: 'oppositeSourceUpper',
     Icon: ArrowUpRight,
     labelClass: 'font-semibold text-xs text-rose-600 dark:text-rose-300 flex items-center gap-1.5',
-    dotClass: 'w-2 h-2 rounded-full bg-rose-500 dark:bg-rose-400 animate-pulse',
+    dotClass: 'w-2 h-2 rounded-full bg-rose-500 dark:bg-rose-400',
     iconBoxClass: 'w-7 h-7 rounded-lg bg-rose-100 text-rose-600 border border-rose-200 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20 flex items-center justify-center',
     glowClass: 'absolute top-0 right-0 w-32 h-32 bg-rose-500/5 rounded-full blur-2xl pointer-events-none',
     chips: [
@@ -28,7 +28,7 @@ const HOTSPOTS = [
     sourceKey: 'oppositeSourceDelta',
     Icon: ArrowDownRight,
     labelClass: 'font-semibold text-xs text-sky-700 dark:text-sky-300 flex items-center gap-1.5',
-    dotClass: 'w-2 h-2 rounded-full bg-sky-500 dark:bg-sky-400 animate-pulse',
+    dotClass: 'w-2 h-2 rounded-full bg-sky-500 dark:bg-sky-400',
     iconBoxClass: 'w-7 h-7 rounded-lg bg-sky-100 text-sky-600 border border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 flex items-center justify-center',
     glowClass: 'absolute top-0 right-0 w-32 h-32 bg-sky-500/5 rounded-full blur-2xl pointer-events-none',
     chips: [

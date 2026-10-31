@@ -18,7 +18,7 @@ const KPIS = [
         <span className="text-xs font-normal text-slate-500 dark:text-white/50">{t.kpiWarmingRate?.split('°C')[1] || '/ decade'}</span>
       </>
     ),
-    dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-rose-500 dark:bg-rose-400 animate-pulse',
+    dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-rose-500 dark:bg-rose-400',
     subClass: 'text-xs text-rose-600 dark:text-rose-400/80 mt-1.5 font-medium flex items-center gap-1',
     subKey: 'kpiWarmingSub',
     sourceKey: 'kpiSource1',

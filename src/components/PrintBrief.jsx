@@ -104,8 +104,8 @@ export default function PrintBrief({
       : `${totalReportsCount} تقريراً موثقاً`;
 
   // Risk Classification
-  const riskTierEn = baseHni >= 72 ? 'TIER 1 — CRITICAL CLIMATE-HEALTH CRISIS' : baseHni >= 60 ? 'TIER 2 — HIGH VULNERABILITY ALERT' : 'TIER 3 — ACTIVE SURVEILLANCE';
-  const riskTierAr = baseHni >= 72 ? 'المستوى الأول — بؤرة أزمة حرجة قصوى (طوارئ مناخية)' : baseHni >= 60 ? 'المستوى الثاني — إجهاد صحي ومناخي مرتفع' : 'المستوى الثالث — مراقبة وبائية نشطة';
+  const riskTierEn = baseHni >= 72 ? 'TIER 1: CRITICAL CLIMATE-HEALTH CRISIS' : baseHni >= 60 ? 'TIER 2: HIGH VULNERABILITY ALERT' : 'TIER 3: ACTIVE SURVEILLANCE';
+  const riskTierAr = baseHni >= 72 ? 'المستوى الأول: بؤرة أزمة حرجة قصوى (طوارئ مناخية)' : baseHni >= 60 ? 'المستوى الثاني: إجهاد صحي ومناخي مرتفع' : 'المستوى الثالث: مراقبة وبائية نشطة';
 
   // Today's formatted date
   const todayStr = new Date().toLocaleDateString(isAr ? 'ar-EG' : 'en-GB', {
@@ -173,7 +173,7 @@ export default function PrintBrief({
         <h1 className="text-[12pt] font-extrabold tracking-tight text-slate-950 uppercase leading-snug">
           {isAr
             ? `مذكرة إحاطة وزارية عاجلة: تقدير موقف واستبقاء الكفاءات الطبية بمحافظة ${govName}`
-            : `MINISTERIAL INTELLIGENCE MEMORANDUM: HEALTHCARE RETENTION DIRECTIVE — ${govName.toUpperCase()}`}
+            : `MINISTERIAL INTELLIGENCE MEMORANDUM: HEALTHCARE RETENTION DIRECTIVE: ${govName.toUpperCase()}`}
         </h1>
         <div className="text-[8pt] text-slate-700 font-semibold mt-0.5">
           {isAr

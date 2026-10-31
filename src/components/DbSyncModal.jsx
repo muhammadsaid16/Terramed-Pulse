@@ -52,7 +52,7 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
   const verdict = lastCheck
     ? (lastCheck.state === 'read_blocked'
         ? (isAr ? 'نقطة الإرسال تقبل البلاغات ولا تقرأ شيئاً.' : 'The endpoint accepts submissions and reads nothing.')
-        : `${isAr ? 'نقطة الإرسال: ' : 'Endpoint: '}${lastCheck.state}${lastCheck.detail ? ` — ${lastCheck.detail}` : ''}`)
+        : `${isAr ? 'نقطة الإرسال: ' : 'Endpoint: '}${lastCheck.state}${lastCheck.detail ? `: ${lastCheck.detail}` : ''}`)
     : null;
 
   // Named per outcome rather than echoing the internal token: a physician reading this
@@ -71,8 +71,8 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
             ? 'الإرسال مُفعّل: كل بلاغ يُكتب في Neon عبر دالة Pages بصلاحيات role إضافة فقط.'
             : 'Writes enabled: each report is inserted into Neon through a Pages Function that holds an INSERT-only role.')
         : (isAr
-            ? 'الإرسال غير متاح حالياً — البلاغات تُحفظ على هذا الجهاز فقط.'
-            : 'Writes unavailable right now — reports stay on this device only.')
+            ? 'الإرسال غير متاح حالياً؛ البلاغات تُحفظ على هذا الجهاز فقط.'
+            : 'Writes unavailable right now; reports stay on this device only.')
     },
     {
       icon: EyeOff,
@@ -83,8 +83,8 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
     {
       icon: Database,
       text: isAr
-        ? 'لا يحتفظ المتصفح بأي مفتاح قاعدة بيانات — فالمفتاح يعني وصولاً لصاحب قاعدة البيانات كله.'
-        : 'The browser holds no database credential — one would be owner-level access to the whole database.'
+        ? 'لا يحتفظ المتصفح بأي مفتاح قاعدة بيانات. فالمفتاح يعني وصولاً لصاحب قاعدة البيانات كله.'
+        : 'The browser holds no database credential. One would be owner-level access to the whole database.'
     }
   ];
 
@@ -106,8 +106,8 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
               </h3>
               <p className="text-micro text-slate-500 dark:text-white/50">
                 {isAr
-                  ? 'Neon (Postgres) خلف دالة Cloudflare Pages — مسار كتابة فقط'
-                  : 'Neon (Postgres) behind a Cloudflare Pages Function — write path only'}
+                  ? 'Neon (Postgres) خلف دالة Cloudflare Pages: مسار كتابة فقط'
+                  : 'Neon (Postgres) behind a Cloudflare Pages Function: write path only'}
               </p>
             </div>
           </div>
@@ -164,9 +164,9 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
         {refused && (
           <div className="p-3 rounded-xl text-xs bg-amber-50 border border-amber-200 text-amber-900 dark:bg-amber-500/10 dark:border-amber-500/25 dark:text-amber-200 leading-relaxed">
             {isAr
-              ? `لم يصل بلاغك الأخير إلى السحابة: ${refusedThis} — وهو محفوظ على هذا الجهاز وحده. هذا يصف إرسالك أنت، لا نقطة الإرسال${
+              ? `لم يصل بلاغك الأخير إلى السحابة: ${refusedThis}، وهو محفوظ على هذا الجهاز وحده. هذا يصف إرسالك أنت، لا نقطة الإرسال${
                   writesEnabled ? '، وما زالت الكتابة متاحة.' : '، ونقطة الإرسال غير متاحة حالياً أيضاً.'}`
-              : `Your last report did not reach the cloud: ${refusedThis} — it is saved on this device alone. That describes your submission, not the endpoint${
+              : `Your last report did not reach the cloud: ${refusedThis}, it is saved on this device alone. That describes your submission, not the endpoint${
                   writesEnabled ? ', which is still accepting writes.' : ', and the endpoint is unavailable right now as well.'}`}
           </div>
         )}
@@ -182,11 +182,11 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
           <p>
             {isAr ? (
               <>
-                يعمل <b>TerraPulse</b> دون خادم خاص به بالنسبة للبيانات والخرائط والمخططات: المؤشرات تُحسب من بذور مدمجة وتُعرض بلا شبكة. مسار البلاغات هو الاستثناء الوحيد — <span className="text-slate-900 dark:text-white font-medium">متصفح ثابت ← دالة Pages ← Neon</span>، والدالة هي الكيان الوحيد المسموح له بالكتابة.
+                يعمل <b>TerraPulse</b> دون خادم خاص به بالنسبة للبيانات والخرائط والمخططات: المؤشرات تُحسب من بذور مدمجة وتُعرض بلا شبكة. مسار البلاغات هو الاستثناء الوحيد: <span className="text-slate-900 dark:text-white font-medium">متصفح ثابت ← دالة Pages ← Neon</span>، والدالة هي الكيان الوحيد المسموح له بالكتابة.
               </>
             ) : (
               <>
-                <b>TerraPulse</b> needs no server for its data, map and charts: indicators compute from the embedded satellite dataset and render with no network. The report feed is the one exception — <span className="text-slate-900 dark:text-white font-medium">static browser → Pages Function → Neon</span> — and the function is the only thing allowed to write.
+                <b>TerraPulse</b> needs no server for its data, map and charts: indicators compute from the embedded satellite dataset and render with no network. The report feed is the one exception: <span className="text-slate-900 dark:text-white font-medium">static browser → Pages Function → Neon</span>, and the function is the only thing allowed to write.
               </>
             )}
           </p>
@@ -205,8 +205,8 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
           <div className="flex items-center justify-between gap-3">
             <span className="text-micro font-medium text-slate-600 dark:text-white/60">
               {isAr
-                ? 'نفس ملف db/migrations/0001_neon_physician_reports.sql — يُنفَّذ في محرر Neon SQL:'
-                : 'Verbatim from db/migrations/0001_neon_physician_reports.sql — run in the Neon SQL Editor:'}
+                ? 'نفس ملف db/migrations/0001_neon_physician_reports.sql: يُنفَّذ في محرر Neon SQL:'
+                : 'Verbatim from db/migrations/0001_neon_physician_reports.sql, run in the Neon SQL Editor:'}
             </span>
             <button
               type="button"
@@ -229,8 +229,8 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
 
           <p className="text-micro text-slate-500 dark:text-white/45 leading-relaxed">
             {isAr
-              ? 'يقرأ هذا الملف أي جدول موجود مسبقاً ويرفض التعديل عليه بدل الصمت. بعد التطبيق تُنشأ كلمة مرور للـ role web_writer من محرر SQL أو لوحة Neon، ثم توضع في Cloudflare كـ Secret باسم NEON_URL مع IP_SALT — ولا تضع أيّاً منهما في متغيّرات VITE_* لأن أي قيمة VITE تُدمج في الحزمة العامة.'
-              : 'The file reads whatever table already exists and refuses to adapt to it rather than proceeding silently. After it is applied, set the web_writer password in the SQL Editor or the Neon dashboard, then attach it to Cloudflare as the NEON_URL secret alongside IP_SALT — and never as a VITE_* variable, because every VITE value is inlined into the public bundle.'}
+              ? 'يقرأ هذا الملف أي جدول موجود مسبقاً ويرفض التعديل عليه بدل الصمت. بعد التطبيق تُنشأ كلمة مرور للـ role web_writer من محرر SQL أو لوحة Neon، ثم توضع في Cloudflare كـ Secret باسم NEON_URL مع IP_SALT، ولا تضع أيّاً منهما في متغيّرات VITE_* لأن أي قيمة VITE تُدمج في الحزمة العامة.'
+              : 'The file reads whatever table already exists and refuses to adapt to it rather than proceeding silently. After it is applied, set the web_writer password in the SQL Editor or the Neon dashboard, then attach it to Cloudflare as the NEON_URL secret alongside IP_SALT, and never as a VITE_* variable, because every VITE value is inlined into the public bundle.'}
           </p>
 
           <pre

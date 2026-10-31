@@ -57,8 +57,8 @@ export default function PhysicianObservatory({
             </h2>
             <p className="text-micro text-slate-600 dark:text-white/60 font-normal max-w-3xl leading-relaxed mt-1">
               {t?.module3Subtitle || (isAr
-                ? 'تحليل تجريبي محكّم لدراسات هجرة الأطباء (منظمة الصحة العالمية، جامعة أكسفورد، MDPI) ومؤشرات التوزيع الجغرافي للجهاز المركزي للتعبئة العامة والإحصاء — مبني بنسبة 100% على بيانات رصدية موثقة ودراسات سريرية منشورة.'
-                : 'Empirical synthesis of peer-reviewed physician migration cohorts (WHO EMHJ, Oxford University Press, MDPI) and CAPMAS healthcare capacity benchmarks — 100% founded on published empirical cohorts and official census records.')}
+                ? 'تحليل تجريبي محكّم لدراسات هجرة الأطباء (منظمة الصحة العالمية، جامعة أكسفورد، MDPI) ومؤشرات التوزيع الجغرافي للجهاز المركزي للتعبئة العامة والإحصاء: مبني بنسبة 100% على بيانات رصدية موثقة ودراسات سريرية منشورة.'
+                : 'Empirical synthesis of peer-reviewed physician migration cohorts (WHO EMHJ, Oxford University Press, MDPI) and CAPMAS healthcare capacity benchmarks, 100% founded on published empirical cohorts and official census records.')}
             </p>
           </div>
         </div>
@@ -390,7 +390,7 @@ export default function PhysicianObservatory({
                   <span className={`font-bold telemetry-mono ${
                     (currentGov?.demographics?.physicians_per_10k || 0) < 10 ? 'text-rose-600 dark:text-rose-400' : 'text-sky-700 dark:text-sky-300'
                   }`}>
-                    {currentGov?.demographics?.physicians_per_10k || '—'} / 10k
+                    {currentGov?.demographics?.physicians_per_10k || '-'} / 10k
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-2xs text-slate-500 dark:text-white/40">
@@ -416,7 +416,7 @@ export default function PhysicianObservatory({
                   {isAr ? 'أسرة المستشفيات (لكل 10 آلاف مواطن):' : 'Hospital beds per 10k:'}
                 </span>
                 <span className="font-semibold text-slate-900 dark:text-white telemetry-mono">
-                  {currentGov?.demographics?.hospital_beds_per_10k || '—'} / 10k
+                  {currentGov?.demographics?.hospital_beds_per_10k || '-'} / 10k
                 </span>
               </div>
 
@@ -426,7 +426,7 @@ export default function PhysicianObservatory({
                   {isAr ? 'مؤشر عجز المنشآت الصحية (FSI):' : 'Facility Shortage Index (FSI):'}
                 </span>
                 <span className="font-semibold text-amber-600 dark:text-amber-400 telemetry-mono">
-                  {currentGov?.baseline_indices?.fsi || '—'} / 100
+                  {currentGov?.baseline_indices?.fsi || '-'} / 100
                 </span>
               </div>
 
@@ -436,7 +436,7 @@ export default function PhysicianObservatory({
                   {isAr ? 'مؤشر الإجهاد البيئي والحراري (EPI):' : 'Environmental Pressure Index (EPI):'}
                 </span>
                 <span className="font-semibold text-rose-600 dark:text-rose-400 telemetry-mono">
-                  {currentGov?.baseline_indices?.epi || '—'} / 100
+                  {currentGov?.baseline_indices?.epi || '-'} / 100
                 </span>
               </div>
 

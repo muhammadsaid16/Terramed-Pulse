@@ -230,7 +230,7 @@ export default function TrendChartModule({
           <div className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-sky-600 dark:text-sky-400 shrink-0" />
             <span className="text-xs font-semibold text-slate-900 dark:text-white/95">
-              {govName} — {t[`var_${selectedVar}`] || selectedVar} (1995-2025)
+              {govName}: {t[`var_${selectedVar}`] || selectedVar} (1995-2025)
             </span>
           </div>
           <span className="satellite-chip text-2xs text-slate-500 dark:text-white/50">

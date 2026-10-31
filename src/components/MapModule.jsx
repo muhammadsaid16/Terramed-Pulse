@@ -314,8 +314,8 @@ export default function MapModule({
   const timelinePhase = useMemo(() => {
     if (year <= 2000) {
       return {
-        title_en: '1995-2000: Baseline Climatology — Moderate Thermal Load',
-        title_ar: '1995-2000: خط الأساس المناخي — حمل حراري معتدل ومساحات زراعية مستقرة',
+        title_en: '1995-2000: Baseline Climatology, Moderate Thermal Load',
+        title_ar: '1995-2000: خط الأساس المناخي: حمل حراري معتدل ومساحات زراعية مستقرة',
         anomaly: '+0.0°C',
         color: 'text-emerald-400',
         bgColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
@@ -398,7 +398,7 @@ export default function MapModule({
         {/* Basemap credit */}
         {creditedTilesVisible && (
           <div className="absolute bottom-[78px] right-2 z-[400] px-1.5 py-0.5 rounded-md bg-white/70 text-slate-700 border border-slate-200/60 dark:border-transparent dark:bg-black/45 text-2xs leading-none dark:text-white/45 pointer-events-none">
-            © Esri — Source: Esri, Maxar, Earthstar Geographics
+            © Esri, Source: Esri, Maxar, Earthstar Geographics
           </div>
         )}
 

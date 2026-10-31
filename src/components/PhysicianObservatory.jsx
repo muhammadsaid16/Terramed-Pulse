@@ -75,67 +75,105 @@ export default function PhysicianObservatory({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
         
         {/* Stat 1: Total Cohort */}
-        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-sky-500/30 transition-all space-y-1">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-medium text-white/50 uppercase tracking-wider">
-              {isAr ? 'إجمالي عينة الأطباء المستطلعة' : 'Surveyed Physician Cohort'}
-            </span>
-            <Users className="w-4 h-4 text-sky-400" />
+        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-sky-500/30 transition-all flex flex-col justify-between space-y-1">
+          <div>
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-medium text-white/50 uppercase tracking-wider">
+                {isAr ? 'إجمالي عينة الأطباء المستطلعة' : 'Surveyed Physician Cohort'}
+              </span>
+              <Users className="w-4 h-4 text-sky-400" />
+            </div>
+            <div className="text-2xl font-bold text-white telemetry-mono mt-1">
+              1,735 <span className="text-xs font-normal text-white/50">{isAr ? 'طبيباً مصرياً' : 'MDs in Egypt'}</span>
+            </div>
+            <div className="text-[11px] text-sky-400/90 font-medium flex items-center gap-1 mt-1">
+              <span>WHO ($n=885$) + Oxford ($400$) + MDPI ($450$)</span>
+            </div>
           </div>
-          <div className="text-2xl font-bold text-white telemetry-mono">
-            1,735 <span className="text-xs font-normal text-white/50">{isAr ? 'طبيباً مصرياً' : 'MDs in Egypt'}</span>
-          </div>
-          <div className="text-[11px] text-sky-400/90 font-medium flex items-center gap-1">
-            <span>WHO ($n=885$) + Oxford ($400$) + MDPI ($450$)</span>
+          <div className="mt-2 pt-2 border-t border-white/[0.06] text-[10px] text-white/40 font-medium">
+            <span className="text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> WHO 885 + Oxford 400 + MDPI 450
           </div>
         </div>
 
         {/* Stat 2: Stay Willingness */}
-        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-emerald-500/30 transition-all space-y-1">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-medium text-white/50 uppercase tracking-wider">
-              {isAr ? 'الاستعداد للبقاء حال تحسين المنظومة' : 'Willingness to Stay (If Improved)'}
-            </span>
-            <HeartPulse className="w-4 h-4 text-emerald-400" />
+        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-emerald-500/30 transition-all flex flex-col justify-between space-y-1">
+          <div>
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-medium text-white/50 uppercase tracking-wider">
+                {isAr ? 'الاستعداد للبقاء حال تحسين المنظومة' : 'Willingness to Stay (If Improved)'}
+              </span>
+              <HeartPulse className="w-4 h-4 text-emerald-400" />
+            </div>
+            <div className="text-2xl font-bold text-emerald-400 telemetry-mono mt-1">
+              97.4%
+            </div>
+            <div className="text-[11px] text-white/60 font-normal mt-1">
+              {isAr ? 'من الأطباء المقيمين مستعدون للبقاء (الصحة العالمية)' : 'Of resident physicians ready to stay (WHO EMHJ)'}
+            </div>
           </div>
-          <div className="text-2xl font-bold text-emerald-400 telemetry-mono">
-            97.4%
-          </div>
-          <div className="text-[11px] text-white/60 font-normal">
-            {isAr ? 'من الأطباء المقيمين مستعدون للبقاء (الصحة العالمية)' : 'Of resident physicians ready to stay (WHO EMHJ)'}
-          </div>
+          <a
+            href="https://doi.org/10.26719/emhj.21.070"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 pt-2 border-t border-white/[0.06] text-[10px] text-emerald-400/90 font-medium flex items-center justify-between hover:underline"
+          >
+            <span><span className="text-white/40">{t.sourcePrefix || 'المصدر:'}</span> WHO EMHJ 2021 (n=885)</span>
+            <ExternalLink className="w-3 h-3 shrink-0" />
+          </a>
         </div>
 
         {/* Stat 3: Return Intent */}
-        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-amber-500/30 transition-all space-y-1">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-medium text-white/50 uppercase tracking-wider">
-              {isAr ? 'نية العودة لخدمة مصر بعد التدريب' : 'Intent to Return After Training'}
-            </span>
-            <TrendingUp className="w-4 h-4 text-amber-400" />
+        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-amber-500/30 transition-all flex flex-col justify-between space-y-1">
+          <div>
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-medium text-white/50 uppercase tracking-wider">
+                {isAr ? 'نية العودة لخدمة مصر بعد التدريب' : 'Intent to Return After Training'}
+              </span>
+              <TrendingUp className="w-4 h-4 text-amber-400" />
+            </div>
+            <div className="text-2xl font-bold text-amber-400 telemetry-mono mt-1">
+              81.8%
+            </div>
+            <div className="text-[11px] text-white/60 font-normal mt-1">
+              {isAr ? 'رغبة وطنية للعودة بعلم متقدم (جامعة أكسفورد)' : 'Patriotic desire to return with expertise (Oxford)'}
+            </div>
           </div>
-          <div className="text-2xl font-bold text-amber-400 telemetry-mono">
-            81.8%
-          </div>
-          <div className="text-[11px] text-white/60 font-normal">
-            {isAr ? 'رغبة وطنية للعودة بعلم متقدم (جامعة أكسفورد)' : 'Patriotic desire to return with expertise (Oxford)'}
-          </div>
+          <a
+            href="https://doi.org/10.1093/inthealth/ihv042"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 pt-2 border-t border-white/[0.06] text-[10px] text-amber-400/90 font-medium flex items-center justify-between hover:underline"
+          >
+            <span><span className="text-white/40">{t.sourcePrefix || 'المصدر:'}</span> Oxford Int Health 2015 (n=400)</span>
+            <ExternalLink className="w-3 h-3 shrink-0" />
+          </a>
         </div>
 
         {/* Stat 4: Dissatisfaction Multiplier */}
-        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-rose-500/30 transition-all space-y-1">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-medium text-white/50 uppercase tracking-wider">
-              {isAr ? 'تأثير بيئة العمل على الهجرة' : 'Work Dissatisfaction Impact'}
-            </span>
-            <ShieldAlert className="w-4 h-4 text-rose-400" />
+        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] hover:border-rose-500/30 transition-all flex flex-col justify-between space-y-1">
+          <div>
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-medium text-white/50 uppercase tracking-wider">
+                {isAr ? 'تأثير بيئة العمل على الهجرة' : 'Work Dissatisfaction Impact'}
+              </span>
+              <ShieldAlert className="w-4 h-4 text-rose-400" />
+            </div>
+            <div className="text-2xl font-bold text-rose-400 telemetry-mono mt-1">
+              20.0× <span className="text-xs font-normal text-white/50">{isAr ? 'أرجحية (OR)' : 'Odds Ratio'}</span>
+            </div>
+            <div className="text-[11px] text-white/60 font-normal mt-1">
+              {isAr ? 'تضاعف رغبة الهجرة لسوء بيئة العمل (MDPI 2025)' : 'Multiplied emigration intent from hospital distress'}
+            </div>
           </div>
-          <div className="text-2xl font-bold text-rose-400 telemetry-mono">
-            20.0× <span className="text-xs font-normal text-white/50">{isAr ? 'أرجحية (OR)' : 'Odds Ratio'}</span>
-          </div>
-          <div className="text-[11px] text-white/60 font-normal">
-            {isAr ? 'تضاعف رغبة الهجرة لسوء بيئة العمل (MDPI 2025)' : 'Multiplied emigration intent from hospital distress'}
-          </div>
+          <a
+            href="https://doi.org/10.3390/soc15050112"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 pt-2 border-t border-white/[0.06] text-[10px] text-rose-400/90 font-medium flex items-center justify-between hover:underline"
+          >
+            <span><span className="text-white/40">{t.sourcePrefix || 'المصدر:'}</span> MDPI Societies 2025 (n=450)</span>
+            <ExternalLink className="w-3 h-3 shrink-0" />
+          </a>
         </div>
 
       </div>
@@ -184,6 +222,9 @@ export default function PhysicianObservatory({
                 <div className="w-full h-2 rounded-full bg-white/[0.06] overflow-hidden">
                   <div className="h-full bg-rose-500 rounded-full" style={{ width: '1%' }} />
                 </div>
+                <span className="text-[9px] text-white/40 block mt-0.5 font-medium">
+                  {isAr ? 'المصدر: دراسة منظمة الصحة العالمية EMHJ 2021 (عينة 885 طبيباً)' : 'Source: WHO EMHJ 2021 (n=885 Egyptian MDs)'}
+                </span>
               </div>
 
               {/* Item 2: Physical Assaults in Hospitals */}
@@ -199,6 +240,9 @@ export default function PhysicianObservatory({
                 <div className="w-full h-2 rounded-full bg-white/[0.06] overflow-hidden">
                   <div className="h-full bg-rose-500 rounded-full" style={{ width: '35.4%' }} />
                 </div>
+                <span className="text-[9px] text-white/40 block mt-0.5 font-medium">
+                  {isAr ? 'المصدر: دراسة منظمة الصحة العالمية EMHJ 2021 (عينة 885 طبيباً)' : 'Source: WHO EMHJ 2021 (n=885 Egyptian MDs)'}
+                </span>
               </div>
 
               {/* Item 3: Verbal Abuse */}
@@ -214,6 +258,9 @@ export default function PhysicianObservatory({
                 <div className="w-full h-2 rounded-full bg-white/[0.06] overflow-hidden">
                   <div className="h-full bg-amber-500 rounded-full" style={{ width: '55.5%' }} />
                 </div>
+                <span className="text-[9px] text-white/40 block mt-0.5 font-medium">
+                  {isAr ? 'المصدر: دراسة منظمة الصحة العالمية EMHJ 2021 (عينة 885 طبيباً)' : 'Source: WHO EMHJ 2021 (n=885 Egyptian MDs)'}
+                </span>
               </div>
 
               {/* Item 4: Medical Supplies Adequacy */}
@@ -229,6 +276,9 @@ export default function PhysicianObservatory({
                 <div className="w-full h-2 rounded-full bg-white/[0.06] overflow-hidden">
                   <div className="h-full bg-sky-500 rounded-full" style={{ width: '19.3%' }} />
                 </div>
+                <span className="text-[9px] text-white/40 block mt-0.5 font-medium">
+                  {isAr ? 'المصدر: منظمة الصحة العالمية EMHJ 2021 وسجلات التعبئة والإحصاء 2024' : 'Source: WHO EMHJ 2021 & CAPMAS Health Census 2024'}
+                </span>
               </div>
 
               {/* Item 5: Moonlighting in Private Sector */}
@@ -244,6 +294,9 @@ export default function PhysicianObservatory({
                 <div className="w-full h-2 rounded-full bg-white/[0.06] overflow-hidden">
                   <div className="h-full bg-purple-500 rounded-full" style={{ width: '52.8%' }} />
                 </div>
+                <span className="text-[9px] text-white/40 block mt-0.5 font-medium">
+                  {isAr ? 'المصدر: دراسة منظمة الصحة العالمية EMHJ 2021 (عينة 885 طبيباً)' : 'Source: WHO EMHJ 2021 (n=885 Egyptian MDs)'}
+                </span>
               </div>
 
               {/* Item 6: Research Opportunities Seeking */}
@@ -259,6 +312,9 @@ export default function PhysicianObservatory({
                 <div className="w-full h-2 rounded-full bg-white/[0.06] overflow-hidden">
                   <div className="h-full bg-emerald-500 rounded-full" style={{ width: '87.2%' }} />
                 </div>
+                <span className="text-[9px] text-white/40 block mt-0.5 font-medium">
+                  {isAr ? 'المصدر: دراسة منظمة الصحة العالمية EMHJ 2021 (عينة 885 طبيباً)' : 'Source: WHO EMHJ 2021 (n=885 Egyptian MDs)'}
+                </span>
               </div>
 
             </div>
@@ -310,8 +366,8 @@ export default function PhysicianObservatory({
                   {isAr ? 'التوزيع الإقليمي للكوادر (بيانات التعبئة والإحصاء)' : 'Regional Healthcare Capacity (CAPMAS Censuses)'}
                 </h3>
               </div>
-              <span className="text-[10px] text-white/40 telemetry-mono">
-                CAPMAS 2024
+              <span className="text-[10px] text-sky-300 telemetry-mono font-medium">
+                {isAr ? 'تعداد CAPMAS 2024' : 'CAPMAS 2024'}
               </span>
             </div>
 

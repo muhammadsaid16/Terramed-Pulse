@@ -353,6 +353,9 @@ export default function DecisionMaker({
                 onChange={(e) => setSalaryHikePct(Number(e.target.value))}
                 className="slider-teal"
               />
+              <p className="text-[10px] text-white/45 leading-relaxed font-normal">
+                {t.sourceRationaleSalary}
+              </p>
             </div>
 
             {/* Slider 2: Hazard & Infection Pay */}
@@ -372,6 +375,9 @@ export default function DecisionMaker({
                 onChange={(e) => setHazardPayPct(Number(e.target.value))}
                 className="slider-teal"
               />
+              <p className="text-[10px] text-white/45 leading-relaxed font-normal">
+                {t.sourceRationaleHazard}
+              </p>
             </div>
 
             {/* Slider 3: Remote Housing & Hardship Allowance */}
@@ -391,6 +397,9 @@ export default function DecisionMaker({
                 onChange={(e) => setStipendPct(Number(e.target.value))}
                 className="slider-teal"
               />
+              <p className="text-[10px] text-white/45 leading-relaxed font-normal">
+                {t.sourceRationaleStipend}
+              </p>
             </div>
           </div>
 
@@ -420,6 +429,9 @@ export default function DecisionMaker({
                 onChange={(e) => setSecurityPct(Number(e.target.value))}
                 className="slider-teal"
               />
+              <p className="text-[10px] text-white/45 leading-relaxed font-normal">
+                {t.sourceRationaleSecurity}
+              </p>
             </div>
 
             {/* Slider 5: Critical Care & Dialysis Re-equipment */}
@@ -439,6 +451,9 @@ export default function DecisionMaker({
                 onChange={(e) => setEquipmentPct(Number(e.target.value))}
                 className="slider-teal"
               />
+              <p className="text-[10px] text-white/45 leading-relaxed font-normal">
+                {t.sourceRationaleEquipment}
+              </p>
             </div>
 
             {/* Slider 6: Mobile Response Clinics */}
@@ -457,6 +472,9 @@ export default function DecisionMaker({
                 onChange={(e) => setClinics(Number(e.target.value))}
                 className="slider-teal"
               />
+              <p className="text-[10px] text-white/45 leading-relaxed font-normal">
+                {t.sourceRationaleClinics}
+              </p>
             </div>
 
             {/* Slider 7: Urban Greening & Cool Surfaces (NASA Heat Exposure Reduction) */}
@@ -475,6 +493,9 @@ export default function DecisionMaker({
                 onChange={(e) => setGreeningPct(Number(e.target.value))}
                 className="slider-teal"
               />
+              <p className="text-[10px] text-white/45 leading-relaxed font-normal">
+                {t.sourceRationaleGreening}
+              </p>
             </div>
           </div>
 
@@ -492,6 +513,9 @@ export default function DecisionMaker({
               <span className="text-[10px] text-white/40 block mt-1">
                 {t.scenarioIllustrativeNote}
               </span>
+              <span className="text-[9px] text-white/45 block mt-1 pt-1.5 border-t border-white/[0.06]">
+                <span className="text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceAdmissionsPrevented}
+              </span>
             </div>
 
             <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] text-center">
@@ -503,6 +527,9 @@ export default function DecisionMaker({
               </div>
               <span className="text-[10px] text-sky-400/60 block mt-1">
                 {t.modeledResponseNote}
+              </span>
+              <span className="text-[9px] text-sky-400/80 block mt-1 pt-1.5 border-t border-white/[0.06]">
+                <span className="text-white/40">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceProjectedRetention}
               </span>
             </div>
           </div>
@@ -526,11 +553,16 @@ export default function DecisionMaker({
           
           {/* Executive Chart 1: Turnover Drivers Doughnut */}
           <div className="apple-card p-5 flex flex-col justify-between">
-            <div className="flex items-center gap-2 mb-3">
-              <PieChart className="w-4 h-4 text-rose-400" />
-              <h4 className="text-xs font-semibold text-white/90">
-                {t.chartTurnoverTitle}
-              </h4>
+            <div>
+              <div className="flex items-center gap-2 mb-1.5">
+                <PieChart className="w-4 h-4 text-rose-400" />
+                <h4 className="text-xs font-semibold text-white/90">
+                  {t.chartTurnoverTitle}
+                </h4>
+              </div>
+              <span className="text-[10px] text-white/45 block mb-2 font-medium">
+                <span className="text-rose-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceExecTurnover}
+              </span>
             </div>
             <div className="h-[180px] w-full flex items-center justify-center">
               {turnoverChartData ? (
@@ -546,11 +578,16 @@ export default function DecisionMaker({
 
           {/* Executive Chart 2: Migration Risk vs Demand */}
           <div className="apple-card p-5 flex flex-col justify-between">
-            <div className="flex items-center gap-2 mb-3">
-              <BarChart3 className="w-4 h-4 text-sky-400" />
-              <h4 className="text-xs font-semibold text-white/90">
-                {t.chartMigrationTitle}
-              </h4>
+            <div>
+              <div className="flex items-center gap-2 mb-1.5">
+                <BarChart3 className="w-4 h-4 text-sky-400" />
+                <h4 className="text-xs font-semibold text-white/90">
+                  {t.chartMigrationTitle}
+                </h4>
+              </div>
+              <span className="text-[10px] text-white/45 block mb-2 font-medium">
+                <span className="text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceExecMigration}
+              </span>
             </div>
             <div className="h-[180px] w-full">
               {migrationChartData ? (
@@ -566,11 +603,16 @@ export default function DecisionMaker({
 
           {/* Executive Chart 3: Governorate Priority Matrix */}
           <div className="apple-card p-5 flex flex-col justify-between">
-            <div className="flex items-center gap-2 mb-3">
-              <ShieldCheck className="w-4 h-4 text-amber-400" />
-              <h4 className="text-xs font-semibold text-white/90">
-                {t.chartPriorityTitle}
-              </h4>
+            <div>
+              <div className="flex items-center gap-2 mb-1.5">
+                <ShieldCheck className="w-4 h-4 text-amber-400" />
+                <h4 className="text-xs font-semibold text-white/90">
+                  {t.chartPriorityTitle}
+                </h4>
+              </div>
+              <span className="text-[10px] text-white/45 block mb-2 font-medium">
+                <span className="text-amber-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceExecPriority}
+              </span>
             </div>
             <div className="h-[180px] w-full">
               <Bar

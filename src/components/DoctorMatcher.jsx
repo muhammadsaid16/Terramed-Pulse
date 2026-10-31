@@ -199,6 +199,12 @@ export default function DoctorMatcher({
 
       </div>
 
+      {/* Provenance Attribution Bar */}
+      <div className="pt-3 border-t border-white/[0.06] flex items-center gap-1.5 text-[10px] text-white/45 font-medium">
+        <span className="text-sky-400 font-semibold shrink-0">{t.sourcePrefix || 'المصدر:'}</span>
+        <span>{t.doctorMatcherSource}</span>
+      </div>
+
     </section>
   );
 }

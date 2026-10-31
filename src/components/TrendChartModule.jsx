@@ -236,7 +236,13 @@ export default function TrendChartModule({
           </span>
         </div>
 
-        <div className="h-[230px] sm:h-[250px] w-full">
+        {/* Dedicated Sensor Micro-Badge */}
+        <div className="mb-2 text-[10px] text-white/40 flex items-center gap-1.5 font-medium">
+          <span className="text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span>
+          <span>{t[`sensorSource_${selectedVar}`] || 'NASA Earth Observation Telemetry'}</span>
+        </div>
+
+        <div className="h-[220px] sm:h-[240px] w-full">
           <Line data={chartData} options={chartOptions} />
         </div>
       </div>

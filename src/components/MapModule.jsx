@@ -368,6 +368,16 @@ export default function MapModule({
         </div>
       </div>
 
+      {/* Active Layer Empirical Sensor Attribution Pill */}
+      <div className="flex items-center justify-between text-[11px] bg-white/[0.02] border border-white/[0.06] rounded-xl px-3 py-1.5 font-medium">
+        <span className="text-white/40">{t.sourcePrefix || 'المصدر:'}</span>
+        <span className="text-sky-300/90 text-right rtl:text-left truncate">
+          {mapMetric === 'var'
+            ? (t[`sensorSource_${selectedVar}`] || 'NASA Earth Observation')
+            : (t[`sensorSource_${mapMetric}`] || 'NASA POWER / CAPMAS 2024')}
+        </span>
+      </div>
+
       {/* Map Viewport Container */}
       <div className="relative flex-1 min-h-[420px] rounded-3xl overflow-hidden border border-white/[0.08] shadow-2xl">
         <div ref={mapContainerRef} className="w-full h-full min-h-[420px]" />

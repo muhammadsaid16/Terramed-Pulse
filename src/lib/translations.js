@@ -333,9 +333,8 @@ export const TRANSLATIONS = {
     chartMigrationRisk: "Migration Risk (%)",
     chartClimateDemand: "Climate Demand (%)",
     chartOverallHni: "Overall Health Need (HNI)",
-    chartClimateEpi: "Climate Stress (EPI)"
+    chartClimateEpi: "Climate Stress (EPI)",
 
-,
     footerTagline: "TerraPulse: Stay & Build Egypt — NASA Space Apps Challenge 2026",
     hniScoreLabel: "HNI Score",
     impactChip: "CLINICAL IMPACT TELEMETRY",
@@ -347,10 +346,55 @@ export const TRANSLATIONS = {
     sliderFsi: "Facility Shortage (FSI - 20%)",
     sliderPpi: "Population Pressure (PPI - 30%)",
     sliderWni: "Physician Shortage (WNI - 15%)",
-    unitPts: "pts"
+    unitPts: "pts",
 
+    // Provenance & Source Micro-Badges
+    sourcePrefix: "Source:",
+    kpiSource1: "NASA POWER v2.0 (MERRA-2 Assimilation 1995–2025)",
+    kpiSource2: "NASA Climate Telemetry (EPI) + CAPMAS Healthcare Census 2024",
+    kpiSource3: "WHO EMHJ (n=885) + Oxford (n=400) + MDPI (n=450) Cohorts",
+    kpiSource4: "NASA Spatial Telemetry Divergence Analysis (Upper Egypt vs Coast)",
 
+    // Sensor Provenance per Variable & Layer
+    sensorSource_T2M_MAX: "Sensor: NASA POWER v2.0 (MERRA-2 Assimilation, 0.5° Grid)",
+    sensorSource_T2M: "Sensor: NASA POWER v2.0 (Surface Air Temperature 1995–2025)",
+    sensorSource_RH2M: "Sensor: NASA POWER v2.0 (2-Meter Surface Relative Humidity)",
+    sensorSource_ALLSKY_SFC_SW_DWN: "Sensor: NASA POWER v2.0 (Surface Downward Solar Irradiance)",
+    sensorSource_EXTREME_HEAT_DAYS: "Sensor: NASA POWER Daily Telemetry (Count of Days > 40°C)",
+    sensorSource_AOD_550: "Sensor: NASA MODIS Terra/Aqua (MOD04_L2 Aerosol Optical Depth)",
+    sensorSource_NDVI: "Sensor: NASA MODIS Terra (MOD13A2 Vegetation Index 250m, 2000–2025)",
+    sensorSource_LST_DAY: "Sensor: NASA MODIS Terra (MOD11A2 Land Surface Temperature 1km)",
+    sensorSource_SOIL_MOISTURE: "Sensor: NASA GLDAS v2.1 (Noah Land Surface Hydrology)",
+    sensorSource_hni: "Composite: NASA POWER Heat (EPI) + CAPMAS Healthcare Census 2024",
+    sensorSource_epi: "Source: NASA POWER v2.0 Extreme Heat & MODIS Aerosols",
+    sensorSource_ppi: "Source: CAPMAS 2024 Demographic Density & Vulnerable Age Ratios",
+    sensorSource_fsi: "Source: CAPMAS Annual Health Services Census 2024 (Hospital Beds & Units)",
+    sensorSource_wni: "Source: WHO EMHJ 2021 & CAPMAS Frontline Physician Workforce Ratios",
 
+    // Opposite Trends Sources
+    oppositeSourceUpper: "NASA POWER Satellites + CAPMAS Health Census 2024",
+    oppositeSourceDelta: "MODIS Terra/Aqua Sensors + MERRA-2 Humidity Telemetry",
+
+    // Doctor Matcher & Observatory Sources
+    doctorMatcherSource: "CAPMAS Annual Health Services Census 2024 + WHO Clinical Priority Matrix & NASA POWER Telemetry",
+    whoSourceTag: "WHO EMHJ (2021), n=885",
+    oxfordSourceTag: "Oxford Int Health (2015), n=400",
+    mdpiSourceTag: "MDPI Societies (2025), n=450",
+    capmasCapacitySource: "Central Agency for Public Mobilization & Statistics (CAPMAS) Health Census Bulletin 2024",
+
+    // Policy Simulator Rationale & Charts Provenance
+    sourceRationaleSalary: "Target Evidence: Solves the critical 1.0% physician salary satisfaction baseline (WHO EMHJ 2021).",
+    sourceRationaleHazard: "Target Evidence: Compensates clinical infection risk and counters 52.8% forced moonlighting (WHO EMHJ 2021).",
+    sourceRationaleStipend: "Target Evidence: Eliminates Upper Egypt physician deficit (5.4 MDs/10k in Aswan vs 16.5 in Cairo — CAPMAS 2024).",
+    sourceRationaleSecurity: "Target Evidence: Directly mitigates 35.4% physical assault and 55.5% verbal abuse rates in public hospitals (WHO EMHJ 2021).",
+    sourceRationaleEquipment: "Target Evidence: Overcomes the 80.7% equipment and emergency supplies shortage in public facilities (WHO EMHJ 2021 & CAPMAS).",
+    sourceRationaleClinics: "Target Evidence: Ministry of Health & Population primary care outreach standards to bridge facility deficit (FSI).",
+    sourceRationaleGreening: "Target Evidence: Mitigates urban heat island microclimates documented in NASA MODIS LST thermal telemetry.",
+    sourceExecTurnover: "WHO Eastern Mediterranean Health Journal 2021 (n=885 Egyptian MDs)",
+    sourceExecMigration: "Oxford University Press 2015 (n=400) & MDPI Societies 2025 (n=450)",
+    sourceExecPriority: "CAPMAS 2024 Healthcare Capacity Bulletin + NASA Climate Exposure Index",
+    sourceProjectedRetention: "Health Economics Elasticity Model derived from WHO EMHJ & Oxford Cohorts",
+    sourceAdmissionsPrevented: "Coupled NASA Heatwave Days with Regional Acute Renal Decompensation Benchmarks"
   },
 
   ar: {
@@ -681,9 +725,8 @@ export const TRANSLATIONS = {
     chartMigrationRisk: "مؤشر خطورة الهجرة (%)",
     chartClimateDemand: "الحاجة المناخية السريرية (%)",
     chartOverallHni: "مؤشر الحاجة الصحية الكلي (HNI)",
-    chartClimateEpi: "الإجهاد البيئي والمناخي (EPI)"
+    chartClimateEpi: "الإجهاد البيئي والمناخي (EPI)",
 
-,
     footerTagline: "TerraPulse: ابقَ وابنِ مصر — تحدي ناسا لتطبيقات الفضاء 2026",
     hniScoreLabel: "مؤشر HNI",
     impactChip: "تليمتري الأثر السريري",
@@ -695,9 +738,54 @@ export const TRANSLATIONS = {
     sliderFsi: "عجز المنشآت (FSI - 20%)",
     sliderPpi: "الضغط السكاني (PPI - 30%)",
     sliderWni: "هجرة ونقص الكوادر (WNI - 15%)",
-    unitPts: "نقطة"
+    unitPts: "نقطة",
 
+    // Provenance & Source Micro-Badges
+    sourcePrefix: "المصدر:",
+    kpiSource1: "مرصد ناسا POWER v2.0 (استيعاب MERRA-2 الساتلي 1995–2025)",
+    kpiSource2: "مؤشر مركب: أرصاد ناسا للمناخ (EPI) + تعداد الصحة بالتعبئة والإحصاء 2024",
+    kpiSource3: "دراسات ميدانية محكّمة (منظمة الصحة n=885، أكسفورد n=400، MDPI n=450)",
+    kpiSource4: "تحليل التباين المكاني لأرصاد ناسا الساتلية (صعيد مصر مقابل الساحل)",
 
+    // Sensor Provenance per Variable & Layer
+    sensorSource_T2M_MAX: "المستشعر: مرصد ناسا POWER v2.0 (استيعاب MERRA-2 بدقة 0.5 درجة)",
+    sensorSource_T2M: "المستشعر: مرصد ناسا POWER v2.0 (حرارة الهواء السطحية 1995–2025)",
+    sensorSource_RH2M: "المستشعر: مرصد ناسا POWER v2.0 (الرطوبة النسبية السطحية على ارتفاع مترين)",
+    sensorSource_ALLSKY_SFC_SW_DWN: "المستشعر: مرصد ناسا POWER v2.0 (الإشعاع الشمسي الهابط على السطح)",
+    sensorSource_EXTREME_HEAT_DAYS: "المستشعر: قياسات ناسا POWER اليومية (عدد الأيام متجاوزة 40 درجة مئوية)",
+    sensorSource_AOD_550: "المستشعر: قمر ناسا MODIS Terra/Aqua (منتج MOD04_L2 لعمق الهباء الجوي)",
+    sensorSource_NDVI: "المستشعر: قمر ناسا MODIS Terra (مؤشر الغطاء النباتي MOD13A2 بدقة 250م)",
+    sensorSource_LST_DAY: "المستشعر: قمر ناسا MODIS Terra (حرارة سطح الأرض MOD11A2 بدقة 1 كم)",
+    sensorSource_SOIL_MOISTURE: "المستشعر: مرصد ناسا الهيدرولوجي العالمي GLDAS v2.1 (رطوبة التربة)",
+    sensorSource_hni: "مؤشر هجين: حرارة ناسا POWER + التعداد الصحي للجهاز المركزي للتعبئة والإحصاء 2024",
+    sensorSource_epi: "المصدر: مرصد ناسا POWER v2.0 للإجهاد الحراري وعوالق MODIS",
+    sensorSource_ppi: "المصدر: الجهاز المركزي للتعبئة والإحصاء 2024 — الكثافة السكانية ونسب كبار السن",
+    sensorSource_fsi: "المصدر: النشرة السنوية للخدمات الصحية 2024 — جهاز التعبئة والإحصاء (الأسرة والمستشفيات)",
+    sensorSource_wni: "المصدر: دراسات منظمة الصحة العالمية 2021 ونسب الأطباء الميدانية بالتعبئة والإحصاء",
 
+    // Opposite Trends Sources
+    oppositeSourceUpper: "أرصاد ناسا POWER الساتلية + التعداد الصحي لجهاز التعبئة والإحصاء 2024",
+    oppositeSourceDelta: "مستشعرات أقمار MODIS ومحاكاة رطوبة MERRA-2 الساتلية",
+
+    // Doctor Matcher & Observatory Sources
+    doctorMatcherSource: "النشرة السنوية للإحصاءات الصحية — جهاز التعبئة والإحصاء CAPMAS 2024 + مصفوفة أولويات الصحة العالمية",
+    whoSourceTag: "منظمة الصحة العالمية EMHJ (2021)، عينة=885",
+    oxfordSourceTag: "جامعة أكسفورد Int Health (2015)، عينة=400",
+    mdpiSourceTag: "مجلة MDPI السويسرية (2025)، عينة=450",
+    capmasCapacitySource: "الجهاز المركزي للتعبئة العامة والإحصاء — النشرة السنوية للإحصاءات الصحية 2024",
+
+    // Policy Simulator Rationale & Charts Provenance
+    sourceRationaleSalary: "المستهدف بالأدلة: معالجة الرضا الحرج عن الرواتب البالغ 1.0% فقط بين الأطباء (منظمة الصحة العالمية 2021).",
+    sourceRationaleHazard: "المستهدف بالأدلة: تعويض مخاطر العدوى وتقليل اضطرار 52.8% من الأطباء للعمل الإضافي (الصحة العالمية 2021).",
+    sourceRationaleStipend: "المستهدف بالأدلة: سد فجوة عجز أطباء الصعيد (5.4 طبيب/10k بأسوان مقابل 16.5 بالقاهرة — التعبئة والإحصاء 2024).",
+    sourceRationaleSecurity: "المستهدف بالأدلة: الخفض المباشر لمعدلات الاعتداء الجسدي (35.4%) واللفظي (55.5%) بالمستشفيات (الصحة العالمية 2021).",
+    sourceRationaleEquipment: "المستهدف بالأدلة: تجاوز عجز الأجهزة والمستلزمات الطبية البالغ 80.7% في المستشفيات الحكومية (الصحة العالمية والتعبئة والإحصاء).",
+    sourceRationaleClinics: "المستهدف بالأدلة: معايير القوافل الطبية لوزارة الصحة والسكان لسد فجوة عجز المنشآت (FSI) بالقرى.",
+    sourceRationaleGreening: "المستهدف بالأدلة: تبريد الجزر الحرارية الحضرية الموثقة بأرصاد أقمار ناسا MODIS LST الحرارية السطحية.",
+    sourceExecTurnover: "المجلة الصحية لشرق المتوسط — منظمة الصحة العالمية 2021 (عينة 885 طبيباً مصرياً)",
+    sourceExecMigration: "دراسات جامعة أكسفورد 2015 (عينة 400) ومجلة MDPI 2025 (عينة 450)",
+    sourceExecPriority: "النشرة الإحصائية للخدمات الصحية CAPMAS 2024 + مؤشر ناسا للتعرض المناخي",
+    sourceProjectedRetention: "محسوب وفق نموذج مرونة اقتصاديات الصحة السريرية (دراسات منظمة الصحة العالمية وأكسفورد)",
+    sourceAdmissionsPrevented: "مقرون بموجات الحر الشديدة المقاسة بأقمار ناسا مع معدلات التردد الكلوي الإقليمية"
   }
 };

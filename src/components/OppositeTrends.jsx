@@ -73,7 +73,8 @@ export default function OppositeTrends({ t }) {
                 duration: 9,
                 colorFrom: '#f43f5e',
                 colorTo: '#fb923c',
-                borderWidth: 2
+                borderWidth: 2,
+                radius: 24
               } : null}
               className={`bento-card p-4 sm:p-5 relative flex flex-col justify-between shadow-sm dark:shadow-md ${
                 isUpperEgypt ? 'border-rose-300/80 dark:border-rose-500/30' : ''

@@ -140,6 +140,15 @@ html.dark {
   animation: border-beam-spin var(--beam-duration, 12s) linear infinite;
 }
 
+@keyframes border-beam-dash {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 /* Telemetry Typography */
 .telemetry-mono {
   font-family: var(--font-mono);

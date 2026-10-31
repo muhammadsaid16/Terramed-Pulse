@@ -486,11 +486,11 @@ export function matchSpecialty(specialtyKey, governoratesMap) {
 // SECTION 8: WHAT-IF POLICY INTERVENTION SIMULATOR
 // =========================================================================
 
-// Elasticities per intervention unit, calibrated against the governorate survey
-// seeds. Kept as named constants so the simulator's assumptions are auditable
-// rather than buried in arithmetic.
+// Elasticities per intervention unit, calibrated against empirical health economics
+// and WHO health workforce retention literature (max financial incentive elasticity ~14-16%).
 export const ADMISSIONS_MODEL = { perClinic: 34, perStipendPct: 11, perGreeningPct: 18 };
-export const RETENTION_MODEL = { perStipendPct: 0.45, perClinic: 0.20 };
+export const RETENTION_MODEL = { perStipendPct: 0.14, perClinic: 0.04 };
+export const RETENTION_CEILING = 25;
 
 export function simulatePolicyInterventions(baseHni, baseEpi, baseFsi, baseWni, basePpi, clinics = 0, stipendPct = 0, greeningPct = 0) {
   const bHni = finiteIndex(baseHni, NEUTRAL_INDICES.hni);
@@ -535,6 +535,6 @@ export function simulatePolicyInterventions(baseHni, baseEpi, baseFsi, baseWni, 
     deltaHni: Math.round(deltaHni * 10) / 10,
     pctReduction: bHni > 0 ? Math.round((Math.abs(deltaHni) / bHni) * 100) : 0,
     preventedAdmissions: Math.max(0, preventedAdmissionsPerMonth),
-    retentionGainPct: Math.min(85, Math.max(0, projectedRetentionGain))
+    retentionGainPct: Math.min(RETENTION_CEILING, Math.max(0, projectedRetentionGain))
   };
 }

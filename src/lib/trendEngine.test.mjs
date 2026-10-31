@@ -10,7 +10,7 @@ import {
   lnGamma, betacf, ibeta, erf, standardNormalCdf, getTCritical95, studentTPValue,
   linearRegression, mannKendall, theilSenSlope, deseasonalize, minMaxNormalize,
   HNI_WEIGHTS, computeHNI, computeWNIFromReports, SPECIALTY_WEIGHTS, matchSpecialty,
-  simulatePolicyInterventions, ADMISSIONS_MODEL, RETENTION_MODEL,
+  simulatePolicyInterventions, ADMISSIONS_MODEL, RETENTION_MODEL, RETENTION_CEILING,
   NEUTRAL_INDICES, WNI_PRIOR_DEFAULT
 } from './trendEngine.js';
 import { TERRAPULSE_DATA } from '../data/terrapulseData.js';
@@ -238,7 +238,7 @@ check(scaledUp.deltaHni < withPolicy.deltaHni, 'doubling the intervention deepen
 
 const saturated = simulatePolicyInterventions(baseHni, 12, 12, 12, cairo.ppi, 500, 500, 500);
 check(saturated.simEpi === 10 && saturated.simFsi === 10 && saturated.simWni === 10, 'sub-indices floor at 10 under extreme policy');
-check(saturated.retentionGainPct === 85, 'retention gain is capped at 85 percent');
+check(saturated.retentionGainPct === RETENTION_CEILING, `retention gain is capped at ${RETENTION_CEILING} percent`);
 check(closeTo(simulatePolicyInterventions(baseHni, cairo.epi, cairo.fsi, cairo.wni_prior, 92.1, 15, 40, 10).deltaHni, withPolicy.deltaHni, 1e-9), 'simulator is deterministic for identical inputs');
 check(simulatePolicyInterventions(baseHni, cairo.epi, cairo.fsi, cairo.wni_prior, 48.0, 15, 40, 10).deltaHni !== withPolicy.deltaHni, 'simulator honours the governorate population pressure rather than a fixed value');
 check(typeof RETENTION_MODEL.perStipendPct === 'number', 'retention model coefficients are exported for auditing');
@@ -402,12 +402,12 @@ check(
   `retention at max UI levers follows RETENTION_MODEL (${maxed.retentionGainPct})`
 );
 check(
-  maxed.retentionGainPct < 85,
-  `the slider range alone never reaches the 85% ceiling (${maxed.retentionGainPct})`
+  maxed.retentionGainPct < RETENTION_CEILING,
+  `the slider range alone never reaches the ${RETENTION_CEILING}% ceiling (${maxed.retentionGainPct})`
 );
 check(
-  simFor('aswan', { clinics: 500, stipend: 500 }).retentionGainPct === 85,
-  'the 85% ceiling only binds on an out-of-range lever'
+  simFor('aswan', { clinics: 500, stipend: 500 }).retentionGainPct === RETENTION_CEILING,
+  `the ${RETENTION_CEILING}% ceiling only binds on an out-of-range lever`
 );
 check(
   simFor('aswan', { clinics: 50 }).preventedAdmissions === 50 * ADMISSIONS_MODEL.perClinic,

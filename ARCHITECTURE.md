@@ -232,9 +232,9 @@ Everything the simulator computes, in `src/lib/trendEngine.js::simulatePolicyInt
 | $HNI_{sim}$ | $0.35\,EPI_{sim} + 0.30\,PPI + 0.20\,FSI_{sim} + 0.15\,WNI_{sim}$ | index (0–100) | `HNI_WEIGHTS` |
 | $\Delta HNI$ | $HNI_{sim} - HNI_{base}$ | index points | — |
 | Prevented admissions / month | $\text{clinics}\times34 + \text{stipend}\times11 + \text{greening}\times18$ | patient-visits averted per month | `ADMISSIONS_MODEL` |
-| Projected retention gain | $\text{stipend}\times0.45 + \text{clinics}\times0.20$ | percentage points of the workforce retained | `RETENTION_MODEL` |
+| Projected retention gain | $\text{stipend}\times0.14 + \text{clinics}\times0.04$ | percentage points of the workforce retained | `RETENTION_MODEL` |
 
-Each simulated sub-index is clamped from below at `Math.max(10, …)`; prevented admissions at `Math.max(0, …)`; retention gain at `Math.min(85, Math.max(0, …))`. All outputs are rounded to 1 decimal (integers for the two derived counts).
+Each simulated sub-index is clamped from below at `Math.max(10, …)`; prevented admissions at `Math.max(0, …)`; retention gain at `Math.min(RETENTION_CEILING, Math.max(0, …))` (ceiling = 25%). All outputs are rounded to 1 decimal (integers for the two derived counts).
 
 Input handling: a non-finite lever (undefined/NaN from a reset component) coerces to `0`; a non-finite baseline coerces to `NEUTRAL_INDICES`. Levers are **not** range-clamped inside the engine — the sliders in `DecisionMaker.jsx` own the ranges, and the model is defined to extrapolate linearly beyond them, with the sub-index floor and the retention ceiling as the only guards.
 

@@ -177,8 +177,8 @@ export default function PrintBrief({
         </h1>
         <div className="text-[8pt] text-slate-700 font-semibold mt-0.5">
           {isAr
-            ? `مبنية على الرصد البيئي لأقمار وكالة ناسا (1995-${year}) وسجل الاحتياج السريري الميداني لبلاغات أطباء مصر`
-            : `Synthesized from 30 Years of NASA Earth Observation Satellite Telemetry (1995-${year}) & Verified Physician Reports`}
+            ? `مبنية على الرصد البيئي لأقمار وكالة ناسا (1995-${year}) وتعدادات التعبئة والإحصاء وأبحاث هجرة الكوادر الطبية`
+            : `Synthesized from 30 Years of NASA Earth Observation Satellite Telemetry (1995-${year}), CAPMAS Censuses & Peer-Reviewed Cohorts`}
         </div>
       </div>
 

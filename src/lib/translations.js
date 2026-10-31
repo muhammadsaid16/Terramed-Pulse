@@ -229,7 +229,7 @@ export const TRANSLATIONS = {
     mathHNITitle: "3. Composite Health Need Index (HNI)",
     mathHNIBody: "HNI = 0.35 × EPI + 0.30 × PPI + 0.20 × FSI + 0.15 × WNI, where EPI is Environmental Pressure, PPI is Population Pressure, FSI is Facility Shortage, and WNI is Physician Workload & Shortage.",
     mathWNITitle: "4. Bayesian Workforce Need Index (WNI)",
-    mathWNIBody: "WNI integrates prior baseline healthcare worker deficit with live crowdsourced clinical reports using Bayesian blending: WNI_post = (n_prior · WNI_prior + Σ w_i · Score_i) / (n_prior + N_obs).",
+    mathWNIBody: "WNI integrates prior baseline healthcare worker deficit with empirical migration research benchmarks (WHO, Oxford, MDPI) using Bayesian blending: WNI_post = (n_prior · WNI_prior + Σ w_i · Score_i) / (n_prior + N_obs).",
     btnGotIt: "Understood — Close",
 
     // Print Brief
@@ -571,7 +571,7 @@ export const TRANSLATIONS = {
     mathHNITitle: "3. معادلة مؤشر الاحتياج الصحي المركب (HNI)",
     mathHNIBody: "HNI = 0.35 × EPI + 0.30 × PPI + 0.20 × FSI + 0.15 × WNI، حيث تشمل المتغيرات الضغط البيئي لناسا، والكثافة السكانية، وعجز المنشآت، ومعدل نقص الكوادر الطبية.",
     mathWNITitle: "4. مؤشر عجز واستقرار الكوادر الطبية البايزي (WNI)",
-    mathWNIBody: "يدمج مؤشر WNI عجز الكوادر الأساسي مع البلاغات الميدانية الحية للأطباء عبر الاستدلال البايزي: WNI_post = (n_prior · WNI_prior + Σ w_i · Score_i) / (n_prior + N_obs).",
+    mathWNIBody: "يدمج مؤشر WNI عجز الكوادر الأساسي للتعبئة والإحصاء مع شواهد أبحاث الهجرة المحكّمة (الصحة العالمية، أكسفورد، MDPI) عبر الاستدلال البايزي: WNI_post = (n_prior · WNI_prior + Σ w_i · Score_i) / (n_prior + N_obs).",
     btnGotIt: "فهمت ذلك — إغلاق",
 
     // Print Brief

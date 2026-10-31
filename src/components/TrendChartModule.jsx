@@ -214,6 +214,14 @@ export default function TrendChartModule({
 
       </div>
 
+      {/* Sensor Operational Window Note (MODIS Terra 2000-2025 vs 1995-1999 baseline) */}
+      {(selectedVar === 'NDVI' || selectedVar === 'LST_DAY') && (
+        <div className="flex items-center gap-2 text-[11px] text-amber-300 bg-amber-500/10 border border-amber-500/25 px-3.5 py-2 rounded-xl">
+          <Info className="w-3.5 h-3.5 shrink-0 text-amber-400" />
+          <span>{t.sensorModisNote}</span>
+        </div>
+      )}
+
       {/* Chart Canvas Bento Container */}
       <div className="bento-card p-4 sm:p-5 min-h-[300px] flex-1 flex flex-col justify-between shadow-2xl">
         <div className="flex flex-wrap items-center justify-between gap-2 mb-2">

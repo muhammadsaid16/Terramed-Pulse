@@ -5,6 +5,7 @@ import { LIMITS } from '../lib/reportLimits';
 
 export default function PhysicianForm({
   reports,
+  communityReports = [],
   onAddReport,
   governorates,
   selectedGov,
@@ -29,6 +30,8 @@ export default function PhysicianForm({
   // the chip green. A 201 on one submission never changes it, because one successful
   // write does not prove the app can talk to the store in general.
   const writesEnabled = syncState === 'read_blocked';
+  const [activeFeedTab, setActiveFeedTab] = useState('local');
+  const [isAnonymous, setIsAnonymous] = useState(false);
   const [formData, setFormData] = useState({
     doctor: '',
     specialty: preselectedSpecialty || 'nephrology',
@@ -62,7 +65,7 @@ export default function PhysicianForm({
 
     const newErrors = {};
     const required = (field) => (lang === 'ar' ? `هذا الحقل مطلوب: ${field}` : `${field} is required`);
-    if (!formData.doctor.trim()) newErrors.doctor = required(t.inputDoctorName);
+    if (!isAnonymous && !formData.doctor.trim()) newErrors.doctor = required(t.inputDoctorName);
     if (!formData.gov) newErrors.gov = required(t.inputGov);
     if (!formData.hospital.trim()) newErrors.hospital = required(lang === 'ar' ? 'المستشفى' : 'Hospital');
     if (!formData.comment.trim()) newErrors.comment = required(lang === 'ar' ? 'التعليق' : 'Comment');
@@ -73,9 +76,13 @@ export default function PhysicianForm({
     }
     setErrors({});
 
+    const submittedDocName = isAnonymous || !formData.doctor.trim()
+      ? (t.anonymousDoctorName || (lang === 'ar' ? 'طبيب مجهول' : 'Anonymous Physician'))
+      : formData.doctor.trim();
+
     const newReport = {
       id: `report-${Date.now()}`,
-      doctor: formData.doctor.trim(),
+      doctor: submittedDocName,
       specialty: formData.specialty,
       gov: formData.gov,
       hospital: formData.hospital.trim(),
@@ -156,11 +163,24 @@ export default function PhysicianForm({
                 <input
                   type="text"
                   maxLength={LIMITS.doctor}
-                  placeholder={t.phDoctorName}
-                  value={formData.doctor}
+                  placeholder={isAnonymous ? (t.anonymousDoctorName || 'Anonymous Physician') : t.phDoctorName}
+                  disabled={isAnonymous}
+                  value={isAnonymous ? '' : formData.doctor}
                   onChange={(e) => setFormData({ ...formData, doctor: e.target.value })}
-                  className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30 transition-colors"
+                  className={`w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30 transition-colors ${isAnonymous ? 'opacity-50 cursor-not-allowed' : ''}`}
                 />
+                <label className="flex items-center gap-1.5 mt-1.5 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={isAnonymous}
+                    onChange={(e) => {
+                      setIsAnonymous(e.target.checked);
+                      if (e.target.checked) setErrors(prev => ({ ...prev, doctor: undefined }));
+                    }}
+                    className="rounded border-white/20 bg-[#0E1320] text-sky-400 focus:ring-0 w-3 h-3"
+                  />
+                  <span className="text-[10px] text-white/50">{t.anonymousToggle}</span>
+                </label>
               </div>
 
               <div>
@@ -372,26 +392,53 @@ export default function PhysicianForm({
                 <span className="text-[10px] text-white/40">⚙</span>
               </button>
 
-              <span className="text-[11px] text-white/60 font-medium bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-white/10">
-                {/* Always the local label. There is no read endpoint, so no state of the
-                    badge — including a live one — makes this list anyone else's. */}
-                {t.feedSubLocal} ({reports.length})
-              </span>
+              {communityReports.length > 0 ? (
+                <div className="flex items-center bg-white/[0.04] p-0.5 rounded-full border border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => setActiveFeedTab('local')}
+                    className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full transition-all ${
+                      activeFeedTab === 'local'
+                        ? 'bg-white/[0.12] text-white shadow-sm'
+                        : 'text-white/50 hover:text-white/80'
+                    }`}
+                  >
+                    {t.feedSubLocal} ({reports.length})
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveFeedTab('community')}
+                    className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full transition-all ${
+                      activeFeedTab === 'community'
+                        ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30 shadow-sm'
+                        : 'text-white/50 hover:text-white/80'
+                    }`}
+                  >
+                    {t.communityFeedBadge} ({communityReports.length})
+                  </button>
+                </div>
+              ) : (
+                <span className="text-[11px] text-white/60 font-medium bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-white/10">
+                  {t.feedSubLocal} ({reports.length})
+                </span>
+              )}
             </div>
           </div>
 
           <div className="space-y-3 max-h-[540px] overflow-y-auto pr-1">
-            {reports.length === 0 && (
+            {((activeFeedTab === 'community' && communityReports.length > 0) ? communityReports : reports).length === 0 && (
               <div className="py-12 px-5 text-center rounded-2xl border border-dashed border-white/12 bg-white/[0.02]">
                 <p className="text-sm font-semibold text-white/70">{t.feedEmptyTitle}</p>
-                <p className="text-xs text-white/45 mt-2 leading-relaxed max-w-md mx-auto">{t.feedEmptySub}</p>
+                <p className="text-xs text-white/45 mt-2 leading-relaxed max-w-md mx-auto">
+                  {activeFeedTab === 'community' ? t.communityFeedDesc : t.feedEmptySub}
+                </p>
               </div>
             )}
-            {reports.map((rep, idx) => {
+            {((activeFeedTab === 'community' && communityReports.length > 0) ? communityReports : reports).map((rep, idx) => {
               const govKey = rep.gov;
               const govObj = governorates?.[govKey];
               const govName = govObj ? (lang === 'ar' ? govObj.name_ar : govObj.name_en) : govKey;
-              const docName = rep.doctor;
+              const docName = rep.doctor || t.anonymousDoctorName || (lang === 'ar' ? 'طبيب مجهول' : 'Anonymous Physician');
               const hospitalName = rep.hospital;
               const isMigrating = (rep.considering_migration || '').toLowerCase() === 'yes';
               const repDate = rep.date || '—';

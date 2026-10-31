@@ -31,6 +31,7 @@ export const SQL_TABLE_SCHEMA = migrationSql;
 
 const ENDPOINT_REPORTS = '/api/reports';
 const ENDPOINT_STATUS = '/api/status';
+const ENDPOINT_COMMUNITY = '/api/community';
 
 /**
  * Coarse classification of what a remote call actually did.
@@ -188,4 +189,20 @@ export async function submitRemoteReport(report) {
     state: res.status >= 500 ? SYNC_STATE.UNREACHABLE : SYNC_STATE.ERROR,
     error: body?.error || `HTTP ${res.status}`
   };
+}
+
+/**
+ * Fetches anonymized community observations across devices.
+ * If the community endpoint is unavailable or database is unconfigured,
+ * resolves gracefully with an empty list.
+ */
+export async function fetchCommunityReports() {
+  try {
+    const res = await request(ENDPOINT_COMMUNITY);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data?.reports) ? data.reports : [];
+  } catch {
+    return [];
+  }
 }

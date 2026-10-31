@@ -9,7 +9,7 @@ import {
   Legend
 } from 'chart.js';
 import { Doughnut, Bar } from 'react-chartjs-2';
-import { Sliders, ShieldCheck, BarChart3, PieChart, AlertTriangle } from 'lucide-react';
+import { Sliders, ShieldCheck, BarChart3, PieChart, AlertTriangle, BookOpen, FileText, ExternalLink, Info } from 'lucide-react';
 import { simulatePolicyInterventions, NEUTRAL_INDICES } from '../lib/trendEngine';
 import {
   buildTurnoverChartData,
@@ -18,6 +18,7 @@ import {
   doughnutChartOptions,
   barChartOptions
 } from '../lib/chartAdapters';
+import { MIGRATION_RESEARCH_STUDIES, DOCUMENTED_MIGRATION_DRIVERS } from '../data/migrationResearchData';
 
 ChartJS.register(
   ArcElement,
@@ -32,9 +33,11 @@ export default function DecisionMaker({
   govData,
   allGovs,
   reports,
+  communityReports = [],
   lang,
   t
 }) {
+  const [activeSubTab, setActiveSubTab] = useState('simulation');
   const [clinics, setClinics] = useState(15);
   const [stipendPct, setStipendPct] = useState(40);
   const [greeningPct, setGreeningPct] = useState(10);
@@ -71,16 +74,28 @@ export default function DecisionMaker({
     );
   }, [baseIndices, clinics, stipendPct, greeningPct]);
 
-  // Executive Chart 1: Primary Drivers of Turnover (computed live from reports)
+  // Aggregate local submissions and verified community reports for executive analytics
+  const combinedReports = useMemo(() => {
+    if (!communityReports || communityReports.length === 0) return reports;
+    const map = new Map();
+    reports.forEach(r => map.set(r.id || `${r.doctor}-${r.hospital}-${r.comment}`, r));
+    communityReports.forEach(r => {
+      const key = r.id || `${r.doctor}-${r.hospital}-${r.comment}`;
+      if (!map.has(key)) map.set(key, r);
+    });
+    return Array.from(map.values());
+  }, [reports, communityReports]);
+
+  // Executive Chart 1: Primary Drivers of Turnover (computed live from combined reports)
   const turnoverChartData = useMemo(
-    () => buildTurnoverChartData(reports, lang, t),
-    [reports, lang, t]
+    () => buildTurnoverChartData(combinedReports, lang, t),
+    [combinedReports, lang, t]
   );
 
   // Executive Chart 2: Migration Risk vs Climate Demand
   const migrationChartData = useMemo(
-    () => buildMigrationChartData(reports, lang, t),
-    [reports, lang, t]
+    () => buildMigrationChartData(combinedReports, lang, t),
+    [combinedReports, lang, t]
   );
 
   // Executive Chart 3: Governorate Priority Matrix (Comparative)
@@ -95,7 +110,7 @@ export default function DecisionMaker({
     <section id="section-decision" className="bento-card p-5 sm:p-8 mb-8 space-y-6">
       
       {/* Header */}
-      <div className="border-b border-white/[0.08] pb-4 flex flex-wrap items-center justify-between gap-2">
+      <div className="border-b border-white/[0.08] pb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.2)]">
@@ -109,12 +124,57 @@ export default function DecisionMaker({
             {t.module4Subtitle} — {govName}
           </p>
         </div>
-        <span className="satellite-chip text-sky-300 bg-sky-950/40 border-sky-800/40">
-          {t.mcdaChip}
-        </span>
+
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center bg-white/[0.04] p-1 rounded-xl border border-white/10">
+            <button
+              type="button"
+              onClick={() => setActiveSubTab('simulation')}
+              className={`px-3 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
+                activeSubTab === 'simulation'
+                  ? 'bg-sky-500/20 text-sky-300 border border-sky-500/40 shadow-sm'
+                  : 'text-white/60 hover:text-white'
+              }`}
+            >
+              <Sliders className="w-3.5 h-3.5" />
+              <span>{t.tabSimulation}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveSubTab('evidence')}
+              className={`px-3 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
+                activeSubTab === 'evidence'
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
+                  : 'text-white/60 hover:text-white'
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>{t.tabResearchEvidence}</span>
+            </button>
+          </div>
+
+          <span className="satellite-chip text-sky-300 bg-sky-950/40 border-sky-800/40">
+            {t.mcdaChip}
+          </span>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {activeSubTab === 'simulation' && (
+        <div className="space-y-6 animate-fade-in">
+          {/* Policy Scenario Model Notice */}
+          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/[0.08] text-xs">
+            <Info className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+            <div>
+              <span className="font-semibold text-white/90 block text-[11px] uppercase tracking-wider">
+                {t.policyScenarioBadge}
+              </span>
+              <span className="text-[11px] text-white/50 leading-relaxed block mt-0.5">
+                {t.policyScenarioNotice}
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* Left: Live Simulation Output Scoreboard (5 cols) */}
         <div className="lg:col-span-5 apple-card p-6 space-y-5">
@@ -403,7 +463,156 @@ export default function DecisionMaker({
 
         </div>
       </div>
+      </div>
+      )}
 
+      {/* Peer-Reviewed Research Evidence View */}
+      {activeSubTab === 'evidence' && (
+        <div className="space-y-6 animate-fade-in">
+          {/* Top 3 Empirical Highlights */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="apple-card p-5 border-l-4 border-l-emerald-400 space-y-2">
+              <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-bold block">
+                WHO EMHJ (2021)
+              </span>
+              <div className="text-2xl font-bold text-white tabular-nums">97.4%</div>
+              <p className="text-xs text-white/70 leading-relaxed">
+                {t.evidenceWhoStat}
+              </p>
+            </div>
+
+            <div className="apple-card p-5 border-l-4 border-l-sky-400 space-y-2">
+              <span className="text-[10px] uppercase tracking-wider text-sky-400 font-bold block">
+                Oxford Int Health (2015)
+              </span>
+              <div className="text-2xl font-bold text-white tabular-nums">81.8%</div>
+              <p className="text-xs text-white/70 leading-relaxed">
+                {t.evidenceOxfordStat}
+              </p>
+            </div>
+
+            <div className="apple-card p-5 border-l-4 border-l-amber-400 space-y-2">
+              <span className="text-[10px] uppercase tracking-wider text-amber-400 font-bold block">
+                MDPI Social Sciences (2025)
+              </span>
+              <div className="text-2xl font-bold text-white tabular-nums">20.0× Odds</div>
+              <p className="text-xs text-white/70 leading-relaxed">
+                {t.evidenceMdpiStat}
+              </p>
+            </div>
+          </div>
+
+          {/* Detailed Peer-Reviewed Studies */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <FileText className="w-4 h-4 text-sky-400" />
+              <h3 className="text-sm font-semibold text-white">
+                {t.researchEvidenceTitle}
+              </h3>
+            </div>
+            
+            <div className="grid grid-cols-1 gap-4">
+              {MIGRATION_RESEARCH_STUDIES.map((study) => (
+                <div key={study.id} className="apple-card p-5 space-y-3">
+                  <div className="flex flex-wrap items-start justify-between gap-2 border-b border-white/[0.08] pb-3">
+                    <div>
+                      <span className="text-[10px] font-bold text-sky-400 uppercase tracking-wider bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">
+                        {study.journal} ({study.year})
+                      </span>
+                      <h4 className="text-xs font-semibold text-white/95 mt-1.5 leading-snug">
+                        {study.citation}
+                      </h4>
+                    </div>
+                    <a
+                      href={study.doi}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[11px] text-sky-400 hover:text-sky-300 flex items-center gap-1 font-medium transition-colors shrink-0"
+                    >
+                      <span>DOI</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+
+                  <p className="text-xs text-white/80 leading-relaxed bg-white/[0.02] p-3 rounded-xl border border-white/[0.05]">
+                    {lang === 'ar' ? study.narrative_ar : study.narrative_en}
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-1">
+                    <div className="bg-white/[0.03] p-3 rounded-xl border border-white/[0.06]">
+                      <span className="text-[10px] text-white/40 block font-medium mb-1">
+                        {t.researchStudyCohort}
+                      </span>
+                      <span className="text-white/85 text-[11px] leading-relaxed block">
+                        {study.cohort} (n = {study.sample_size})
+                      </span>
+                    </div>
+
+                    <div className="bg-white/[0.03] p-3 rounded-xl border border-white/[0.06]">
+                      <span className="text-[10px] text-white/40 block font-medium mb-1">
+                        {t.researchKeyMetrics}
+                      </span>
+                      <div className="space-y-1 text-[11px] text-white/85">
+                        {study.key_findings.migration_intent_pct && (
+                          <div className="flex justify-between">
+                            <span className="text-white/60">Migration Intent:</span>
+                            <span className="font-semibold text-rose-300">{study.key_findings.migration_intent_pct}%</span>
+                          </div>
+                        )}
+                        {study.key_findings.retention_willingness_if_improved_pct && (
+                          <div className="flex justify-between">
+                            <span className="text-white/60">Willing to Stay if Improved:</span>
+                            <span className="font-semibold text-emerald-300">{study.key_findings.retention_willingness_if_improved_pct}%</span>
+                          </div>
+                        )}
+                        {study.key_findings.plan_to_return_after_training_pct && (
+                          <div className="flex justify-between">
+                            <span className="text-white/60">Plan to Return:</span>
+                            <span className="font-semibold text-sky-300">{study.key_findings.plan_to_return_after_training_pct}%</span>
+                          </div>
+                        )}
+                        {study.key_findings.work_dissatisfaction_odds_ratio && (
+                          <div className="flex justify-between">
+                            <span className="text-white/60">Work Dissatisfaction OR:</span>
+                            <span className="font-semibold text-amber-300">{study.key_findings.work_dissatisfaction_odds_ratio}×</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Evidence-Based Levers Matrix */}
+          <div className="apple-card p-5 space-y-4">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <h3 className="text-xs font-semibold text-white">
+                {t.actionablePolicyDrivers}
+              </h3>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {DOCUMENTED_MIGRATION_DRIVERS.map(driver => (
+                <div key={driver.id} className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-1.5">
+                  <span className="text-xs font-semibold text-white block">
+                    {lang === 'ar' ? driver.ar : driver.en}
+                  </span>
+                  <div className="text-[11px] text-rose-300/90 font-medium">
+                    📌 {lang === 'ar' ? driver.evidence_stat_ar : driver.evidence_stat}
+                  </div>
+                  <div className="text-[11px] text-emerald-300 font-medium pt-1 border-t border-white/[0.06]">
+                    🎯 {lang === 'ar' ? driver.policy_lever_ar : driver.policy_lever}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      )}
     </section>
   );
 }

@@ -17,7 +17,7 @@ import Footer from './components/Footer';
 import { TERRAPULSE_DATA } from './data/terrapulseData';
 import { TRANSLATIONS } from './lib/translations';
 import { computeWNIFromReports, computeHNI, WNI_PRIOR_DEFAULT } from './lib/trendEngine';
-import { getSyncStatus, submitRemoteReport } from './lib/dbService';
+import { getSyncStatus, submitRemoteReport, fetchCommunityReports } from './lib/dbService';
 
 export default function App() {
   const [lang, setLang] = useState(() => {
@@ -100,10 +100,21 @@ export default function App() {
     return [];
   });
 
-  // Ask the submission endpoint what it is, once at startup. There is no report to
-  // fetch: the shipped posture has no read path, so `reports` stays this device's
-  // localStorage, and the badge describes only whether a write would be
-  // accepted. A probe that fails is reported as failing rather than as local mode.
+  // Aggregated anonymized community reports across devices
+  const [communityReports, setCommunityReports] = useState([]);
+
+  // Fetch anonymized community reports once at startup
+  useEffect(() => {
+    let isMounted = true;
+    fetchCommunityReports().then(remoteReports => {
+      if (isMounted && Array.isArray(remoteReports) && remoteReports.length > 0) {
+        setCommunityReports(remoteReports);
+      }
+    });
+    return () => { isMounted = false; };
+  }, []);
+
+  // Ask the submission endpoint what it is, once at startup.
   useEffect(() => {
     let isMounted = true;
     getSyncStatus().then(result => {
@@ -114,11 +125,12 @@ export default function App() {
 
   const t = useMemo(() => TRANSLATIONS[lang] || TRANSLATIONS.en, [lang]);
 
-  // Recalculate WNI & HNI whenever reports change
+  // Recalculate WNI & HNI whenever reports or communityReports change
   useEffect(() => {
     setAppData(prev => {
       const next = JSON.parse(JSON.stringify(prev));
       const govs = next.governorates;
+      const allReports = [...reports, ...communityReports];
 
       Object.keys(govs).forEach(govId => {
         const gov = govs[govId];
@@ -128,15 +140,15 @@ export default function App() {
         // would drift with every submission in a session instead of depending only on n.
         // The shipped key is `wni_prior`; bare `wni` is what this effect publishes.
         const priorWni = TERRAPULSE_DATA.governorates[govId]?.baseline_indices?.wni_prior ?? WNI_PRIOR_DEFAULT;
-        const localCount = reports.filter(r => (r.gov || r.governorate) === govId).length;
-        if (localCount === 0) {
+        const totalCount = allReports.filter(r => (r.gov || r.governorate) === govId).length;
+        if (totalCount === 0) {
           // No field signal for this governorate: publish the prior and leave the
           // published HNI untouched. computeHNI(epi, ppi, fsi, wni_prior) reproduces the
           // shipped hni exactly, so this branch is an identity, not a shortcut.
           gov.baseline_indices.wni = priorWni;
           return;
         }
-        const newWni = computeWNIFromReports(govId, reports, priorWni);
+        const newWni = computeWNIFromReports(govId, allReports, priorWni);
         gov.baseline_indices.wni = newWni;
 
         const epi = gov.baseline_indices.epi;
@@ -147,7 +159,7 @@ export default function App() {
 
       return next;
     });
-  }, [reports]);
+  }, [reports, communityReports]);
 
   // Local write is authoritative and happens first; the remote write is an extra that
   // reports its own outcome. Returns the remote state so the form can tell the truth.
@@ -413,6 +425,7 @@ export default function App() {
             =================================================================== */}
         <PhysicianForm
           reports={reports}
+          communityReports={communityReports}
           onAddReport={handleAddReport}
           governorates={appData.governorates}
           selectedGov={selectedGov}
@@ -430,6 +443,7 @@ export default function App() {
           govData={currentGovData}
           allGovs={appData.governorates}
           reports={reports}
+          communityReports={communityReports}
           lang={lang}
           t={t}
         />

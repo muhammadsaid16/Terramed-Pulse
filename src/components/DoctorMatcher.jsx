@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Stethoscope, HeartPulse, Wind, AlertCircle, Baby, Users, ShieldAlert, Sparkles, CheckCircle2 } from 'lucide-react';
 import { matchSpecialty } from '../lib/trendEngine';
 import { SPECIALTY_FULL_LABELS } from '../lib/specialties';
-import { SpotlightCard, NumberTicker, BorderBeam } from './ui';
+import { SpotlightCard, NumberTicker, BorderBeam, Button, Badge } from './ui';
 
 // Icons are presentation, so they stay here; the ids and both label registers come from
 // the module that owns the submission vocabulary.
@@ -55,12 +55,12 @@ export default function DoctorMatcher({
             {t.module2Subtitle}
           </p>
         </div>
-        <span className="satellite-chip text-sky-700 bg-sky-50 border-sky-200 dark:text-sky-300 dark:bg-sky-950/40 dark:border-sky-800/40">
+        <Badge variant="default" pulse={true} className="text-xs py-1">
           {t.impactChip}
-        </span>
+        </Badge>
       </div>
 
-      {/* Specialty Selector Pills */}
+      {/* Specialty Selector Buttons */}
       <div className="space-y-2.5">
         <label className="text-xs font-medium text-slate-700 dark:text-white/60 block">
           {t.chooseSpecialtyLabel}
@@ -70,20 +70,21 @@ export default function DoctorMatcher({
             const Icon = spec.icon;
             const isSelected = selectedSpecialty === spec.id;
             return (
-              <button
+              <Button
                 key={spec.id}
+                variant={isSelected ? 'default' : 'outline'}
                 onClick={() => setSelectedSpecialty(spec.id)}
-                className={`apple-chip p-3 rounded-2xl border text-left rtl:text-right flex items-center gap-2.5 transition-all ${
+                className={`p-3 h-auto justify-start text-left rtl:text-right rounded-2xl gap-2.5 transition-all duration-150 ${
                   isSelected
-                    ? 'bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-black dark:border-white shadow-md font-semibold'
-                    : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50 dark:bg-white/[0.03] dark:text-white/70 dark:border-white/[0.08] dark:hover:bg-white/[0.07] dark:hover:text-white'
+                    ? 'bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 shadow-md font-semibold'
+                    : 'text-slate-700 dark:text-white/80'
                 }`}
               >
                 <Icon className={`w-4 h-4 shrink-0 ${isSelected ? 'text-white dark:text-black' : 'text-slate-500 dark:text-white/50'}`} />
-                <span className="text-xs font-medium leading-tight">
+                <span className="text-xs font-medium leading-tight truncate">
                   {lang === 'ar' ? spec.ar : spec.en}
                 </span>
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -101,10 +102,10 @@ export default function DoctorMatcher({
             <h3 className="font-semibold text-sm text-slate-900 dark:text-white flex items-center gap-2">
               <span>{lang === 'ar' ? currentSpecialtyObj?.ar : currentSpecialtyObj?.en}</span>
             </h3>
-            <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-medium bg-sky-50 text-sky-700 border border-sky-200 dark:bg-white/[0.06] dark:text-sky-400 dark:border-white/10">
+            <Badge variant="success" className="gap-1.5 py-1">
               <CheckCircle2 className="w-3.5 h-3.5" />
               {t.matchBadge}
-            </span>
+            </Badge>
           </div>
 
           {/* Biomedical Mechanism */}
@@ -123,15 +124,15 @@ export default function DoctorMatcher({
               {t.nasaDriversHeading}
             </h4>
             <div className="flex flex-wrap gap-2 text-[10px] font-medium">
-              <span className="px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-500/10 dark:text-rose-300 dark:border-rose-500/20">
+              <Badge variant="destructive" className="py-0.5">
                 {t.driverHeat}
-              </span>
-              <span className="px-3 py-1 rounded-full bg-sky-50 text-sky-700 border border-sky-200 dark:bg-sky-500/10 dark:text-sky-300 dark:border-sky-500/20">
+              </Badge>
+              <Badge variant="default" className="py-0.5">
                 {t.driverAod}
-              </span>
-              <span className="px-3 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-500/10 dark:text-purple-300 dark:border-purple-500/20">
+              </Badge>
+              <Badge variant="purple" className="py-0.5">
                 {t.driverGlas}
-              </span>
+              </Badge>
             </div>
           </div>
 
@@ -146,17 +147,19 @@ export default function DoctorMatcher({
                 : `${topGov?.name_en} suffers from a severe facility gap (${topGov?.keyDrivers?.fsi}/100) and accelerating heatwave frequency. Practicing your specialty here creates the maximum clinical life-saving dividend.`}
             </p>
 
-            <button
+            <Button
+              variant="default"
+              size="lg"
               onClick={() => onVoiceNeeds && onVoiceNeeds(topGov?.id, selectedSpecialty)}
-              className="w-full apple-btn-primary py-2.5 px-4 text-xs flex items-center justify-center gap-2"
+              className="w-full py-2.5 h-auto text-xs flex items-center justify-center gap-2 bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
             >
-              <HeartPulse className="w-4 h-4 text-white dark:text-black" />
+              <HeartPulse className="w-4 h-4 text-rose-400 dark:text-rose-600" />
               <span>
                 {lang === 'ar'
                   ? `الخطوة التالية: معاينة بيانات وأدلة الاستبقاء في ${topGov?.name_ar} ⬅`
                   : `Next Step: Explore Retention Evidence for ${topGov?.name_en} ➔`}
               </span>
-            </button>
+            </Button>
           </div>
         </SpotlightCard>
 

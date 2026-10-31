@@ -19,10 +19,20 @@ import {
   barChartOptions
 } from '../lib/chartAdapters';
 import { MIGRATION_RESEARCH_STUDIES, DOCUMENTED_MIGRATION_DRIVERS } from '../data/migrationResearchData';
-import SpotlightCard from './ui/SpotlightCard';
-import NumberTicker from './ui/NumberTicker';
-import BorderBeam from './ui/BorderBeam';
-import GlowProgressBar from './ui/GlowProgressBar';
+import {
+  SpotlightCard,
+  NumberTicker,
+  BorderBeam,
+  GlowProgressBar,
+  Button,
+  Badge,
+  Card,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  Slider,
+  DonutChart
+} from './ui';
 
 ChartJS.register(
   ArcElement,
@@ -104,6 +114,16 @@ export default function DecisionMaker({
     return buildEmpiricalTurnoverChartData(lang, t, theme);
   }, [lang, t, theme]);
 
+  // NameThatUI Donut Chart representation with synchronized legend
+  const donutData = useMemo(() => {
+    if (!turnoverChartData?.labels || !turnoverChartData?.datasets?.[0]) return [];
+    return turnoverChartData.labels.map((label, idx) => ({
+      label,
+      value: turnoverChartData.datasets[0].data[idx],
+      color: turnoverChartData.datasets[0].backgroundColor[idx]
+    }));
+  }, [turnoverChartData]);
+
   // Executive Chart 2: Migration Risk vs Climate Demand (empirical literature benchmarks)
   const migrationChartData = useMemo(() => {
     return buildEmpiricalMigrationChartData(lang, t);
@@ -137,36 +157,22 @@ export default function DecisionMaker({
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex items-center bg-slate-100/80 dark:bg-white/[0.04] p-1 rounded-xl border border-slate-200/80 dark:border-white/10">
-            <button
-              type="button"
-              onClick={() => setActiveSubTab('simulation')}
-              className={`px-3 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
-                activeSubTab === 'simulation'
-                  ? 'bg-white text-sky-700 shadow-xs border border-slate-200/80 dark:bg-sky-500/20 dark:text-sky-300 dark:border-sky-500/40'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-white/60 dark:hover:text-white'
-              }`}
-            >
-              <Sliders className="w-3.5 h-3.5" />
-              <span>{t.tabSimulation}</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveSubTab('evidence')}
-              className={`px-3 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
-                activeSubTab === 'evidence'
-                  ? 'bg-white text-emerald-700 shadow-xs border border-slate-200/80 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/40'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-white/60 dark:hover:text-white'
-              }`}
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              <span>{t.tabResearchEvidence}</span>
-            </button>
-          </div>
+          <Tabs value={activeSubTab} onValueChange={setActiveSubTab} className="w-auto">
+            <TabsList className="p-0.5 h-auto">
+              <TabsTrigger value="simulation" className="gap-1.5 py-1 px-3 text-xs">
+                <Sliders className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
+                <span>{t.tabSimulation}</span>
+              </TabsTrigger>
+              <TabsTrigger value="evidence" className="gap-1.5 py-1 px-3 text-xs">
+                <BookOpen className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                <span>{t.tabResearchEvidence}</span>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
 
-          <span className="satellite-chip text-sky-700 bg-sky-50 border-sky-200 dark:text-sky-300 dark:bg-sky-950/40 dark:border-sky-800/40">
+          <Badge variant="default" pulse={true} className="text-xs py-1">
             {t.mcdaChip}
-          </span>
+          </Badge>
         </div>
       </div>
 
@@ -321,14 +327,13 @@ export default function DecisionMaker({
                   +{salaryHikePct}%
                 </span>
               </div>
-              <input
-                type="range"
-                min="0"
-                max="150"
-                step="5"
+              <Slider
+                min={0}
+                max={150}
+                step={5}
                 value={salaryHikePct}
-                onChange={(e) => setSalaryHikePct(Number(e.target.value))}
-                className="slider-teal"
+                onChange={setSalaryHikePct}
+                ariaLabel={t.sliderSalaryHike}
               />
               <p className="text-[10px] text-slate-500 dark:text-white/45 leading-relaxed font-normal">
                 {t.sourceRationaleSalary}
@@ -343,14 +348,13 @@ export default function DecisionMaker({
                   +{hazardPayPct}%
                 </span>
               </div>
-              <input
-                type="range"
-                min="0"
-                max="200"
-                step="10"
+              <Slider
+                min={0}
+                max={200}
+                step={10}
                 value={hazardPayPct}
-                onChange={(e) => setHazardPayPct(Number(e.target.value))}
-                className="slider-teal"
+                onChange={setHazardPayPct}
+                ariaLabel={t.sliderHazardPay}
               />
               <p className="text-[10px] text-slate-500 dark:text-white/45 leading-relaxed font-normal">
                 {t.sourceRationaleHazard}
@@ -365,14 +369,13 @@ export default function DecisionMaker({
                   +{stipendPct}%
                 </span>
               </div>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                step="5"
+              <Slider
+                min={0}
+                max={100}
+                step={5}
                 value={stipendPct}
-                onChange={(e) => setStipendPct(Number(e.target.value))}
-                className="slider-teal"
+                onChange={setStipendPct}
+                ariaLabel={t.sliderIncentive}
               />
               <p className="text-[10px] text-slate-500 dark:text-white/45 leading-relaxed font-normal">
                 {t.sourceRationaleStipend}
@@ -397,14 +400,13 @@ export default function DecisionMaker({
                   {securityPct}%
                 </span>
               </div>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                step="5"
+              <Slider
+                min={0}
+                max={100}
+                step={5}
                 value={securityPct}
-                onChange={(e) => setSecurityPct(Number(e.target.value))}
-                className="slider-teal"
+                onChange={setSecurityPct}
+                ariaLabel={t.sliderSecurity}
               />
               <p className="text-[10px] text-slate-500 dark:text-white/45 leading-relaxed font-normal">
                 {t.sourceRationaleSecurity}
@@ -419,14 +421,13 @@ export default function DecisionMaker({
                   {equipmentPct}%
                 </span>
               </div>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                step="5"
+              <Slider
+                min={0}
+                max={100}
+                step={5}
                 value={equipmentPct}
-                onChange={(e) => setEquipmentPct(Number(e.target.value))}
-                className="slider-teal"
+                onChange={setEquipmentPct}
+                ariaLabel={t.sliderEquipment}
               />
               <p className="text-[10px] text-slate-500 dark:text-white/45 leading-relaxed font-normal">
                 {t.sourceRationaleEquipment}
@@ -441,13 +442,13 @@ export default function DecisionMaker({
                   {clinics}
                 </span>
               </div>
-              <input
-                type="range"
-                min="0"
-                max="50"
+              <Slider
+                min={0}
+                max={50}
+                step={1}
                 value={clinics}
-                onChange={(e) => setClinics(Number(e.target.value))}
-                className="slider-teal"
+                onChange={setClinics}
+                ariaLabel={t.sliderClinics}
               />
               <p className="text-[10px] text-slate-500 dark:text-white/45 leading-relaxed font-normal">
                 {t.sourceRationaleClinics}
@@ -462,13 +463,13 @@ export default function DecisionMaker({
                   +{greeningPct}%
                 </span>
               </div>
-              <input
-                type="range"
-                min="0"
-                max="30"
+              <Slider
+                min={0}
+                max={30}
+                step={1}
                 value={greeningPct}
-                onChange={(e) => setGreeningPct(Number(e.target.value))}
-                className="slider-teal"
+                onChange={setGreeningPct}
+                ariaLabel={t.sliderGreening}
               />
               <p className="text-[10px] text-slate-500 dark:text-white/45 leading-relaxed font-normal">
                 {t.sourceRationaleGreening}
@@ -543,11 +544,20 @@ export default function DecisionMaker({
                 <span className="text-rose-600 dark:text-rose-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceExecTurnover}
               </span>
             </div>
-            <div className="h-[180px] w-full flex items-center justify-center">
-              {turnoverChartData ? (
-                <Doughnut
-                  data={turnoverChartData}
-                  options={doughnutChartOptions(theme)}
+            <div className="w-full flex items-center justify-center py-1">
+              {donutData && donutData.length > 0 ? (
+                <DonutChart
+                  data={donutData}
+                  layout="vertical"
+                  size={140}
+                  innerRadius={42}
+                  outerRadius={64}
+                  sliceGapAngle={3}
+                  hoverOffset={6}
+                  totalLabel={lang === 'ar' ? 'الإجمالي' : 'Total'}
+                  totalSuffix="%"
+                  centerSublabel={lang === 'ar' ? 'نسبة' : 'Share'}
+                  legendClassName="w-full mt-1.5"
                 />
               ) : (
                 <p className="text-xs text-slate-500 dark:text-white/45 px-4 text-center leading-relaxed">{t.chartNoFieldData}</p>
@@ -612,9 +622,9 @@ export default function DecisionMaker({
           {/* Top 3 Empirical Highlights */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <SpotlightCard className="p-5 border-l-4 border-l-emerald-500 space-y-2">
-              <span className="text-[10px] uppercase tracking-wider text-emerald-600 dark:text-emerald-400 font-bold block">
+              <Badge variant="success" className="text-[10px] font-bold py-0.5">
                 {lang === 'ar' ? 'الصحة العالمية EMHJ (2021)' : 'WHO EMHJ (2021)'}
-              </span>
+              </Badge>
               <div className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
                 <NumberTicker value={97.4} decimalPlaces={1} suffix="%" />
               </div>
@@ -624,9 +634,9 @@ export default function DecisionMaker({
             </SpotlightCard>
 
             <SpotlightCard className="p-5 border-l-4 border-l-sky-500 space-y-2">
-              <span className="text-[10px] uppercase tracking-wider text-sky-600 dark:text-sky-400 font-bold block">
+              <Badge variant="default" className="text-[10px] font-bold py-0.5">
                 {lang === 'ar' ? 'أكسفورد Int Health (2015)' : 'Oxford Int Health (2015)'}
-              </span>
+              </Badge>
               <div className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
                 <NumberTicker value={81.8} decimalPlaces={1} suffix="%" />
               </div>
@@ -636,9 +646,9 @@ export default function DecisionMaker({
             </SpotlightCard>
 
             <SpotlightCard className="p-5 border-l-4 border-l-amber-500 space-y-2">
-              <span className="text-[10px] uppercase tracking-wider text-amber-600 dark:text-amber-400 font-bold block">
+              <Badge variant="warning" className="text-[10px] font-bold py-0.5">
                 {lang === 'ar' ? 'مجلة MDPI للعلوم الاجتماعية (2025)' : 'MDPI Social Sciences (2025)'}
-              </span>
+              </Badge>
               <div className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
                 {lang === 'ar' ? (
                   <><NumberTicker value={20.0} decimalPlaces={1} suffix="×" /> أرجحية</>
@@ -666,9 +676,9 @@ export default function DecisionMaker({
                 <div key={study.id} className="apple-card p-5 space-y-3">
                   <div className="flex flex-wrap items-start justify-between gap-2 border-b border-slate-200/80 dark:border-white/[0.08] pb-3">
                     <div>
-                      <span className="text-[10px] font-bold text-sky-700 dark:text-sky-400 uppercase tracking-wider bg-sky-50 dark:bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-200 dark:border-sky-500/20">
+                      <Badge variant="default" className="text-[10px] font-bold py-0.5">
                         {(lang === 'ar' ? study.journal_ar : study.journal_en) || study.journal} ({study.year})
-                      </span>
+                      </Badge>
                       <h4 className="text-xs font-semibold text-slate-900 dark:text-white/95 mt-1.5 leading-snug">
                         {study.citation}
                       </h4>

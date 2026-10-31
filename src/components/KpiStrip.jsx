@@ -1,12 +1,12 @@
 import React from 'react';
 import { Flame, AlertTriangle, Stethoscope, ArrowLeftRight } from 'lucide-react';
-import SpotlightCard from './ui/SpotlightCard';
-import NumberTicker from './ui/NumberTicker';
+import { SpotlightCard, NumberTicker, Badge } from './ui';
 
 const KPIS = [
   {
     id: 'warming',
-    chipClass: 'satellite-chip text-rose-700 bg-rose-50 border-rose-200 dark:text-rose-300/80 dark:bg-rose-950/40 dark:border-rose-800/40',
+    badgeVariant: 'destructive',
+    pulse: true,
     chipLabelKey: 'kpiChipPower',
     iconBoxClass: 'w-7 h-7 rounded-lg bg-rose-100 text-rose-600 border border-rose-200 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20 flex items-center justify-center',
     Icon: Flame,
@@ -26,7 +26,8 @@ const KPIS = [
   },
   {
     id: 'highest-need',
-    chipClass: 'satellite-chip text-amber-700 bg-amber-50 border-amber-200 dark:text-amber-300/80 dark:bg-amber-950/40 dark:border-amber-800/40',
+    badgeVariant: 'warning',
+    pulse: false,
     chipLabelKey: 'kpiChipModis',
     iconBoxClass: 'w-7 h-7 rounded-lg bg-amber-100 text-amber-600 border border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20 flex items-center justify-center',
     Icon: AlertTriangle,
@@ -48,7 +49,8 @@ const KPIS = [
   },
   {
     id: 'field-doctors',
-    chipClass: 'satellite-chip text-sky-700 bg-sky-50 border-sky-200 dark:text-sky-300/80 dark:bg-sky-950/40 dark:border-sky-800/40',
+    badgeVariant: 'default',
+    pulse: false,
     chipLabelKey: 'kpiChipField',
     iconBoxClass: 'w-7 h-7 rounded-lg bg-sky-100 text-sky-600 border border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 flex items-center justify-center',
     Icon: Stethoscope,
@@ -68,7 +70,8 @@ const KPIS = [
   },
   {
     id: 'divergence',
-    chipClass: 'satellite-chip text-purple-700 bg-purple-50 border-purple-200 dark:text-purple-300/80 dark:bg-purple-950/40 dark:border-purple-800/40',
+    badgeVariant: 'purple',
+    pulse: false,
     chipLabelKey: 'kpiChipSpatial',
     iconBoxClass: 'w-7 h-7 rounded-lg bg-purple-100 text-purple-600 border border-purple-200 dark:bg-purple-500/10 dark:text-purple-400 dark:border-purple-500/20 flex items-center justify-center',
     Icon: ArrowLeftRight,
@@ -93,7 +96,9 @@ export default function KpiStrip({ t }) {
           <SpotlightCard key={kpi.id} className="bento-card p-5 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-3">
-                <span className={kpi.chipClass}>{t[kpi.chipLabelKey]}</span>
+                <Badge variant={kpi.badgeVariant} pulse={kpi.pulse} className="text-[10px] py-0.5">
+                  {t[kpi.chipLabelKey]}
+                </Badge>
                 <div className={kpi.iconBoxClass}>
                   <Icon className="w-4 h-4" />
                 </div>

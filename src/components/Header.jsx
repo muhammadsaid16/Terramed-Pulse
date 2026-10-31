@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Activity, Stethoscope, FileText, Sliders, Globe, Compass, Printer, Menu, X, Satellite, Sun, Moon } from 'lucide-react';
+import { Button, Badge } from './ui';
 
 export default function Header({
   lang,
@@ -52,15 +53,15 @@ export default function Header({
             <span className="font-semibold text-sm sm:text-base tracking-tight text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-300 transition-colors">
               {t.appTitle}
             </span>
-            <span className="satellite-chip hidden xs:inline-flex items-center gap-1 text-[9px] sm:text-[10px] text-sky-700 bg-sky-50 border-sky-200 dark:text-sky-300/80 dark:bg-sky-950/40 dark:border-sky-800/40">
+            <Badge variant="default" pulse={true} className="hidden xs:inline-flex items-center gap-1 text-[10px] py-0.5">
               <Satellite className="w-2.5 h-2.5 text-sky-500 dark:text-sky-400" />
               <span>{t.nasaBadge}</span>
-            </span>
+            </Badge>
           </div>
         </div>
 
         {/* Center: Desktop Mission Control Segmented Track (Visible on lg: 1024px+) */}
-        <nav className="hidden lg:flex items-center apple-segmented-track gap-0.5 max-w-xl">
+        <nav className="hidden lg:flex items-center p-1 rounded-xl bg-slate-100/90 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] gap-1 max-w-xl">
           {navTabs.map(tab => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -68,13 +69,13 @@ export default function Header({
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id)}
-                className={`apple-segmented-item px-3 py-1 text-xs flex items-center gap-1.5 transition-all ${
+                className={`px-3 py-1.5 text-xs font-medium rounded-lg flex items-center gap-1.5 select-none transition-all duration-150 ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.98] ${
                   isActive
-                    ? 'apple-segmented-item-active'
-                    : 'text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/[0.04]'
+                    ? 'bg-white text-slate-900 shadow-sm font-semibold dark:bg-white/15 dark:text-white dark:shadow-[0_2px_8px_rgba(0,0,0,0.3)]'
+                    : 'text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/[0.05]'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-sky-600 dark:text-sky-400' : 'text-slate-400 dark:text-white/50'}`} />
+                <Icon className={`w-3.5 h-3.5 shrink-0 transition-colors ${isActive ? 'text-sky-600 dark:text-sky-400' : 'text-slate-400 dark:text-white/50'}`} />
                 <span className="whitespace-nowrap">{tab.label}</span>
               </button>
             );
@@ -84,60 +85,69 @@ export default function Header({
         {/* Right: Actions & Theme & Mobile Hamburger */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           
-          {/* Guided Tour Pill (Desktop & Large Screens) */}
-          <button
+          {/* Guided Tour Button (Desktop & Large Screens) */}
+          <Button
+            variant="outline"
+            size="chip"
             onClick={onOpenWizard}
-            className="apple-chip px-2.5 py-1 rounded-full text-xs font-medium items-center gap-1.5 hidden xl:flex shrink-0"
+            className="hidden xl:flex items-center gap-1.5"
             title={t.btnWizard}
           >
             <Compass className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400 shrink-0" />
             <span className="whitespace-nowrap">{t.btnWizard}</span>
-          </button>
+          </Button>
 
-          {/* Quick Print Icon */}
-          <button
+          {/* Quick Print Button */}
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => window.print()}
-            className="apple-chip p-1.5 rounded-full hidden sm:flex shrink-0"
+            className="hidden sm:flex h-8 w-8 rounded-full"
             title={t.btnPrintBrief}
           >
             <Printer className="w-3.5 h-3.5 text-slate-500 dark:text-white/60 shrink-0" />
-          </button>
+          </Button>
 
           {/* Theme Switcher Button (Clean Lab Dual Theme) */}
-          <button
-            type="button"
+          <Button
+            variant="outline"
+            size="chip"
             onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
-            className="apple-chip p-1.5 sm:px-2.5 sm:py-1 rounded-full flex items-center gap-1.5 shrink-0 font-medium text-xs"
+            className="flex items-center gap-1.5"
             title={theme === 'dark' ? t.themeLight : t.themeDark}
             aria-label={t.toggleTheme}
           >
             {theme === 'dark' ? (
-              <Sun className="w-3.5 h-3.5 text-amber-400 hover:rotate-45 transition-transform shrink-0" />
+              <Sun className="w-3.5 h-3.5 text-amber-400 hover:rotate-45 transition-transform duration-200 shrink-0" />
             ) : (
-              <Moon className="w-3.5 h-3.5 text-slate-700 hover:-rotate-12 transition-transform shrink-0" />
+              <Moon className="w-3.5 h-3.5 text-slate-700 hover:-rotate-12 transition-transform duration-200 shrink-0" />
             )}
             <span className="hidden md:inline-block whitespace-nowrap text-[11px]">
               {theme === 'dark' ? t.themeLight : t.themeDark}
             </span>
-          </button>
+          </Button>
 
-          {/* Language Switcher Pill */}
-          <button
+          {/* Language Switcher Button */}
+          <Button
+            variant="default"
+            size="chip"
             onClick={toggleLanguage}
-            className="px-3 py-1 rounded-full bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 font-semibold text-xs flex items-center gap-1.5 shadow-sm transition-all shrink-0 active:scale-95"
+            className="bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 font-semibold shadow-sm"
           >
             <Globe className="w-3.5 h-3.5 shrink-0" />
             <span className="whitespace-nowrap">{t.langBtn}</span>
-          </button>
+          </Button>
 
           {/* Mobile/Tablet Menu Button (< 1024px) */}
-          <button
+          <Button
+            variant="outline"
+            size="icon"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.06] dark:hover:bg-white/[0.1] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-white/80 transition-all shrink-0"
+            className="lg:hidden h-8 w-8"
             aria-label="Toggle navigation menu"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5 text-sky-600 dark:text-sky-400" /> : <Menu className="w-5 h-5" />}
-          </button>
+            {mobileMenuOpen ? <X className="w-4 h-4 text-sky-600 dark:text-sky-400" /> : <Menu className="w-4 h-4" />}
+          </Button>
 
         </div>
 

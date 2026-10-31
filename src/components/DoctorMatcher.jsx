@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Stethoscope, HeartPulse, Wind, AlertCircle, Baby, Users, ShieldAlert, Sparkles, CheckCircle2 } from 'lucide-react';
 import { matchSpecialty } from '../lib/trendEngine';
 import { SPECIALTY_FULL_LABELS } from '../lib/specialties';
+import { SpotlightCard, NumberTicker, BorderBeam } from './ui';
 
 // Icons are presentation, so they stay here; the ids and both label registers come from
 // the module that owns the submission vocabulary.
@@ -92,7 +93,8 @@ export default function DoctorMatcher({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* Left: Clinical Evidence & Mechanism (7 cols) */}
-        <div className="lg:col-span-7 apple-card p-6 space-y-5">
+        <SpotlightCard className="lg:col-span-7 apple-card p-6 space-y-5 relative overflow-hidden">
+          <BorderBeam size={220} duration={14} colorFrom="#38bdf8" colorTo="#818cf8" />
           <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] pb-3">
             <h3 className="font-semibold text-sm text-slate-900 dark:text-white flex items-center gap-2">
               <span>{lang === 'ar' ? currentSpecialtyObj?.ar : currentSpecialtyObj?.en}</span>
@@ -154,7 +156,7 @@ export default function DoctorMatcher({
               </span>
             </button>
           </div>
-        </div>
+        </SpotlightCard>
 
         {/* Right: Ranked Recommendations (5 cols) */}
         <div className="lg:col-span-5 flex flex-col space-y-3">
@@ -164,10 +166,14 @@ export default function DoctorMatcher({
 
           <div className="space-y-2.5">
             {rankings.slice(0, 4).map((r, i) => (
-              <div
+              <SpotlightCard
                 key={r.id}
                 onClick={() => onSelectGov(r.id)}
-                className="apple-card p-3.5 flex items-center justify-between cursor-pointer group shadow-sm dark:shadow-md"
+                className={`p-3.5 flex items-center justify-between cursor-pointer group shadow-sm dark:shadow-md transition-all ${
+                  i === 0
+                    ? 'ring-1 ring-sky-500/40 bg-sky-500/[0.03]'
+                    : ''
+                }`}
               >
                 <div className="flex items-center gap-3">
                   <span className={`w-7 h-7 rounded-full text-xs font-semibold flex items-center justify-center transition-all ${
@@ -182,17 +188,17 @@ export default function DoctorMatcher({
                       {lang === 'ar' ? r.name_ar : r.name_en}
                     </span>
                     <span className="text-[10px] text-slate-500 dark:text-white/45 block tabular-nums font-normal mt-0.5">
-                      {t.hniScoreLabel}: {r.hni}
+                      {t.hniScoreLabel}: <NumberTicker value={r.hni} decimalPlaces={1} />
                     </span>
                   </div>
                 </div>
 
                 <div className="text-right rtl:text-left">
                   <span className="text-xs font-semibold text-slate-900 dark:text-white tabular-nums bg-slate-100 dark:bg-white/[0.06] px-3 py-1 rounded-full border border-slate-200 dark:border-white/10">
-                    {r.match_pct}% {t.matchWord}
+                    <NumberTicker value={r.match_pct} suffix={`% ${t.matchWord}`} />
                   </span>
                 </div>
-              </div>
+              </SpotlightCard>
             ))}
           </div>
         </div>

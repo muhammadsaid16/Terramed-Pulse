@@ -1,0 +1,38 @@
+import React from 'react';
+
+/**
+ * 21st.dev Shimmer Button Component
+ * High-conversion interactive button with traveling perimeter sheen and hover glow.
+ */
+export default function ShimmerButton({
+  children,
+  onClick,
+  className = '',
+  shimmerColor = 'rgba(255, 255, 255, 0.4)',
+  shimmerDuration = '3s',
+  type = 'button',
+  ...props
+}) {
+  return (
+    <button
+      type={type}
+      onClick={onClick}
+      className={`relative inline-flex items-center justify-center overflow-hidden rounded-full p-[1.5px] font-semibold transition-all duration-200 active:scale-95 group focus:outline-none focus:ring-2 focus:ring-sky-500/50 ${className}`}
+      {...props}
+    >
+      {/* 21st.dev Traveling Shimmer Background */}
+      <span
+        className="absolute inset-[-100%] animate-[spin_3s_linear_infinite]"
+        style={{
+          background: `conic-gradient(from 0deg, transparent 0 300deg, ${shimmerColor} 340deg, transparent 360deg)`,
+          animationDuration: shimmerDuration
+        }}
+      />
+
+      {/* Button Body */}
+      <span className="relative z-10 inline-flex items-center justify-center gap-2 w-full h-full px-5 py-2.5 rounded-full bg-slate-900 text-white dark:bg-[#0c1222] dark:text-white border border-slate-700/50 dark:border-white/10 group-hover:bg-slate-800 dark:group-hover:bg-[#121b33] transition-colors shadow-sm">
+        {children}
+      </span>
+    </button>
+  );
+}

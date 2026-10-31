@@ -19,6 +19,10 @@ import {
   barChartOptions
 } from '../lib/chartAdapters';
 import { MIGRATION_RESEARCH_STUDIES, DOCUMENTED_MIGRATION_DRIVERS } from '../data/migrationResearchData';
+import SpotlightCard from './ui/SpotlightCard';
+import NumberTicker from './ui/NumberTicker';
+import BorderBeam from './ui/BorderBeam';
+import GlowProgressBar from './ui/GlowProgressBar';
 
 ChartJS.register(
   ArcElement,
@@ -184,7 +188,9 @@ export default function DecisionMaker({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* Left: Live Simulation Output Scoreboard (5 cols) */}
-        <div className="lg:col-span-5 apple-card p-6 space-y-5 lg:sticky lg:top-24 shadow-sm dark:shadow-md">
+        <SpotlightCard className="lg:col-span-5 apple-card p-6 space-y-5 lg:sticky lg:top-24 shadow-sm dark:shadow-md relative overflow-hidden border-emerald-300/80 dark:border-emerald-500/30">
+          <BorderBeam duration={12} colorFrom="#10b981" colorTo="#0ea5e9" borderWidth={1.5} />
+
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-xs text-slate-800 dark:text-white/80">
               {t.simulationHeading}
@@ -211,7 +217,7 @@ export default function DecisionMaker({
                 {t.baselineHni}
               </span>
               <div className="text-3xl font-semibold text-slate-700 dark:text-white/70 tabular-nums">
-                {baseIndices.hni}
+                <NumberTicker value={baseIndices.hni} decimalPlaces={1} />
               </div>
             </div>
             <div className="text-slate-300 dark:text-white/30 font-light text-2xl select-none" aria-hidden="true">
@@ -222,7 +228,7 @@ export default function DecisionMaker({
                 {t.simulatedHni}
               </span>
               <div className="text-3xl font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">
-                {sim.simHni}
+                <NumberTicker value={sim.simHni} decimalPlaces={1} />
               </div>
             </div>
           </div>
@@ -237,67 +243,43 @@ export default function DecisionMaker({
             </span>
           </div>
 
-          {/* Sub-indices Progress Bars */}
-          <div className="space-y-3 pt-2 text-xs">
-            <div>
-              <div className="flex justify-between text-[11px] mb-1 font-medium">
-                <span className="text-slate-700 dark:text-white/70">
-                  {t.sliderEpi}
-                </span>
-                <span className="text-rose-600 dark:text-rose-400 tabular-nums font-semibold">{sim.simEpi}</span>
-              </div>
-              <div className="w-full bg-slate-200 dark:bg-white/[0.06] rounded-full h-1.5 overflow-hidden">
-                <div
-                  className="bg-rose-500 h-full rounded-full transition-all duration-500"
-                  style={{ width: `${Math.min(100, sim.simEpi)}%` }}
-                />
-              </div>
-            </div>
+          {/* Sub-indices Progress Bars using 21st.dev GlowProgressBar */}
+          <div className="space-y-3.5 pt-2 text-xs">
+            <GlowProgressBar
+              label={t.sliderEpi}
+              value={sim.simEpi}
+              valueText={`${sim.simEpi}`}
+              gradientFrom="from-rose-500"
+              gradientTo="to-red-600"
+              glowColor="shadow-rose-500/25"
+            />
 
-            <div>
-              <div className="flex justify-between text-[11px] mb-1 font-medium">
-                <span className="text-slate-700 dark:text-white/70">
-                  {t.sliderPpi}
-                </span>
-                <span className="text-amber-600 dark:text-amber-400 tabular-nums font-semibold">{baseIndices.ppi}</span>
-              </div>
-              <div className="w-full bg-slate-200 dark:bg-white/[0.06] rounded-full h-1.5 overflow-hidden">
-                <div
-                  className="bg-amber-500 h-full rounded-full transition-all duration-500"
-                  style={{ width: `${Math.min(100, baseIndices.ppi)}%` }}
-                />
-              </div>
-            </div>
+            <GlowProgressBar
+              label={t.sliderPpi}
+              value={baseIndices.ppi}
+              valueText={`${baseIndices.ppi}`}
+              gradientFrom="from-amber-500"
+              gradientTo="to-orange-500"
+              glowColor="shadow-amber-500/25"
+            />
 
-            <div>
-              <div className="flex justify-between text-[11px] mb-1 font-medium">
-                <span className="text-slate-700 dark:text-white/70">
-                  {t.sliderFsi}
-                </span>
-                <span className="text-sky-600 dark:text-sky-400 tabular-nums font-semibold">{sim.simFsi}</span>
-              </div>
-              <div className="w-full bg-slate-200 dark:bg-white/[0.06] rounded-full h-1.5 overflow-hidden">
-                <div
-                  className="bg-sky-500 h-full rounded-full transition-all duration-500"
-                  style={{ width: `${Math.min(100, sim.simFsi)}%` }}
-                />
-              </div>
-            </div>
+            <GlowProgressBar
+              label={t.sliderFsi}
+              value={sim.simFsi}
+              valueText={`${sim.simFsi}`}
+              gradientFrom="from-sky-500"
+              gradientTo="to-blue-600"
+              glowColor="shadow-sky-500/25"
+            />
 
-            <div>
-              <div className="flex justify-between text-[11px] mb-1 font-medium">
-                <span className="text-slate-700 dark:text-white/70">
-                  {t.sliderWni}
-                </span>
-                <span className="text-emerald-600 dark:text-emerald-400 tabular-nums font-semibold">{sim.simWni}</span>
-              </div>
-              <div className="w-full bg-slate-200 dark:bg-white/[0.06] rounded-full h-1.5 overflow-hidden">
-                <div
-                  className="bg-emerald-500 h-full rounded-full transition-all duration-500"
-                  style={{ width: `${Math.min(100, sim.simWni)}%` }}
-                />
-              </div>
-            </div>
+            <GlowProgressBar
+              label={t.sliderWni}
+              value={sim.simWni}
+              valueText={`${sim.simWni}`}
+              gradientFrom="from-emerald-500"
+              gradientTo="to-teal-600"
+              glowColor="shadow-emerald-500/25"
+            />
           </div>
 
           <details className="rounded-xl border border-slate-200/80 dark:border-white/[0.08] bg-slate-50 dark:bg-white/[0.02] px-3.5 py-2.5">
@@ -309,7 +291,7 @@ export default function DecisionMaker({
             </p>
           </details>
 
-        </div>
+        </SpotlightCard>
 
         {/* Right: Policy Sliders & Projected Health Dividends (7 cols) */}
         <div className="lg:col-span-7 apple-card p-6 space-y-6 shadow-sm dark:shadow-md">
@@ -494,14 +476,16 @@ export default function DecisionMaker({
 
           {/* Projected Dividends */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.08] text-center shadow-xs">
+            <SpotlightCard className="p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.08] text-center shadow-xs">
               <span className="text-[11px] text-slate-500 dark:text-white/50 block font-medium">
                 {t.admissionsPrevented}
               </span>
               <div className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white mt-1 tabular-nums">
-                {lang === 'ar' 
-                  ? `~${(sim.preventedAdmissions / 1000).toFixed(1)} ألف حالة / شهرياً`
-                  : `~${(sim.preventedAdmissions / 1000).toFixed(1)}k cases / mo`}
+                {lang === 'ar' ? (
+                  <>~<NumberTicker value={Number((sim.preventedAdmissions / 1000).toFixed(1))} decimalPlaces={1} /> ألف حالة / شهرياً</>
+                ) : (
+                  <>~<NumberTicker value={Number((sim.preventedAdmissions / 1000).toFixed(1))} decimalPlaces={1} />k cases / mo</>
+                )}
               </div>
               <span className="text-[10px] text-slate-500 dark:text-white/40 block mt-1">
                 {t.scenarioIllustrativeNote}
@@ -509,14 +493,14 @@ export default function DecisionMaker({
               <span className="text-[9px] text-slate-500 dark:text-white/45 block mt-1 pt-1.5 border-t border-slate-200/80 dark:border-white/[0.06]">
                 <span className="text-sky-600 dark:text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceAdmissionsPrevented}
               </span>
-            </div>
+            </SpotlightCard>
 
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.08] text-center shadow-xs">
+            <SpotlightCard className="p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.08] text-center shadow-xs">
               <span className="text-[11px] text-slate-500 dark:text-white/50 block font-medium">
                 {t.retentionBoost}
               </span>
               <div className="text-xl sm:text-2xl font-semibold text-sky-600 dark:text-sky-400 mt-1 tabular-nums">
-                +{sim.retentionGainPct}%
+                +<NumberTicker value={sim.retentionGainPct} decimalPlaces={1} suffix="%" />
               </div>
               <span className="text-[10px] text-sky-600/80 dark:text-sky-400/60 block mt-1">
                 {t.modeledResponseNote}
@@ -524,7 +508,7 @@ export default function DecisionMaker({
               <span className="text-[9px] text-sky-600/90 dark:text-sky-400/80 block mt-1 pt-1.5 border-t border-slate-200/80 dark:border-white/[0.06]">
                 <span className="text-slate-500 dark:text-white/40">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceProjectedRetention}
               </span>
-            </div>
+            </SpotlightCard>
           </div>
 
         </div>
@@ -625,37 +609,45 @@ export default function DecisionMaker({
         <div className="space-y-6 animate-fade-in">
           {/* Top 3 Empirical Highlights */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="apple-card p-5 border-l-4 border-l-emerald-500 space-y-2">
+            <SpotlightCard className="p-5 border-l-4 border-l-emerald-500 space-y-2">
               <span className="text-[10px] uppercase tracking-wider text-emerald-600 dark:text-emerald-400 font-bold block">
                 {lang === 'ar' ? 'الصحة العالمية EMHJ (2021)' : 'WHO EMHJ (2021)'}
               </span>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">97.4%</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
+                <NumberTicker value={97.4} decimalPlaces={1} suffix="%" />
+              </div>
               <p className="text-xs text-slate-600 dark:text-white/70 leading-relaxed">
                 {t.evidenceWhoStat}
               </p>
-            </div>
+            </SpotlightCard>
 
-            <div className="apple-card p-5 border-l-4 border-l-sky-500 space-y-2">
+            <SpotlightCard className="p-5 border-l-4 border-l-sky-500 space-y-2">
               <span className="text-[10px] uppercase tracking-wider text-sky-600 dark:text-sky-400 font-bold block">
                 {lang === 'ar' ? 'أكسفورد Int Health (2015)' : 'Oxford Int Health (2015)'}
               </span>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">81.8%</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
+                <NumberTicker value={81.8} decimalPlaces={1} suffix="%" />
+              </div>
               <p className="text-xs text-slate-600 dark:text-white/70 leading-relaxed">
                 {t.evidenceOxfordStat}
               </p>
-            </div>
+            </SpotlightCard>
 
-            <div className="apple-card p-5 border-l-4 border-l-amber-500 space-y-2">
+            <SpotlightCard className="p-5 border-l-4 border-l-amber-500 space-y-2">
               <span className="text-[10px] uppercase tracking-wider text-amber-600 dark:text-amber-400 font-bold block">
                 {lang === 'ar' ? 'مجلة MDPI للعلوم الاجتماعية (2025)' : 'MDPI Social Sciences (2025)'}
               </span>
               <div className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
-                {lang === 'ar' ? '20.0× أرجحية' : '20.0× Odds'}
+                {lang === 'ar' ? (
+                  <><NumberTicker value={20.0} decimalPlaces={1} suffix="×" /> أرجحية</>
+                ) : (
+                  <><NumberTicker value={20.0} decimalPlaces={1} suffix="×" /> Odds</>
+                )}
               </div>
               <p className="text-xs text-slate-600 dark:text-white/70 leading-relaxed">
                 {t.evidenceMdpiStat}
               </p>
-            </div>
+            </SpotlightCard>
           </div>
 
           {/* Detailed Peer-Reviewed Studies */}

@@ -85,6 +85,47 @@ body[dir="rtl"] {
   }
 }
 
+/* 21st.dev Component Tokens */
+:root {
+  --spotlight-glow: rgba(14, 165, 233, 0.08);
+}
+
+html.dark {
+  --spotlight-glow: rgba(56, 189, 248, 0.14);
+}
+
+/* 21st.dev Marquee Keyframes */
+@keyframes marquee {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marquee-reverse {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee var(--marquee-duration, 30s) linear infinite;
+}
+
+.animate-marquee-reverse {
+  animation: marquee-reverse var(--marquee-duration, 30s) linear infinite;
+}
+
+.pause-on-hover:hover .animate-marquee,
+.pause-on-hover:hover .animate-marquee-reverse {
+  animation-play-state: paused;
+}
+
 /* Telemetry Typography */
 .telemetry-mono {
   font-family: var(--font-mono);

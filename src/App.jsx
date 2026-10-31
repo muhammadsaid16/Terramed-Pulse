@@ -14,6 +14,8 @@ import DbSyncModal from './components/DbSyncModal';
 import PrintBrief from './components/PrintBrief';
 import Footer from './components/Footer';
 
+import { SpotlightCard, ShimmerButton, PulsingBadge, DotPattern, Marquee } from './components/ui';
+
 import { TERRAPULSE_DATA } from './data/terrapulseData';
 import { TRANSLATIONS } from './lib/translations';
 import { computeWNIFromReports, computeHNI, WNI_PRIOR_DEFAULT } from './lib/trendEngine';
@@ -266,6 +268,30 @@ export default function App() {
 
   const currentGovData = appData?.governorates?.[selectedGov] || null;
 
+  const tickerItems = useMemo(() => {
+    return lang === 'ar'
+      ? [
+          { title: 'مرصد ناسا POWER', desc: 'احترار 31 عاماً (+0.44°م)' },
+          { title: 'ذروة أسوان الحرارية', desc: '46.2°م T2M_MAX' },
+          { title: 'هباء جوي MERRA-2', desc: 'كثافة 0.44 AOD بالقاهرة' },
+          { title: 'رادار دلتا النيل', desc: 'انحسار غطاء نباتي NDVI (-0.003/yr)' },
+          { title: 'المرصد الميداني', desc: '1,735 استبيان أطباء موثق' },
+          { title: 'مؤشر HNI الحرج', desc: 'أسوان 88.4 نقطة عجز' },
+          { title: 'اختبار مان-كيندال', desc: 'Z=3.94 (ثقة 99.9%)' },
+          { title: 'استبقاء الكوادر', desc: 'مكاسب متوقعة +18.4%' }
+        ]
+      : [
+          { title: 'NASA POWER Telemetry', desc: '31-Yr Warming (+0.44°C)' },
+          { title: 'Upper Egypt Peak', desc: 'Aswan 46.2°C T2M_MAX' },
+          { title: 'MERRA-2 Particulates', desc: 'Cairo AOD 0.44' },
+          { title: 'Nile Delta Radar', desc: 'Vegetative shift -0.003 NDVI/yr' },
+          { title: 'Field Observatory', desc: '1,735 Physician Responses' },
+          { title: 'Critical HNI Score', desc: 'Aswan 88.4 Index' },
+          { title: 'Mann-Kendall Test', desc: 'Z=3.94 (p < 0.0001, 99.9% Conf)' },
+          { title: 'Stay & Build Model', desc: 'Projected retention gain +18.4%' }
+        ];
+  }, [lang]);
+
   return (
     <div className={`min-h-screen flex flex-col bg-slate-50 dark:bg-[#050811] text-slate-900 dark:text-slate-100 transition-colors duration-200 ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
       
@@ -299,16 +325,20 @@ export default function App() {
         {/* ===================================================================
             SECTION 1: HERO & CORE VISION (Docx Section 1 & 6)
             =================================================================== */}
-        <section className="bento-card p-6 sm:p-10 mb-8 relative overflow-hidden">
-          {/* Ambient background glow */}
+        <SpotlightCard as="section" className="bento-card p-6 sm:p-10 mb-6 relative overflow-hidden">
+          {/* Subtle 21st.dev Dot Pattern & Ambient Glow */}
+          <DotPattern className="opacity-70" />
           <div className="absolute top-0 right-0 -mr-24 -mt-24 w-96 h-96 bg-sky-400/10 dark:bg-sky-500/15 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 -ml-24 -mb-24 w-96 h-96 bg-purple-400/5 dark:bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 max-w-4xl space-y-4 sm:space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-sky-100 text-sky-800 border border-sky-200 dark:bg-sky-950/50 dark:text-sky-300 dark:border-sky-800/40 backdrop-blur-xl">
-              <Sparkles className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
-              <span>{t.heroBadge}</span>
-            </div>
+            <PulsingBadge
+              label={t.heroBadge}
+              sublabel="NASA POWER • MODIS Terra/Aqua • SEDAC"
+              pulseColor="bg-sky-500"
+              pingColor="bg-sky-400"
+              className="mb-1"
+            />
 
             <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-950 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-b dark:from-white dark:via-white/95 dark:to-white/60 leading-[1.15]">
               {t.heroMainTitle}
@@ -320,17 +350,17 @@ export default function App() {
 
             {/* The 2 Primary Hero Call-to-Actions from Docx Section 6 */}
             <div className="pt-2 flex flex-wrap items-center gap-3">
-              <button
+              <ShimmerButton
                 onClick={() => {
                   setActiveTab('doctor');
                   const el = document.getElementById('section-doctor');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="apple-btn-primary px-5 py-2.5 text-xs sm:text-sm flex items-center gap-2"
+                className="text-xs sm:text-sm"
               >
-                <Stethoscope className="w-4 h-4 text-white dark:text-black" />
+                <Stethoscope className="w-4 h-4 text-sky-400" />
                 <span>{t.btnDoctorCta}</span>
-              </button>
+              </ShimmerButton>
 
               <button
                 onClick={() => {
@@ -360,7 +390,29 @@ export default function App() {
               </div>
             </div>
           </div>
-        </section>
+        </SpotlightCard>
+
+        {/* 21st.dev Live Satellite & Scientific Telemetry Ticker Marquee */}
+        <div className="mb-8 rounded-2xl bg-white/70 dark:bg-[#070b14]/70 border border-slate-200/80 dark:border-white/[0.06] backdrop-blur-md overflow-hidden shadow-xs flex items-center">
+          <div className="px-3.5 py-2 bg-sky-500/10 border-r rtl:border-r-0 rtl:border-l border-slate-200/80 dark:border-white/10 flex items-center gap-2 shrink-0">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="text-[10px] font-mono font-bold tracking-wider text-sky-700 dark:text-sky-300 uppercase">
+              {lang === 'ar' ? 'بث حي' : 'LIVE'}
+            </span>
+          </div>
+          <Marquee duration={35} className="text-xs text-slate-600 dark:text-white/75">
+            {tickerItems.map((item, idx) => (
+              <div key={idx} className="flex items-center gap-2 mx-4 whitespace-nowrap">
+                <span className="text-slate-400 dark:text-white/30">•</span>
+                <span className="font-semibold text-slate-800 dark:text-white/95">{item.title}:</span>
+                <span className="tabular-nums text-slate-600 dark:text-white/70">{item.desc}</span>
+              </div>
+            ))}
+          </Marquee>
+        </div>
 
         {/* Executive KPI Summary Strip */}
         <KpiStrip t={t} />

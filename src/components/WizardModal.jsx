@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Compass, X, ArrowRight, ArrowLeft, Check, Sparkles, MapPin, Activity, Stethoscope } from 'lucide-react';
+import { ShimmerButton } from './ui';
 
 export default function WizardModal({ isOpen, onClose, lang, t, onApplyPreset }) {
   const [step, setStep] = useState(1);
@@ -316,14 +317,13 @@ export default function WizardModal({ isOpen, onClose, lang, t, onApplyPreset })
               <ArrowRight className="w-3.5 h-3.5 rtl:rotate-180" />
             </button>
           ) : (
-            <button
-              type="button"
+            <ShimmerButton
               onClick={handleFinish}
-              className="apple-btn-primary px-5 py-2 text-xs font-semibold flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white dark:from-emerald-400 dark:to-teal-400 dark:text-black shadow-lg shadow-teal-500/20 hover:opacity-95 transition-all"
+              className="text-xs font-semibold py-2 px-5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white dark:from-emerald-400 dark:to-teal-400 dark:text-black shadow-lg shadow-teal-500/20"
             >
               <span>{t.btnFinish || (isAr ? 'تطبيق التحقيق على المنظومة' : 'Apply Investigation')}</span>
               <Sparkles className="w-3.5 h-3.5" />
-            </button>
+            </ShimmerButton>
           )}
         </div>
 

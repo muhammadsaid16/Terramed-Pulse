@@ -1,5 +1,7 @@
 import React from 'react';
 import { Flame, AlertTriangle, Stethoscope, ArrowLeftRight } from 'lucide-react';
+import SpotlightCard from './ui/SpotlightCard';
+import NumberTicker from './ui/NumberTicker';
 
 const KPIS = [
   {
@@ -9,8 +11,13 @@ const KPIS = [
     iconBoxClass: 'w-7 h-7 rounded-lg bg-rose-100 text-rose-600 border border-rose-200 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20 flex items-center justify-center',
     Icon: Flame,
     labelKey: 'kpiWarmingLabel',
-    valueClass: 'text-3xl font-bold tracking-tight text-slate-900 dark:text-white telemetry-mono',
-    Value: ({ t }) => t.kpiWarmingRate,
+    valueClass: 'text-3xl font-bold tracking-tight text-slate-900 dark:text-white telemetry-mono flex items-baseline gap-1.5',
+    Value: ({ t }) => (
+      <>
+        <NumberTicker value={0.44} prefix="+" suffix="°C" decimalPlaces={2} />
+        <span className="text-xs font-normal text-slate-500 dark:text-white/50">{t.kpiWarmingRate?.split('°C')[1] || '/ decade'}</span>
+      </>
+    ),
     dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-rose-500 dark:bg-rose-400 animate-pulse',
     subClass: 'text-xs text-rose-600 dark:text-rose-400/80 mt-1.5 font-medium flex items-center gap-1',
     subKey: 'kpiWarmingSub',
@@ -24,8 +31,15 @@ const KPIS = [
     iconBoxClass: 'w-7 h-7 rounded-lg bg-amber-100 text-amber-600 border border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20 flex items-center justify-center',
     Icon: AlertTriangle,
     labelKey: 'kpiHighestNeedLabel',
-    valueClass: 'text-2xl sm:text-3xl font-bold tracking-tight text-amber-600 dark:text-amber-300 telemetry-mono',
-    Value: ({ t }) => t.kpiHighestNeed,
+    valueClass: 'text-2xl sm:text-3xl font-bold tracking-tight text-amber-600 dark:text-amber-400 telemetry-mono flex items-baseline gap-1.5',
+    Value: ({ t }) => (
+      <>
+        <span>{t.kpiHighestNeed?.split('(')[0]?.trim() || 'Aswan'}</span>
+        <span className="text-sm font-semibold text-amber-500 dark:text-amber-300 flex items-center">
+          (<NumberTicker value={88.4} decimalPlaces={1} prefix="HNI " />)
+        </span>
+      </>
+    ),
     dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-400',
     subClass: 'text-xs text-amber-600 dark:text-amber-400/80 mt-1.5 font-medium flex items-center gap-1',
     subKey: 'kpiHighestNeedSub',
@@ -39,10 +53,11 @@ const KPIS = [
     iconBoxClass: 'w-7 h-7 rounded-lg bg-sky-100 text-sky-600 border border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 flex items-center justify-center',
     Icon: Stethoscope,
     labelKey: 'kpiTotalDoctorsLabel',
-    valueClass: 'text-3xl font-bold tracking-tight text-slate-900 dark:text-white telemetry-mono',
+    valueClass: 'text-3xl font-bold tracking-tight text-slate-900 dark:text-white telemetry-mono flex items-baseline gap-1.5',
     Value: ({ t }) => (
       <>
-        1,735 <span className="text-sm font-normal text-slate-500 dark:text-white/50">{t.kpiTotalDoctors}</span>
+        <NumberTicker value={1735} />
+        <span className="text-sm font-normal text-slate-500 dark:text-white/50">{t.kpiTotalDoctors}</span>
       </>
     ),
     dotClass: 'inline-block w-1.5 h-1.5 rounded-full bg-sky-500 dark:bg-sky-400',
@@ -75,7 +90,7 @@ export default function KpiStrip({ t }) {
         const Icon = kpi.Icon;
         const Value = kpi.Value;
         return (
-          <div key={kpi.id} className="bento-card p-5 relative overflow-hidden group flex flex-col justify-between">
+          <SpotlightCard key={kpi.id} className="bento-card p-5 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-3">
                 <span className={kpi.chipClass}>{t[kpi.chipLabelKey]}</span>
@@ -102,7 +117,7 @@ export default function KpiStrip({ t }) {
             </div>
 
             <div className={kpi.glowClass} />
-          </div>
+          </SpotlightCard>
         );
       })}
     </div>

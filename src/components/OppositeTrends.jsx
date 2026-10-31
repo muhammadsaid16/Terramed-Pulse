@@ -1,5 +1,7 @@
 import React from 'react';
 import { ArrowUpRight, ArrowDownRight, Compass } from 'lucide-react';
+import SpotlightCard from './ui/SpotlightCard';
+import BorderBeam from './ui/BorderBeam';
 
 // The two hotspot cards are the same component shape; only accent colors, icon and telemetry chips differ.
 // Class strings stay literal (not interpolated) so Tailwind's content scanner keeps them in the bundle.
@@ -63,8 +65,22 @@ export default function OppositeTrends({ t }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {HOTSPOTS.map(spot => {
           const Icon = spot.Icon;
+          const isUpperEgypt = spot.id === 'upper-egypt';
           return (
-            <div key={spot.id} className="bento-card p-4 sm:p-5 relative overflow-hidden group flex flex-col justify-between shadow-sm dark:shadow-md">
+            <SpotlightCard
+              key={spot.id}
+              className={`bento-card p-4 sm:p-5 relative flex flex-col justify-between shadow-sm dark:shadow-md ${
+                isUpperEgypt ? 'border-rose-300/80 dark:border-rose-500/30' : ''
+              }`}
+            >
+              {isUpperEgypt && (
+                <BorderBeam
+                  duration={9}
+                  colorFrom="#f43f5e"
+                  colorTo="#fb923c"
+                  borderWidth={1.5}
+                />
+              )}
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <span className={spot.labelClass}>
@@ -94,7 +110,7 @@ export default function OppositeTrends({ t }) {
               </div>
 
               <div className={spot.glowClass} />
-            </div>
+            </SpotlightCard>
           );
         })}
       </div>

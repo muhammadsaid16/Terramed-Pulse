@@ -43,6 +43,10 @@ export default function DecisionMaker({
   const [clinics, setClinics] = useState(15);
   const [stipendPct, setStipendPct] = useState(40);
   const [greeningPct, setGreeningPct] = useState(10);
+  const [salaryHikePct, setSalaryHikePct] = useState(50);
+  const [hazardPayPct, setHazardPayPct] = useState(60);
+  const [securityPct, setSecurityPct] = useState(40);
+  const [equipmentPct, setEquipmentPct] = useState(50);
 
   // Guard per-field, not per-object: App.jsx only writes `wni` in a post-paint effect,
   // so on the first frame `baseline_indices.wni` is undefined and every product of it
@@ -72,9 +76,13 @@ export default function DecisionMaker({
       baseIndices.ppi,
       clinics,
       stipendPct,
-      greeningPct
+      greeningPct,
+      salaryHikePct,
+      hazardPayPct,
+      securityPct,
+      equipmentPct
     );
-  }, [baseIndices, clinics, stipendPct, greeningPct]);
+  }, [baseIndices, clinics, stipendPct, greeningPct, salaryHikePct, hazardPayPct, securityPct, equipmentPct]);
 
   // Aggregate local submissions and verified community reports for executive analytics
   const combinedReports = useMemo(() => {
@@ -311,7 +319,7 @@ export default function DecisionMaker({
         </div>
 
         {/* Right: Policy Sliders & Projected Health Dividends (7 cols) */}
-        <div className="lg:col-span-7 apple-card p-6 space-y-5">
+        <div className="lg:col-span-7 apple-card p-6 space-y-6">
           <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
             <h3 className="font-semibold text-xs text-white/80">
               {t.leversTitle}
@@ -319,58 +327,155 @@ export default function DecisionMaker({
             <span className="text-[11px] text-white/50">{t.leversSub}</span>
           </div>
 
-          {/* Slider 1: Clinics */}
-          <div className="space-y-1.5">
-            <div className="flex justify-between text-xs font-medium">
-              <label className="text-white/80">{t.sliderClinics}</label>
-              <span className="font-semibold text-white tabular-nums bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-white/10 text-[11px]">
-                {clinics}
-              </span>
+          {/* TRACK 1: DIRECT FINANCIAL & COMPENSATION PACKAGE */}
+          <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-4">
+            <div className="flex items-center gap-2 border-b border-white/[0.06] pb-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <h4 className="text-xs font-semibold text-emerald-300">
+                {t.trackFinancialTitle}
+              </h4>
             </div>
-            <input
-              type="range"
-              min="0"
-              max="50"
-              value={clinics}
-              onChange={(e) => setClinics(Number(e.target.value))}
-              className="slider-teal"
-            />
+
+            {/* Slider 1: Base Salary Hike */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs font-medium">
+                <label className="text-white/80">{t.sliderSalaryHike}</label>
+                <span className="font-semibold text-emerald-300 tabular-nums bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-white/10 text-[11px]">
+                  +{salaryHikePct}%
+                </span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="150"
+                step="5"
+                value={salaryHikePct}
+                onChange={(e) => setSalaryHikePct(Number(e.target.value))}
+                className="slider-teal"
+              />
+            </div>
+
+            {/* Slider 2: Hazard & Infection Pay */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs font-medium">
+                <label className="text-white/80">{t.sliderHazardPay}</label>
+                <span className="font-semibold text-emerald-300 tabular-nums bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-white/10 text-[11px]">
+                  +{hazardPayPct}%
+                </span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="200"
+                step="10"
+                value={hazardPayPct}
+                onChange={(e) => setHazardPayPct(Number(e.target.value))}
+                className="slider-teal"
+              />
+            </div>
+
+            {/* Slider 3: Remote Housing & Hardship Allowance */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs font-medium">
+                <label className="text-white/80">{t.sliderIncentive}</label>
+                <span className="font-semibold text-emerald-300 tabular-nums bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-white/10 text-[11px]">
+                  +{stipendPct}%
+                </span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="5"
+                value={stipendPct}
+                onChange={(e) => setStipendPct(Number(e.target.value))}
+                className="slider-teal"
+              />
+            </div>
           </div>
 
-          {/* Slider 2: Rural Incentives */}
-          <div className="space-y-1.5">
-            <div className="flex justify-between text-xs font-medium">
-              <label className="text-white/80">{t.sliderIncentive}</label>
-              <span className="font-semibold text-white tabular-nums bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-white/10 text-[11px]">
-                +{stipendPct}%
-              </span>
+          {/* TRACK 2: WORKPLACE SAFETY & CLINICAL FACILITIES */}
+          <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-4">
+            <div className="flex items-center gap-2 border-b border-white/[0.06] pb-2">
+              <span className="w-2 h-2 rounded-full bg-sky-400"></span>
+              <h4 className="text-xs font-semibold text-sky-300">
+                {t.trackFacilitiesTitle}
+              </h4>
             </div>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={stipendPct}
-              onChange={(e) => setStipendPct(Number(e.target.value))}
-              className="slider-teal"
-            />
-          </div>
 
-          {/* Slider 3: Urban Greening */}
-          <div className="space-y-1.5">
-            <div className="flex justify-between text-xs font-medium">
-              <label className="text-white/80">{t.sliderGreening}</label>
-              <span className="font-semibold text-white tabular-nums bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-white/10 text-[11px]">
-                +{greeningPct}%
-              </span>
+            {/* Slider 4: Hospital Security Protection */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs font-medium">
+                <label className="text-white/80">{t.sliderSecurity}</label>
+                <span className="font-semibold text-sky-300 tabular-nums bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-white/10 text-[11px]">
+                  {securityPct}%
+                </span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="5"
+                value={securityPct}
+                onChange={(e) => setSecurityPct(Number(e.target.value))}
+                className="slider-teal"
+              />
             </div>
-            <input
-              type="range"
-              min="0"
-              max="30"
-              value={greeningPct}
-              onChange={(e) => setGreeningPct(Number(e.target.value))}
-              className="slider-teal"
-            />
+
+            {/* Slider 5: Critical Care & Dialysis Re-equipment */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs font-medium">
+                <label className="text-white/80">{t.sliderEquipment}</label>
+                <span className="font-semibold text-sky-300 tabular-nums bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-white/10 text-[11px]">
+                  {equipmentPct}%
+                </span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="5"
+                value={equipmentPct}
+                onChange={(e) => setEquipmentPct(Number(e.target.value))}
+                className="slider-teal"
+              />
+            </div>
+
+            {/* Slider 6: Mobile Response Clinics */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs font-medium">
+                <label className="text-white/80">{t.sliderClinics}</label>
+                <span className="font-semibold text-sky-300 tabular-nums bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-white/10 text-[11px]">
+                  {clinics}
+                </span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="50"
+                value={clinics}
+                onChange={(e) => setClinics(Number(e.target.value))}
+                className="slider-teal"
+              />
+            </div>
+
+            {/* Slider 7: Urban Greening & Cool Surfaces (NASA Heat Exposure Reduction) */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs font-medium">
+                <label className="text-white/80">{t.sliderGreening}</label>
+                <span className="font-semibold text-sky-300 tabular-nums bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-white/10 text-[11px]">
+                  +{greeningPct}%
+                </span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="30"
+                value={greeningPct}
+                onChange={(e) => setGreeningPct(Number(e.target.value))}
+                className="slider-teal"
+              />
+            </div>
           </div>
 
           {/* Projected Dividends */}

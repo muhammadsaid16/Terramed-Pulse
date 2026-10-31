@@ -492,7 +492,11 @@ export const ADMISSIONS_MODEL = { perClinic: 34, perStipendPct: 11, perGreeningP
 export const RETENTION_MODEL = { perStipendPct: 0.14, perClinic: 0.04 };
 export const RETENTION_CEILING = 25;
 
-export function simulatePolicyInterventions(baseHni, baseEpi, baseFsi, baseWni, basePpi, clinics = 0, stipendPct = 0, greeningPct = 0) {
+export function simulatePolicyInterventions(
+  baseHni, baseEpi, baseFsi, baseWni, basePpi,
+  clinics = 0, stipendPct = 0, greeningPct = 0,
+  salaryHikePct = 0, hazardPayPct = 0, securityPct = 0, equipmentPct = 0
+) {
   const bHni = finiteIndex(baseHni, NEUTRAL_INDICES.hni);
   const bEpi = finiteIndex(baseEpi, NEUTRAL_INDICES.epi);
   const bFsi = finiteIndex(baseFsi, NEUTRAL_INDICES.fsi);
@@ -507,9 +511,16 @@ export function simulatePolicyInterventions(baseHni, baseEpi, baseFsi, baseWni, 
   const nClinics = lever(clinics);
   const nStipend = lever(stipendPct);
   const nGreening = lever(greeningPct);
+  const nSalaryHike = lever(salaryHikePct);
+  const nHazardPay = lever(hazardPayPct);
+  const nSecurity = lever(securityPct);
+  const nEquipment = lever(equipmentPct);
 
-  const fsiReduction = (nClinics / 50.0) * 22.0;
-  const wniReduction = (nStipend / 100.0) * 28.0;
+  const fsiReduction = ((nClinics / 50.0) * 22.0) + ((nEquipment / 100.0) * 16.0);
+  const wniReduction = ((nStipend / 100.0) * 28.0) +
+                       ((nSalaryHike / 150.0) * 20.0) +
+                       ((nHazardPay / 200.0) * 10.0) +
+                       ((nSecurity / 100.0) * 14.0);
   const epiReduction = (nGreening / 30.0) * 12.0;
 
   const simEpi = Math.max(10, bEpi - epiReduction);
@@ -520,11 +531,20 @@ export function simulatePolicyInterventions(baseHni, baseEpi, baseFsi, baseWni, 
   const deltaHni = simHni - bHni;
 
   const preventedAdmissionsPerMonth = Math.round(
-    (nClinics * ADMISSIONS_MODEL.perClinic) + (nStipend * ADMISSIONS_MODEL.perStipendPct) + (nGreening * ADMISSIONS_MODEL.perGreeningPct)
+    (nClinics * ADMISSIONS_MODEL.perClinic) +
+    (nStipend * ADMISSIONS_MODEL.perStipendPct) +
+    (nGreening * ADMISSIONS_MODEL.perGreeningPct) +
+    ((nEquipment / 100.0) * 900) +
+    ((nSecurity / 100.0) * 350)
   );
 
   const projectedRetentionGain = Math.round(
-    (nStipend * RETENTION_MODEL.perStipendPct) + (nClinics * RETENTION_MODEL.perClinic)
+    (nStipend * RETENTION_MODEL.perStipendPct) +
+    (nClinics * RETENTION_MODEL.perClinic) +
+    ((nSalaryHike / 150.0) * 8.0) +
+    ((nHazardPay / 200.0) * 4.0) +
+    ((nSecurity / 100.0) * 5.0) +
+    ((nEquipment / 100.0) * 2.0)
   );
 
   return {

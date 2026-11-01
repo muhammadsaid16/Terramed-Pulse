@@ -296,17 +296,26 @@ export default function MapModule({
       layerGroup.addLayer(marker);
     });
 
-    // 3. Native-style Palestine geographic label (replacing foreign label in native map typography)
-    const palestineMarker = L.marker([31.42, 34.95], {
+    // 3. Seamless mask to erase Israel label from the basemap tiles (exact land color #414143)
+    const israelMask = L.rectangle([[30.70, 34.40], [31.20, 35.40]], {
+      color: 'transparent',
+      fillColor: '#414143',
+      fillOpacity: 1,
+      interactive: false
+    });
+    layerGroup.addLayer(israelMask);
+
+    // 4. Native-style Palestine geographic label directly covering the erased spot
+    const palestineMarker = L.marker([30.95, 34.96], {
       icon: L.divIcon({
         className: 'palestine-map-label',
         html: `
-          <div style="display:flex;align-items:center;justify-content:center;background:#242424;box-shadow:0 0 7px 5px #242424;border-radius:3px;padding:1px 4px;pointer-events:none;user-select:none;">
-            <span style="color:#78808a;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;font-size:9.5px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;white-space:nowrap;line-height:1;">PALESTINE</span>
+          <div style="display:inline-flex;align-items:center;justify-content:center;background:#414143;box-shadow:0 0 8px 6px #414143;border-radius:2px;padding:2px 4px;pointer-events:none;user-select:none;">
+            <span style="color:#e2e8f0;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;white-space:nowrap;line-height:1;">PALESTINE</span>
           </div>
         `,
-        iconSize: [68, 16],
-        iconAnchor: [34, 8]
+        iconSize: [78, 18],
+        iconAnchor: [39, 9]
       }),
       interactive: false
     });
@@ -327,33 +336,39 @@ export default function MapModule({
     };
   }, [isPlaying, setYear]);
 
-  // Year Timeline Metadata & Alert Levels
+  // Year Timeline Metadata & Alert Levels (High-Contrast for both Light and Dark themes)
   const timelinePhase = useMemo(() => {
     if (year <= 2000) {
       return {
         title_en: '1995-2000: Baseline Climatology, Moderate Thermal Load',
         title_ar: '1995-2000: خط الأساس المناخي: حمل حراري معتدل ومساحات زراعية مستقرة',
-        anomaly: '+0.0°C',
-        color: 'text-emerald-700 dark:text-emerald-400',
-        bgColor: 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/40',
+        anomaly: '\u200E+0.0°C',
+        color: 'text-emerald-900 dark:text-emerald-400',
+        badgeBg: 'bg-emerald-100 dark:bg-emerald-500/20',
+        badgeText: 'text-emerald-950 dark:text-emerald-200',
+        badgeBorder: 'border-emerald-500 dark:border-emerald-500/40',
         badge: t.phaseBaselineBadge
       };
     } else if (year <= 2012) {
       return {
         title_en: '2001-2012: Warming Acceleration & Upper Egypt Heat Escalation',
         title_ar: '2001-2012: تسارع الاحترار وتزايد الإجهاد الحراري بصعيد مصر',
-        anomaly: '+0.65°C',
-        color: 'text-amber-700 dark:text-amber-400',
-        bgColor: 'bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40',
+        anomaly: '\u200E+0.65°C',
+        color: 'text-amber-950 dark:text-amber-300',
+        badgeBg: 'bg-amber-200 dark:bg-amber-500/25',
+        badgeText: 'text-amber-950 dark:text-amber-100',
+        badgeBorder: 'border-amber-500 dark:border-amber-500/50',
         badge: t.phaseWarmingBadge
       };
     } else {
       return {
         title_en: '2013-2025: CRITICAL HEAT DOME & ARIDIFICATION PEAK',
         title_ar: '2013-2025: ذروة القباب الحرارية وأزمة الجفاف القصوى بالصعيد',
-        anomaly: '+1.46°C',
-        color: 'text-rose-700 dark:text-rose-400',
-        bgColor: 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-500/25 dark:text-rose-200 dark:border-rose-500/50',
+        anomaly: '\u200E+1.46°C',
+        color: 'text-rose-900 dark:text-rose-400',
+        badgeBg: 'bg-rose-200 dark:bg-rose-500/25',
+        badgeText: 'text-rose-950 dark:text-rose-100',
+        badgeBorder: 'border-rose-500 dark:border-rose-500/50',
         badge: t.phaseCriticalBadge
       };
     }
@@ -420,18 +435,18 @@ export default function MapModule({
         )}
 
         {/* Dynamic On-Map Year HUD Banner */}
-        <div className="absolute top-3 left-3 right-3 z-[400] bg-white/90 dark:bg-black/65 backdrop-blur-2xl px-4 py-2 rounded-2xl border border-slate-200/80 dark:border-white/[0.12] shadow-lg dark:shadow-2xl flex items-center justify-between gap-2">
+        <div className="absolute top-3 left-3 right-3 z-[400] bg-white/95 dark:bg-black/75 backdrop-blur-2xl px-4 py-2.5 rounded-2xl border border-slate-300 dark:border-white/[0.12] shadow-xl flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 truncate">
             <Flame className={`w-4 h-4 shrink-0 ${timelinePhase.color}`} />
-            <span className="text-xs font-semibold text-slate-900 dark:text-white/95 truncate">
+            <span className="text-xs font-bold text-slate-950 dark:text-white truncate">
               {lang === 'ar' ? timelinePhase.title_ar : timelinePhase.title_en}
             </span>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <span dir="ltr" className={`text-xs font-bold tabular-nums ${timelinePhase.color}`}>
+            <span dir="ltr" className={`text-xs font-black tabular-nums ${timelinePhase.color}`}>
               {timelinePhase.anomaly}
             </span>
-            <span className={`text-2xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border shadow-xs ${timelinePhase.bgColor}`}>
+            <span className={`text-2xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border shadow-xs ${timelinePhase.badgeBg} ${timelinePhase.badgeText} ${timelinePhase.badgeBorder}`}>
               {timelinePhase.badge}
             </span>
           </div>

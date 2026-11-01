@@ -113,6 +113,8 @@ export default function TrendChartModule({
     plugins: {
       legend: {
         position: 'top',
+        rtl: lang === 'ar',
+        textDirection: lang === 'ar' ? 'rtl' : 'ltr',
         labels: {
           color: isDark ? '#94A3B8' : '#334155',
           font: { family: 'Inter', size: 11, weight: '500' },
@@ -121,6 +123,8 @@ export default function TrendChartModule({
         }
       },
       tooltip: {
+        rtl: lang === 'ar',
+        textDirection: lang === 'ar' ? 'rtl' : 'ltr',
         backgroundColor: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.96)',
         titleColor: isDark ? '#F8FAFC' : '#0F172A',
         bodyColor: isDark ? '#2DD4BF' : '#0284C7',
@@ -281,8 +285,7 @@ export default function TrendChartModule({
           </span>
 
           <span className="text-xs font-bold text-slate-900 dark:text-white telemetry-mono">
-            {regression.ratePerDecade >= 0 ? '+' : ''}
-            {regression.ratePerDecade.toFixed(3)} {t.perDecade}
+            <span dir="ltr">{regression.ratePerDecade >= 0 ? '+' : ''}{regression.ratePerDecade.toFixed(3)}</span> {t.perDecade}
           </span>
         </div>
 
@@ -290,28 +293,28 @@ export default function TrendChartModule({
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs pt-1">
           <div className="bg-slate-50 dark:bg-white/[0.03] p-2.5 rounded-xl border border-slate-200/80 dark:border-white/[0.06]">
             <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium mb-0.5">{t.mkStatLabel}</span>
-            <span className="font-bold text-slate-900 dark:text-white telemetry-mono text-sm">
+            <span dir="ltr" className="font-bold text-slate-900 dark:text-white telemetry-mono text-sm block">
               {mkTest.s > 0 ? `+${mkTest.s}` : mkTest.s}
             </span>
           </div>
 
           <div className="bg-slate-50 dark:bg-white/[0.03] p-2.5 rounded-xl border border-slate-200/80 dark:border-white/[0.06]">
             <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium mb-0.5">{t.zScoreLabel}</span>
-            <span className="font-bold text-sky-600 dark:text-sky-400 telemetry-mono text-sm">
-              {mkTest.z.toFixed(2)}
+            <span dir="ltr" className="font-bold text-sky-600 dark:text-sky-400 telemetry-mono text-sm block">
+              {mkTest.z > 0 ? `+${mkTest.z.toFixed(2)}` : mkTest.z.toFixed(2)}
             </span>
           </div>
 
           <div className="bg-slate-50 dark:bg-white/[0.03] p-2.5 rounded-xl border border-slate-200/80 dark:border-white/[0.06]">
             <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium mb-0.5">{t.pValueLabel}</span>
-            <span className="font-bold text-amber-600 dark:text-amber-300 telemetry-mono text-sm">
+            <span dir="ltr" className="font-bold text-amber-600 dark:text-amber-300 telemetry-mono text-sm block">
               {mkTest.pValue < 0.0001 ? '< 0.0001' : mkTest.pValue.toFixed(4)}
             </span>
           </div>
 
           <div className="bg-slate-50 dark:bg-white/[0.03] p-2.5 rounded-xl border border-slate-200/80 dark:border-white/[0.06]">
             <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium mb-0.5">{t.ci95Label}</span>
-            <span className="font-bold text-slate-700 dark:text-white/80 telemetry-mono text-micro">
+            <span dir="ltr" className="font-bold text-slate-700 dark:text-white/80 telemetry-mono text-micro block">
               [{regression.ci95Lower.toFixed(2)}, {regression.ci95Upper.toFixed(2)}]
             </span>
           </div>

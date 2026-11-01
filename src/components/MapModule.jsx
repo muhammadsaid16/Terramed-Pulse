@@ -455,7 +455,7 @@ export default function MapModule({
               className="apple-chip p-2 rounded-full bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] dark:text-white/80 dark:border-white/10"
               title={t.prevYearTitle}
             >
-              <ChevronLeft className="w-3.5 h-3.5 rtl:rotate-180" />
+              <ChevronLeft className="w-3.5 h-3.5" />
             </button>
 
             <button
@@ -463,20 +463,20 @@ export default function MapModule({
               className="apple-chip p-2 rounded-full bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] dark:text-white/80 dark:border-white/10"
               title={t.nextYearTitle}
             >
-              <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180" />
+              <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
           <div className="flex items-center gap-2.5">
             <span className="text-slate-500 dark:text-white/45 font-medium text-xs">{t.timelapseYearLabel}</span>
-            <span className="text-xl font-semibold text-slate-900 dark:text-white tabular-nums bg-white dark:bg-white/[0.06] px-3 py-0.5 rounded-xl border border-slate-200/80 dark:border-white/10 shadow-sm">
+            <span dir="ltr" className="text-xl font-semibold text-slate-900 dark:text-white tabular-nums bg-white dark:bg-white/[0.06] px-3 py-0.5 rounded-xl border border-slate-200/80 dark:border-white/10 shadow-sm">
               {year}
             </span>
           </div>
         </div>
 
         {/* Interactive Slider Bar */}
-        <div className="space-y-1.5">
+        <div className="space-y-1.5" dir="ltr">
           <input
             type="range"
             min="1995"
@@ -486,7 +486,7 @@ export default function MapModule({
               setYear(Number(e.target.value));
               if (isPlaying) setIsPlaying(false);
             }}
-            className="slider-teal"
+            className="slider-teal w-full"
           />
           <div className="flex justify-between text-micro font-medium text-slate-500 dark:text-white/45 px-1 tabular-nums">
             <span className="text-emerald-600 dark:text-emerald-400/90 font-medium">

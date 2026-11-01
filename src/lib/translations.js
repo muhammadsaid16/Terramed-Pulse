@@ -685,9 +685,9 @@ export const TRANSLATIONS = {
     phaseBaselineBadge: "مدار مرجعي",
     phaseWarmingBadge: "احترار متسارع",
     phaseCriticalBadge: "إنذار حرج",
-    yearBaselineCaption: "1995 (خط الأساس: 0.0°C+)",
-    yearMidCaption: "2010 (نقطة المنتصف: 0.65°C+)",
-    yearPeakCaption: "2025 (ذروة الاحترار: 1.46°C+)",
+    yearBaselineCaption: "1995 (خط الأساس: \u200E+0.0°C)",
+    yearMidCaption: "2010 (نقطة المنتصف: \u200E+0.65°C)",
+    yearPeakCaption: "2025 (ذروة الاحترار: \u200E+1.46°C)",
 
     // Spatial asymmetry + KPI telemetry chips
     spatialChip: "تليمتري التباين المكاني الجغرافي",

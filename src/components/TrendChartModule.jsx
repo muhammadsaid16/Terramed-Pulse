@@ -158,10 +158,10 @@ export default function TrendChartModule({
   ];
 
   return (
-    <div className="flex flex-col space-y-4 h-full">
+    <div className="flex flex-col space-y-5 h-full">
       
       {/* Top Selectors: Governorate, NASA Variable, Anomaly Toggle */}
-      <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 bg-slate-100/80 dark:bg-white/[0.03] backdrop-blur-xl p-3 rounded-2xl border border-slate-200/90 dark:border-white/[0.08]">
+      <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 bg-slate-100/80 dark:bg-white/[0.03] backdrop-blur-xl p-3 rounded-[14px] border border-slate-200/90 dark:border-white/[0.08]">
         
         {/* Governorate Selector */}
         <div className="sm:col-span-3">

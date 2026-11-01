@@ -145,9 +145,10 @@ export default function MapModule({
     }
 
     const map = L.map(mapContainerRef.current, {
-      center: [27.0, 31.0],
-      zoom: 6,
-      minZoom: 5,
+      center: [25.6, 30.8],
+      zoom: 5.5,
+      zoomSnap: 0.25,
+      minZoom: 4.5,
       maxZoom: 9,
       zoomControl: false,
       attributionControl: false
@@ -343,10 +344,10 @@ export default function MapModule({
   }, [year, lang]);
 
   return (
-    <div className="flex flex-col h-full space-y-3">
+    <div className="flex flex-col h-full space-y-5">
       
       {/* Top Map Metric Selector Toolbar (Apple Segmented Style) */}
-      <div className="flex flex-wrap items-center justify-between gap-2.5 bg-slate-100/80 dark:bg-white/[0.03] backdrop-blur-xl p-2.5 rounded-2xl border border-slate-200/90 dark:border-white/[0.08]">
+      <div className="flex flex-wrap items-center justify-between gap-2.5 bg-slate-100/80 dark:bg-white/[0.03] backdrop-blur-xl p-2.5 rounded-[14px] border border-slate-200/90 dark:border-white/[0.08]">
         <div className="flex items-center gap-2 px-1">
           <Layers className="w-4 h-4 text-sky-600 dark:text-sky-400" />
           <span className="text-xs font-medium text-slate-700 dark:text-white/70">{t.layerSelectorLabel}</span>
@@ -379,8 +380,8 @@ export default function MapModule({
       </div>
 
       {/* Map Viewport Container */}
-      <div className="relative flex-1 min-h-[420px] rounded-3xl overflow-hidden border border-slate-200/90 dark:border-white/[0.08] shadow-md dark:shadow-2xl">
-        <div ref={mapContainerRef} className="w-full h-full min-h-[420px]" />
+      <div className="relative flex-1 min-h-[460px] rounded-[14px] overflow-hidden border border-slate-200/90 dark:border-white/[0.08] shadow-md dark:shadow-2xl">
+        <div ref={mapContainerRef} className="w-full h-full min-h-[460px]" />
 
         {basemapNoticeVisible && (
           <div
@@ -438,7 +439,7 @@ export default function MapModule({
       </div>
 
       {/* 30-Year Time-Lapse Slider Control Box (Apple Player Aesthetics) */}
-      <div className="p-4 rounded-2xl bg-slate-100/70 dark:bg-white/[0.03] backdrop-blur-xl border border-slate-200/90 dark:border-white/[0.08] space-y-3">
+      <div className="p-4 rounded-[14px] bg-slate-100/70 dark:bg-white/[0.03] backdrop-blur-xl border border-slate-200/90 dark:border-white/[0.08] space-y-3">
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-2">
             <button

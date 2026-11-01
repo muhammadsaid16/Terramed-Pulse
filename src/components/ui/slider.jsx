@@ -15,7 +15,10 @@ export function Slider({
   const percentage = Math.min(100, Math.max(0, ((value - min) / (max - min)) * 100));
 
   return (
-    <div className={cn('relative flex w-full touch-none select-none items-center py-2', className)}>
+    <div
+      dir="ltr"
+      className={cn('relative flex w-full touch-none select-none items-center py-2', className)}
+    >
       <div className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-slate-200/80 dark:bg-white/10">
         <div
           className="h-full bg-sky-500 dark:bg-sky-400 transition-none"

@@ -27,13 +27,36 @@ export default function SpotlightCard({
     cardRef.current.style.setProperty('--mouse-y', `${y}px`);
   };
 
+  // Separate outer card styling from inner children layout styling
+  const rawClasses = className.split(/\s+/).filter(Boolean);
+  const layoutClasses = [];
+  const outerClasses = [];
+
+  rawClasses.forEach(cls => {
+    if (
+      cls.startsWith('space-y-') ||
+      cls.startsWith('space-x-') ||
+      cls.startsWith('gap-') ||
+      cls === 'flex' ||
+      cls === 'inline-flex' ||
+      cls === 'flex-col' ||
+      cls === 'flex-row' ||
+      cls.startsWith('items-') ||
+      cls.startsWith('justify-')
+    ) {
+      layoutClasses.push(cls);
+    } else {
+      outerClasses.push(cls);
+    }
+  });
+
   return (
     <Component
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative overflow-hidden group ${className}`}
+      className={`relative overflow-hidden group ${outerClasses.join(' ')}`}
       {...props}
     >
       {/* 21st.dev Radial Spotlight Sheen */}
@@ -50,8 +73,10 @@ export default function SpotlightCard({
         <BorderBeam {...(typeof borderBeam === 'object' ? borderBeam : {})} />
       )}
 
-      {/* Content wrapper */}
-      <div className="relative z-10 w-full h-full">{children}</div>
+      {/* Content wrapper with propagated layout styling */}
+      <div className={`relative z-10 w-full h-full ${layoutClasses.join(' ')}`}>
+        {children}
+      </div>
     </Component>
   );
 }

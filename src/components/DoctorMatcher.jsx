@@ -89,13 +89,13 @@ export default function DoctorMatcher({
       </div>
 
       {/* Specialty Demand Panel & Ranked Governorates */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* Left: Clinical Evidence & Mechanism (7 cols) */}
         <SpotlightCard
-          className="lg:col-span-7 apple-card p-6 space-y-8 relative overflow-hidden border border-sky-400/30 dark:border-sky-400/40 shadow-[0_0_20px_-3px_rgba(14,165,233,0.15)]"
+          className="lg:col-span-7 apple-card p-6 space-y-4 relative overflow-hidden border border-sky-400/30 dark:border-sky-400/40 shadow-[0_0_20px_-3px_rgba(14,165,233,0.15)] self-start"
         >
-          <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] pb-3 -mb-2">
+          <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] pb-3 mb-1">
             <h3 className="font-semibold text-sm text-slate-900 dark:text-white flex items-center gap-2">
               <span>{lang === 'ar' ? currentSpecialtyObj?.ar : currentSpecialtyObj?.en}</span>
             </h3>

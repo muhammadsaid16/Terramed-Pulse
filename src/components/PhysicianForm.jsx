@@ -150,7 +150,7 @@ export default function PhysicianForm({
         
         {/* Left: In-Page Form (5 cols) */}
         <div className="lg:col-span-5 apple-card p-6 space-y-4">
-          <h3 className="font-semibold text-xs text-white/80">
+          <h3 className="font-semibold text-xs text-white/80 pb-2.5 border-b border-white/[0.08]">
             {t.formTitle}
           </h3>
 

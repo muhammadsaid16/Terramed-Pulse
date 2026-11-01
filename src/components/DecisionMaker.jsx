@@ -194,8 +194,8 @@ export default function DecisionMaker({
         <SpotlightCard
           className="lg:col-span-5 apple-card p-6 lg:sticky lg:top-24 shadow-sm dark:shadow-md relative overflow-hidden border border-emerald-400/40 dark:border-emerald-500/40 shadow-[0_0_25px_-5px_rgba(16,185,129,0.18)]"
         >
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
+          <div className="space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] pb-3">
               <h3 className="font-semibold text-xs text-slate-800 dark:text-white/80">
                 {t.simulationHeading}
               </h3>
@@ -238,7 +238,7 @@ export default function DecisionMaker({
             </div>
 
             {/* Clear breathing space between the numbers box and reduction pill */}
-            <div className="text-center pt-3 pb-1">
+            <div className="text-center mt-6 mb-2">
               <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30 tabular-nums shadow-sm">
                 <span dir="ltr" className="font-mono font-bold">{sim.deltaHni}</span>
                 <span>{t.unitPts}</span>
@@ -321,7 +321,7 @@ export default function DecisionMaker({
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
                 <label className="text-slate-800 dark:text-white/80">{t.sliderSalaryHike}</label>
-                <span className="font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-white/10 text-micro">
+                <span dir="ltr" className="font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-white/10 text-micro">
                   +{salaryHikePct}%
                 </span>
               </div>
@@ -342,7 +342,7 @@ export default function DecisionMaker({
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
                 <label className="text-slate-800 dark:text-white/80">{t.sliderHazardPay}</label>
-                <span className="font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-white/10 text-micro">
+                <span dir="ltr" className="font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-white/10 text-micro">
                   +{hazardPayPct}%
                 </span>
               </div>
@@ -363,7 +363,7 @@ export default function DecisionMaker({
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
                 <label className="text-slate-800 dark:text-white/80">{t.sliderIncentive}</label>
-                <span className="font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-white/10 text-micro">
+                <span dir="ltr" className="font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-white/10 text-micro">
                   +{stipendPct}%
                 </span>
               </div>
@@ -394,8 +394,8 @@ export default function DecisionMaker({
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
                 <label className="text-slate-800 dark:text-white/80">{t.sliderSecurity}</label>
-                <span className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-micro">
-                  {securityPct}%
+                <span dir="ltr" className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-micro">
+                  +{securityPct}%
                 </span>
               </div>
               <Slider
@@ -415,8 +415,8 @@ export default function DecisionMaker({
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
                 <label className="text-slate-800 dark:text-white/80">{t.sliderEquipment}</label>
-                <span className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-micro">
-                  {equipmentPct}%
+                <span dir="ltr" className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-micro">
+                  +{equipmentPct}%
                 </span>
               </div>
               <Slider
@@ -436,8 +436,8 @@ export default function DecisionMaker({
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
                 <label className="text-slate-800 dark:text-white/80">{t.sliderClinics}</label>
-                <span className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-micro">
-                  {clinics}
+                <span dir="ltr" className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-micro">
+                  +{clinics}
                 </span>
               </div>
               <Slider
@@ -457,7 +457,7 @@ export default function DecisionMaker({
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
                 <label className="text-slate-800 dark:text-white/80">{t.sliderGreening}</label>
-                <span className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-micro">
+                <span dir="ltr" className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-micro">
                   +{greeningPct}%
                 </span>
               </div>
@@ -662,7 +662,7 @@ export default function DecisionMaker({
 
           {/* Detailed Peer-Reviewed Studies */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 pb-2.5 border-b border-slate-200/80 dark:border-white/[0.06] mb-1">
               <FileText className="w-4 h-4 text-sky-600 dark:text-sky-400" />
               <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
                 {t.researchEvidenceTitle}
@@ -746,7 +746,7 @@ export default function DecisionMaker({
 
           {/* Evidence-Based Levers Matrix */}
           <div className="apple-card p-5 space-y-4">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 pb-3 border-b border-slate-200/80 dark:border-white/[0.06] mb-1">
               <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <h3 className="text-xs font-semibold text-slate-900 dark:text-white">
                 {t.actionablePolicyDrivers}

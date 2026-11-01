@@ -295,7 +295,7 @@ export default function PhysicianObservatory({
 
           {/* Card: Actionable Policy Levers (Connecting Evidence to Solutions) */}
           <SpotlightCard className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 dark:bg-white/[0.03] dark:border-white/[0.08] space-y-4 shadow-sm">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 pb-3 border-b border-slate-200/80 dark:border-white/[0.06] mb-3">
               <span className="p-1.5 rounded-lg bg-emerald-100 text-emerald-600 border border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20">
                 <Scale className="w-4 h-4" />
               </span>
@@ -330,7 +330,7 @@ export default function PhysicianObservatory({
           
           {/* Card: CAPMAS Regional Healthcare Density */}
           <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 dark:bg-white/[0.03] dark:border-white/[0.08] space-y-4 shadow-sm">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-white/[0.06] mb-1">
               <div className="flex items-center gap-2">
                 <span className="p-1.5 rounded-lg bg-sky-100 text-sky-600 border border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20">
                   <Building2 className="w-4 h-4" />
@@ -455,7 +455,7 @@ export default function PhysicianObservatory({
 
           {/* Card: Peer-Reviewed Scientific References */}
           <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 dark:bg-white/[0.03] dark:border-white/[0.08] space-y-3 shadow-sm">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 pb-3 border-b border-slate-200/80 dark:border-white/[0.06] mb-1">
               <span className="p-1.5 rounded-lg bg-purple-100 text-purple-600 border border-purple-200 dark:bg-purple-500/10 dark:text-purple-400 dark:border-purple-500/20">
                 <BookOpen className="w-4 h-4" />
               </span>

@@ -145,7 +145,7 @@ export default function MapModule({
     }
 
     const map = L.map(mapContainerRef.current, {
-      center: [25.6, 30.8],
+      center: [26.0, 30.8],
       zoom: 5.5,
       zoomSnap: 0.25,
       minZoom: 4.5,
@@ -295,6 +295,22 @@ export default function MapModule({
       marker.on('click', () => setSelectedGov(govId));
       layerGroup.addLayer(marker);
     });
+
+    // 3. Native-style Palestine geographic label (replacing foreign label in native map typography)
+    const palestineMarker = L.marker([31.42, 34.95], {
+      icon: L.divIcon({
+        className: 'palestine-map-label',
+        html: `
+          <div style="display:flex;align-items:center;justify-content:center;background:#242424;box-shadow:0 0 7px 5px #242424;border-radius:3px;padding:1px 4px;pointer-events:none;user-select:none;">
+            <span style="color:#78808a;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;font-size:9.5px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;white-space:nowrap;line-height:1;">PALESTINE</span>
+          </div>
+        `,
+        iconSize: [68, 16],
+        iconAnchor: [34, 8]
+      }),
+      interactive: false
+    });
+    layerGroup.addLayer(palestineMarker);
   }, [mapReady, data, selectedGov, selectedVar, year, mapMetric, lang]);
 
   // Handle Play / Pause 30-year Time-Lapse
@@ -318,8 +334,8 @@ export default function MapModule({
         title_en: '1995-2000: Baseline Climatology, Moderate Thermal Load',
         title_ar: '1995-2000: خط الأساس المناخي: حمل حراري معتدل ومساحات زراعية مستقرة',
         anomaly: '+0.0°C',
-        color: 'text-emerald-400',
-        bgColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+        color: 'text-emerald-700 dark:text-emerald-400',
+        bgColor: 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/40',
         badge: t.phaseBaselineBadge
       };
     } else if (year <= 2012) {
@@ -327,8 +343,8 @@ export default function MapModule({
         title_en: '2001-2012: Warming Acceleration & Upper Egypt Heat Escalation',
         title_ar: '2001-2012: تسارع الاحترار وتزايد الإجهاد الحراري بصعيد مصر',
         anomaly: '+0.65°C',
-        color: 'text-amber-400',
-        bgColor: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+        color: 'text-amber-700 dark:text-amber-400',
+        bgColor: 'bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40',
         badge: t.phaseWarmingBadge
       };
     } else {
@@ -336,12 +352,12 @@ export default function MapModule({
         title_en: '2013-2025: CRITICAL HEAT DOME & ARIDIFICATION PEAK',
         title_ar: '2013-2025: ذروة القباب الحرارية وأزمة الجفاف القصوى بالصعيد',
         anomaly: '+1.46°C',
-        color: 'text-rose-400',
-        bgColor: 'bg-rose-500/25 text-rose-300 border-rose-500/50',
+        color: 'text-rose-700 dark:text-rose-400',
+        bgColor: 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-500/25 dark:text-rose-200 dark:border-rose-500/50',
         badge: t.phaseCriticalBadge
       };
     }
-  }, [year, lang]);
+  }, [year, lang, t]);
 
   return (
     <div className="flex flex-col h-full space-y-5">
@@ -412,10 +428,10 @@ export default function MapModule({
             </span>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <span className={`text-xs font-semibold tabular-nums ${timelinePhase.color}`}>
+            <span dir="ltr" className={`text-xs font-bold tabular-nums ${timelinePhase.color}`}>
               {timelinePhase.anomaly}
             </span>
-            <span className={`text-2xs font-medium uppercase tracking-wider px-2 py-0.5 rounded-full border ${timelinePhase.bgColor}`}>
+            <span className={`text-2xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border shadow-xs ${timelinePhase.bgColor}`}>
               {timelinePhase.badge}
             </span>
           </div>

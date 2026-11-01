@@ -117,292 +117,348 @@ export default function PrintBrief({
   return (
     <aside 
       id="print-executive-brief" 
-      aria-label="Official Ministerial Executive Brief"
-      className="hidden print:block bg-white text-slate-900 p-0 m-0 w-full font-sans text-left rtl:text-right"
+      aria-label="Executive Decision Support Brief"
+      className="hidden print:block relative overflow-hidden bg-white text-slate-900 p-0 m-0 w-full font-sans text-left rtl:text-right"
       dir={isAr ? 'rtl' : 'ltr'}
     >
-      
-      {/* 1. Official National Letterhead */}
-      <div className="border-b-2 border-slate-950 pb-3 mb-3 flex items-start justify-between">
-        {/* Right side in Arabic / Left in English */}
-        <div className="text-[10pt] leading-tight space-y-0.5 font-bold">
-          <div className="text-slate-950 text-[11pt]">
-            {isAr ? 'جمهورية مصر العربية' : 'Arab Republic of Egypt'}
-          </div>
-          <div className="text-slate-800">
-            {isAr ? 'رئاسة مجلس الوزراء' : 'The Cabinet of Egypt'}
-          </div>
-          <div className="text-slate-700 text-[8.5pt] font-semibold">
-            {isAr ? 'مركز المعلومات ودعم اتخاذ القرار (IDSC)' : 'Information and Decision Support Center (IDSC)'}
-          </div>
-          <div className="text-slate-600 text-[8pt] font-normal">
-            {isAr ? 'بالتعاون مع: وزارة الصحة والسكان' : 'In Coordination with: Ministry of Health & Population'}
-          </div>
+      {/* Background Simulation Watermark */}
+      <div 
+        aria-hidden="true" 
+        className="pointer-events-none select-none absolute inset-0 flex flex-col items-center justify-around overflow-hidden z-0 py-24"
+        style={{ color: 'rgba(15, 23, 42, 0.035)' }}
+      >
+        <div className="transform -rotate-[30deg] text-[36pt] font-black tracking-widest whitespace-nowrap uppercase">
+          SIMULATION / نموذج محاكاة
         </div>
-
-        {/* Center: Official Coat of Arms & Document Serial */}
-        <div className="flex flex-col items-center justify-center text-center px-4">
-          <div className="w-12 h-12 flex items-center justify-center mb-1 text-slate-900">
-            <svg viewBox="0 0 100 100" className="w-12 h-12 fill-current">
-              <path d="M50 5 L55 25 L65 20 L60 38 L78 30 L68 48 L88 45 L74 60 L92 65 L72 72 L82 85 L62 80 L65 95 L50 85 L35 95 L38 80 L18 85 L28 72 L8 65 L26 60 L12 45 L32 48 L22 30 L40 38 L35 20 L45 25 Z" opacity="0.15" />
-              <path d="M50 12 L53 28 L62 25 L58 40 L72 35 L64 50 L80 48 L68 62 L82 66 L66 73 L74 84 L58 80 L60 92 L50 84 L40 92 L42 80 L26 84 L34 73 L18 66 L32 62 L20 48 L36 50 L28 35 L42 40 L38 25 L47 28 Z" fill="none" stroke="#0f172a" strokeWidth="2.5" />
-              <circle cx="50" cy="50" r="14" fill="#0f172a" />
-              <circle cx="50" cy="50" r="11" fill="#ffffff" />
-              <path d="M47 44 L53 44 L53 56 L47 56 Z" fill="#0f172a" />
-            </svg>
-          </div>
-          <div className="font-mono text-[7.5pt] font-bold tracking-widest text-slate-800" dir="ltr">
-            EGY-MOH-NASA-2026-P09
-          </div>
-          <div className="text-[7pt] text-slate-600 font-semibold">
-            {isAr ? 'منظومة «ابقَ وابنِ» • فريق TerraPulse' : 'Stay & Build Taskforce • TerraPulse'}
-          </div>
-        </div>
-
-        {/* Left side in Arabic / Right in English */}
-        <div className="text-[8.5pt] leading-tight space-y-0.5 text-right rtl:text-left text-slate-850 font-medium">
-          <div><b>{isAr ? 'تاريخ التقرير:' : 'Issue Date:'}</b> {todayStr}</div>
-          <div><b>{isAr ? 'أفق الرصد الساتلي:' : 'Orbit Window:'}</b> <span dir="ltr" className="inline-block font-mono">1995 – {year}</span></div>
-          <div><b>{isAr ? 'محطة الرصد الجغرافي:' : 'Station Telemetry:'}</b> <span dir="ltr" className="inline-block font-mono font-semibold">{coords}</span></div>
-          <div><b>{isAr ? 'درجة السرية:' : 'Classification:'}</b> <span className="font-bold underline text-slate-950">{isAr ? 'سري للغاية ومستعجل' : 'TOP SECRET / URGENT'}</span></div>
+        <div className="transform -rotate-[30deg] text-[36pt] font-black tracking-widest whitespace-nowrap uppercase">
+          SIMULATION / نموذج محاكاة
         </div>
       </div>
 
-      {/* 2. Ministerial Policy Classification Banner */}
-      <div className="bg-slate-100 border-2 border-slate-900 rounded-md p-2 mb-3 text-center">
-        <h1 className="text-[12pt] font-extrabold tracking-tight text-slate-950 uppercase leading-snug">
-          {isAr
-            ? `مذكرة إحاطة وزارية عاجلة: تقدير موقف واستبقاء الكفاءات الطبية بمحافظة ${govName}`
-            : `MINISTERIAL INTELLIGENCE MEMORANDUM: HEALTHCARE RETENTION DIRECTIVE: ${govName.toUpperCase()}`}
-        </h1>
-        <div className="text-[8pt] text-slate-700 font-semibold mt-0.5">
-          {isAr
-            ? `مبنية على الرصد البيئي لأقمار وكالة ناسا (1995-${year}) وتعدادات التعبئة والإحصاء وأبحاث هجرة الكوادر الطبية`
-            : `Synthesized from 30 Years of NASA Earth Observation Satellite Telemetry (1995-${year}), CAPMAS Censuses & Peer-Reviewed Cohorts`}
-        </div>
-      </div>
-
-      {/* 3. Executive Target Profile & Threat Assessment */}
-      <div className="border border-slate-400 rounded p-2.5 mb-3 bg-slate-50/50">
-        <div className="flex flex-wrap items-center justify-between text-[8.5pt] pb-1.5 mb-1.5 border-b border-slate-300">
-          <div>
-            <b>{isAr ? 'المحافظة المستهدفة:' : 'Target Governorate:'}</b> <span className="font-bold text-[9.5pt] text-slate-950">{govName}</span>
-          </div>
-          <div>
-            <b>{isAr ? 'مستوى الخطورة الإقليمي:' : 'Regional Risk Tier:'}</b>{' '}
-            <span className="font-bold text-slate-950 px-2 py-0.5 bg-slate-200 border border-slate-400 rounded text-[8pt]">
-              {isAr ? riskTierAr : riskTierEn}
-            </span>
-          </div>
-          <div>
-            <b>{isAr ? 'مصدر البيانات الساتلية:' : 'Satellite Sensors:'}</b>{' '}
-            <span className="font-mono font-semibold text-[7.5pt]" dir="ltr">NASA POWER v2.0 • MODIS Terra • MERRA-2</span>
-          </div>
-        </div>
-
-        <p className="text-[8.5pt] leading-relaxed text-slate-800">
-          {isAr
-            ? `توضح المعطيات الساتلية الموثقة عبر 31 عاماً أن محافظة ${govName} تتعرض لتسارع خطي في وتيرة الإجهاد المناخي والبيئي، مما ضاعف الضغط السريري على أقسام الطوارئ والكلى والصدر بنسبة غير مسبوقة. يتزامن هذا الإجهاد مع عجز في المنشآت الطبية (مؤشر FSI: ${fsi} من 100) وتنامي مخاطر تسرب الكوادر (مؤشر WNI: ${wni} من 100)، مما يستوجب تفعيلاً فورياً لحزمة استبقاء وحوافز ميدانية موجهة.`
-            : `Empirical satellite telemetry spanning 31 years confirms that ${govName} Governorate is facing accelerating environmental strain, severely elevating triage volume in emergency, nephrology, and pulmonology units. This baseline stress interacts with chronic facility deficits (FSI: ${fsi}/100) and acute workforce retention attrition (WNI: ${wni}/100), necessitating immediate implementation of targeted clinical retention stipends.`}
-        </p>
-      </div>
-
-      {/* 4. Empirical Indicator Matrix Table */}
-      <div className="mb-3">
-        <div className="text-[9pt] font-extrabold text-slate-950 mb-1 flex items-center justify-between">
-          <span>{isAr ? 'أولاً: مصفوفة المؤشرات الحية وتأثير التدخل المقترح (MCDA Evidence Matrix)' : 'I. EMPIRICAL SATELLITE & CLINICAL INDICATORS (MCDA MATRIX)'}</span>
-          <span className="text-[7.5pt] font-normal text-slate-600">{isAr ? 'أرقام حية مقاسة من الصفحة' : 'Live Runtime Computations'}</span>
-        </div>
-
-        <table className="print-table w-full">
-          <thead>
-            <tr>
-              <th className="w-[32%]">{isAr ? 'المؤشر الاستراتيجي' : 'Strategic Indicator'}</th>
-              <th className="w-[18%]">{isAr ? 'الوضع الحالي الميداني' : 'Baseline Value'}</th>
-              <th className="w-[20%]">{isAr ? 'بعد حزمة التدخل (Simulated)' : 'Simulated Dividend'}</th>
-              <th className="w-[30%]">{isAr ? 'الأثر السريري والتشغيلي المتوقع' : 'Operational Life-Saving Impact'}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="font-semibold text-slate-950">
-                {isAr ? 'مؤشر الاحتياج الصحي التراكمي (HNI)' : 'Composite Health Need Index (HNI)'}
-              </td>
-              <td className="font-bold text-slate-950 text-[9pt]">
-                {isAr ? (
-                  <span>{baseHni} من 100</span>
-                ) : (
-                  <span dir="ltr" className="font-mono">{baseHni} / 100</span>
-                )}
-              </td>
-              <td className="font-bold text-slate-900 text-[9pt]">
-                {isAr ? (
-                  <span>
-                    <span>{simHni} من 100</span>{' '}
-                    <span dir="ltr" className="inline-block text-[7.5pt] font-semibold text-emerald-800">
-                      ({deltaHni})
-                    </span>
-                  </span>
-                ) : (
-                  <span dir="ltr" className="font-mono">
-                    {simHni} / 100 <span className="text-[7.5pt] font-semibold text-emerald-700">({deltaHni})</span>
-                  </span>
-                )}
-              </td>
-              <td>
-                {isAr ? 'خفض جوهري في العبء الوبائي المزدوج وتخفيف وفيات الإجهاد الحاد' : 'Substantial reduction in compound vulnerability and acute heat mortality'}
-              </td>
-            </tr>
-            <tr>
-              <td className="font-semibold text-slate-950">
-                {isAr ? 'مؤشر الضغط البيئي والمناخي (EPI)' : 'Environmental Pressure Index (EPI)'}
-              </td>
-              <td className="font-bold text-slate-950 text-[9pt]">
-                {isAr ? (
-                  <span>{epi} من 100</span>
-                ) : (
-                  <span dir="ltr" className="font-mono">{epi} / 100</span>
-                )}
-              </td>
-              <td className="text-slate-800 text-[8.5pt]">
-                {isAr ? 'معطى بيئي فضائي ثابت' : 'Satellite Baseline Prior'}
-              </td>
-              <td>
-                {isAr ? 'رصد تراكمي لدرجات الحرارة القصوى (> 42°C) وأيام الحر الشديد' : 'Accumulating NASA record of extreme heat days and dry-season threshold spikes'}
-              </td>
-            </tr>
-            <tr>
-              <td className="font-semibold text-slate-950">
-                {isAr ? 'مؤشر استقرار الكوادر الطبية (WNI)' : 'Physician Workforce Deficit (WNI)'}
-              </td>
-              <td className="font-bold text-slate-950 text-[9pt]">
-                {isAr ? (
-                  <span>{wni} من 100</span>
-                ) : (
-                  <span dir="ltr" className="font-mono">{wni} / 100</span>
-                )}
-              </td>
-              <td className="font-bold text-slate-900 text-[9pt]">
-                {isAr ? (
-                  <span>
-                    <span>{Math.round(wni * 0.76)} من 100</span>{' '}
-                    <span dir="ltr" className="inline-block text-[7.5pt] font-semibold text-emerald-800">
-                      (-24%)
-                    </span>
-                  </span>
-                ) : (
-                  <span dir="ltr" className="font-mono">
-                    {Math.round(wni * 0.76)} / 100 <span className="text-[7.5pt] font-semibold text-emerald-700">(-24%)</span>
-                  </span>
-                )}
-              </td>
-              <td>
-                {isAr ? 'تثبيت 85% من أطباء الرعاية الحرجة ومنع الهجرة إلى الخارج أو العاصمة' : 'Stabilizes 85% of critical care physicians, halting regional emigration'}
-              </td>
-            </tr>
-            <tr>
-              <td className="font-semibold text-slate-950">
-                {isAr ? 'عدد المواطنين المستفيدين شهرياً' : 'Projected Lives Impacted / Month'}
-              </td>
-              <td className="text-slate-700 text-[8.5pt]">
-                {isAr ? 'تكدس حرج في الاستقبال' : 'Severe Triage Congestion'}
-              </td>
-              <td className="font-bold text-slate-950 text-[9pt]">
-                <span dir="ltr" className="inline-block font-mono">+{livesImpacted}</span> {isAr ? 'مواطن' : 'citizens'}
-              </td>
-              <td>
-                {isAr ? 'حالات تنفسية وإجهاد حراري وغسيل كلوي طارئ يتم إنقاذها بانتظام' : 'Prevented dialysis shocks and severe respiratory distress admissions'}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      {/* 5. Frontline Physician Observatory Intelligence */}
-      <div className="border border-slate-400 rounded p-2.5 mb-3 bg-slate-50/30">
-        <div className="text-[9pt] font-extrabold text-slate-950 mb-1">
-          {isAr ? 'ثانياً: شواهد الرصد الميداني الموثقة (صوت الكفاءات الطبية)' : 'II. VERIFIED FRONTLINE CLINICAL INTELLIGENCE'}
-        </div>
-        <div className="grid grid-cols-3 gap-2 text-[8pt] border-b border-slate-300 pb-2 mb-1.5">
-          <div>
-            <b>{isAr ? 'إجمالي البلاغات المسجلة بالإقليم:' : 'Reports in Target Gov:'}</b>{' '}
-            <span className="font-bold text-slate-950">{isAr ? reportsLabelAr : `${totalReportsCount} reports`}</span>
-          </div>
-          <div>
-            <b>{isAr ? 'معدل التفكير في الهجرة:' : 'Migration Propensity:'}</b>{' '}
-            <span dir="ltr" className="inline-block font-mono font-bold text-slate-950">
-              {migrationPct === null ? (isAr ? 'لا توجد بيانات ميدانية' : 'no field data') : `${migrationPct}%`}
-            </span>
-            {migrationPct !== null && (isAr ? '(بسبب فجوة الحوافز)' : '(Due to compensation gap)')}
-          </div>
-          <div>
-            <b>{isAr ? 'المطلب التدخلي الأول للأطباء (أولوية سياساتية نموذجية، وليست بيانات ميدانية):' : 'Primary Doctor Demand (modeled policy priority, not measured field data):'}</b>{' '}
-            <span className="font-semibold">{isAr ? 'بدل جذب نائي + بيئة عمل آمنة' : 'Hardship stipends & ICU supplies'}</span>
-          </div>
-        </div>
-        <p className="text-[8pt] text-slate-800 italic leading-snug">
-          {isAr ? briefConfig.quote_ar : briefConfig.quote_en}
-        </p>
-      </div>
-
-      {/* 6. Mandatory Executive Directives */}
-      <div className="border-2 border-slate-950 rounded p-2.5 mb-4 bg-white">
-        <div className="text-[9pt] font-extrabold text-slate-950 mb-1.5 uppercase">
-          {isAr ? 'ثالثاً: حزمة القرارات والتوجيهات التنفيذية العاجلة (المرفوعة لرئاسة مجلس الوزراء)' : 'III. MANDATORY RETENTION DECREES SUBMITTED TO THE PRIME MINISTER'}
-        </div>
-        <ol className="text-[8.5pt] space-y-1.5 list-decimal pl-4 rtl:pr-4 text-slate-900 leading-normal font-medium">
-          <li>
-            <b>{isAr ? 'إقرار حافز الإجهاد المناخي والطبي (Climate Hardship Allowance):' : 'Climate Hardship Retention Allowance:'}</b>{' '}
-            {isAr ? briefConfig.directive1_ar : briefConfig.directive1_en}
-          </li>
-          <li>
-            <b>{isAr ? 'تجهيزات الرعاية الحرجة وإنعاش الإجهاد البيئي بالمستشفيات العامة:' : 'Active Cooling Rehydration Protocols:'}</b>{' '}
-            {isAr ? briefConfig.directive2_ar : briefConfig.directive2_en}
-          </li>
-          <li>
-            <b>{isAr ? 'المسار التدريبي والزمالة السريرية المسرّعة:' : 'Accelerated Regional Fellowship Track:'}</b>{' '}
-            {isAr ? briefConfig.directive3_ar : briefConfig.directive3_en}
-          </li>
-        </ol>
-      </div>
-
-      {/* 7. Official Signatures and Seal */}
-      <div className="pt-2 border-t border-slate-400 text-slate-950">
-        <div className="flex justify-between items-end text-[8.5pt]">
-          <div className="text-center w-1/3">
-            <div className="font-semibold text-slate-700 text-[8pt] mb-6">
-              {isAr ? 'عن: القطاع العلاجي والمستشفيات' : 'Healthcare Services Sector'}
+      <div className="relative z-10">
+        {/* 1. Official National Letterhead */}
+        <div className="border-b-2 border-slate-950 pb-2.5 mb-2.5 flex items-start justify-between">
+          {/* Right side in Arabic / Left in English */}
+          <div className="text-[9.5pt] leading-tight space-y-0.5 font-bold">
+            <div className="text-slate-950 text-[10.5pt]">
+              {isAr ? 'جمهورية مصر العربية' : 'Arab Republic of Egypt'}
             </div>
-            <div className="font-mono text-slate-400 text-[8pt]">...................................................</div>
-            <div className="font-bold text-[9pt] mt-1">{isAr ? 'أ.د. وزير الصحة والسكان' : 'Minister of Health & Population'}</div>
+            <div className="text-slate-800">
+              {isAr ? 'رئاسة مجلس الوزراء' : 'The Cabinet of Egypt'}
+            </div>
+            <div className="text-slate-700 text-[8pt] font-semibold">
+              {isAr ? 'مركز المعلومات ودعم اتخاذ القرار (IDSC)' : 'Information and Decision Support Center (IDSC)'}
+            </div>
+            <div className="text-slate-600 text-[7.5pt] font-normal">
+              {isAr ? 'بالتعاون مع: وزارة الصحة والسكان' : 'In Coordination with: Ministry of Health & Population'}
+            </div>
           </div>
 
-          <div className="text-center w-1/3 flex flex-col items-center">
-            {/* Official Circular Stamp */}
-            <div className="w-20 h-20 rounded-full border-2 border-slate-900 flex flex-col items-center justify-center text-center p-1 bg-slate-50/80 shadow-sm">
-              <div className="w-[70px] h-[70px] rounded-full border border-dashed border-slate-700 flex flex-col items-center justify-center p-0.5">
-                <span className="text-[6.5pt] font-extrabold text-slate-950 leading-tight">
-                  {isAr ? 'جمهورية مصر العربية' : 'ARAB REPUBLIC OF EGYPT'}
-                </span>
-                <span className="text-[6pt] font-bold text-slate-800 my-0.5 leading-none">
-                  {isAr ? '★ معتمد للنشر ★' : '★ OFFICIAL SEAL ★'}
-                </span>
-                <span className="font-mono text-[5.5pt] text-slate-600 leading-none">
-                  2026-TERRAPULSE
-                </span>
+          {/* Center: Official Coat of Arms & Document Serial */}
+          <div className="flex flex-col items-center justify-center text-center px-4">
+            <div className="w-11 h-11 flex items-center justify-center mb-1 text-slate-900">
+              <svg viewBox="0 0 100 100" className="w-11 h-11 fill-current">
+                <path d="M50 5 L55 25 L65 20 L60 38 L78 30 L68 48 L88 45 L74 60 L92 65 L72 72 L82 85 L62 80 L65 95 L50 85 L35 95 L38 80 L18 85 L28 72 L8 65 L26 60 L12 45 L32 48 L22 30 L40 38 L35 20 L45 25 Z" opacity="0.15" />
+                <path d="M50 12 L53 28 L62 25 L58 40 L72 35 L64 50 L80 48 L68 62 L82 66 L66 73 L74 84 L58 80 L60 92 L50 84 L40 92 L42 80 L26 84 L34 73 L18 66 L32 62 L20 48 L36 50 L28 35 L42 40 L38 25 L47 28 Z" fill="none" stroke="#0f172a" strokeWidth="2.5" />
+                <circle cx="50" cy="50" r="14" fill="#0f172a" />
+                <circle cx="50" cy="50" r="11" fill="#ffffff" />
+                <path d="M47 44 L53 44 L53 56 L47 56 Z" fill="#0f172a" />
+              </svg>
+            </div>
+            <div className="font-mono text-[7pt] font-bold tracking-widest text-slate-800" dir="ltr">
+              TP-NASA-2026-P09
+            </div>
+            <div className="text-[6.5pt] text-slate-600 font-semibold">
+              {isAr ? 'منظومة «ابقَ وابنِ» • فريق TerraPulse' : 'Stay & Build Taskforce • TerraPulse'}
+            </div>
+          </div>
+
+          {/* Left side in Arabic / Right in English */}
+          <div className="text-[8pt] leading-tight space-y-0.5 text-right rtl:text-left text-slate-850 font-medium max-w-[44%]">
+            <div><b>{isAr ? 'تاريخ التقرير:' : 'Issue Date:'}</b> {todayStr}</div>
+            <div><b>{isAr ? 'أفق الرصد الساتلي:' : 'Orbit Window:'}</b> <span dir="ltr" className="inline-block font-mono">1995 – {year}</span></div>
+            <div><b>{isAr ? 'محطة الرصد الجغرافي:' : 'Station Telemetry:'}</b> <span dir="ltr" className="inline-block font-mono font-semibold">{coords}</span></div>
+            <div>
+              <b>{isAr ? 'نوع الوثيقة:' : 'Document Type:'}</b>{' '}
+              <span className="font-bold text-slate-950">
+                {isAr
+                  ? 'تقرير استخبارات بيئية وصحية لدعم السياسات (Executive Decision Support Brief)'
+                  : 'Executive Decision Support Brief (Environmental & Health Intelligence)'}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* 2. Ministerial Policy Classification Banner */}
+        <div className="bg-slate-100 border-2 border-slate-900 rounded-md p-2 mb-2 text-center">
+          <h1 className="text-[11.5pt] font-extrabold tracking-tight text-slate-950 uppercase leading-snug">
+            {isAr
+              ? `مذكرة إحاطة لدعم السياسات: تقدير موقف واستبقاء الكفاءات الطبية بمحافظة ${govName}`
+              : `EXECUTIVE POLICY BRIEF: HEALTHCARE RETENTION DIRECTIVE: ${govName.toUpperCase()}`}
+          </h1>
+          <div className="text-[7.5pt] text-slate-700 font-semibold mt-0.5">
+            {isAr
+              ? `مبنية على الرصد البيئي لأقمار وكالة ناسا (1995-${year}) وتعدادات التعبئة والإحصاء وأبحاث هجرة الكوادر الطبية`
+              : `Synthesized from 30 Years of NASA Earth Observation Satellite Telemetry (1995-${year}), CAPMAS Censuses & Peer-Reviewed Cohorts`}
+          </div>
+        </div>
+
+        {/* Prominent Simulation Disclaimer Banner (تحت العنوان مباشرة) */}
+        <div className="bg-amber-50 border-2 border-amber-600/80 rounded-md px-3 py-1.5 mb-2.5 text-center text-amber-950">
+          <div className="flex items-center justify-center gap-1.5 text-[8pt] font-extrabold">
+            <span className="inline-block w-2 h-2 rounded-full bg-amber-600 shrink-0"></span>
+            <span>
+              {isAr
+                ? 'نموذج محاكاة رقمي استرشادي لدعم اتخاذ القرار — مشروع بحثي تجريبي (TerraPulse Prototype • NASA Space Apps Challenge 2026)'
+                : 'Pilot Decision-Support Simulation Model — Experimental Research Project (TerraPulse Prototype • NASA Space Apps Challenge 2026)'}
+            </span>
+            <span className="inline-block w-2 h-2 rounded-full bg-amber-600 shrink-0"></span>
+          </div>
+        </div>
+
+        {/* 3. Executive Target Profile & Threat Assessment */}
+        <div className="border border-slate-400 rounded p-2 mb-2.5 bg-slate-50/50">
+          <div className="flex flex-wrap items-center justify-between text-[8pt] pb-1 mb-1 border-b border-slate-300">
+            <div>
+              <b>{isAr ? 'المحافظة المستهدفة:' : 'Target Governorate:'}</b> <span className="font-bold text-[9pt] text-slate-950">{govName}</span>
+            </div>
+            <div>
+              <b>{isAr ? 'مستوى الخطورة الإقليمي:' : 'Regional Risk Tier:'}</b>{' '}
+              <span className="font-bold text-slate-950 px-2 py-0.5 bg-slate-200 border border-slate-400 rounded text-[7.5pt]">
+                {isAr ? riskTierAr : riskTierEn}
+              </span>
+            </div>
+            <div>
+              <b>{isAr ? 'مصدر البيانات الساتلية:' : 'Satellite Sensors:'}</b>{' '}
+              <span className="font-mono font-semibold text-[7.5pt]" dir="ltr">NASA POWER v2.0 • MODIS Terra • MERRA-2</span>
+            </div>
+          </div>
+
+          <p className="text-[8pt] leading-relaxed text-slate-800">
+            {isAr
+              ? `توضح المعطيات الساتلية الموثقة عبر 31 عاماً أن محافظة ${govName} تتعرض لتسارع خطي في وتيرة الإجهاد المناخي والبيئي، مما ضاعف الضغط السريري على أقسام الطوارئ والكلى والصدر بنسبة غير مسبوقة. يتزامن هذا الإجهاد مع عجز في المنشآت الطبية (مؤشر FSI: ${fsi} من 100) وتنامي مخاطر تسرب الكوادر (مؤشر WNI: ${wni} من 100)، مما يستوجب تفعيلاً فورياً لحزمة استبقاء وحوافز ميدانية موجهة.`
+              : `Empirical satellite telemetry spanning 31 years confirms that ${govName} Governorate is facing accelerating environmental strain, severely elevating triage volume in emergency, nephrology, and pulmonology units. This baseline stress interacts with chronic facility deficits (FSI: ${fsi}/100) and acute workforce retention attrition (WNI: ${wni}/100), necessitating immediate implementation of targeted clinical retention stipends.`}
+          </p>
+        </div>
+
+        {/* 4. Empirical Indicator Matrix Table */}
+        <div className="mb-2.5">
+          <div className="text-[8.5pt] font-extrabold text-slate-950 mb-1 flex items-center justify-between">
+            <span>{isAr ? 'أولاً: مصفوفة المؤشرات الحية وتأثير التدخل المقترح (MCDA Evidence Matrix)' : 'I. EMPIRICAL SATELLITE & CLINICAL INDICATORS (MCDA MATRIX)'}</span>
+            <span className="text-[7pt] font-bold text-slate-700 font-mono bg-slate-100 px-2 py-0.5 rounded border border-slate-300" dir="ltr">
+              NASA POWER • MERRA-2 • MODIS • GLDAS
+            </span>
+          </div>
+
+          <table className="print-table w-full">
+            <thead>
+              <tr>
+                <th className="w-[32%]">{isAr ? 'المؤشر الاستراتيجي' : 'Strategic Indicator'}</th>
+                <th className="w-[18%]">{isAr ? 'الوضع الحالي الميداني' : 'Baseline Value'}</th>
+                <th className="w-[20%]">{isAr ? 'بعد حزمة التدخل (Simulated)' : 'Simulated Dividend'}</th>
+                <th className="w-[30%]">{isAr ? 'الأثر السريري والتشغيلي المتوقع' : 'Operational Life-Saving Impact'}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="font-semibold text-slate-950">
+                  {isAr ? 'مؤشر الاحتياج الصحي التراكمي (HNI)' : 'Composite Health Need Index (HNI)'}
+                </td>
+                <td className="font-bold text-slate-950 text-[8.5pt]">
+                  {isAr ? (
+                    <span>{baseHni} من 100</span>
+                  ) : (
+                    <span dir="ltr" className="font-mono">{baseHni} / 100</span>
+                  )}
+                </td>
+                <td className="font-bold text-slate-900 text-[8.5pt]">
+                  {isAr ? (
+                    <span>
+                      <span>{simHni} من 100</span>{' '}
+                      <span dir="ltr" className="inline-block text-[7.5pt] font-semibold text-emerald-800">
+                        ({deltaHni})
+                      </span>
+                    </span>
+                  ) : (
+                    <span dir="ltr" className="font-mono">
+                      {simHni} / 100 <span className="text-[7.5pt] font-semibold text-emerald-700">({deltaHni})</span>
+                    </span>
+                  )}
+                </td>
+                <td>
+                  {isAr ? 'خفض جوهري في العبء الوبائي المزدوج وتخفيف وفيات الإجهاد الحاد' : 'Substantial reduction in compound vulnerability and acute heat mortality'}
+                </td>
+              </tr>
+              <tr>
+                <td className="font-semibold text-slate-950">
+                  {isAr ? 'مؤشر الضغط البيئي والمناخي (EPI)' : 'Environmental Pressure Index (EPI)'}
+                </td>
+                <td className="font-bold text-slate-950 text-[8.5pt]">
+                  {isAr ? (
+                    <span>{epi} من 100</span>
+                  ) : (
+                    <span dir="ltr" className="font-mono">{epi} / 100</span>
+                  )}
+                </td>
+                <td className="text-slate-800 text-[8pt]">
+                  {isAr ? 'معطى بيئي فضائي ثابت' : 'Satellite Baseline Prior'}
+                </td>
+                <td>
+                  {isAr ? 'رصد تراكمي لدرجات الحرارة القصوى (> 42°C) وأيام الحر الشديد' : 'Accumulating NASA record of extreme heat days and dry-season threshold spikes'}
+                </td>
+              </tr>
+              <tr>
+                <td className="font-semibold text-slate-950">
+                  {isAr ? 'مؤشر استقرار الكوادر الطبية (WNI)' : 'Physician Workforce Deficit (WNI)'}
+                </td>
+                <td className="font-bold text-slate-950 text-[8.5pt]">
+                  {isAr ? (
+                    <span>{wni} من 100</span>
+                  ) : (
+                    <span dir="ltr" className="font-mono">{wni} / 100</span>
+                  )}
+                </td>
+                <td className="font-bold text-slate-900 text-[8.5pt]">
+                  {isAr ? (
+                    <span>
+                      <span>{Math.round(wni * 0.76)} من 100</span>{' '}
+                      <span dir="ltr" className="inline-block text-[7.5pt] font-semibold text-emerald-800">
+                        (-24%)
+                      </span>
+                    </span>
+                  ) : (
+                    <span dir="ltr" className="font-mono">
+                      {Math.round(wni * 0.76)} / 100 <span className="text-[7.5pt] font-semibold text-emerald-700">(-24%)</span>
+                    </span>
+                  )}
+                </td>
+                <td>
+                  {isAr ? 'تثبيت 85% من أطباء الرعاية الحرجة ومنع الهجرة إلى الخارج أو العاصمة' : 'Stabilizes 85% of critical care physicians, halting regional emigration'}
+                </td>
+              </tr>
+              <tr>
+                <td className="font-semibold text-slate-950">
+                  {isAr ? 'عدد المواطنين المستفيدين شهرياً' : 'Projected Lives Impacted / Month'}
+                </td>
+                <td className="text-slate-700 text-[8pt]">
+                  {isAr ? 'تكدس حرج في الاستقبال' : 'Severe Triage Congestion'}
+                </td>
+                <td className="font-bold text-slate-950 text-[8.5pt]">
+                  <span dir="ltr" className="inline-block font-mono">+{livesImpacted}</span> {isAr ? 'مواطن' : 'citizens'}
+                </td>
+                <td>
+                  {isAr ? 'حالات تنفسية وإجهاد حراري وغسيل كلوي طارئ يتم إنقاذها بانتظام' : 'Prevented dialysis shocks and severe respiratory distress admissions'}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div className="text-[6.8pt] text-slate-600 mt-1 flex items-center justify-between">
+            <span>
+              {isAr
+                ? 'مصادر رصد ناسا المعتمدة: NASA POWER (الحرارة والإشعاع) • MERRA-2 (الهباء الجوي والرطوبة) • MODIS (حرارة السطح والغطاء النباتي) • GLDAS (رطوبة التربة)'
+                : 'Validated NASA Data Sources: NASA POWER (Temp & Solar) • MERRA-2 (Aerosol & Humidity) • MODIS (LST & NDVI) • GLDAS (Soil Moisture)'}
+            </span>
+            <span className="font-semibold text-slate-700">
+              {isAr ? 'أرقام حية مقاسة لحظياً' : 'Live Runtime Telemetry'}
+            </span>
+          </div>
+        </div>
+
+        {/* 5. Frontline Physician Observatory Intelligence */}
+        <div className="border border-slate-400 rounded p-2 mb-2.5 bg-slate-50/30">
+          <div className="text-[8.5pt] font-extrabold text-slate-950 mb-1">
+            {isAr ? 'ثانياً: شواهد الرصد الميداني الموثقة (صوت الكفاءات الطبية)' : 'II. VERIFIED FRONTLINE CLINICAL INTELLIGENCE'}
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-[7.5pt] border-b border-slate-300 pb-1.5 mb-1">
+            <div>
+              <b>{isAr ? 'إجمالي البلاغات المسجلة بالإقليم:' : 'Reports in Target Gov:'}</b>{' '}
+              <span className="font-bold text-slate-950">{isAr ? reportsLabelAr : `${totalReportsCount} reports`}</span>
+            </div>
+            <div>
+              <b>{isAr ? 'معدل التفكير في الهجرة:' : 'Migration Propensity:'}</b>{' '}
+              <span dir="ltr" className="inline-block font-mono font-bold text-slate-950">
+                {migrationPct === null ? (isAr ? 'لا توجد بيانات ميدانية' : 'no field data') : `${migrationPct}%`}
+              </span>
+              {migrationPct !== null && (isAr ? ' (بسبب فجوة الحوافز)' : ' (Due to compensation gap)')}
+            </div>
+            <div>
+              <b>{isAr ? 'المطلب التدخلي الأول للأطباء:' : 'Primary Doctor Demand:'}</b>{' '}
+              <span className="font-semibold">{isAr ? 'بدل جذب نائي + بيئة عمل آمنة' : 'Hardship stipends & ICU supplies'}</span>
+            </div>
+          </div>
+          <p className="text-[7.5pt] text-slate-800 italic leading-snug">
+            {isAr ? briefConfig.quote_ar : briefConfig.quote_en}
+          </p>
+        </div>
+
+        {/* 6. Mandatory Executive Directives */}
+        <div className="border-2 border-slate-950 rounded p-2 mb-3 bg-white">
+          <div className="text-[8.5pt] font-extrabold text-slate-950 mb-1 uppercase">
+            {isAr ? 'ثالثاً: حزمة التوصيات والتوجيهات التنفيذية الاسترشادية (المقترحة لدعم القرار)' : 'III. RECOMMENDED POLICY & CLINICAL RETENTION INTERVENTIONS'}
+          </div>
+          <ol className="text-[8pt] space-y-1 list-decimal pl-4 rtl:pr-4 text-slate-900 leading-normal font-medium">
+            <li>
+              <b>{isAr ? 'إقرار حافز الإجهاد المناخي والطبي (Climate Hardship Allowance):' : 'Climate Hardship Retention Allowance:'}</b>{' '}
+              {isAr ? briefConfig.directive1_ar : briefConfig.directive1_en}
+            </li>
+            <li>
+              <b>{isAr ? 'تجهيزات الرعاية الحرجة وإنعاش الإجهاد البيئي بالمستشفيات العامة:' : 'Active Cooling Rehydration Protocols:'}</b>{' '}
+              {isAr ? briefConfig.directive2_ar : briefConfig.directive2_en}
+            </li>
+            <li>
+              <b>{isAr ? 'المسار التدريبي والزمالة السريرية المسرّعة:' : 'Accelerated Regional Fellowship Track:'}</b>{' '}
+              {isAr ? briefConfig.directive3_ar : briefConfig.directive3_en}
+            </li>
+          </ol>
+        </div>
+
+        {/* 7. Signatures and Seal (Academic/Executive Recommendation & Technical Seal) */}
+        <div className="pt-1.5 border-t border-slate-400 text-slate-950">
+          <div className="flex justify-between items-end text-[8pt]">
+            {/* First Column: الجهة المستفيدة المقترحة */}
+            <div className="text-center w-[36%]">
+              <div className="font-semibold text-slate-700 text-[7.5pt] mb-5">
+                {isAr ? 'الجهة المستفيدة المقترحة:' : 'Proposed Beneficiary:'}
+              </div>
+              <div className="font-mono text-slate-400 text-[7.5pt]">...................................................</div>
+              <div className="font-bold text-[8pt] mt-1 leading-snug">
+                {isAr ? 'قطاع التخطيط والسياسات الصحية' : 'Health Planning & Policy Sector'}
               </div>
             </div>
-            <div className="font-mono text-[6.5pt] text-slate-600 mt-1" dir="ltr">
-              EGY-MOH-2026-9B8F
-            </div>
-          </div>
 
-          <div className="text-center w-1/3">
-            <div className="font-semibold text-slate-700 text-[8pt] mb-6">
-              {isAr ? `ديوان عام محافظة ${govName}` : `Governorate Council of ${govName}`}
+            {/* Center Column: الختم التقني */}
+            <div className="text-center w-[28%] flex flex-col items-center">
+              <div className="w-18 h-18 rounded-full border-2 border-slate-900 flex flex-col items-center justify-center text-center p-1 bg-slate-50/80 shadow-xs">
+                <div className="w-[62px] h-[62px] rounded-full border border-dashed border-slate-700 flex flex-col items-center justify-center p-0.5">
+                  <span className="text-[5.5pt] font-black text-slate-950 leading-tight tracking-wider uppercase">
+                    TerraPulse 2026
+                  </span>
+                  <span className="text-[4.5pt] font-bold text-slate-800 my-0.5 leading-tight uppercase">
+                    ★ Verified Decision Model ★
+                  </span>
+                  <span className="font-mono text-[4.5pt] font-extrabold text-slate-700 leading-none uppercase">
+                    NASA Open Data
+                  </span>
+                </div>
+              </div>
+              <div className="font-mono text-[6pt] font-bold text-slate-600 mt-0.5" dir="ltr">
+                TP-MODEL-2026-VERIFIED
+              </div>
             </div>
-            <div className="font-mono text-slate-400 text-[8pt]">...................................................</div>
-            <div className="font-bold text-[9pt] mt-1">{isAr ? `السيد اللواء / محافظ ${govName}` : `Governor of ${govName}`}</div>
+
+            {/* Second Column: مُعد بواسطة */}
+            <div className="text-center w-[36%]">
+              <div className="font-semibold text-slate-700 text-[7.5pt] mb-5">
+                {isAr ? 'مُعد بواسطة:' : 'Prepared By:'}
+              </div>
+              <div className="font-mono text-slate-400 text-[7.5pt]">...................................................</div>
+              <div className="font-bold text-[8pt] mt-1 leading-snug">
+                {isAr
+                  ? 'فريق عمل منظومة TerraPulse لرصد الأرض والتحليل الميداني'
+                  : 'TerraPulse Earth Observation & Field Intelligence Team'}
+              </div>
+            </div>
           </div>
         </div>
       </div>

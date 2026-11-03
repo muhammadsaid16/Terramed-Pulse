@@ -13,8 +13,10 @@
 export const MIGRATION_RESEARCH_STUDIES = [
   {
     id: "who_emhj_2021",
-    citation: "Kabbash I, El-Sallamy R, Zayed H, Alkhyate I, Omar A, Abdo S. The brain drain: why medical students and young physicians want to leave Egypt. East Mediterr Health J. 2021;27(12):1195–1202.",
+    citation: "Kabbash I, El-Sallamy R, Zayed H, Alkhyate I, Omar A, Abdo S. The brain drain: why medical students and young physicians want to leave Egypt. East Mediterr Health J. 2021;27(11):1102–1108.",
     doi: "https://doi.org/10.26719/emhj.21.050",
+    pubmed: "https://pubmed.ncbi.nlm.nih.gov/34927710/",
+    url: "https://applications.emro.who.int/EMHJ/V27/11/1020-3397-2021-2711-1102-1108-eng.pdf",
     journal: "WHO Eastern Mediterranean Health Journal (EMHJ)",
     journal_en: "WHO Eastern Mediterranean Health Journal (EMHJ)",
     journal_ar: "المجلة الصحية لشرق المتوسط (منظمة الصحة العالمية)",
@@ -44,7 +46,9 @@ export const MIGRATION_RESEARCH_STUDIES = [
   {
     id: "oxford_int_health_2015",
     citation: "Fouad YA, Fahmy YM, Abdel Hady SM, Elsabagh AE. Egyptian future physicians are packing to leave but may be willing to return. Int Health. 2015;7(3):190–194.",
-    doi: "https://doi.org/10.1093/inthealth/ihu082",
+    doi: "https://doi.org/10.1093/inthealth/ihu072",
+    pubmed: "https://pubmed.ncbi.nlm.nih.gov/25256738/",
+    url: "https://academic.oup.com/inthealth/article/7/3/190/2413554",
     journal: "International Health (Oxford University Press / Royal Society of Tropical Medicine)",
     journal_en: "International Health (Oxford University Press)",
     journal_ar: "مجلة الصحة الدولية (جامعة أكسفورد)",
@@ -65,7 +69,8 @@ export const MIGRATION_RESEARCH_STUDIES = [
   {
     id: "mdpi_societies_2025",
     citation: "Ismail HA, Chun S. The Brain Drain of Egyptian Physicians and Its Driving Factors: A Cross-Sectional Study. Soc Sci. 2025;14(5):295.",
-    doi: "https://doi.org/10.3390/soc14050295",
+    doi: "https://doi.org/10.3390/socsci14050295",
+    url: "https://www.mdpi.com/2076-0760/14/5/295",
     journal: "MDPI Social Sciences",
     journal_en: "MDPI Social Sciences",
     journal_ar: "مجلة العلوم الاجتماعية (MDPI)",

@@ -112,7 +112,7 @@ export default function PhysicianObservatory({
             </div>
           </div>
           <a
-            href="https://doi.org/10.26719/emhj.21.070"
+            href={whoStudy?.pubmed || whoStudy?.doi || "https://pubmed.ncbi.nlm.nih.gov/34927710/"}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-2 pt-2 border-t border-slate-200/80 dark:border-white/[0.06] text-2xs text-emerald-600 dark:text-emerald-400/90 font-medium flex items-center justify-between hover:underline"
@@ -139,7 +139,7 @@ export default function PhysicianObservatory({
             </div>
           </div>
           <a
-            href="https://doi.org/10.1093/inthealth/ihv042"
+            href={oxfordStudy?.pubmed || oxfordStudy?.doi || "https://pubmed.ncbi.nlm.nih.gov/25256738/"}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-2 pt-2 border-t border-slate-200/80 dark:border-white/[0.06] text-2xs text-amber-600 dark:text-amber-400/90 font-medium flex items-center justify-between hover:underline"
@@ -166,12 +166,12 @@ export default function PhysicianObservatory({
             </div>
           </div>
           <a
-            href="https://doi.org/10.3390/soc15050112"
+            href={mdpiStudy?.doi || mdpiStudy?.url || "https://doi.org/10.3390/socsci14050295"}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-2 pt-2 border-t border-slate-200/80 dark:border-white/[0.06] text-2xs text-rose-600 dark:text-rose-400/90 font-medium flex items-center justify-between hover:underline"
           >
-            <span><span className="text-slate-500 dark:text-white/40">{t.sourcePrefix || 'المصدر:'}</span> MDPI Societies 2025 (n=450)</span>
+            <span><span className="text-slate-500 dark:text-white/40">{t.sourcePrefix || 'المصدر:'}</span> MDPI Soc Sci 2025 (n=450)</span>
             <ExternalLink className="w-3 h-3 shrink-0" />
           </a>
         </SpotlightCard>
@@ -466,21 +466,39 @@ export default function PhysicianObservatory({
 
             <div className="space-y-2 text-xs">
               {MIGRATION_RESEARCH_STUDIES.map(study => (
-                <a
+                <div
                   key={study.id}
-                  href={study.doi}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block p-2.5 rounded-lg bg-white hover:bg-slate-100 border border-slate-200/80 dark:bg-white/[0.02] dark:hover:bg-white/[0.05] dark:border-white/[0.04] transition-colors group shadow-xs"
+                  className="p-2.5 rounded-lg bg-white border border-slate-200/80 dark:bg-white/[0.02] dark:border-white/[0.04] transition-colors shadow-xs"
                 >
-                  <div className="flex items-center justify-between text-slate-900 dark:text-white/90 group-hover:text-sky-600 dark:group-hover:text-sky-300 font-medium">
+                  <div className="flex items-center justify-between gap-2 text-slate-900 dark:text-white/90 font-medium">
                     <span>{isAr ? study.journal_ar : study.journal_en} ({study.year})</span>
-                    <ExternalLink className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 shrink-0" />
+                    <div className="flex items-center gap-2 shrink-0">
+                      {study.pubmed && (
+                        <a
+                          href={study.pubmed}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-2xs text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 font-semibold flex items-center gap-0.5 hover:underline"
+                        >
+                          <span>PubMed</span>
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      )}
+                      <a
+                        href={study.doi}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-2xs text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 font-medium flex items-center gap-0.5 hover:underline"
+                      >
+                        <span>DOI</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
                   </div>
                   <div className="text-micro text-slate-500 dark:text-white/50 mt-1 line-clamp-2">
                     {study.citation}
                   </div>
-                </a>
+                </div>
               ))}
 
               <div className="p-2.5 rounded-lg bg-white border border-slate-200/80 dark:bg-white/[0.02] dark:border-white/[0.04] text-slate-700 dark:text-white/70 shadow-xs">

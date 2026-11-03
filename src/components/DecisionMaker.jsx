@@ -681,15 +681,28 @@ export default function DecisionMaker({
                         {study.citation}
                       </h4>
                     </div>
-                    <a
-                      href={study.doi}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-micro text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 flex items-center gap-1 font-medium transition-colors shrink-0"
-                    >
-                      <span>DOI</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
+                    <div className="flex items-center gap-2.5 shrink-0">
+                      {study.pubmed && (
+                        <a
+                          href={study.pubmed}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-micro text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 flex items-center gap-1 font-semibold transition-colors"
+                        >
+                          <span>PubMed</span>
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      )}
+                      <a
+                        href={study.doi}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-micro text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 flex items-center gap-1 font-medium transition-colors"
+                      >
+                        <span>DOI</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
                   </div>
 
                   <p className="text-xs text-slate-600 dark:text-white/80 leading-relaxed bg-slate-50 dark:bg-white/[0.02] p-3 rounded-xl border border-slate-200/80 dark:border-white/[0.05]">

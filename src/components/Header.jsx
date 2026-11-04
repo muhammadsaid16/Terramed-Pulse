@@ -44,20 +44,28 @@ export default function Header({
         
         {/* Brand Logo & Mission Title */}
         <div 
-          className="flex items-center space-x-2 rtl:space-x-reverse cursor-pointer shrink-0 group" 
+          className="flex items-center space-x-2.5 rtl:space-x-reverse cursor-pointer shrink-0 group" 
           onClick={() => handleTabClick('detective')}
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-b from-sky-500/15 to-sky-600/10 border border-sky-400/30 flex items-center justify-center shadow-sm dark:shadow-[0_0_15px_rgba(56,189,248,0.25)] group-hover:border-sky-400/50 transition-all">
-            <Activity className="w-4 h-4 text-sky-600 dark:text-sky-400" />
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-b from-sky-500/15 to-sky-600/10 border border-sky-400/30 flex items-center justify-center shadow-sm dark:shadow-[0_0_15px_rgba(56,189,248,0.25)] group-hover:border-sky-400/50 transition-all shrink-0">
+            <Activity className="w-4.5 h-4.5 text-sky-600 dark:text-sky-400" />
           </div>
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <span className="font-semibold text-sm sm:text-base tracking-tight text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-300 transition-colors">
-              {t.appTitle}
-            </span>
-            <Badge variant="default" pulse={true} className="hidden xs:inline-flex items-center gap-1 text-2xs py-0.5">
-              <Satellite className="w-2.5 h-2.5 text-sky-500 dark:text-sky-400" />
-              <span>{t.nasaBadge}</span>
-            </Badge>
+          <div className="flex flex-col text-start justify-center">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="font-bold text-sm sm:text-base tracking-tight text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-300 transition-colors leading-tight">
+                {t.appTitle}
+              </span>
+              <Badge variant="default" pulse={true} className="hidden xs:inline-flex items-center gap-1 text-2xs py-0.5">
+                <Satellite className="w-2.5 h-2.5 text-sky-500 dark:text-sky-400" />
+                <span>{t.nasaBadge}</span>
+              </Badge>
+            </div>
+            <div 
+              dir="ltr"
+              className="font-mono text-[9px] sm:text-[10px] font-bold text-sky-600 dark:text-sky-400 uppercase select-none tracking-[0.28em] leading-none mt-0.5 opacity-90 group-hover:text-sky-500 dark:group-hover:text-sky-300 transition-colors"
+            >
+              TERRAMED &nbsp; PULSE
+            </div>
           </div>
         </div>
 
@@ -157,6 +165,9 @@ export default function Header({
       {/* Mobile & Tablet Mission Control Slide-Down Menu (< 1024px) */}
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-slate-200 dark:border-white/[0.08] bg-white/95 dark:bg-[#050811]/95 backdrop-blur-2xl px-4 py-4 space-y-3 transition-all animate-fadeIn">
+          <div dir="ltr" className="text-center font-mono text-[10px] font-bold tracking-[0.28em] text-sky-600 dark:text-sky-400 uppercase py-1 border-b border-slate-200/80 dark:border-white/[0.08]">
+            TERRAMED &nbsp; PULSE
+          </div>
           <div className="grid grid-cols-2 gap-2">
             {navTabs.map(tab => {
               const Icon = tab.icon;

@@ -16,11 +16,17 @@ export default function Footer({ lang, t }) {
     <footer className="border-t border-slate-200/80 dark:border-white/[0.08] bg-slate-50/90 dark:bg-[#040508]/80 backdrop-blur-2xl py-8 px-4 text-xs text-slate-500 dark:text-white/50 mt-16">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         
-        <div className="flex items-center gap-2 text-slate-800 dark:text-white/80">
-          <Orbit className="w-4 h-4 text-sky-600 dark:text-sky-400" />
-          <span className="font-medium">
-            {t.footerTagline}
-          </span>
+        <div className="flex items-center gap-2.5 text-slate-800 dark:text-white/80">
+          <Orbit className="w-4 h-4 text-sky-600 dark:text-sky-400 shrink-0" />
+          <div className="flex flex-wrap items-center gap-1.5 font-medium">
+            <span dir="ltr" className="font-mono font-bold tracking-[0.25em] text-sky-600 dark:text-sky-400 uppercase">
+              TERRAMED &nbsp; PULSE
+            </span>
+            <span className="text-slate-400 dark:text-white/30">•</span>
+            <span>
+              {lang === 'ar' ? 'ابقَ وابنِ مصر — تحدي ناسا لتطبيقات الفضاء 2026' : 'Stay & Build Egypt — NASA Space Apps Challenge 2026'}
+            </span>
+          </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5 text-slate-500 dark:text-white/40 text-micro font-normal">

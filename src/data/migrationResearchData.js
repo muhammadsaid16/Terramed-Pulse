@@ -69,8 +69,10 @@ export const MIGRATION_RESEARCH_STUDIES = [
   {
     id: "mdpi_societies_2025",
     citation: "Ismail HA, Chun S. The Brain Drain of Egyptian Physicians and Its Driving Factors: A Cross-Sectional Study. Soc Sci. 2025;14(5):295.",
-    doi: "https://doi.org/10.3390/socsci14050295",
-    url: "https://www.mdpi.com/2076-0760/14/5/295",
+    doi: "https://ideas.repec.org/a/gam/jscscx/v14y2025i5p295-d1653586.html",
+    url: "https://ideas.repec.org/a/gam/jscscx/v14y2025i5p295-d1653586.html",
+    repec: "https://ideas.repec.org/a/gam/jscscx/v14y2025i5p295-d1653586.html",
+    researchgate: "https://www.researchgate.net/publication/391692937_The_Brain_Drain_of_Egyptian_Physicians_and_Its_Driving_Factors_A_Cross-Sectional_Study",
     journal: "MDPI Social Sciences",
     journal_en: "MDPI Social Sciences",
     journal_ar: "مجلة العلوم الاجتماعية (MDPI)",

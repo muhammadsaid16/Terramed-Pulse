@@ -240,10 +240,12 @@ export default function DecisionMaker({
             {/* Clear breathing space between the numbers box and reduction pill */}
             <div className="text-center mt-6 mb-2">
               <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30 tabular-nums shadow-sm">
-                <span dir="ltr" className="font-mono font-bold">{sim.deltaHni}</span>
+                <span dir="ltr" className="font-mono font-bold">
+                  <NumberTicker value={sim.deltaHni} decimalPlaces={1} prefix={sim.deltaHni > 0 ? '+' : ''} />
+                </span>
                 <span>{t.unitPts}</span>
                 <span className="opacity-80">
-                  (<span dir="ltr" className="font-mono">{sim.pctReduction}%</span> {t.reductionWord})
+                  (<span dir="ltr" className="font-mono"><NumberTicker value={sim.pctReduction} />%</span> {t.reductionWord})
                 </span>
               </span>
             </div>
@@ -677,9 +679,14 @@ export default function DecisionMaker({
                       <Badge variant="default" className="text-2xs font-bold py-0.5">
                         {(lang === 'ar' ? study.journal_ar : study.journal_en) || study.journal} ({study.year})
                       </Badge>
-                      <h4 className="text-xs font-semibold text-slate-900 dark:text-white/95 mt-1.5 leading-snug">
+                      <a
+                        href={study.url || study.doi}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-semibold text-slate-900 dark:text-white/95 mt-1.5 leading-snug hover:text-sky-600 dark:hover:text-sky-400 block transition-colors"
+                      >
                         {study.citation}
-                      </h4>
+                      </a>
                     </div>
                     <div className="flex items-center gap-2.5 shrink-0">
                       {study.pubmed && (
@@ -693,13 +700,24 @@ export default function DecisionMaker({
                           <ExternalLink className="w-3 h-3" />
                         </a>
                       )}
+                      {study.researchgate && (
+                        <a
+                          href={study.researchgate}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-micro text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300 flex items-center gap-1 font-medium transition-colors"
+                        >
+                          <span>ResearchGate</span>
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      )}
                       <a
-                        href={study.doi}
+                        href={study.url || study.doi}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-micro text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 flex items-center gap-1 font-medium transition-colors"
                       >
-                        <span>DOI</span>
+                        <span>{study.id === 'mdpi_societies_2025' ? (lang === 'ar' ? 'المستودع الأكاديمي' : 'Open Access') : 'DOI'}</span>
                         <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>

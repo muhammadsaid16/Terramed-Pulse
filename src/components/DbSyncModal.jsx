@@ -182,11 +182,11 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
           <p>
             {isAr ? (
               <>
-                يعمل <b>TerraPulse</b> دون خادم خاص به بالنسبة للبيانات والخرائط والمخططات: المؤشرات تُحسب من بذور مدمجة وتُعرض بلا شبكة. مسار البلاغات هو الاستثناء الوحيد: <span className="text-slate-900 dark:text-white font-medium">متصفح ثابت ← دالة Pages ← Neon</span>، والدالة هي الكيان الوحيد المسموح له بالكتابة.
+                يعمل <b className="font-mono tracking-[0.15em]" dir="ltr">TERRAMED PULSE</b> دون خادم خاص به بالنسبة للبيانات والخرائط والمخططات: المؤشرات تُحسب من بذور مدمجة وتُعرض بلا شبكة. مسار البلاغات هو الاستثناء الوحيد: <span className="text-slate-900 dark:text-white font-medium">متصفح ثابت ← دالة Pages ← Neon</span>، والدالة هي الكيان الوحيد المسموح له بالكتابة.
               </>
             ) : (
               <>
-                <b>TerraPulse</b> needs no server for its data, map and charts: indicators compute from the embedded satellite dataset and render with no network. The report feed is the one exception: <span className="text-slate-900 dark:text-white font-medium">static browser → Pages Function → Neon</span>, and the function is the only thing allowed to write.
+                <b className="font-mono tracking-[0.15em]" dir="ltr">TERRAMED PULSE</b> needs no server for its data, map and charts: indicators compute from the embedded satellite dataset and render with no network. The report feed is the one exception: <span className="text-slate-900 dark:text-white font-medium">static browser → Pages Function → Neon</span>, and the function is the only thing allowed to write.
               </>
             )}
           </p>

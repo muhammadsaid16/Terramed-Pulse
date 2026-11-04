@@ -5,9 +5,9 @@
 export const TRANSLATIONS = {
   en: {
     // Header & Meta
-    tagline: "TerraPulse: Stay & Build Egypt. Decision support for healthcare talent and policymakers",
+    tagline: "TERRAMED PULSE: Stay & Build Egypt. Decision support for healthcare talent and policymakers",
     appTitle: "Stay & Build Egypt",
-    appSubtitle: "TerraPulse • Decision Support Platform for Healthcare Talents & Policy Makers",
+    appSubtitle: "TERRAMED PULSE • Decision Support Platform for Healthcare Talents & Policy Makers",
     egyptTag: "Egypt 1995-2025",
     btnCases: "1-Click Cases:",
     demo1: "Stay & Build: Upper Egypt",
@@ -22,7 +22,7 @@ export const TRANSLATIONS = {
     toggleTheme: "Toggle Light / Dark Theme",
 
     // Hero & Core Message (Docx Section 1 & 6)
-    heroBadge: "STAY & BUILD EGYPT • NASA SPACE APPS 2026",
+    heroBadge: "STAY & BUILD EGYPT • TERRAMED PULSE • NASA SPACE APPS 2026",
     heroMainTitle: "Stay & Build Egypt: Clinical Impact Compass",
     heroSubTitle: "Decision Support Platform for Healthcare Talents & Policy Makers (ابقَ وابنِ)",
     heroDesc: "NASA satellite observations do not claim to explain or prevent physician migration. Migration is a complex systemic decision driven by salaries, facilities, and residency training. Rather, we utilize 31 years of Earth observations (1995–2025) as a Clinical Impact Compass, mapping rising environmental and climate stresses across Egypt so medical talents discover where their specialization makes the highest life-saving difference, combined with an in-page feedback loop directly informing national health policy.",
@@ -246,7 +246,7 @@ export const TRANSLATIONS = {
     printTitle: "OFFICIAL EXECUTIVE BRIEFING: CLIMATE-HEALTH ACTION PLAN",
     printSub: "Arab Republic of Egypt. Ministry of Health & Population and Ministry of Environment",
     printDate: "Generated on: 28/10/2026",
-    printIntro: "This document represents an evidence-based executive brief synthesized from 30 years of NASA satellite Earth observations (1995-2025) and real-time clinical reports from Egyptian frontline physicians under the TerraPulse initiative.",
+    printIntro: "This document represents an evidence-based executive brief synthesized from 30 years of NASA satellite Earth observations (1995-2025) and real-time clinical reports from Egyptian frontline physicians under the TERRAMED PULSE initiative.",
     directiveTitle: "Recommended Ministerial Directive:",
     directive1: "Pre-position active cooling rehydration centers in high-risk Upper Egypt districts prior to May-September heatwave peaks.",
     directive2: "Ratify 40%+ retention stipends for critical specialties (Nephrology, Cardiology, ER) serving in desert valley corridors.",
@@ -339,7 +339,7 @@ export const TRANSLATIONS = {
     chartOverallHni: "Overall Health Need (HNI)",
     chartClimateEpi: "Climate Stress (EPI)",
 
-    footerTagline: "TerraPulse: Stay & Build Egypt. NASA Space Apps Challenge 2026",
+    footerTagline: "TERRAMED PULSE: Stay & Build Egypt. NASA Space Apps Challenge 2026",
     hniScoreLabel: "HNI Score",
     impactChip: "CLINICAL IMPACT TELEMETRY",
     matchWord: "Match",
@@ -403,9 +403,9 @@ export const TRANSLATIONS = {
 
   ar: {
     // Header & Meta
-    tagline: "تيراإلس: ابقَ وابنِ. دعم قرار للكفاءات الصحية وصنّاع القرار في مصر",
+    tagline: "TERRAMED PULSE: ابقَ وابنِ. دعم قرار للكفاءات الصحية وصنّاع القرار في مصر",
     appTitle: "ابقَ وابنِ: Stay & Build",
-    appSubtitle: "منصة دعم قرار للكفاءات الصحية وصناع القرار في مصر • فريق TerraPulse",
+    appSubtitle: "منصة دعم قرار للكفاءات الصحية وصناع القرار في مصر • فريق TERRAMED PULSE",
     egyptTag: "مصر 1995-2025",
     btnCases: "حالات بنقرة واحدة:",
     demo1: "ابقَ وابنِ: صعيد مصر",
@@ -420,7 +420,7 @@ export const TRANSLATIONS = {
     toggleTheme: "تبديل المظهر (فاتح / مظلم)",
 
     // Hero & Core Message (Docx Section 1 & 6)
-    heroBadge: "ابقَ وابنِ: تحدي ناسا لتطبيقات الفضاء 2026",
+    heroBadge: "ابقَ وابنِ • فريق TERRAMED PULSE • تحدي ناسا لتطبيقات الفضاء 2026",
     heroMainTitle: "ابقَ وابنِ: بوصلة الأثر المهني ومنصة دعم القرار",
     heroSubTitle: "نظام دعم قرار للكفاءات الصحية وصناع القرار في مصر (Stay & Build Egypt)",
     heroDesc: "بيانات الأقمار الصناعية لوكالة ناسا لا تفسر كل أسباب هجرة الأطباء ولا تدّعي التنبؤ بها أو منعها، لأن الهجرة قرار مركب تحكمه الرواتب وظروف العمل والأجهزة وتوفر التدريب، لكنها تمنحنا قدرة دقيقة على رسم «خريطة الضغط البيئي والصحي عبر الزمن» كـ «بوصلة أثر مهني» (Impact Compass) تساعد الطبيب على معرفة أين يصنع تخصصه فرقاً حقيقياً في مصر، مع توفير فورم تفاعلي مدمج بالصفحة يسجل صوته واحتياجاته الميدانية لتتحول تلقائياً إلى لوحة أولويات لصانع القرار.",
@@ -642,7 +642,7 @@ export const TRANSLATIONS = {
     printTitle: "مذكرة إحاطة تنفيذية: خطة العمل الصحية-المناخية العاجلة",
     printSub: "جمهورية مصر العربية. وزارة الصحة والسكان بالتعاون مع وزارة البيئة",
     printDate: "تاريخ الإصدار: 28/10/2026",
-    printIntro: "تمثل هذه الوثيقة مذكرة سياسات مبنية على الأدلة مستخلصة من 30 عاماً من بيانات رصد الأرض الساتلية لوكالة ناسا (1995-2025) وبلاغات الأطباء الميدانية الحية ضمن مبادرة TerraPulse.",
+    printIntro: "تمثل هذه الوثيقة مذكرة سياسات مبنية على الأدلة مستخلصة من 30 عاماً من بيانات رصد الأرض الساتلية لوكالة ناسا (1995-2025) وبلاغات الأطباء الميدانية الحية ضمن مبادرة TERRAMED PULSE.",
     directiveTitle: "التوجيهات الوزارية الموصى بها:",
     directive1: "إنشاء مراكز ترطيب وإنعاش حراري مجهزة في مراكز صعيد مصر الأكثر هشاشة قبل حلول ذروة الصيف.",
     directive2: "اعتماد بدل جذب ومكافأة استبقاء لا تقل عن 40% للتخصصات الحرجة (الكلى، الطوارئ، القلب) في المحافظات النائية.",
@@ -735,7 +735,7 @@ export const TRANSLATIONS = {
     chartOverallHni: "مؤشر الحاجة الصحية الكلي (HNI)",
     chartClimateEpi: "الإجهاد البيئي والمناخي (EPI)",
 
-    footerTagline: "TerraPulse: ابقَ وابنِ مصر. تحدي ناسا لتطبيقات الفضاء 2026",
+    footerTagline: "فريق TERRAMED PULSE: ابقَ وابنِ مصر. تحدي ناسا لتطبيقات الفضاء 2026",
     hniScoreLabel: "مؤشر HNI",
     impactChip: "تليمتري الأثر السريري",
     matchWord: "تطابق",

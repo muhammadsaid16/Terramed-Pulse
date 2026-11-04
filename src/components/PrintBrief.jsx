@@ -169,7 +169,8 @@ export default function PrintBrief({
               TP-NASA-2026-P09
             </div>
             <div className="text-[6.5pt] text-slate-600 font-semibold">
-              {isAr ? 'منظومة «ابقَ وابنِ» • فريق TerraPulse' : 'Stay & Build Taskforce • TerraPulse'}
+              {isAr ? 'منظومة «ابقَ وابنِ» • فريق ' : 'Stay & Build Taskforce • '}
+              <span dir="ltr" className="font-mono font-bold tracking-[0.2em]">TERRAMED PULSE</span>
             </div>
           </div>
 
@@ -209,8 +210,8 @@ export default function PrintBrief({
             <span className="inline-block w-2 h-2 rounded-full bg-amber-600 shrink-0"></span>
             <span>
               {isAr
-                ? 'نموذج محاكاة رقمي استرشادي لدعم اتخاذ القرار — مشروع بحثي تجريبي (TerraPulse Prototype • NASA Space Apps Challenge 2026)'
-                : 'Pilot Decision-Support Simulation Model — Experimental Research Project (TerraPulse Prototype • NASA Space Apps Challenge 2026)'}
+                ? 'نموذج محاكاة رقمي استرشادي لدعم اتخاذ القرار — مشروع بحثي تجريبي (TERRAMED PULSE Prototype • NASA Space Apps Challenge 2026)'
+                : 'Pilot Decision-Support Simulation Model — Experimental Research Project (TERRAMED PULSE Prototype • NASA Space Apps Challenge 2026)'}
             </span>
             <span className="inline-block w-2 h-2 rounded-full bg-amber-600 shrink-0"></span>
           </div>
@@ -431,11 +432,11 @@ export default function PrintBrief({
             <div className="text-center w-[28%] flex flex-col items-center">
               <div className="w-18 h-18 rounded-full border-2 border-slate-900 flex flex-col items-center justify-center text-center p-1 bg-slate-50/80 shadow-xs">
                 <div className="w-[62px] h-[62px] rounded-full border border-dashed border-slate-700 flex flex-col items-center justify-center p-0.5">
-                  <span className="text-[5.5pt] font-black text-slate-950 leading-tight tracking-wider uppercase">
-                    TerraPulse 2026
+                  <span className="text-[5pt] font-black text-slate-950 leading-tight tracking-[0.18em] uppercase font-mono" dir="ltr">
+                    TERRAMED PULSE
                   </span>
                   <span className="text-[4.5pt] font-bold text-slate-800 my-0.5 leading-tight uppercase">
-                    ★ Verified Decision Model ★
+                    ★ Verified Model 2026 ★
                   </span>
                   <span className="font-mono text-[4.5pt] font-extrabold text-slate-700 leading-none uppercase">
                     NASA Open Data
@@ -443,7 +444,7 @@ export default function PrintBrief({
                 </div>
               </div>
               <div className="font-mono text-[6pt] font-bold text-slate-600 mt-0.5" dir="ltr">
-                TP-MODEL-2026-VERIFIED
+                TMP-MODEL-2026-VERIFIED
               </div>
             </div>
 
@@ -455,8 +456,8 @@ export default function PrintBrief({
               <div className="font-mono text-slate-400 text-[7.5pt]">...................................................</div>
               <div className="font-bold text-[8pt] mt-1 leading-snug">
                 {isAr
-                  ? 'فريق عمل منظومة TerraPulse لرصد الأرض والتحليل الميداني'
-                  : 'TerraPulse Earth Observation & Field Intelligence Team'}
+                  ? 'فريق عمل منظومة TERRAMED PULSE لرصد الأرض والتحليل الميداني'
+                  : 'TERRAMED PULSE Earth Observation & Field Intelligence Team'}
               </div>
             </div>
           </div>

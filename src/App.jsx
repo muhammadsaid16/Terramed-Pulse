@@ -88,6 +88,8 @@ export default function App() {
   // Clean Lab theme state ('light' | 'dark')
   const [theme, setTheme] = useState(() => {
     try {
+      const urlTheme = new URLSearchParams(window.location.search).get('theme');
+      if (urlTheme === 'dark' || urlTheme === 'light') return urlTheme;
       const saved = localStorage.getItem('terrapulse_theme');
       if (saved === 'dark' || saved === 'light') return saved;
     } catch {}
@@ -333,12 +335,19 @@ export default function App() {
 
           <div className="relative z-10 max-w-4xl space-y-4 sm:space-y-5">
             {/* Console status line */}
-            <div className="flex items-center gap-2.5 font-mono text-micro uppercase tracking-[0.08em] text-slate-500 dark:text-white/45">
+            <div className="flex flex-wrap items-center gap-2 font-mono text-micro uppercase text-slate-500 dark:text-white/45">
               <span className="relative flex h-2 w-2 shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
               </span>
-              <span dir="ltr">LINK NOMINAL · MODIS TERRA/AQUA · SEDAC</span>
+              <span dir="ltr" className="tracking-[0.08em]">LINK NOMINAL · MODIS TERRA/AQUA · SEDAC</span>
+              <span className="text-slate-300 dark:text-white/20">·</span>
+              <span 
+                dir="ltr" 
+                className="font-bold tracking-[0.25em] text-sky-600 dark:text-sky-400 bg-sky-500/10 dark:bg-sky-500/15 px-2 py-0.5 rounded border border-sky-400/25"
+              >
+                TERRAMED &nbsp; PULSE
+              </span>
             </div>
 
             <div>

@@ -166,7 +166,7 @@ export default function PhysicianObservatory({
             </div>
           </div>
           <a
-            href={mdpiStudy?.doi || mdpiStudy?.url || "https://doi.org/10.3390/socsci14050295"}
+            href={mdpiStudy?.repec || mdpiStudy?.url || mdpiStudy?.doi || "https://ideas.repec.org/a/gam/jscscx/v14y2025i5p295-d1653586.html"}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-2 pt-2 border-t border-slate-200/80 dark:border-white/[0.06] text-2xs text-rose-600 dark:text-rose-400/90 font-medium flex items-center justify-between hover:underline"
@@ -471,7 +471,14 @@ export default function PhysicianObservatory({
                   className="p-2.5 rounded-lg bg-white border border-slate-200/80 dark:bg-white/[0.02] dark:border-white/[0.04] transition-colors shadow-xs"
                 >
                   <div className="flex items-center justify-between gap-2 text-slate-900 dark:text-white/90 font-medium">
-                    <span>{isAr ? study.journal_ar : study.journal_en} ({study.year})</span>
+                    <a
+                      href={study.url || study.doi}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-sky-600 dark:hover:text-sky-400 hover:underline transition-colors flex items-center gap-1.5"
+                    >
+                      <span>{isAr ? study.journal_ar : study.journal_en} ({study.year})</span>
+                    </a>
                     <div className="flex items-center gap-2 shrink-0">
                       {study.pubmed && (
                         <a
@@ -484,20 +491,36 @@ export default function PhysicianObservatory({
                           <ExternalLink className="w-3 h-3" />
                         </a>
                       )}
+                      {study.researchgate && (
+                        <a
+                          href={study.researchgate}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-2xs text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300 font-medium flex items-center gap-0.5 hover:underline"
+                        >
+                          <span>ResearchGate</span>
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      )}
                       <a
-                        href={study.doi}
+                        href={study.url || study.doi}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-2xs text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 font-medium flex items-center gap-0.5 hover:underline"
                       >
-                        <span>DOI</span>
+                        <span>{study.id === 'mdpi_societies_2025' ? (isAr ? 'المستودع الأكاديمي' : 'Open Access') : 'DOI'}</span>
                         <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>
                   </div>
-                  <div className="text-micro text-slate-500 dark:text-white/50 mt-1 line-clamp-2">
+                  <a
+                    href={study.url || study.doi}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-micro text-slate-500 dark:text-white/50 mt-1 line-clamp-2 hover:text-slate-700 dark:hover:text-white/80 block cursor-pointer transition-colors"
+                  >
                     {study.citation}
-                  </div>
+                  </a>
                 </div>
               ))}
 

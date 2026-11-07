@@ -458,6 +458,12 @@ export function matchSpecialty(specialtyKey, governoratesMap) {
 
       const roundedScore = Math.round(matchScore * 10) / 10;
       const matchPct = Math.min(99, Math.max(50, Math.round(matchScore)));
+      const envBurdenPct = Math.min(100, Math.max(0, Math.round(
+        ((weights.heat * heatScore) + (weights.aod * aodScore)) * 100
+      )));
+      const priorityIndex = Math.min(100, Math.max(0, Math.round(
+        gov.baseline_indices ? gov.baseline_indices.hni : matchScore
+      )));
 
       results.push({
         id,
@@ -465,6 +471,8 @@ export function matchSpecialty(specialtyKey, governoratesMap) {
         name_ar: gov.name_ar,
         matchScore: roundedScore,
         match_pct: matchPct,
+        envBurdenPct,
+        priorityIndex,
         hni: gov.baseline_indices ? gov.baseline_indices.hni : Math.round(matchScore),
         justification_en: weights.justification_en,
         justification_ar: weights.justification_ar,
@@ -486,9 +494,17 @@ export function matchSpecialty(specialtyKey, governoratesMap) {
 // SECTION 8: WHAT-IF POLICY INTERVENTION SIMULATOR
 // =========================================================================
 
-// Elasticities per intervention unit, calibrated against empirical health economics
-// and WHO health workforce retention literature (max financial incentive elasticity ~14-16%).
-export const ADMISSIONS_MODEL = { perClinic: 34, perStipendPct: 11, perGreeningPct: 18 };
+// Percentage-point elasticities per intervention unit, calibrated against empirical health
+// economics and WHO health workforce retention literature. Outputs are normalized shifts,
+// never patient or emergency-visit headcounts.
+export const ER_PRESSURE_MODEL = {
+  perClinicPct: 18,
+  perStipendPct: 10,
+  perGreeningPct: 10,
+  perEquipmentPct: 6,
+  perSecurityPct: 5,
+  ceilingPct: 45
+};
 export const RETENTION_MODEL = { perStipendPct: 0.14, perClinic: 0.04 };
 export const RETENTION_CEILING = 25;
 
@@ -530,12 +546,15 @@ export function simulatePolicyInterventions(
   const simHni = (HNI_WEIGHTS.epi * simEpi) + (HNI_WEIGHTS.ppi * bPpi) + (HNI_WEIGHTS.fsi * simFsi) + (HNI_WEIGHTS.wni * simWni);
   const deltaHni = simHni - bHni;
 
-  const preventedAdmissionsPerMonth = Math.round(
-    (nClinics * ADMISSIONS_MODEL.perClinic) +
-    (nStipend * ADMISSIONS_MODEL.perStipendPct) +
-    (nGreening * ADMISSIONS_MODEL.perGreeningPct) +
-    ((nEquipment / 100.0) * 900) +
-    ((nSecurity / 100.0) * 350)
+  const erPressureReductionPct = Math.min(
+    ER_PRESSURE_MODEL.ceilingPct,
+    Math.max(0, Math.round(
+      ((nClinics / 50.0) * ER_PRESSURE_MODEL.perClinicPct) +
+      ((nStipend / 100.0) * ER_PRESSURE_MODEL.perStipendPct) +
+      ((nGreening / 30.0) * ER_PRESSURE_MODEL.perGreeningPct) +
+      ((nEquipment / 100.0) * ER_PRESSURE_MODEL.perEquipmentPct) +
+      ((nSecurity / 100.0) * ER_PRESSURE_MODEL.perSecurityPct)
+    ))
   );
 
   const projectedRetentionGain = Math.round(
@@ -554,7 +573,7 @@ export function simulatePolicyInterventions(
     simHni: Math.round(simHni * 10) / 10,
     deltaHni: Math.round(deltaHni * 10) / 10,
     pctReduction: bHni > 0 ? Math.round((Math.abs(deltaHni) / bHni) * 100) : 0,
-    preventedAdmissions: Math.max(0, preventedAdmissionsPerMonth),
+    erPressureReductionPct,
     retentionGainPct: Math.min(RETENTION_CEILING, Math.max(0, projectedRetentionGain))
   };
 }

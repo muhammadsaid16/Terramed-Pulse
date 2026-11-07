@@ -89,7 +89,7 @@ export default function DoctorMatcher({
       </div>
 
       {/* Specialty Demand Panel & Ranked Governorates */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div key={selectedSpecialty} className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start enter-swap">
         
         {/* Left: Clinical Evidence & Mechanism (7 cols) */}
         <SpotlightCard
@@ -140,8 +140,8 @@ export default function DoctorMatcher({
             </h4>
             <p className="text-xs text-slate-700 dark:text-white/70 leading-relaxed font-normal">
               {lang === 'ar'
-                ? `محافظة ${topGov?.name_ar} تعاني من مؤشر عجز منشآت يبلغ ${topGov?.keyDrivers?.fsi}/100 وتصاعد مستمر في موجات الإجهاد الحراري. تواجدك هنا ينقذ مئات الحالات الحرجة شهرياً.`
-                : `${topGov?.name_en} suffers from a severe facility gap (${topGov?.keyDrivers?.fsi}/100) and accelerating heatwave frequency. Practicing your specialty here creates the maximum clinical life-saving dividend.`}
+                ? `محافظة ${topGov?.name_ar} تعاني من مؤشر عجز منشآت يبلغ ${topGov?.keyDrivers?.fsi}/100 وتصاعد مستمر في موجات الإجهاد الحراري. تواجدك هنا يرفع نسبة خفض العبء المرضي المرتبط بالمناخ.`
+                : `${topGov?.name_en} suffers from a severe facility gap (${topGov?.keyDrivers?.fsi}/100) and accelerating heatwave frequency. Practicing your specialty here maximizes the relative reduction in climate-sensitive disease burden.`}
             </p>
 
             <Button
@@ -190,7 +190,10 @@ export default function DoctorMatcher({
                       {lang === 'ar' ? r.name_ar : r.name_en}
                     </span>
                     <span className="text-2xs text-slate-500 dark:text-white/45 block tabular-nums font-normal mt-0.5">
-                      {t.hniScoreLabel}: <NumberTicker value={r.hni} decimalPlaces={1} />
+                      {t.relativePriorityLabel}: <NumberTicker value={r.priorityIndex} /> / 100
+                    </span>
+                    <span className="text-2xs text-slate-500 dark:text-white/45 block tabular-nums font-normal mt-0.5">
+                      {t.envBurdenShareLabel}: <NumberTicker value={r.envBurdenPct} suffix="%" />
                     </span>
                   </div>
                 </div>

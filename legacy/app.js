@@ -93,7 +93,7 @@ const TRANSLATIONS = {
     sliderClinics: "Mobile Climate-Health Clinics Deployed (0 - 50 units):",
     sliderIncentive: "Rural Specialty Retention Stipend (+0% to +100%):",
     sliderGreening: "Urban Greening & Reflective Cool Surfaces (+0% to +30%):",
-    admissionsPrevented: "Est. Prevented Emergency Admissions / Mo:",
+    erPressureReduction: "Climate-Sensitive ER Pressure Reduction:",
     retentionBoost: "Projected Physician Retention Gain:",
 
     // Wizard Modal
@@ -200,7 +200,7 @@ const TRANSLATIONS = {
     sliderClinics: "القوافل والعيادات المتنقلة الموجهة (0 - 50 وحدة):",
     sliderIncentive: "حوافز وبدلات جذب الكوادر للمناطق النائية (+0% إلى +100%):",
     sliderGreening: "التشجير والأسطح العاكسة المبردة بالمدن (+0% إلى +30%):",
-    admissionsPrevented: "حالات الطوارئ المتوقع إنقاذها شهرياً:",
+    erPressureReduction: "خفض ضغط الطوارئ المرتبط بالإجهاد المناخي:",
     retentionBoost: "معدل زيادة استبقاء الأطباء بالمنطقة:",
 
     // Wizard Modal
@@ -799,7 +799,7 @@ function updateWhatIfSimulation() {
   const baseHniEl = document.getElementById("hni-base-score");
   const simHniEl = document.getElementById("hni-simulated-score");
   const deltaBadge = document.getElementById("hni-delta-badge");
-  const preventedEl = document.getElementById("hni-prevented-admissions");
+  const erPressureEl = document.getElementById("hni-er-pressure-reduction");
   const retentionEl = document.getElementById("hni-retention-boost");
 
   if (baseHniEl) baseHniEl.innerText = sim.baselineHni.toFixed(1);
@@ -810,11 +810,10 @@ function updateWhatIfSimulation() {
     deltaBadge.innerText = `${sim.deltaHni.toFixed(1)} pts (${pct}% reduction)`;
   }
 
-  // Calculate prevented admissions and retention boost
-  const preventedVisits = Math.round((sim.baselineHni - sim.simulatedHni) * 95);
+  // Calculate relative ER pressure reduction and retention boost
   const retentionGain = Math.round(incentiveVal * 0.58);
 
-  if (preventedEl) preventedEl.innerText = preventedVisits.toLocaleString();
+  if (erPressureEl) erPressureEl.innerText = `-${sim.erPressureReductionPct}%`;
   if (retentionEl) retentionEl.innerText = `+${retentionGain}%`;
 
   // Update sub-index bars
@@ -976,13 +975,13 @@ function initModalsAndPrint() {
         const govNameEl = document.getElementById("print-gov-name");
         const baseHniEl = document.getElementById("print-base-hni");
         const simHniEl = document.getElementById("print-sim-hni");
-        const preventedEl = document.getElementById("print-prevented");
+        const erPressureEl = document.getElementById("print-er-pressure");
         const retentionEl = document.getElementById("print-retention");
 
         if (govNameEl) govNameEl.innerText = currentLang === 'ar' ? gov.name_ar : gov.name_en;
         if (baseHniEl) baseHniEl.innerText = document.getElementById("hni-base-score")?.innerText || "88.4";
         if (simHniEl) simHniEl.innerText = document.getElementById("hni-simulated-score")?.innerText || "76.2";
-        if (preventedEl) preventedEl.innerText = `${document.getElementById("hni-prevented-admissions")?.innerText || "1,159"} visits / month`;
+        if (erPressureEl) erPressureEl.innerText = document.getElementById("hni-er-pressure-reduction")?.innerText || "-13%";
         if (retentionEl) retentionEl.innerText = `${document.getElementById("hni-retention-boost")?.innerText || "+23%"} Retention`;
       }
       window.print();

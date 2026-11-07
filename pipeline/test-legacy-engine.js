@@ -227,7 +227,7 @@ const simResult = engine.simulateInterventions(simBaseline, {
 
 assert(simResult.simulatedHni < simResult.baselineHni, 'HNI decreases after policy interventions');
 assert(simResult.deltaHni < 0, `Delta HNI is negative (${simResult.deltaHni} points reduction)`);
-assert(simResult.livesImpacted > 0, `Projected lives impacted is positive (${simResult.livesImpacted} people)`);
+assert(simResult.erPressureReductionPct > 0, `Projected ER pressure reduction is positive (${simResult.erPressureReductionPct}%)`);
 
 // -----------------------------------------------------------------------------
 // 8. PERFORMANCE BENCHMARKS (< 1ms execution guarantee)

@@ -46,10 +46,10 @@ export const TRANSLATIONS = {
     kpiHighestNeedLabel: "Highest Climate-Health Need",
     kpiHighestNeed: "Aswan (HNI: 88.4)",
     kpiHighestNeedSub: "Critical Physician Shortage",
-    kpiTotalDoctorsLabel: "Empirical Physician Evidence",
-    kpiTotalDoctors: "Physicians Surveyed",
+    kpiTotalDoctorsLabel: "Academic Evidence Base",
+    kpiTotalDoctors: "Peer-Reviewed Studies",
     kpiLiveBadge: "Live Field Report",
-    kpiTotalDoctorsSub: "WHO EMHJ • Oxford • MDPI Cohorts",
+    kpiTotalDoctorsSub: "Reference meta-synthesis of 3 published academic studies (WHO EMHJ 2021 & Social Sciences 2025) analyzing emigration drivers among young Egyptian physicians and clinical trainees.",
     kpiTrendDivergenceLabel: "Opposite-Direction Dynamics",
     kpiTrendDivergence: "Upper Egypt vs Delta",
     kpiTrendDivergenceSub: "Arid heat vs Humid aerosols",
@@ -109,7 +109,7 @@ export const TRANSLATIONS = {
 
     // Module 3: Physician Observatory
     module3Title: "Module 3: Healthcare Workforce & Physician Retention Observatory",
-    module3Subtitle: "Empirical synthesis of peer-reviewed migration cohorts (WHO EMHJ, Oxford, MDPI) and CAPMAS healthcare capacity benchmarks",
+    module3Subtitle: "Reference meta-synthesis of 3 peer-reviewed physician migration studies (WHO EMHJ 2021, Oxford 2015, MDPI 2025) and CAPMAS healthcare capacity benchmarks",
     formTitle: "Log a Frontline Clinical Observation & Retention Signal",
     inputDoctorName: "Physician Name (or Anonymous):",
     inputGov: "Governorate:",
@@ -185,7 +185,7 @@ export const TRANSLATIONS = {
     sliderClinics: "Mobile Climate-Health Clinics Deployed (0 - 50 units):",
     sliderIncentive: "Remote Housing & Regional Hardship Allowance (+0% to +100%):",
     sliderGreening: "Urban Greening & Reflective Cool Surfaces (+0% to +30%):",
-    admissionsPrevented: "Est. Prevented Emergency Admissions / Mo:",
+    erPressureReduction: "Climate-Sensitive ER Pressure Reduction:",
     retentionBoost: "Projected Physician Retention Gain:",
     scenarioIllustrativeNote: "Illustrative scenario estimate (unmeasured)",
     modeledResponseNote: "Modeled policy response",
@@ -205,9 +205,9 @@ export const TRANSLATIONS = {
     researchCitation: "Citation & DOI",
     actionablePolicyDrivers: "Evidence-Based Retention Levers",
     execChartsTitle: "Executive Policy Intelligence Dashboards",
-    chartTurnoverTitle: "Primary Drivers of Physician Emigration (WHO Cohort, n=885)",
+    chartTurnoverTitle: "Primary Drivers of Physician Emigration (3-Study Synthesis, %)",
     chartMigrationTitle: "Emigration Propensity by Clinical Specialty (Literature Benchmarks)",
-    chartNoFieldData: "Empirical cohort data from WHO EMHJ 2021 (n=885 Egyptian MDs).",
+    chartNoFieldData: "3-study academic meta-synthesis (WHO EMHJ 2021 & Social Sciences 2025).",
     chartPriorityTitle: "Governorate Priority Matrix (NASA Climate Stress vs Health Gap)",
 
     // Wizard Modal
@@ -303,7 +303,7 @@ export const TRANSLATIONS = {
     chipDeltaWetBulb: "Wet-Bulb: +1.8°C",
     kpiChipPower: "NASA POWER v2.0",
     kpiChipModis: "MODIS LST / MERRA-2",
-    kpiChipField: "PEER-REVIEWED COHORTS",
+    kpiChipField: "3-STUDY META-SYNTHESIS",
     kpiChipSpatial: "SPATIAL DIVERGENCE",
 
     // Trend telemetry (module 1b)
@@ -340,7 +340,9 @@ export const TRANSLATIONS = {
     chartClimateEpi: "Climate Stress (EPI)",
 
     footerTagline: "TERRAMED PULSE: Stay & Build Egypt. NASA Space Apps Challenge 2026",
-    hniScoreLabel: "HNI Score",
+    relativePriorityLabel: "Relative Priority Index",
+    envBurdenShareLabel: "Environmental Disease Burden Share",
+    matchScoreLabel: "Match Score",
     impactChip: "CLINICAL IMPACT TELEMETRY",
     matchWord: "Match",
     mcdaChip: "MCDA POLICY SIMULATOR",
@@ -356,7 +358,7 @@ export const TRANSLATIONS = {
     sourcePrefix: "Source:",
     kpiSource1: "NASA POWER v2.0 (MERRA-2 Assimilation 1995–2025)",
     kpiSource2: "NASA Climate Telemetry (EPI) + CAPMAS Healthcare Census 2024",
-    kpiSource3: "WHO EMHJ (n=885) + Oxford (n=400) + MDPI (n=450) Cohorts",
+    kpiSource3: "Reference meta-synthesis of 3 published academic studies (WHO EMHJ 2021 & Social Sciences 2025)",
     kpiSource4: "NASA Spatial Telemetry Divergence Analysis (Upper Egypt vs Coast)",
 
     // Sensor Provenance per Variable & Layer
@@ -394,11 +396,11 @@ export const TRANSLATIONS = {
     sourceRationaleEquipment: "Target Evidence: Overcomes the 80.7% equipment and emergency supplies shortage in public facilities (WHO EMHJ 2021 & CAPMAS).",
     sourceRationaleClinics: "Target Evidence: Ministry of Health & Population primary care outreach standards to bridge facility deficit (FSI).",
     sourceRationaleGreening: "Target Evidence: Mitigates urban heat island microclimates documented in NASA MODIS LST thermal telemetry.",
-    sourceExecTurnover: "WHO Eastern Mediterranean Health Journal 2021 (n=885 Egyptian MDs)",
+    sourceExecTurnover: "3-Study Academic Meta-Synthesis (WHO EMHJ 2021 & Social Sciences 2025)",
     sourceExecMigration: "Oxford University Press 2015 (n=400) & MDPI Societies 2025 (n=450)",
     sourceExecPriority: "CAPMAS 2024 Healthcare Capacity Bulletin + NASA Climate Exposure Index",
     sourceProjectedRetention: "Health Economics Elasticity Model derived from WHO EMHJ & Oxford Cohorts",
-    sourceAdmissionsPrevented: "Coupled NASA Heatwave Days with Regional Acute Renal Decompensation Benchmarks"
+    sourceErPressureReduction: "Modeled from NASA heatwave exposure and climate-sensitive clinical load benchmarks"
   },
 
   ar: {
@@ -444,10 +446,10 @@ export const TRANSLATIONS = {
     kpiHighestNeedLabel: "المحافظة الأعلى في الاحتياج الصحي-المناخي",
     kpiHighestNeed: "أسوان (مؤشر HNI: 88.4)",
     kpiHighestNeedSub: "عجز حرج في الكوادر التخصصية",
-    kpiTotalDoctorsLabel: "شواهد أبحاث هجرة الأطباء",
-    kpiTotalDoctors: "طبيباً بالدراسات",
+    kpiTotalDoctorsLabel: "قاعدة الأدلة الأكاديمية",
+    kpiTotalDoctors: "دراسات أكاديمية محكّمة",
     kpiLiveBadge: "بلاغ ميداني حي",
-    kpiTotalDoctorsSub: "أبحاث الصحة العالمية وأكسفورد وMDPI",
+    kpiTotalDoctorsSub: "تحليل مرجعي مجمّع لـ 3 دراسات أكاديمية منشورة (EMHJ 2021 / Social Sciences 2025) لرصد دوافع الهجرة لدى الأطباء الشبان والكوادر الطبية في مصر.",
     kpiTrendDivergenceLabel: "ديناميكية الاتجاهات المتعاكسة",
     kpiTrendDivergence: "صعيد مصر مقابل الدلتا",
     kpiTrendDivergenceSub: "جفاف حراري مقابل عوالق ورطوبة",
@@ -507,7 +509,7 @@ export const TRANSLATIONS = {
 
     // Module 3: Physician Observatory
     module3Title: "الوحدة 3: مرصد القوى البشرية الصحية واستبقاء الأطباء",
-    module3Subtitle: "تحليل تجريبي محكّم لدراسات هجرة الأطباء (منظمة الصحة العالمية، أكسفورد، MDPI) ومؤشرات التوزيع الجغرافي لجهاز التعبئة والإحصاء",
+    module3Subtitle: "تحليل مرجعي مجمّع لـ 3 دراسات محكّمة حول هجرة الأطباء (منظمة الصحة العالمية 2021، أكسفورد 2015، MDPI 2025) ومؤشرات التوزيع الجغرافي لجهاز التعبئة والإحصاء",
     formTitle: "تسجيل ملاحظة سريرية ميدانية ومؤشر استبقاء",
     inputDoctorName: "اسم الطبيب (أو طبيب ميداني):",
     inputGov: "المحافظة:",
@@ -581,7 +583,7 @@ export const TRANSLATIONS = {
     sliderClinics: "نشر قوافل وعيادات مناخية متنقلة (0 - 50 وحدة):",
     sliderIncentive: "بدل السكن المعيشي والجذب للمناطق النائية (+0% إلى +100%):",
     sliderGreening: "زيادة المساحات الخضراء والأسطح العاكسة المبردة (+0% إلى +30%):",
-    admissionsPrevented: "تجنب حالات طوارئ شهرياً:",
+    erPressureReduction: "خفض ضغط الطوارئ المرتبط بالإجهاد المناخي:",
     retentionBoost: "نسبة الزيادة المتوقعة في استبقاء الأطباء:",
     scenarioIllustrativeNote: "تقدير توضيحي للسيناريو، غير مقاس رصدياً",
     modeledResponseNote: "استجابة تخطيطية مرجحة",
@@ -601,9 +603,9 @@ export const TRANSLATIONS = {
     researchCitation: "التوثيق العلمي ورابط البحث",
     actionablePolicyDrivers: "أذرع الاستبقاء المبنية على الأدلة",
     execChartsTitle: "لوحات المعلومات الذكية لصناع القرار",
-    chartTurnoverTitle: "أبرز دوافع تسرب وهجرة الأطباء (دراسة الصحة العالمية، n=885)",
+    chartTurnoverTitle: "أبرز دوافع هجرة الأطباء (تحليل مجمّع لـ 3 دراسات، %)",
     chartMigrationTitle: "مؤشر قابلية هجرة التخصصات السريرية (الدراسات المحكّمة)",
-    chartNoFieldData: "بيانات العينة الميدانية المحكّمة من دراسة منظمة الصحة العالمية (عينة 885 طبيباً مصرياً).",
+    chartNoFieldData: "تحليل مرجعي مجمّع لـ 3 دراسات أكاديمية منشورة (EMHJ 2021 / Social Sciences 2025).",
     chartPriorityTitle: "مصفوفة أولويات المحافظات (أرصاد ناسا للمناخ مقابل عجز الرعاية)",
 
     // Wizard Modal
@@ -699,7 +701,7 @@ export const TRANSLATIONS = {
     chipDeltaWetBulb: "الحرارة الرطبة Wet-Bulb: +1.8°C",
     kpiChipPower: "بيانات ناسا POWER v2.0",
     kpiChipModis: "أقمار MODIS / MERRA-2",
-    kpiChipField: "دراسات محكّمة",
+    kpiChipField: "تحليل مرجعي لـ 3 دراسات",
     kpiChipSpatial: "تباين مكاني",
 
     // Trend telemetry (module 1b)
@@ -736,7 +738,9 @@ export const TRANSLATIONS = {
     chartClimateEpi: "الإجهاد البيئي والمناخي (EPI)",
 
     footerTagline: "فريق TERRAMED PULSE: ابقَ وابنِ مصر. تحدي ناسا لتطبيقات الفضاء 2026",
-    hniScoreLabel: "مؤشر HNI",
+    relativePriorityLabel: "مؤشر الأولوية النسبية",
+    envBurdenShareLabel: "حصة العبء المرضي البيئي",
+    matchScoreLabel: "درجة التطابق",
     impactChip: "تليمتري الأثر السريري",
     matchWord: "تطابق",
     mcdaChip: "مختبر محاكاة السياسات (MCDA)",
@@ -752,7 +756,7 @@ export const TRANSLATIONS = {
     sourcePrefix: "المصدر:",
     kpiSource1: "مرصد ناسا POWER v2.0 (استيعاب MERRA-2 الساتلي 1995–2025)",
     kpiSource2: "مؤشر مركب: أرصاد ناسا للمناخ (EPI) + تعداد الصحة بالتعبئة والإحصاء 2024",
-    kpiSource3: "دراسات ميدانية محكّمة (منظمة الصحة n=885، أكسفورد n=400، MDPI n=450)",
+    kpiSource3: "تحليل مرجعي لـ 3 دراسات أكاديمية منشورة (EMHJ 2021 / Social Sciences 2025)",
     kpiSource4: "تحليل التباين المكاني لأرصاد ناسا الساتلية (صعيد مصر مقابل الساحل)",
 
     // Sensor Provenance per Variable & Layer
@@ -790,10 +794,10 @@ export const TRANSLATIONS = {
     sourceRationaleEquipment: "المستهدف بالأدلة: تجاوز عجز الأجهزة والمستلزمات الطبية البالغ 80.7% في المستشفيات الحكومية (الصحة العالمية والتعبئة والإحصاء).",
     sourceRationaleClinics: "المستهدف بالأدلة: معايير القوافل الطبية لوزارة الصحة والسكان لسد فجوة عجز المنشآت (FSI) بالقرى.",
     sourceRationaleGreening: "المستهدف بالأدلة: تبريد الجزر الحرارية الحضرية الموثقة بأرصاد أقمار ناسا MODIS LST الحرارية السطحية.",
-    sourceExecTurnover: "المجلة الصحية لشرق المتوسط: منظمة الصحة العالمية 2021 (عينة 885 طبيباً مصرياً)",
+    sourceExecTurnover: "تحليل مرجعي مجمّع لـ 3 دراسات أكاديمية (EMHJ 2021 / Social Sciences 2025)",
     sourceExecMigration: "دراسات جامعة أكسفورد 2015 (عينة 400) ومجلة MDPI 2025 (عينة 450)",
     sourceExecPriority: "النشرة الإحصائية للخدمات الصحية CAPMAS 2024 + مؤشر ناسا للتعرض المناخي",
     sourceProjectedRetention: "محسوب وفق نموذج مرونة اقتصاديات الصحة السريرية (دراسات منظمة الصحة العالمية وأكسفورد)",
-    sourceAdmissionsPrevented: "مقرون بموجات الحر الشديدة المقاسة بأقمار ناسا مع معدلات التردد الكلوي الإقليمية"
+    sourceErPressureReduction: "مُحتسب من تعرض موجات الحر بأقمار ناسا ومعايير العبء السريري المرتبط بالمناخ"
   }
 };

@@ -71,27 +71,29 @@ export default function PhysicianObservatory({
         </div>
       </div>
 
-      {/* Top Evidence Stat Cards (Synthesis of 1,735 Egyptian Physicians) */}
+      {/* Top Evidence Stat Cards (3-Study Academic Meta-Synthesis) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
         
-        {/* Stat 1: Total Cohort */}
+        {/* Stat 1: Academic Meta-Synthesis */}
         <SpotlightCard className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-sky-500/40 dark:bg-white/[0.02] dark:border-white/[0.06] dark:hover:border-sky-500/30 transition-[border-color,box-shadow] flex flex-col justify-between space-y-1 shadow-sm enter-pop">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-micro font-medium text-slate-500 dark:text-white/50 uppercase tracking-wider">
-                {isAr ? 'إجمالي عينة الأطباء المستطلعة' : 'Surveyed Physician Cohort'}
+                {isAr ? 'تحليل مرجعي أكاديمي مجمّع' : 'Academic Meta-Synthesis'}
               </span>
               <Users className="w-4 h-4 text-sky-600 dark:text-sky-400" />
             </div>
             <div className="text-2xl font-bold text-slate-900 dark:text-white telemetry-mono mt-1 flex items-baseline gap-1">
-              <NumberTicker value={1735} /> <span className="text-xs font-normal text-slate-500 dark:text-white/50">{isAr ? 'طبيباً مصرياً' : 'MDs in Egypt'}</span>
+              <NumberTicker value={3} /> <span className="text-xs font-normal text-slate-500 dark:text-white/50">{isAr ? 'دراسات أكاديمية محكّمة' : 'Peer-Reviewed Studies'}</span>
             </div>
-            <div className="text-micro text-sky-600 dark:text-sky-400/90 font-medium flex items-center gap-1 mt-1">
-              <span>WHO ($n=885$) + Oxford ($400$) + MDPI ($450$)</span>
+            <div className="text-micro text-slate-600 dark:text-white/60 font-normal mt-1 leading-relaxed">
+              {isAr
+                ? 'تحليل مرجعي مجمّع لـ 3 دراسات أكاديمية منشورة (EMHJ 2021 / Social Sciences 2025) لرصد دوافع الهجرة لدى الأطباء الشبان والكوادر الطبية في مصر.'
+                : 'Reference meta-synthesis of 3 published academic studies (WHO EMHJ 2021 & Social Sciences 2025) analyzing emigration drivers among young Egyptian physicians and clinical trainees.'}
             </div>
           </div>
           <div className="mt-2 pt-2 border-t border-slate-200/80 dark:border-white/[0.06] text-2xs text-slate-500 dark:text-white/40 font-medium">
-            <span className="text-sky-600 dark:text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> WHO 885 + Oxford 400 + MDPI 450
+            <span className="text-sky-600 dark:text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {isAr ? 'EMHJ 2021 / Social Sciences 2025' : 'WHO EMHJ 2021 / Social Sciences 2025'}
           </div>
         </SpotlightCard>
 

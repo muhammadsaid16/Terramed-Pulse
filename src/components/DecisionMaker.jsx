@@ -108,7 +108,7 @@ export default function DecisionMaker({
     return Array.from(map.values());
   }, [reports, communityReports]);
 
-  // Executive Chart 1: Primary Drivers of Turnover (verified empirical WHO breakdown n=885)
+  // Executive Chart 1: Migration driver shares (%) from the 3-study academic meta-synthesis
   const turnoverChartData = useMemo(() => {
     return buildEmpiricalTurnoverChartData(lang, t, theme);
   }, [lang, t, theme]);
@@ -481,20 +481,16 @@ export default function DecisionMaker({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
             <SpotlightCard className="p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.08] text-center shadow-xs">
               <span className="text-micro text-slate-500 dark:text-white/50 block font-medium">
-                {t.admissionsPrevented}
+                {t.erPressureReduction}
               </span>
-              <div className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white mt-1 tabular-nums">
-                {lang === 'ar' ? (
-                  <>~<NumberTicker value={Number((sim.preventedAdmissions / 1000).toFixed(1))} decimalPlaces={1} /> ألف حالة / شهرياً</>
-                ) : (
-                  <>~<NumberTicker value={Number((sim.preventedAdmissions / 1000).toFixed(1))} decimalPlaces={1} />k cases / mo</>
-                )}
+              <div className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white mt-1 tabular-nums" dir="ltr">
+                -<NumberTicker value={sim.erPressureReductionPct} suffix="%" />
               </div>
               <span className="text-2xs text-slate-500 dark:text-white/40 block mt-1">
                 {t.scenarioIllustrativeNote}
               </span>
               <span className="text-2xs text-slate-500 dark:text-white/45 block mt-1 pt-1.5 border-t border-slate-200/80 dark:border-white/[0.06]">
-                <span className="text-sky-600 dark:text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceAdmissionsPrevented}
+                <span className="text-sky-600 dark:text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceErPressureReduction}
               </span>
             </SpotlightCard>
 

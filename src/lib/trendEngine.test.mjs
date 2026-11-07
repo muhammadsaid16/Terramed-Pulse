@@ -10,7 +10,7 @@ import {
   lnGamma, betacf, ibeta, erf, standardNormalCdf, getTCritical95, studentTPValue,
   linearRegression, mannKendall, theilSenSlope, deseasonalize, minMaxNormalize,
   HNI_WEIGHTS, computeHNI, computeWNIFromReports, SPECIALTY_WEIGHTS, matchSpecialty,
-  simulatePolicyInterventions, ADMISSIONS_MODEL, RETENTION_MODEL, RETENTION_CEILING,
+  simulatePolicyInterventions, ER_PRESSURE_MODEL, RETENTION_MODEL, RETENTION_CEILING,
   NEUTRAL_INDICES, WNI_PRIOR_DEFAULT
 } from './trendEngine.js';
 import { TERRAPULSE_DATA } from '../data/terrapulseData.js';
@@ -224,13 +224,20 @@ const cairo = govs.cairo.baseline_indices;
 const baseHni = computeHNI(cairo.epi, cairo.ppi, cairo.fsi, cairo.wni_prior);
 const untouched = simulatePolicyInterventions(baseHni, cairo.epi, cairo.fsi, cairo.wni_prior, cairo.ppi, 0, 0, 0);
 check(untouched.deltaHni === 0, 'zero interventions leave the baseline HNI unchanged');
-check(untouched.preventedAdmissions === 0, 'zero interventions prevent zero admissions');
+check(untouched.erPressureReductionPct === 0, 'zero interventions produce zero ER pressure reduction');
 check(untouched.retentionGainPct === 0, 'zero interventions retain no additional staff');
 
 const withPolicy = simulatePolicyInterventions(baseHni, cairo.epi, cairo.fsi, cairo.wni_prior, cairo.ppi, 15, 40, 10);
 check(withPolicy.deltaHni < 0, 'a funded policy reduces the need index');
 check(withPolicy.simEpi < cairo.epi && withPolicy.simFsi < cairo.fsi && withPolicy.simWni < cairo.wni_prior, 'all three addressed sub-indices improve');
-check(withPolicy.preventedAdmissions === 15 * ADMISSIONS_MODEL.perClinic + 40 * ADMISSIONS_MODEL.perStipendPct + 10 * ADMISSIONS_MODEL.perGreeningPct, 'admission dividend is reproducible from the published model constants');
+check(
+  withPolicy.erPressureReductionPct === Math.round(
+    (15 / 50) * ER_PRESSURE_MODEL.perClinicPct +
+    (40 / 100) * ER_PRESSURE_MODEL.perStipendPct +
+    (10 / 30) * ER_PRESSURE_MODEL.perGreeningPct
+  ),
+  'ER pressure reduction is reproducible from the published percentage model constants'
+);
 check(closeTo(withPolicy.simHni, computeHNI(withPolicy.simEpi, cairo.ppi, withPolicy.simFsi, withPolicy.simWni), 0.15), 'simulated HNI is internally consistent with its own sub-indices');
 
 const scaledUp = simulatePolicyInterventions(baseHni, cairo.epi, cairo.fsi, cairo.wni_prior, cairo.ppi, 30, 80, 20);
@@ -394,8 +401,11 @@ check(
   `every simulator output is finite at maximum levers (${JSON.stringify(maxed)})`
 );
 check(
-  maxed.preventedAdmissions === 50 * ADMISSIONS_MODEL.perClinic + 100 * ADMISSIONS_MODEL.perStipendPct + 30 * ADMISSIONS_MODEL.perGreeningPct,
-  `prevented admissions follow ADMISSIONS_MODEL exactly (${maxed.preventedAdmissions})`
+  maxed.erPressureReductionPct ===
+    (50 / 50) * ER_PRESSURE_MODEL.perClinicPct +
+    (100 / 100) * ER_PRESSURE_MODEL.perStipendPct +
+    (30 / 30) * ER_PRESSURE_MODEL.perGreeningPct,
+  `ER pressure reduction follows ER_PRESSURE_MODEL exactly (${maxed.erPressureReductionPct})`
 );
 check(
   maxed.retentionGainPct === 100 * RETENTION_MODEL.perStipendPct + 50 * RETENTION_MODEL.perClinic,
@@ -410,8 +420,8 @@ check(
   `the ${RETENTION_CEILING}% ceiling only binds on an out-of-range lever`
 );
 check(
-  simFor('aswan', { clinics: 50 }).preventedAdmissions === 50 * ADMISSIONS_MODEL.perClinic,
-  'a single lever contributes only its own admissions term'
+  simFor('aswan', { clinics: 50 }).erPressureReductionPct === (50 / 50) * ER_PRESSURE_MODEL.perClinicPct,
+  'a single lever contributes only its own ER pressure term'
 );
 
 const hostileLevers = [
@@ -429,7 +439,7 @@ for (const [label, levers] of hostileLevers) {
   );
 }
 check(
-  simFor('aswan', { clinics: -20 }).preventedAdmissions === 0 && simFor('aswan', { clinics: -20 }).retentionGainPct === 0,
+  simFor('aswan', { clinics: -20 }).erPressureReductionPct === 0 && simFor('aswan', { clinics: -20 }).retentionGainPct === 0,
   'a negative lever cannot produce a negative benefit figure',
 );
 check(

@@ -279,7 +279,7 @@ export default function App() {
           { title: 'ذروة أسوان الحرارية', desc: '46.2°م T2M_MAX' },
           { title: 'هباء جوي MERRA-2', desc: 'كثافة 0.44 AOD بالقاهرة' },
           { title: 'رادار دلتا النيل', desc: 'انحسار غطاء نباتي NDVI (-0.003/yr)' },
-          { title: 'المرصد الميداني', desc: '1,735 استبيان أطباء موثق' },
+          { title: 'التحليل المرجعي الأكاديمي', desc: '3 دراسات أكاديمية محكّمة' },
           { title: 'مؤشر HNI الحرج', desc: 'أسوان 88.4 نقطة عجز' },
           { title: 'اختبار مان-كيندال', desc: 'Z=3.94 (ثقة 99.9%)' },
           { title: 'استبقاء الكوادر', desc: 'مكاسب متوقعة +18.4%' }
@@ -289,7 +289,7 @@ export default function App() {
           { title: 'Upper Egypt Peak', desc: 'Aswan 46.2°C T2M_MAX' },
           { title: 'MERRA-2 Particulates', desc: 'Cairo AOD 0.44' },
           { title: 'Nile Delta Radar', desc: 'Vegetative shift -0.003 NDVI/yr' },
-          { title: 'Field Observatory', desc: '1,735 Physician Responses' },
+          { title: 'Academic Meta-Synthesis', desc: '3 Peer-Reviewed Studies' },
           { title: 'Critical HNI Score', desc: 'Aswan 88.4 Index' },
           { title: 'Mann-Kendall Test', desc: 'Z=3.94 (p < 0.0001, 99.9% Conf)' },
           { title: 'Stay & Build Model', desc: 'Projected retention gain +18.4%' }

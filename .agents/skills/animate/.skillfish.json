@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "animate",
+  "owner": "segersniels",
+  "repo": "dotfiles",
+  "path": ".agents/skills/animate",
+  "branch": "master",
+  "sha": "f4df8eac7549b1545587c9a89f3c8472678df220",
+  "source": "manual"
+}

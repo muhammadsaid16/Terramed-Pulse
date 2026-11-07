@@ -728,11 +728,11 @@
    *   - convoys: number of mobile clinics (0-25)
    *   - incentivePct: physician incentive bonus percentage (0-50%)
    *   - heatReductionDeg: degrees Celsius of urban heat mitigated (0.0 - 1.5)
-   * @returns {Object} Simulated indices, delta HNI, and lives impacted estimate
+   * @returns {Object} Simulated indices, delta HNI, and relative ER pressure reduction
    */
   function simulateInterventions(baselineGov, interventions) {
     if (!baselineGov || !baselineGov.baseline_indices) {
-      return { simulatedHni: 50, deltaHni: 0, livesImpacted: 0 };
+      return { simulatedHni: 50, deltaHni: 0, erPressureReductionPct: 0 };
     }
 
     var base = baselineGov.baseline_indices;
@@ -757,10 +757,12 @@
     var simHni = calculateHNI(simEpi, simPpi, simFsi, simWni);
     var deltaHni = Math.round((simHni - base.hni) * 10) / 10;
 
-    // Projected lives impacted / consultations enabled (heuristic grounded in demographic density)
-    var pop = (baselineGov.demographics && baselineGov.demographics.population) || 2000000;
-    var coverageFraction = (convoys * 0.015) + (incentive * 0.008) + (heatMitigation * 0.02);
-    var livesImpacted = Math.round(pop * coverageFraction);
+    // Relative ER pressure reduction. Outputs are percentage shifts, never headcounts.
+    var erPressureReductionPct = Math.min(45, Math.max(0, Math.round(
+      (convoys / 50.0) * 18 +
+      (incentive / 100.0) * 10 +
+      (heatMitigation / 1.5) * 10
+    )));
 
     return {
       baselineHni: base.hni,
@@ -770,7 +772,7 @@
       simulatedFsi: Math.round(simFsi * 10) / 10,
       simulatedWni: Math.round(simWni * 10) / 10,
       simulatedPpi: Math.round(simPpi * 10) / 10,
-      livesImpacted: livesImpacted
+      erPressureReductionPct: erPressureReductionPct
     };
   }
 

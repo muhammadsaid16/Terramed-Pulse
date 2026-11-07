@@ -77,14 +77,13 @@ export default function PrintBrief({
   // Live indices from current governorate
   const baseHni = govData?.baseline_indices?.hni || 75;
   const epi = govData?.baseline_indices?.epi || 70;
-  const ppi = govData?.baseline_indices?.ppi || 60;
   const fsi = govData?.baseline_indices?.fsi || 80;
   const wni = govData?.baseline_indices?.wni || 75;
 
   // Dynamic simulation dividend
   const simHni = Math.round((baseHni * 0.86) * 10) / 10;
   const deltaHni = (simHni - baseHni).toFixed(1);
-  const livesImpacted = Math.round((ppi * 16.5 * 1000)).toLocaleString();
+  const erPressureReduction = baseHni > 0 ? Math.round(((baseHni - simHni) / baseHni) * 100) : 0;
 
   // Field reports in target governorate. Counted as they are: an empty governorate
   // prints as empty. The old `|| 8` and `: 78` invented a registry and a cause.
@@ -339,16 +338,16 @@ export default function PrintBrief({
               </tr>
               <tr>
                 <td className="font-semibold text-slate-950">
-                  {isAr ? 'عدد المواطنين المستفيدين شهرياً' : 'Projected Lives Impacted / Month'}
+                  {isAr ? 'خفض ضغط الطوارئ المرتبط بالإجهاد المناخي' : 'Climate-Sensitive ER Pressure Reduction'}
                 </td>
                 <td className="text-slate-700 text-[8pt]">
                   {isAr ? 'تكدس حرج في الاستقبال' : 'Severe Triage Congestion'}
                 </td>
                 <td className="font-bold text-slate-950 text-[8.5pt]">
-                  <span dir="ltr" className="inline-block font-mono">+{livesImpacted}</span> {isAr ? 'مواطن' : 'citizens'}
+                  <span dir="ltr" className="inline-block font-mono">-{erPressureReduction}%</span>
                 </td>
                 <td>
-                  {isAr ? 'حالات تنفسية وإجهاد حراري وغسيل كلوي طارئ يتم إنقاذها بانتظام' : 'Prevented dialysis shocks and severe respiratory distress admissions'}
+                  {isAr ? 'خفض نسبي في ضغط الحالات التنفسية والإجهاد الحراري والغسيل الكلوي الطارئ' : 'Relative reduction in heat-driven respiratory, renal, and emergency decompensation pressure'}
                 </td>
               </tr>
             </tbody>

@@ -58,7 +58,7 @@ const KPIS = [
     valueClass: 'text-3xl font-bold tracking-tight text-slate-900 dark:text-white telemetry-mono flex items-baseline gap-1.5',
     Value: ({ t }) => (
       <>
-        <NumberTicker value={1735} />
+        <NumberTicker value={3} />
         <span className="text-sm font-normal text-slate-500 dark:text-white/50">{t.kpiTotalDoctors}</span>
       </>
     ),

@@ -57,6 +57,20 @@ export const TRANSLATIONS = {
     // Module 1: Trend Detective & Map
     module1Title: "Module 1: Earth System Trend Detective & Spatial Map",
     module1Subtitle: "Interactive 30-Year Satellite Climate-Environmental Observatory (1995-2025)",
+    compareTitle: "Side-by-Side Governorate Comparison",
+    compareSubtitle: "Compare composite health need, climate pressure, population pressure, facility shortage, and workforce need across two governorates.",
+    compareGovA: "Governorate A",
+    compareGovB: "Governorate B",
+    compareHni: "Health Need Index (HNI)",
+    compareEpi: "Environmental Pressure (EPI)",
+    comparePpi: "Population Pressure (PPI)",
+    compareFsi: "Facility Shortage (FSI)",
+    compareWni: "Workforce Need (WNI)",
+    comparePopulation: "Population",
+    comparePhysicians: "Physicians / 10k",
+    compareBeds: "Beds / 10k",
+    compareHigherNeed: "Higher need",
+    compareFocus: "Focus on map",
     govSelectorLabel: "Governorate:",
     varSelectorLabel: "NASA Variable:",
     layerSelectorLabel: "Map Heatmap Metric:",
@@ -240,6 +254,11 @@ export const TRANSLATIONS = {
     mathHNIBody: "HNI = 0.35 × EPI + 0.30 × PPI + 0.20 × FSI + 0.15 × WNI, where EPI is Environmental Pressure, PPI is Population Pressure, FSI is Facility Shortage, and WNI is Physician Workload & Shortage.",
     mathWNITitle: "4. Bayesian Workforce Need Index (WNI)",
     mathWNIBody: "WNI integrates prior baseline healthcare worker deficit with empirical migration research benchmarks (WHO, Oxford, MDPI) using Bayesian blending: WNI_post = (n_prior · WNI_prior + Σ w_i · Score_i) / (n_prior + N_obs).",
+    mathERPressureTitle: "5. Climate-Sensitive ER Pressure Model",
+    mathERPressureBody: "The ER pressure model converts NASA heat and aerosol exposure into a relative percentage reduction in emergency department pressure. It is a scenario model, not a patient-level forecast. It uses published exposure-response ranges and does not estimate absolute admissions.",
+    mathERPressureEquation: "ER pressure reduction (%) = f(ΔT2M_MAX, extreme heat days, AOD_550, population vulnerability)",
+    mathStudiesTitle: "6. Three-Study Meta-Synthesis",
+    mathStudiesBody: "The evidence base is a qualitative meta-synthesis of three peer-reviewed studies: WHO EMHJ 2021 (Kabbash et al.), International Health 2015 (Fouad et al.), and Social Sciences 2025. The studies report migration intent and retention willingness, not absolute physician counts. Sample sizes and settings differ, so the platform reports directional evidence and percentages only.",
     btnGotIt: "Understood. Close",
 
     // Print Brief
@@ -327,6 +346,8 @@ export const TRANSLATIONS = {
     driverGlas: "GLDAS Aridification",
     driverHeat: "NASA POWER T2M_MAX > 42°C",
     footerArchitecture: "NASA Space Apps 2026 Architecture",
+    dataSnapshotLabel: "Data snapshot",
+    dataSnapshotNote: "Latest NASA POWER / MERRA-2 / MODIS / GLDAS pipeline run",
 
     // Scenario wizard
     demoSub1: "Extreme heat escalations driving acute renal decompensation in Upper Egypt.",
@@ -457,6 +478,20 @@ export const TRANSLATIONS = {
     // Module 1: Trend Detective & Map
     module1Title: "الوحدة 1: محقق اتجاهات أنظمة الأرض والخريطة التفاعلية",
     module1Subtitle: "المرصد الساتلي الموثق عبر 30 عاماً من بيانات ناسا (1995-2025)",
+    compareTitle: "مقارنة جانبية بين المحافظات",
+    compareSubtitle: "قارن الاحتياج الصحي المركب والضغط البيئي والسكاني وعجز المنشآت ونقص الكوادر بين محافظتين.",
+    compareGovA: "المحافظة أ",
+    compareGovB: "المحافظة ب",
+    compareHni: "مؤشر الاحتياج الصحي (HNI)",
+    compareEpi: "الضغط البيئي (EPI)",
+    comparePpi: "الضغط السكاني (PPI)",
+    compareFsi: "عجز المنشآت (FSI)",
+    compareWni: "نقص الكوادر (WNI)",
+    comparePopulation: "السكان",
+    comparePhysicians: "أطباء / 10 آلاف",
+    compareBeds: "أسرّة / 10 آلاف",
+    compareHigherNeed: "احتياج أعلى",
+    compareFocus: "عرض على الخريطة",
     govSelectorLabel: "المحافظة:",
     varSelectorLabel: "متغير ناسا الساتلي:",
     layerSelectorLabel: "مؤشر التلوين الحراري للخريطة:",
@@ -638,6 +673,11 @@ export const TRANSLATIONS = {
     mathHNIBody: "HNI = 0.35 × EPI + 0.30 × PPI + 0.20 × FSI + 0.15 × WNI، حيث تشمل المتغيرات الضغط البيئي لناسا، والكثافة السكانية، وعجز المنشآت، ومعدل نقص الكوادر الطبية.",
     mathWNITitle: "4. مؤشر عجز واستقرار الكوادر الطبية البايزي (WNI)",
     mathWNIBody: "يدمج مؤشر WNI عجز الكوادر الأساسي للتعبئة والإحصاء مع شواهد أبحاث الهجرة المحكّمة (الصحة العالمية، أكسفورد، MDPI) عبر الاستدلال البايزي: WNI_post = (n_prior · WNI_prior + Σ w_i · Score_i) / (n_prior + N_obs).",
+    mathERPressureTitle: "5. نموذج ضغط الطوارئ المرتبط بالمناخ",
+    mathERPressureBody: "يحوّل نموذج ضغط الطوارئ تعرّض ناسا للحرارة والهباء الجوي إلى نسبة خفض نسبية في ضغط قسم الطوارئ. وهو نموذج سيناريوهات وليس تنبؤاً على مستوى المريض. يستخدم نطاقات استجابة منشورة ولا يقدّر أعداداً مطلقة للحالات.",
+    mathERPressureEquation: "خفض ضغط الطوارئ (%) = f(ΔT2M_MAX، أيام الحرارة القصوى، AOD_550، هشاشة السكان)",
+    mathStudiesTitle: "6. تحليل تلوي لثلاث دراسات",
+    mathStudiesBody: "تستند قاعدة الأدلة إلى تحليل نوعي لتوليف ثلاث دراسات محكّمة: المجلة الصحية لشرق المتوسط 2021 (قبّاش وآخرون)، والصحة الدولية 2015 (فؤاد وآخرون)، والعلوم الاجتماعية 2025. تقيس الدراسات نية الهجرة والاستعداد للبقاء، وليس أعداد الأطباء المطلقة. تختلف أحجام العينات والسياقات، لذلك تعرض المنصة أدلة اتجاهية ونسباً مئوية فقط.",
     btnGotIt: "فهمت، إغلاق",
 
     // Print Brief
@@ -725,6 +765,8 @@ export const TRANSLATIONS = {
     driverGlas: "مستشعرات GLDAS: مؤشرات الجفاف",
     driverHeat: "أقمار ناسا: حرارة قصوى T2M_MAX > 42°C",
     footerArchitecture: "معمارية تحدي ناسا لتطبيقات الفضاء 2026",
+    dataSnapshotLabel: "لقطة البيانات",
+    dataSnapshotNote: "آخر تشغيل لخط بيانات ناسا POWER / MERRA-2 / MODIS / GLDAS",
 
     // Scenario wizard
     demoSub1: "تصاعد الإجهاد الحراري وتأثيره على مرضى القصور الكلوي في صعيد مصر.",

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Award, Orbit } from 'lucide-react';
+import { Award, CalendarClock, Orbit } from 'lucide-react';
 
 // Upstream datasets credited in the footer, in citation order (NASA POWER first).
 const DATA_SOURCES = [
@@ -11,7 +11,14 @@ const DATA_SOURCES = [
   { id: 'capmas', en: 'CAPMAS', ar: 'الجهاز المركزي للتعبئة والإحصاء (CAPMAS)' }
 ];
 
-export default function Footer({ lang, t }) {
+export default function Footer({ lang, t, dataUpdated }) {
+  const snapshot = dataUpdated
+    ? new Date(dataUpdated).toLocaleDateString(lang === 'ar' ? 'ar-EG' : 'en-GB', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      })
+    : null;
   return (
     <footer className="border-t border-slate-200/80 dark:border-white/[0.08] bg-slate-50/90 dark:bg-[#040508]/80 backdrop-blur-2xl py-8 px-4 text-xs text-slate-500 dark:text-white/50 mt-16">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
@@ -26,6 +33,15 @@ export default function Footer({ lang, t }) {
             <span>
               {lang === 'ar' ? 'ابقَ وابنِ مصر — تحدي ناسا لتطبيقات الفضاء 2026' : 'Stay & Build Egypt — NASA Space Apps Challenge 2026'}
             </span>
+            {snapshot && (
+              <span
+                title={t.dataSnapshotNote}
+                className="inline-flex items-center gap-1 rounded-full border border-slate-200/80 bg-white px-2 py-0.5 text-2xs font-mono text-slate-500 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/45"
+              >
+                <CalendarClock className="h-3 w-3 text-sky-500 dark:text-sky-400" />
+                <span>{t.dataSnapshotLabel}: {snapshot}</span>
+              </span>
+            )}
           </div>
         </div>
 

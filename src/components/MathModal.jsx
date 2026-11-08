@@ -78,6 +78,29 @@ export default function MathModal({ isOpen, onClose, t }) {
           </div>
         </div>
 
+        {/* Section 5: Climate-Sensitive ER Pressure Model */}
+        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.08] space-y-2">
+          <h4 className="font-semibold text-sky-700 dark:text-sky-300 text-xs">
+            {t.mathERPressureTitle}
+          </h4>
+          <p className="text-xs text-slate-600 dark:text-white/70 leading-relaxed font-normal">
+            {t.mathERPressureBody}
+          </p>
+          <div className="p-3 bg-white dark:bg-black/40 rounded-xl font-mono text-micro text-sky-800 dark:text-sky-200 border border-slate-200/80 dark:border-white/5 overflow-x-auto shadow-2xs dark:shadow-none">
+            {t.mathERPressureEquation}
+          </div>
+        </div>
+
+        {/* Section 6: Three-Study Meta-Synthesis */}
+        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.08] space-y-2">
+          <h4 className="font-semibold text-sky-700 dark:text-sky-300 text-xs">
+            {t.mathStudiesTitle}
+          </h4>
+          <p className="text-xs text-slate-600 dark:text-white/70 leading-relaxed font-normal">
+            {t.mathStudiesBody}
+          </p>
+        </div>
+
         <div className="pt-2 text-right rtl:text-left">
           <button
             onClick={onClose}

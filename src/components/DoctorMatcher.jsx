@@ -1,8 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { HeartPulse, Wind, AlertCircle, Baby, Users, ShieldAlert, Sparkles, CheckCircle2 } from 'lucide-react';
 import { matchSpecialty } from '../lib/trendEngine';
 import { SPECIALTY_FULL_LABELS } from '../lib/specialties';
+import gsap from 'gsap';
 import { SpotlightCard, NumberTicker, Button, Badge } from './ui';
+import { prefersReducedMotion } from '../lib/motionTokens';
 
 // Icons are presentation, so they stay here; the ids and both label registers come from
 // the module that owns the submission vocabulary.
@@ -25,6 +27,29 @@ export default function DoctorMatcher({
   onVoiceNeeds
 }) {
   const [selectedSpecialty, setSelectedSpecialty] = useState('nephrology');
+  const isAr = lang === 'ar';
+  const panelRef = useRef(null);
+  const cardListRef = useRef(null);
+
+  useLayoutEffect(() => {
+    if (!panelRef.current || prefersReducedMotion()) return undefined;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        panelRef.current,
+        { autoAlpha: 0, y: 6 },
+        { autoAlpha: 1, y: 0, duration: 0.18, ease: 'power3.out', overwrite: true }
+      );
+      const cards = cardListRef.current ? Array.from(cardListRef.current.children) : [];
+      if (cards.length) {
+        gsap.fromTo(
+          cards,
+          { autoAlpha: 0, x: isAr ? -8 : 8 },
+          { autoAlpha: 1, x: 0, duration: 0.24, ease: 'power3.out', stagger: 0.035, delay: 0.04, overwrite: true }
+        );
+      }
+    }, panelRef);
+    return () => ctx.revert();
+  }, [selectedSpecialty, isAr]);
 
   const specialties = SPECIALTY_FULL_LABELS.map(spec => ({ ...spec, icon: SPECIALTY_ICONS[spec.id] }));
 
@@ -89,7 +114,7 @@ export default function DoctorMatcher({
       </div>
 
       {/* Specialty Demand Panel & Ranked Governorates */}
-      <div key={selectedSpecialty} className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start enter-swap">
+      <div ref={panelRef} className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* Left: Clinical Evidence & Mechanism (7 cols) */}
         <SpotlightCard
@@ -166,7 +191,7 @@ export default function DoctorMatcher({
             {t.topGovsHeading}
           </span>
 
-          <div className="space-y-2.5">
+          <div ref={cardListRef} className="space-y-2.5">
             {rankings.slice(0, 4).map((r, i) => (
               <SpotlightCard
                 key={r.id}

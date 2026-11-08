@@ -1,18 +1,20 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { lazy, Suspense, useState, useEffect, useMemo } from 'react';
 import { Stethoscope, BarChart3, ShieldCheck, Sparkles } from 'lucide-react';
 import Header from './components/Header';
 import KpiStrip from './components/KpiStrip';
-import MapModule from './components/MapModule';
-import TrendChartModule from './components/TrendChartModule';
 import OppositeTrends from './components/OppositeTrends';
-import DoctorMatcher from './components/DoctorMatcher';
-import PhysicianObservatory from './components/PhysicianObservatory';
-import DecisionMaker from './components/DecisionMaker';
-import WizardModal from './components/WizardModal';
-import MathModal from './components/MathModal';
-import DbSyncModal from './components/DbSyncModal';
 import PrintBrief from './components/PrintBrief';
 import Footer from './components/Footer';
+
+const MapModule = lazy(() => import('./components/MapModule'));
+const TrendChartModule = lazy(() => import('./components/TrendChartModule'));
+const DecisionMaker = lazy(() => import('./components/DecisionMaker'));
+const WizardModal = lazy(() => import('./components/WizardModal'));
+const MathModal = lazy(() => import('./components/MathModal'));
+const DbSyncModal = lazy(() => import('./components/DbSyncModal'));
+const GovernorateCompare = lazy(() => import('./components/GovernorateCompare'));
+const DoctorMatcher = lazy(() => import('./components/DoctorMatcher'));
+const PhysicianObservatory = lazy(() => import('./components/PhysicianObservatory'));
 
 import { SpotlightCard, ShimmerButton, DotPattern, Marquee } from './components/ui';
 import WarmingStripes from './components/WarmingStripes';
@@ -22,6 +24,15 @@ import { TRANSLATIONS } from './lib/translations';
 import { computeWNIFromReports, computeHNI, WNI_PRIOR_DEFAULT } from './lib/trendEngine';
 import { getSyncStatus, submitRemoteReport, fetchCommunityReports } from './lib/dbService';
 import { scrollBehavior } from './lib/motionTokens';
+
+function ModuleSkeleton({ className = 'h-72' }) {
+  return (
+    <div
+      aria-hidden="true"
+      className={`bento-card animate-pulse bg-slate-200/60 dark:bg-white/[0.04] ${className}`}
+    />
+  );
+}
 
 export default function App() {
   const [lang, setLang] = useState(() => {
@@ -461,40 +472,53 @@ export default function App() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Left: Map & 1995-2025 Scrubber (6 cols) */}
             <div className="lg:col-span-6">
-              <MapModule
-                data={appData}
-                selectedGov={selectedGov}
-                setSelectedGov={setSelectedGov}
-                selectedVar={selectedVar}
-                lang={lang}
-                t={t}
-                year={year}
-                setYear={setYear}
-                mapMetric={mapMetric}
-                setMapMetric={setMapMetric}
-              />
+              <Suspense fallback={<ModuleSkeleton className="h-[420px]" />}>
+                <MapModule
+                  data={appData}
+                  selectedGov={selectedGov}
+                  setSelectedGov={setSelectedGov}
+                  selectedVar={selectedVar}
+                  lang={lang}
+                  t={t}
+                  year={year}
+                  setYear={setYear}
+                  mapMetric={mapMetric}
+                  setMapMetric={setMapMetric}
+                />
+              </Suspense>
             </div>
 
             {/* Right: Chart & Statistical Significance (6 cols) */}
             <div className="lg:col-span-6">
-              <TrendChartModule
-                govData={currentGovData}
-                selectedGov={selectedGov}
-                setSelectedGov={setSelectedGov}
-                selectedVar={selectedVar}
-                setSelectedVar={setSelectedVar}
-                allGovs={appData.governorates}
-                isAnomaly={isAnomaly}
-                setIsAnomaly={setIsAnomaly}
-                currentYear={year}
-                t={t}
-                lang={lang}
-                theme={theme}
-                onOpenMath={() => setIsMathOpen(true)}
-              />
+              <Suspense fallback={<ModuleSkeleton className="h-[420px]" />}>
+                <TrendChartModule
+                  govData={currentGovData}
+                  selectedGov={selectedGov}
+                  setSelectedGov={setSelectedGov}
+                  selectedVar={selectedVar}
+                  setSelectedVar={setSelectedVar}
+                  allGovs={appData.governorates}
+                  isAnomaly={isAnomaly}
+                  setIsAnomaly={setIsAnomaly}
+                  currentYear={year}
+                  t={t}
+                  lang={lang}
+                  theme={theme}
+                  onOpenMath={() => setIsMathOpen(true)}
+                />
+              </Suspense>
             </div>
           </div>
         </section>
+
+        <Suspense fallback={<ModuleSkeleton className="h-80 mb-8" />}>
+          <GovernorateCompare
+            governorates={appData.governorates}
+            lang={lang}
+            t={t}
+            onSelectGov={setSelectedGov}
+          />
+        </Suspense>
 
         {/* Opposite Trends Demonstration Showcase */}
         <OppositeTrends t={t} />
@@ -502,75 +526,93 @@ export default function App() {
         {/* ===================================================================
             MODULE 2: DOCTOR IMPACT MATCHER (STAY & BUILD EGYPT)
             =================================================================== */}
-        <DoctorMatcher
-          data={appData}
-          lang={lang}
-          t={t}
-          onSelectGov={(id) => {
-            setSelectedGov(id);
-            setActiveTab('detective');
-            const el = document.getElementById('section-detective');
-            if (el) el.scrollIntoView({ behavior: scrollBehavior() });
-          }}
-          onVoiceNeeds={(govId, specId) => {
-            setSelectedGov(govId);
-            if (specId) setFormSpecialty(specId);
-            setActiveTab('physicians');
-            const el = document.getElementById('section-physicians');
-            if (el) el.scrollIntoView({ behavior: scrollBehavior() });
-          }}
-        />
+        <Suspense fallback={<ModuleSkeleton className="h-[520px] mb-8" />}>
+          <DoctorMatcher
+            data={appData}
+            lang={lang}
+            t={t}
+            onSelectGov={(id) => {
+              setSelectedGov(id);
+              setActiveTab('detective');
+              const el = document.getElementById('section-detective');
+              if (el) el.scrollIntoView({ behavior: scrollBehavior() });
+            }}
+            onVoiceNeeds={(govId, specId) => {
+              setSelectedGov(govId);
+              if (specId) setFormSpecialty(specId);
+              setActiveTab('physicians');
+              const el = document.getElementById('section-physicians');
+              if (el) el.scrollIntoView({ behavior: scrollBehavior() });
+            }}
+          />
+        </Suspense>
 
         {/* ===================================================================
             MODULE 3: HEALTHCARE WORKFORCE & PHYSICIAN RETENTION OBSERVATORY
             =================================================================== */}
-        <PhysicianObservatory
-          selectedGov={selectedGov}
-          onSelectGov={setSelectedGov}
-          governorates={appData.governorates}
-          lang={lang}
-          t={t}
-        />
+        <Suspense fallback={<ModuleSkeleton className="h-[520px] mb-8" />}>
+          <PhysicianObservatory
+            selectedGov={selectedGov}
+            onSelectGov={setSelectedGov}
+            governorates={appData.governorates}
+            lang={lang}
+            t={t}
+          />
+        </Suspense>
 
         {/* ===================================================================
             MODULE 4: DECISION-MAKER & "WHAT-IF" POLICY LAB
             =================================================================== */}
-        <DecisionMaker
-          govData={currentGovData}
-          allGovs={appData.governorates}
-          reports={reports}
-          communityReports={communityReports}
-          lang={lang}
-          t={t}
-          theme={theme}
-        />
+        <Suspense fallback={<ModuleSkeleton className="h-[520px] mb-8" />}>
+          <DecisionMaker
+            govData={currentGovData}
+            allGovs={appData.governorates}
+            reports={reports}
+            communityReports={communityReports}
+            lang={lang}
+            t={t}
+            theme={theme}
+          />
+        </Suspense>
 
       </main>
 
       {/* Global Footer */}
-      <Footer lang={lang} t={t} />
+      <Footer lang={lang} t={t} dataUpdated={TERRAPULSE_DATA.metadata?.generated_at} />
 
       {/* Modals */}
-      <WizardModal
-        isOpen={isWizardOpen}
-        onClose={() => setIsWizardOpen(false)}
-        lang={lang}
-        t={t}
-        onApplyPreset={handleApplyCase}
-      />
+      {isWizardOpen && (
+        <Suspense fallback={null}>
+          <WizardModal
+            isOpen={isWizardOpen}
+            onClose={() => setIsWizardOpen(false)}
+            lang={lang}
+            t={t}
+            onApplyPreset={handleApplyCase}
+          />
+        </Suspense>
+      )}
 
-      <MathModal
-        isOpen={isMathOpen}
-        onClose={() => setIsMathOpen(false)}
-        t={t}
-      />
+      {isMathOpen && (
+        <Suspense fallback={null}>
+          <MathModal
+            isOpen={isMathOpen}
+            onClose={() => setIsMathOpen(false)}
+            t={t}
+          />
+        </Suspense>
+      )}
 
-      <DbSyncModal
-        isOpen={isDbModalOpen}
-        onClose={() => setIsDbModalOpen(false)}
-        lang={lang}
-        syncStatus={syncStatus}
-      />
+      {isDbModalOpen && (
+        <Suspense fallback={null}>
+          <DbSyncModal
+            isOpen={isDbModalOpen}
+            onClose={() => setIsDbModalOpen(false)}
+            lang={lang}
+            syncStatus={syncStatus}
+          />
+        </Suspense>
+      )}
 
     </div>
   );

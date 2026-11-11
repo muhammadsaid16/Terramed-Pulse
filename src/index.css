@@ -17,8 +17,8 @@
   /* Daylight instrument */
   --bg: #F2F4F7;
   --bg-deep: #E9EDF2;
-  --panel: #FFFFFF;
-  --panel-2: #F7F9FC;
+  --panel: rgba(255, 255, 255, 0.94);
+  --panel-2: rgba(247, 249, 252, 0.92);
   --ink: #0B1220;
   --ink-2: #334155;
   --muted: #64748B;
@@ -37,8 +37,8 @@
 html.dark {
   --bg: #04070D;
   --bg-deep: #02040A;
-  --panel: #070C15;
-  --panel-2: rgba(255, 255, 255, 0.035);
+  --panel: rgba(7, 12, 21, 0.88);
+  --panel-2: rgba(255, 255, 255, 0.045);
   --ink: #E9EEF6;
   --ink-2: #B9C4D4;
   --muted: #8A99AD;
@@ -210,6 +210,11 @@ body {
     linear-gradient(to right, var(--grid) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
   background-size: 56px 56px;
+}
+
+/* Site-wide instrument grid: sits above the atmosphere across the whole page. */
+.grid-field-global {
+  opacity: 0.7;
 }
 
 /* Thin corner brackets for instrument panels */

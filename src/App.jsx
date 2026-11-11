@@ -310,8 +310,14 @@ export default function App() {
   }, [lang]);
 
   return (
-    <div className={`min-h-screen flex flex-col bg-[color:var(--bg)] text-[color:var(--ink)] transition-colors duration-200 ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
-      
+    <div className={`min-h-screen flex flex-col text-[color:var(--ink)] transition-colors duration-200 ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
+
+      {/* Global atmospheric surface — one instrument field behind the whole site. */}
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10">
+        <AtmosphericField theme={theme} className="opacity-95" />
+        <div className="absolute inset-0 grid-field grid-field-global" />
+      </div>
+
       {/* Official Government Print Brief Container */}
       <PrintBrief
         govData={currentGovData}
@@ -341,9 +347,7 @@ export default function App() {
           One atmospheric surface, one signal panel, one method note.
           =================================================================== */}
       <section className="relative overflow-hidden border-b border-[color:var(--line)]">
-        <AtmosphericField theme={theme} />
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 grid-field opacity-60" />
-        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-b from-transparent to-[color:var(--bg)]" />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-b from-transparent via-[color:var(--bg)]/40 to-[color:var(--bg)]" />
 
         <div className="relative mx-auto w-full max-w-7xl px-3 pb-10 pt-10 sm:px-6 sm:pb-12 sm:pt-14 lg:px-8">
           <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-12">

@@ -175,7 +175,7 @@ export default function TrendChartModule({
           <select
             value={selectedGov}
             onChange={(e) => setSelectedGov(e.target.value)}
-            className="w-full bg-white text-slate-800 border-slate-200 dark:bg-[#0E1320] dark:border-white/10 rounded-xl px-3 py-1.5 text-xs dark:text-white font-medium outline-none focus:border-sky-500 transition-colors shadow-sm"
+            className="w-full bg-white text-slate-800 border-slate-200 dark:bg-[#0E1320] dark:border-white/10 rounded-xl px-3 py-1.5 text-xs dark:text-white font-medium outline-none focus:border-sky-500 focus-visible:ring-2 focus-visible:ring-sky-500/40 transition-colors shadow-sm"
           >
             {Object.keys(allGovs || {}).map(id => (
                <option key={id} value={id}>
@@ -193,7 +193,7 @@ export default function TrendChartModule({
           <select
             value={selectedVar}
             onChange={(e) => setSelectedVar(e.target.value)}
-            className="w-full bg-white text-slate-800 border-slate-200 dark:bg-[#0E1320] dark:border-white/10 rounded-xl px-3 py-1.5 text-xs dark:text-white font-medium outline-none focus:border-sky-500 transition-colors shadow-sm"
+            className="w-full bg-white text-slate-800 border-slate-200 dark:bg-[#0E1320] dark:border-white/10 rounded-xl px-3 py-1.5 text-xs dark:text-white font-medium outline-none focus:border-sky-500 focus-visible:ring-2 focus-visible:ring-sky-500/40 transition-colors shadow-sm"
           >
             {variablesList.map(v => (
               <option key={v.id} value={v.id}>
@@ -207,7 +207,7 @@ export default function TrendChartModule({
         <div className="sm:col-span-3 flex flex-col justify-end">
           <button
             onClick={() => setIsAnomaly(!isAnomaly)}
-            className={`apple-chip w-full py-1.5 px-3 rounded-xl text-micro font-medium border transition-all flex items-center justify-center gap-1.5 shadow-sm ${
+            className={`apple-chip w-full py-1.5 px-3 rounded-xl text-micro font-medium border transition-[color,background-color,border-color,box-shadow,transform,filter] flex items-center justify-center gap-1.5 shadow-sm ${
               isAnomaly
                 ? 'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/40'
                 : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50 dark:bg-white/[0.05] dark:text-white/70 dark:border-white/10 dark:hover:bg-white/[0.1] dark:hover:text-white'

@@ -9,7 +9,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'system-ui', 'sans-serif'],
-        display: ['Archivo', 'Cairo', '-apple-system', 'system-ui', 'sans-serif'],
+        display: ['"Space Grotesk"', 'Archivo', 'Cairo', '-apple-system', 'system-ui', 'sans-serif'],
         arabic: ['Cairo', '-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
       },
@@ -25,7 +25,17 @@ export default {
           500: '#14B8A6',
           600: '#0D9488',
           700: '#0F766E'
+        },
+        ink: {
+          950: '#04070D',
+          900: '#070C15',
+          850: '#0A111C',
+          800: '#0D1624'
         }
+      },
+      boxShadow: {
+        console: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 24px 60px -32px rgba(0,0,0,0.75)',
+        instrument: '0 1px 0 0 rgba(255,255,255,0.05) inset, 0 10px 30px -18px rgba(0,0,0,0.6)'
       }
     },
   },

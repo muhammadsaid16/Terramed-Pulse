@@ -1,10 +1,12 @@
 import React, { lazy, Suspense, useState, useEffect, useMemo } from 'react';
-import { Stethoscope, BarChart3, ShieldCheck, Sparkles } from 'lucide-react';
+import { Stethoscope, BarChart3, ShieldCheck } from 'lucide-react';
 import Header from './components/Header';
 import KpiStrip from './components/KpiStrip';
 import OppositeTrends from './components/OppositeTrends';
 import PrintBrief from './components/PrintBrief';
 import Footer from './components/Footer';
+import AtmosphericField from './components/AtmosphericField';
+import SectionHeader from './components/SectionHeader';
 
 const MapModule = lazy(() => import('./components/MapModule'));
 const TrendChartModule = lazy(() => import('./components/TrendChartModule'));
@@ -16,7 +18,7 @@ const GovernorateCompare = lazy(() => import('./components/GovernorateCompare'))
 const DoctorMatcher = lazy(() => import('./components/DoctorMatcher'));
 const PhysicianObservatory = lazy(() => import('./components/PhysicianObservatory'));
 
-import { SpotlightCard, ShimmerButton, DotPattern, Marquee } from './components/ui';
+import { ShimmerButton, Marquee } from './components/ui';
 import WarmingStripes from './components/WarmingStripes';
 
 import { TERRAPULSE_DATA } from './data/terrapulseData';
@@ -60,7 +62,7 @@ export default function App() {
       const saved = localStorage.getItem('terrapulse_selected_gov');
       if (saved && TERRAPULSE_DATA.governorates[saved]) return saved;
     } catch {}
-    return '';
+    return 'cairo';
   });
   useEffect(() => {
     try {
@@ -104,7 +106,7 @@ export default function App() {
       const saved = localStorage.getItem('terrapulse_theme');
       if (saved === 'dark' || saved === 'light') return saved;
     } catch {}
-    return 'light'; // Clean Lab default
+    return 'dark'; // Observatory default
   });
 
   useEffect(() => {
@@ -308,7 +310,7 @@ export default function App() {
   }, [lang]);
 
   return (
-    <div className={`min-h-screen flex flex-col bg-slate-50 dark:bg-[#050811] text-slate-900 dark:text-slate-100 transition-colors duration-200 ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
+    <div className={`min-h-screen flex flex-col bg-[color:var(--bg)] text-[color:var(--ink)] transition-colors duration-200 ${lang === 'ar' ? 'font-arabic' : 'font-sans'}`}>
       
       {/* Official Government Print Brief Container */}
       <PrintBrief
@@ -334,112 +336,183 @@ export default function App() {
         onOpenWizard={() => setIsWizardOpen(true)}
       />
 
-      {/* Main App Container */}
-      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-7 w-full flex-1">
-        
-        {/* ===================================================================
-            SECTION 1: HERO & CORE VISION (Docx Section 1 & 6)
-            =================================================================== */}
-        <SpotlightCard as="section" className="bento-card p-6 sm:p-10 mb-6 relative overflow-hidden">
-          {/* Subtle 21st.dev Dot Pattern */}
-          <DotPattern className="opacity-70" />
+      {/* ===================================================================
+          HERO: EARTH SYSTEM OBSERVATORY
+          One atmospheric surface, one signal panel, one method note.
+          =================================================================== */}
+      <section className="relative overflow-hidden border-b border-[color:var(--line)]">
+        <AtmosphericField theme={theme} />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 grid-field opacity-60" />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-b from-transparent to-[color:var(--bg)]" />
 
-          <div className="relative z-10 max-w-4xl space-y-4 sm:space-y-5">
-            {/* Console status line */}
-            <div className="flex flex-wrap items-center gap-2 font-mono text-micro uppercase text-slate-500 dark:text-white/45">
-              <span className="relative flex h-2 w-2 shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-              </span>
-              <span dir="ltr" className="tracking-[0.08em]">LINK NOMINAL · MODIS TERRA/AQUA · SEDAC</span>
-              <span className="text-slate-300 dark:text-white/20">·</span>
-              <span 
-                dir="ltr" 
-                className="font-bold tracking-[0.25em] text-sky-600 dark:text-sky-400 bg-sky-500/10 dark:bg-sky-500/15 px-2 py-0.5 rounded border border-sky-400/25"
-              >
-                TERRAMED &nbsp; PULSE
-              </span>
-            </div>
+        <div className="relative mx-auto w-full max-w-7xl px-3 pb-10 pt-10 sm:px-6 sm:pb-12 sm:pt-14 lg:px-8">
+          <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-12">
 
-            <div>
-              <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold tracking-[-0.02em] leading-[1.05] text-slate-950 dark:text-white">
+            {/* Narrative */}
+            <div className="lg:col-span-7">
+              <div className="flex flex-wrap items-center gap-2.5 font-mono text-2xs uppercase tracking-[0.14em] text-[color:var(--muted)]">
+                <span className="relative flex h-2 w-2 shrink-0">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                </span>
+                <span dir="ltr">LINK NOMINAL</span>
+                <span className="hidden h-3 w-px bg-[color:var(--line-strong)] sm:block" />
+                <span dir="ltr">MODIS TERRA/AQUA · MERRA-2 · SEDAC</span>
+                <span
+                  dir="ltr"
+                  className="inline-flex items-center rounded-full border border-sky-400/30 bg-sky-500/10 px-2.5 py-1 font-bold tracking-[0.22em] text-sky-600 dark:text-sky-300"
+                >
+                  TERRAMED PULSE
+                </span>
+              </div>
+
+              <h1 className="mt-6 max-w-[22ch] font-display text-[clamp(2.15rem,5vw,3.9rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-[color:var(--ink)]">
                 {t.heroMainTitle}
               </h1>
-              <p className="mt-2.5 text-micro sm:text-sm text-slate-500 dark:text-white/50 font-medium">
+
+              <p className="mt-4 font-display text-sm font-medium tracking-[-0.01em] text-[color:var(--ink-2)] sm:text-base">
                 {t.heroSubTitle}
               </p>
+
+              <p className="mt-5 max-w-xl text-[14px] leading-[1.75] text-[color:var(--ink-2)] sm:text-[15px]">
+                {lang === 'ar'
+                  ? 'واحد وثلاثون عاماً من رصد ناسا للأرض، تتحول إلى خريطة سريرية تحدد أين يحتاج مرضى مصر أطباءهم أكثر — ثم تمنح الطبيب وصانع القرار أداة لاتخاذ القرار.'
+                  : 'Thirty-one years of NASA Earth observation, resolved into a clinical map of where Egypt needs its physicians most — then handed to doctors and policy makers as a decision tool.'}
+              </p>
+
+              <div className="mt-7 flex flex-wrap items-center gap-3">
+                <ShimmerButton
+                  onClick={() => {
+                    setActiveTab('doctor');
+                    const el = document.getElementById('section-doctor');
+                    if (el) el.scrollIntoView({ behavior: scrollBehavior() });
+                  }}
+                  className="text-xs sm:text-sm"
+                >
+                  <Stethoscope className="h-4 w-4 text-sky-400" />
+                  <span>{t.btnDoctorCta}</span>
+                </ShimmerButton>
+
+                <button
+                  onClick={() => {
+                    setActiveTab('decision');
+                    const el = document.getElementById('section-decision');
+                    if (el) el.scrollIntoView({ behavior: scrollBehavior() });
+                  }}
+                  className="apple-btn-secondary flex items-center gap-2 px-5 py-2.5 text-xs sm:text-sm"
+                >
+                  <BarChart3 className="h-4 w-4 text-sky-600 dark:text-sky-400" />
+                  <span>{t.btnDecisionCta}</span>
+                </button>
+              </div>
+
+              <div className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-2xs uppercase tracking-[0.12em] text-[color:var(--muted)]" dir="ltr">
+                <span>1995—2025</span>
+                <span className="hidden h-3 w-px bg-[color:var(--line-strong)] sm:block" />
+                <span>5 GOVERNORATES</span>
+                <span className="hidden h-3 w-px bg-[color:var(--line-strong)] sm:block" />
+                <span>9 NASA DATASETS</span>
+                <span className="hidden h-3 w-px bg-[color:var(--line-strong)] sm:block" />
+                <span>MANN-KENDALL p&lt;0.0001</span>
+              </div>
             </div>
 
-            <p className="text-sm sm:text-base text-slate-600 dark:text-white/70 leading-relaxed font-normal max-w-3xl">
-              {t.heroDesc}
-            </p>
+            {/* Climate signal instrument */}
+            <div className="lg:col-span-5">
+              <div className="panel-ticks relative overflow-hidden rounded-[18px] border border-[color:var(--line-strong)] bg-[color:var(--panel)]/72 p-5 shadow-[0_30px_80px_-40px_rgba(0,0,0,0.65)] backdrop-blur-xl sm:p-6">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="flex items-center gap-2 font-mono text-2xs uppercase tracking-[0.18em] text-[color:var(--muted)]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
+                    CLIMATE SIGNAL
+                  </span>
+                  <span className="font-mono text-2xs tabular-nums text-[color:var(--muted)]" dir="ltr">
+                    LST · 1995—2025
+                  </span>
+                </div>
 
-            {/* First light: the actual data — 31 years of MODIS land surface temperature */}
-            <div className="pt-1 sm:pt-2 max-w-3xl">
-              <WarmingStripes />
-            </div>
+                <div className="mt-5 flex items-end justify-between gap-3">
+                  <div>
+                    <div dir="ltr" className="font-display text-[40px] font-semibold leading-none tracking-[-0.04em] text-[color:var(--ink)] rtl:text-right">
+                      +3.7<span className="ml-1 text-lg font-normal text-[color:var(--muted)]">°C</span>
+                    </div>
+                    <div className="mt-1.5 text-micro text-[color:var(--muted)]">
+                      {lang === 'ar' ? 'ارتفاع حرارة سطح الأرض' : 'Land surface warming'}
+                    </div>
+                  </div>
+                  <span className="mb-1 rounded-full border border-[color:var(--line)] px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-[color:var(--muted)]" dir="ltr">
+                    EGY MEAN
+                  </span>
+                </div>
 
-            {/* The 2 Primary Hero Call-to-Actions from Docx Section 6 */}
-            <div className="pt-2 flex flex-wrap items-center gap-3">
-              <ShimmerButton
-                onClick={() => {
-                  setActiveTab('doctor');
-                  const el = document.getElementById('section-doctor');
-                  if (el) el.scrollIntoView({ behavior: scrollBehavior() });
-                }}
-                className="text-xs sm:text-sm"
-              >
-                <Stethoscope className="w-4 h-4 text-sky-400" />
-                <span>{t.btnDoctorCta}</span>
-              </ShimmerButton>
+                <div className="mt-5">
+                  <WarmingStripes size="hero" />
+                </div>
 
-              <button
-                onClick={() => {
-                  setActiveTab('decision');
-                  const el = document.getElementById('section-decision');
-                  if (el) el.scrollIntoView({ behavior: scrollBehavior() });
-                }}
-                className="apple-btn-secondary px-5 py-2.5 text-xs sm:text-sm flex items-center gap-2"
-              >
-                <BarChart3 className="w-4 h-4 text-sky-600 dark:text-sky-400" />
-                <span>{t.btnDecisionCta}</span>
-              </button>
+                <div className="mt-5 grid grid-cols-3 divide-x divide-[color:var(--line)] border-t border-[color:var(--line)] pt-4 text-center" dir="ltr">
+                  {[
+                    { v: '5', l: 'GOVERNORATES' },
+                    { v: '31', l: 'YEARS' },
+                    { v: '9', l: 'DATASETS' }
+                  ].map(stat => (
+                    <div key={stat.l} className="px-2">
+                      <div className="telemetry-mono text-xl font-semibold tabular-nums text-[color:var(--ink)]">
+                        {stat.v}
+                      </div>
+                      <div className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.16em] text-[color:var(--muted)]">
+                        {stat.l}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <p className="mt-3 text-right font-mono text-[9.5px] uppercase tracking-[0.12em] text-[color:var(--muted)]" dir="ltr">
+                SOURCE · NASA POWER / MODIS MOD11A2
+              </p>
             </div>
           </div>
 
-          {/* Scientific Disclaimer Card (Docx Section 1 & 3: 10/10 Judging Criteria) */}
-          <div className="mt-7 pt-5 border-t border-slate-200/80 dark:border-white/[0.08]">
-            <div className="p-3.5 sm:p-4 rounded-xl bg-slate-100/70 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/[0.06] backdrop-blur-xl flex items-start gap-3">
-              <ShieldCheck className="w-5 h-5 text-sky-600 dark:text-sky-400 shrink-0 mt-0.5" />
-              <div className="space-y-1 text-xs">
-                <span className="font-semibold text-slate-900 dark:text-white/90 block">
+          {/* Method note */}
+          <div className="mt-9 grid gap-3 border-t border-[color:var(--line)] pt-5 md:grid-cols-[1fr_auto] md:items-start">
+            <div className="flex items-start gap-3">
+              <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-sky-600 dark:text-sky-400" />
+              <div className="space-y-1">
+                <span className="block text-xs font-semibold text-[color:var(--ink)]">
                   {t.disclaimerTitle}
                 </span>
-                <p className="text-slate-600 dark:text-white/60 leading-relaxed font-normal">
+                <p className="max-w-3xl text-[11.5px] leading-relaxed text-[color:var(--muted)]">
                   {t.disclaimerBody}
                 </p>
               </div>
             </div>
+            <div className="flex flex-wrap items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.14em] text-[color:var(--muted)] md:justify-end" dir="ltr">
+              <span className="rounded-full border border-[color:var(--line)] px-2 py-0.5">CONTEXTUAL ASSOCIATION</span>
+              <span className="rounded-full border border-[color:var(--line)] px-2 py-0.5">NO CAUSAL CLAIM</span>
+            </div>
           </div>
-        </SpotlightCard>
+        </div>
+      </section>
 
+      {/* Main App Container */}
+      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-7 w-full flex-1">
+        
         {/* 21st.dev Live Satellite & Scientific Telemetry Ticker Marquee */}
-        <div className="mb-8 rounded-2xl bg-white/70 dark:bg-[#070b14]/70 border border-slate-200/80 dark:border-white/[0.06] backdrop-blur-md overflow-hidden shadow-xs flex items-center">
-          <div className="px-3.5 py-2 bg-sky-500/10 border-r rtl:border-r-0 rtl:border-l border-slate-200/80 dark:border-white/10 flex items-center gap-2 shrink-0">
+        <div className="mb-8 flex items-stretch overflow-hidden rounded-full border border-[color:var(--line)] bg-[color:var(--panel)]/60 backdrop-blur-md">
+          <div className="flex shrink-0 items-center gap-2 border-e border-[color:var(--line)] bg-[color:var(--accent-soft)] px-3.5 py-2">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
-            <span className="text-2xs font-mono font-bold tracking-wider text-sky-700 dark:text-sky-300 uppercase">
+            <span className="font-mono text-2xs font-bold uppercase tracking-[0.18em] text-sky-700 dark:text-sky-300">
               {lang === 'ar' ? 'بث حي' : 'LIVE'}
             </span>
           </div>
-          <Marquee duration={35} className="text-xs text-slate-600 dark:text-white/75">
+          <Marquee duration={35} className="text-xs text-[color:var(--ink-2)]">
             {tickerItems.map((item, idx) => (
-              <div key={idx} className="flex items-center gap-2 mx-4 whitespace-nowrap">
-                <span className="text-slate-400 dark:text-white/30">•</span>
-                <span className="font-semibold text-slate-800 dark:text-white/95">{item.title}:</span>
-                <span className="tabular-nums text-slate-600 dark:text-white/70">{item.desc}</span>
+              <div key={idx} className="mx-4 flex items-center gap-2 whitespace-nowrap">
+                <span className="text-[color:var(--muted)]">/</span>
+                <span className="font-semibold text-[color:var(--ink)]">{item.title}:</span>
+                <span className="tabular-nums text-[color:var(--muted)]">{item.desc}</span>
               </div>
             ))}
           </Marquee>
@@ -451,23 +524,13 @@ export default function App() {
         {/* ===================================================================
             MODULE 1: EARTH SYSTEM TREND DETECTIVE & SPATIAL MAP
             =================================================================== */}
-        <section id="section-detective" className="bento-card p-5 sm:p-8 mb-8 space-y-6">
-          <div className="border-b border-slate-200/80 dark:border-white/[0.08] pb-4 flex flex-wrap items-start justify-between gap-2">
-            <div className="flex items-start gap-3">
-              <span aria-hidden="true" className="font-mono text-2xs tracking-[0.18em] text-slate-400 dark:text-white/35 pt-1.5">01</span>
-              <div>
-                <h2 className="font-display text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">
-                  {t.module1Title}
-                </h2>
-                <p className="text-micro text-slate-600 dark:text-white/50 font-normal mt-1">
-                  {t.module1Subtitle}
-                </p>
-              </div>
-            </div>
-            <span className="font-mono text-2xs tracking-[0.08em] text-slate-400 dark:text-white/35 pt-1.5" dir="ltr">
-              {t.clickMarkerTip}
-            </span>
-          </div>
+        <section id="section-detective" className="bento-card mb-8 space-y-6 p-5 sm:p-8">
+          <SectionHeader
+            index="01"
+            title={t.module1Title}
+            subtitle={t.module1Subtitle}
+            meta={t.clickMarkerTip}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Left: Map & 1995-2025 Scrubber (6 cols) */}

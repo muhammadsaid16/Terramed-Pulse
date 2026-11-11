@@ -3,6 +3,18 @@ import { Activity, Stethoscope, FileText, Sliders, Globe, Compass, Printer, Menu
 import { Button, Badge } from './ui';
 import { scrollBehavior } from '../lib/motionTokens';
 
+function OrbitMark({ className = '' }) {
+  return (
+    <svg viewBox="0 0 40 40" fill="none" aria-hidden="true" className={className}>
+      <circle cx="20" cy="20" r="6.5" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="20" cy="20" r="2.2" fill="currentColor" />
+      <ellipse cx="20" cy="20" rx="16" ry="7" stroke="currentColor" strokeWidth="1.1" opacity="0.55" transform="rotate(-28 20 20)" />
+      <ellipse cx="20" cy="20" rx="16" ry="7" stroke="currentColor" strokeWidth="1.1" opacity="0.28" transform="rotate(38 20 20)" />
+      <circle cx="33.2" cy="10.7" r="1.9" fill="currentColor" />
+    </svg>
+  );
+}
+
 export default function Header({
   lang,
   setLang,
@@ -39,38 +51,38 @@ export default function Header({
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white/85 dark:bg-[#050811]/90 backdrop-blur-2xl border-b border-slate-200/80 dark:border-white/[0.08] transition-colors">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-13 sm:h-14 flex items-center justify-between gap-2 sm:gap-4">
-        
-        {/* Brand Logo & Mission Title */}
-        <div 
-          className="flex items-center space-x-2.5 rtl:space-x-reverse cursor-pointer shrink-0 group" 
+    <header className="sticky top-0 z-40 border-b border-[color:var(--line)] bg-[color:var(--bg)]/80 backdrop-blur-2xl transition-colors">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-3 sm:px-6 lg:px-8">
+
+        {/* Brand & mission */}
+        <div
+          className="group flex shrink-0 cursor-pointer items-center gap-3"
           onClick={() => handleTabClick('detective')}
         >
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-b from-sky-500/15 to-sky-600/10 border border-sky-400/30 flex items-center justify-center shadow-sm dark:shadow-[0_0_15px_rgba(56,189,248,0.25)] group-hover:border-sky-400/50 transition-all shrink-0">
-            <Activity className="w-4.5 h-4.5 text-sky-600 dark:text-sky-400" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[11px] border border-[color:var(--line-strong)] bg-[color:var(--panel-2)] text-[color:var(--accent)] transition-colors group-hover:border-[color:var(--accent)]">
+            <OrbitMark className="h-6 w-6" />
           </div>
-          <div className="flex flex-col text-start justify-center">
-            <div className="flex items-center gap-1.5 sm:gap-2">
-              <span className="font-bold text-sm sm:text-base tracking-tight text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-300 transition-colors leading-tight">
+          <div className="flex flex-col justify-center text-start">
+            <div className="flex items-center gap-2">
+              <span className="font-display text-[15px] font-semibold leading-tight tracking-[-0.01em] text-[color:var(--ink)]">
                 {t.appTitle}
               </span>
-              <Badge variant="default" pulse={true} className="hidden xs:inline-flex items-center gap-1 text-2xs py-0.5">
-                <Satellite className="w-2.5 h-2.5 text-sky-500 dark:text-sky-400" />
+              <Badge variant="default" pulse={true} className="hidden items-center gap-1 py-0.5 text-2xs xs:inline-flex">
+                <Satellite className="h-2.5 w-2.5 text-sky-500 dark:text-sky-400" />
                 <span>{t.nasaBadge}</span>
               </Badge>
             </div>
-            <div 
+            <div
               dir="ltr"
-              className="font-mono text-[9px] sm:text-[10px] font-bold text-sky-600 dark:text-sky-400 uppercase select-none tracking-[0.28em] leading-none mt-0.5 opacity-90 group-hover:text-sky-500 dark:group-hover:text-sky-300 transition-colors"
+              className="mt-0.5 select-none font-mono text-[9px] font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)] transition-colors group-hover:text-[color:var(--accent)]"
             >
-              TERRAMED &nbsp; PULSE
+              TERRAMED PULSE
             </div>
           </div>
         </div>
 
-        {/* Center: Desktop Mission Control Segmented Track (Visible on lg: 1024px+) */}
-        <nav className="hidden lg:flex items-center p-1 rounded-xl bg-slate-100/90 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] gap-1 max-w-xl">
+        {/* Desktop mission nav */}
+        <nav className="hidden max-w-xl items-center gap-0.5 rounded-full border border-[color:var(--line)] bg-[color:var(--panel-2)] p-1 lg:flex">
           {navTabs.map(tab => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -78,46 +90,43 @@ export default function Header({
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-lg flex items-center gap-1.5 select-none transition-all duration-150 ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.98] ${
+                className={`flex select-none items-center gap-1.5 rounded-full px-3 py-1.5 text-xs transition-[color,background-color,border-color,box-shadow,transform,filter] duration-150 ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.98] ${
                   isActive
-                    ? 'bg-white text-slate-900 shadow-sm font-semibold dark:bg-white/15 dark:text-white dark:shadow-[0_2px_8px_rgba(0,0,0,0.3)]'
-                    : 'text-slate-600 dark:text-white/60 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/[0.05]'
+                    ? 'bg-[color:var(--panel)] font-semibold text-[color:var(--ink)] shadow-[0_1px_2px_rgba(0,0,0,0.18)] ring-1 ring-[color:var(--line)]'
+                    : 'font-medium text-[color:var(--muted)] hover:bg-[color:var(--panel)]/60 hover:text-[color:var(--ink)]'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 shrink-0 transition-colors ${isActive ? 'text-sky-600 dark:text-sky-400' : 'text-slate-400 dark:text-white/50'}`} />
+                <Icon className={`h-3.5 w-3.5 shrink-0 transition-colors ${isActive ? 'text-[color:var(--accent)]' : 'text-[color:var(--muted)]'}`} />
                 <span className="whitespace-nowrap">{tab.label}</span>
               </button>
             );
           })}
         </nav>
 
-        {/* Right: Actions & Theme & Mobile Hamburger */}
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          
-          {/* Guided Tour Button (Desktop & Large Screens) */}
+        {/* Actions */}
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+
           <Button
             variant="outline"
             size="chip"
             onClick={onOpenWizard}
-            className="hidden xl:flex items-center gap-1.5"
+            className="hidden items-center gap-1.5 xl:flex"
             title={t.btnWizard}
           >
-            <Compass className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400 shrink-0" />
+            <Compass className="h-3.5 w-3.5 shrink-0 text-[color:var(--accent)]" />
             <span className="whitespace-nowrap">{t.btnWizard}</span>
           </Button>
 
-          {/* Quick Print Button */}
           <Button
             variant="ghost"
             size="icon"
             onClick={() => window.print()}
-            className="hidden sm:flex h-8 w-8 rounded-full"
+            className="hidden h-8 w-8 rounded-full sm:flex"
             title={t.btnPrintBrief}
           >
-            <Printer className="w-3.5 h-3.5 text-slate-500 dark:text-white/60 shrink-0" />
+            <Printer className="h-3.5 w-3.5 shrink-0 text-[color:var(--muted)]" />
           </Button>
 
-          {/* Theme Switcher Button (Clean Lab Dual Theme) */}
           <Button
             variant="outline"
             size="chip"
@@ -127,48 +136,49 @@ export default function Header({
             aria-label={t.toggleTheme}
           >
             {theme === 'dark' ? (
-              <Sun className="w-3.5 h-3.5 text-amber-400 hover:rotate-45 transition-transform duration-200 shrink-0" />
+              <Sun className="h-3.5 w-3.5 shrink-0 text-amber-400 transition-transform duration-200 hover:rotate-45" />
             ) : (
-              <Moon className="w-3.5 h-3.5 text-slate-700 hover:-rotate-12 transition-transform duration-200 shrink-0" />
+              <Moon className="h-3.5 w-3.5 shrink-0 text-slate-700 transition-transform duration-200 hover:-rotate-12" />
             )}
-            <span className="hidden md:inline-block whitespace-nowrap text-micro">
+            <span className="hidden whitespace-nowrap text-micro md:inline-block">
               {theme === 'dark' ? t.themeLight : t.themeDark}
             </span>
           </Button>
 
-          {/* Language Switcher Button */}
           <Button
             variant="default"
             size="chip"
             onClick={toggleLanguage}
-            className="bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 font-semibold shadow-sm"
+            className="bg-slate-900 font-semibold text-white shadow-sm hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
           >
-            <Globe className="w-3.5 h-3.5 shrink-0" />
+            <Globe className="h-3.5 w-3.5 shrink-0" />
             <span className="whitespace-nowrap">{t.langBtn}</span>
           </Button>
 
-          {/* Mobile/Tablet Menu Button (< 1024px) */}
           <Button
             variant="outline"
             size="icon"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden h-8 w-8"
+            className="h-8 w-8 lg:hidden"
             aria-label="Toggle navigation menu"
           >
-            {mobileMenuOpen ? <X className="w-4 h-4 text-sky-600 dark:text-sky-400" /> : <Menu className="w-4 h-4" />}
+            {mobileMenuOpen ? <X className="h-4 w-4 text-[color:var(--accent)]" /> : <Menu className="h-4 w-4" />}
           </Button>
-
         </div>
-
       </div>
 
-      {/* Mobile & Tablet Mission Control Slide-Down Menu (< 1024px) */}
+      {/* Scroll progress hairline */}
+      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px overflow-hidden">
+        <div className="scroll-progress h-full w-full bg-[color:var(--accent)]" />
+      </div>
+
+      {/* Mobile mission menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-slate-200 dark:border-white/[0.08] bg-white/95 dark:bg-[#050811]/95 backdrop-blur-2xl px-4 py-4 space-y-3 transition-all animate-fadeIn">
-          <div dir="ltr" className="text-center font-mono text-[10px] font-bold tracking-[0.28em] text-sky-600 dark:text-sky-400 uppercase py-1 border-b border-slate-200/80 dark:border-white/[0.08]">
-            TERRAMED &nbsp; PULSE
+        <div className="animate-fadeIn border-t border-[color:var(--line)] bg-[color:var(--bg)]/96 px-4 py-4 backdrop-blur-2xl lg:hidden">
+          <div dir="ltr" className="border-b border-[color:var(--line)] py-1 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-[color:var(--accent)]">
+            TERRAMED PULSE
           </div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="mt-3 grid grid-cols-2 gap-2">
             {navTabs.map(tab => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -176,28 +186,28 @@ export default function Header({
                 <button
                   key={tab.id}
                   onClick={() => handleTabClick(tab.id)}
-                  className={`p-2.5 rounded-xl text-xs font-medium flex items-center gap-2 transition-all ${
+                  className={`flex items-center gap-2 rounded-xl border p-2.5 text-xs font-medium transition-[color,background-color,border-color,box-shadow,transform,filter] ${
                     isActive
-                      ? 'bg-sky-500/15 text-sky-700 dark:bg-sky-500/20 dark:text-sky-300 border border-sky-400/40'
-                      : 'bg-slate-100/70 text-slate-700 dark:bg-white/[0.03] dark:text-white/70 hover:bg-slate-200 dark:hover:bg-white/[0.06] border border-slate-200 dark:border-white/[0.06]'
+                      ? 'border-[color:var(--accent)]/45 bg-[color:var(--accent-soft)] text-[color:var(--accent)]'
+                      : 'border-[color:var(--line)] bg-[color:var(--panel-2)] text-[color:var(--ink-2)] hover:border-[color:var(--line-strong)]'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-sky-600 dark:text-sky-400' : 'text-slate-500 dark:text-white/50'}`} />
+                  <Icon className={`h-4 w-4 shrink-0 ${isActive ? 'text-[color:var(--accent)]' : 'text-[color:var(--muted)]'}`} />
                   <span className="truncate">{tab.label}</span>
                 </button>
               );
             })}
           </div>
 
-          <div className="pt-2 border-t border-slate-200 dark:border-white/[0.08] flex items-center justify-between gap-2">
+          <div className="mt-3 flex items-center justify-between gap-2 border-t border-[color:var(--line)] pt-3">
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 onOpenWizard();
               }}
-              className="flex-1 py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.05] dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/10 text-xs text-slate-700 dark:text-white/80 font-medium flex items-center justify-center gap-1.5"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[color:var(--line)] bg-[color:var(--panel-2)] px-3 py-2 text-xs font-medium text-[color:var(--ink-2)] hover:border-[color:var(--line-strong)]"
             >
-              <Compass className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
+              <Compass className="h-3.5 w-3.5 text-[color:var(--accent)]" />
               <span>{t.btnWizard}</span>
             </button>
             <button
@@ -205,9 +215,9 @@ export default function Header({
                 setMobileMenuOpen(false);
                 window.print();
               }}
-              className="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.05] dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/10 text-xs text-slate-700 dark:text-white/80 font-medium flex items-center justify-center gap-1.5"
+              className="flex items-center justify-center gap-1.5 rounded-xl border border-[color:var(--line)] bg-[color:var(--panel-2)] px-3 py-2 text-xs font-medium text-[color:var(--ink-2)] hover:border-[color:var(--line-strong)]"
             >
-              <Printer className="w-3.5 h-3.5 text-slate-500 dark:text-white/60" />
+              <Printer className="h-3.5 w-3.5 text-[color:var(--muted)]" />
               <span>{t.btnPrintBrief}</span>
             </button>
           </div>

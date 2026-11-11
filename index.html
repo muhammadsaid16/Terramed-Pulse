@@ -5,28 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>TERRAMED PULSE — Stay & Build Egypt | ابقَ وابنِ</title>
     <meta name="description" content="TERRAMED PULSE: NASA Earth System Trend Detective & Climate-Health Compass. Empowering physicians and policy makers to detect 30-year climate shifts, reverse brain drain, and protect Egypt's vulnerable communities." />
+    <meta name="theme-color" content="#04070D" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F2F4F7" media="(prefers-color-scheme: light)" />
 
     <script>
       (function() {
         try {
-          var theme = localStorage.getItem('terrapulse_theme') || 'light';
-          if (theme === 'dark') {
-            document.documentElement.classList.add('dark');
-            document.documentElement.classList.remove('light');
-          } else {
+          var theme = localStorage.getItem('terrapulse_theme') || 'dark';
+          if (theme === 'light') {
             document.documentElement.classList.remove('dark');
             document.documentElement.classList.add('light');
+          } else {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
           }
-        } catch (e) {}
+        } catch (e) {
+          document.documentElement.classList.add('dark');
+        }
       })();
     </script>
 
-    <!-- Google Fonts: Archivo (display), Inter (UI), Cairo (AR), JetBrains Mono (data) -->
+    <!-- Google Fonts: Space Grotesk (display), Inter (UI), Cairo (AR), JetBrains Mono (data) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Cairo:wght@400;500;600;700;800;900&family=Inter:opsz,wght@14..32,300..800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Cairo:wght@400;500;600;700;800;900&family=Inter:opsz,wght@14..32,300..800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-slate-50 dark:bg-[#050811] text-slate-900 dark:text-slate-100 min-h-screen selection:bg-sky-500 selection:text-white antialiased overflow-x-hidden">
+  <body class="bg-slate-50 dark:bg-[#04070D] text-slate-900 dark:text-slate-100 min-h-screen selection:bg-sky-500 selection:text-white antialiased overflow-x-hidden">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

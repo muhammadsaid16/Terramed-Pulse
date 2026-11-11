@@ -20,6 +20,7 @@ import SpotlightCard from './ui/SpotlightCard';
 import NumberTicker from './ui/NumberTicker';
 import GlowProgressBar from './ui/GlowProgressBar';
 import { MIGRATION_RESEARCH_STUDIES, DOCUMENTED_MIGRATION_DRIVERS } from '../data/migrationResearchData';
+import SectionHeader from './SectionHeader';
 
 export default function PhysicianObservatory({
   selectedGov,
@@ -48,28 +49,19 @@ export default function PhysicianObservatory({
     <section id="section-physicians" className="bento-card p-5 sm:p-8 mb-8 space-y-6">
       
       {/* Header bar */}
-      <div className="border-b border-slate-200/80 dark:border-white/[0.08] pb-4 flex flex-wrap items-start justify-between gap-3">
-        <div className="flex items-start gap-3">
-          <span aria-hidden="true" className="font-mono text-2xs tracking-[0.18em] text-slate-400 dark:text-white/35 pt-1.5">03</span>
-          <div>
-            <h2 className="font-display text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">
-              {t?.module3Title || (isAr ? 'الوحدة 3: مرصد القوى البشرية الصحية واستبقاء الأطباء' : 'Module 3: Healthcare Workforce & Physician Retention Observatory')}
-            </h2>
-            <p className="text-micro text-slate-600 dark:text-white/60 font-normal max-w-3xl leading-relaxed mt-1">
-              {t?.module3Subtitle || (isAr
-                ? 'تحليل تجريبي محكّم لدراسات هجرة الأطباء (منظمة الصحة العالمية، جامعة أكسفورد، MDPI) ومؤشرات التوزيع الجغرافي للجهاز المركزي للتعبئة العامة والإحصاء: مبني بنسبة 100% على بيانات رصدية موثقة ودراسات سريرية منشورة.'
-                : 'Empirical synthesis of peer-reviewed physician migration cohorts (WHO EMHJ, Oxford University Press, MDPI) and CAPMAS healthcare capacity benchmarks, 100% founded on published empirical cohorts and official census records.')}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="satellite-chip text-emerald-700 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-950/40 dark:border-emerald-800/40 text-micro font-medium flex items-center gap-1.5">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+      <SectionHeader
+        index="03"
+        title={t?.module3Title || (isAr ? 'الوحدة 3: مرصد القوى البشرية الصحية واستبقاء الأطباء' : 'Module 3: Healthcare Workforce & Physician Retention Observatory')}
+        subtitle={t?.module3Subtitle || (isAr
+          ? 'تحليل تجريبي محكّم لدراسات هجرة الأطباء (منظمة الصحة العالمية، جامعة أكسفورد، MDPI) ومؤشرات التوزيع الجغرافي للجهاز المركزي للتعبئة العامة والإحصاء: مبني بنسبة 100% على بيانات رصدية موثقة ودراسات سريرية منشورة.'
+          : 'Empirical synthesis of peer-reviewed physician migration cohorts (WHO EMHJ, Oxford University Press, MDPI) and CAPMAS healthcare capacity benchmarks, 100% founded on published empirical cohorts and official census records.')}
+        right={
+          <span className="satellite-chip flex items-center gap-1.5 px-2.5 py-1 text-micro font-medium text-emerald-700 dark:text-emerald-300">
+            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
             <span>{isAr ? 'بيانات محكّمة وتعداد رسمي 100%' : '100% Empirical & Official Censuses'}</span>
           </span>
-        </div>
-      </div>
+        }
+      />
 
       {/* Top Evidence Stat Cards (3-Study Academic Meta-Synthesis) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
@@ -270,9 +262,9 @@ export default function PhysicianObservatory({
                   value={52.8}
                   label={isAr ? 'الاضطرار للعمل بالقطاع الخاص لتأمين المعيشة:' : 'Forced Moonlighting in Private Sector:'}
                   valueText="52.8%"
-                  gradientFrom="from-purple-500"
-                  gradientTo="to-indigo-600"
-                  glowColor="shadow-purple-500/25"
+                  gradientFrom="from-amber-500"
+                  gradientTo="to-orange-500"
+                  glowColor="shadow-amber-500/25"
                 />
                 <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium">
                   {isAr ? 'المصدر: دراسة منظمة الصحة العالمية EMHJ 2021 (عينة 885 طبيباً)' : 'Source: WHO EMHJ 2021 (n=885 Egyptian MDs)'}
@@ -284,9 +276,9 @@ export default function PhysicianObservatory({
                   value={87.2}
                   label={isAr ? 'الهجرة بحثاً عن زمالات وتدريب سريري وبحثي:' : 'Emigration to Access Postgraduate Training/Research:'}
                   valueText="87.2%"
-                  gradientFrom="from-emerald-500"
-                  gradientTo="to-teal-600"
-                  glowColor="shadow-emerald-500/25"
+                  gradientFrom="from-rose-500"
+                  gradientTo="to-orange-500"
+                  glowColor="shadow-rose-500/25"
                 />
                 <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium">
                   {isAr ? 'المصدر: دراسة منظمة الصحة العالمية EMHJ 2021 (عينة 885 طبيباً)' : 'Source: WHO EMHJ 2021 (n=885 Egyptian MDs)'}

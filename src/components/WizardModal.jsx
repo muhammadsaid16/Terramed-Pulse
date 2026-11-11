@@ -99,7 +99,7 @@ export default function WizardModal({ isOpen, onClose, lang, t, onApplyPreset })
                   if (s < step) setStep(s);
                 }}
                 disabled={s > step}
-                className={`w-7 h-7 rounded-full text-xs font-semibold flex items-center justify-center transition-all ${
+                className={`w-7 h-7 rounded-full text-xs font-semibold flex items-center justify-center transition-[color,background-color,border-color,box-shadow,transform,filter] ${
                   step === s
                     ? 'bg-sky-600 text-white dark:bg-white dark:text-black shadow-sm'
                     : step > s
@@ -111,7 +111,7 @@ export default function WizardModal({ isOpen, onClose, lang, t, onApplyPreset })
               </button>
               {s < 3 && (
                 <div
-                  className={`w-12 h-0.5 transition-all ${
+                  className={`w-12 h-0.5 transition-[color,background-color,border-color,box-shadow,transform,filter] ${
                     step > s ? 'bg-emerald-500/60 dark:bg-emerald-400/60' : 'bg-slate-200 dark:bg-white/[0.06]'
                   }`}
                 />
@@ -136,7 +136,7 @@ export default function WizardModal({ isOpen, onClose, lang, t, onApplyPreset })
                   setSelectedRole('physician');
                   setStep(2);
                 }}
-                className={`apple-card p-4 text-left rtl:text-right space-y-1.5 group border transition-all ${
+                className={`apple-card p-4 text-left rtl:text-right space-y-1.5 group border transition-[color,background-color,border-color,box-shadow,transform,filter] ${
                   selectedRole === 'physician'
                     ? 'border-sky-500 bg-sky-50/70 dark:border-sky-400/80 dark:bg-sky-500/10'
                     : 'border-slate-200 hover:border-slate-300 dark:border-white/10 dark:hover:border-white/20'
@@ -156,7 +156,7 @@ export default function WizardModal({ isOpen, onClose, lang, t, onApplyPreset })
                   setSelectedRole('decision');
                   setStep(2);
                 }}
-                className={`apple-card p-4 text-left rtl:text-right space-y-1.5 group border transition-all ${
+                className={`apple-card p-4 text-left rtl:text-right space-y-1.5 group border transition-[color,background-color,border-color,box-shadow,transform,filter] ${
                   selectedRole === 'decision'
                     ? 'border-sky-500 bg-sky-50/70 dark:border-sky-400/80 dark:bg-sky-500/10'
                     : 'border-slate-200 hover:border-slate-300 dark:border-white/10 dark:hover:border-white/20'
@@ -194,7 +194,7 @@ export default function WizardModal({ isOpen, onClose, lang, t, onApplyPreset })
                   <div
                     key={preset.id}
                     onClick={() => setSelectedPreset(preset.id)}
-                    className={`apple-card p-3.5 flex items-center justify-between cursor-pointer border transition-all ${
+                    className={`apple-card p-3.5 flex items-center justify-between cursor-pointer border transition-[color,background-color,border-color,box-shadow,transform,filter] ${
                       isSelected
                         ? 'border-sky-500 bg-sky-50/80 dark:border-sky-400 dark:bg-sky-500/15 shadow-sm'
                         : 'border-slate-200 hover:border-slate-300 dark:border-white/10 dark:hover:border-white/20'

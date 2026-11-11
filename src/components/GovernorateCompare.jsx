@@ -4,11 +4,11 @@ import gsap from 'gsap';
 import { prefersReducedMotion } from '../lib/motionTokens';
 
 const INDEX_ROWS = [
-  { key: 'hni', labelKey: 'compareHni', tone: 'bg-sky-500' },
-  { key: 'epi', labelKey: 'compareEpi', tone: 'bg-rose-500' },
-  { key: 'ppi', labelKey: 'comparePpi', tone: 'bg-amber-500' },
-  { key: 'fsi', labelKey: 'compareFsi', tone: 'bg-violet-500' },
-  { key: 'wni', labelKey: 'compareWni', tone: 'bg-emerald-500' }
+  { key: 'hni', labelKey: 'compareHni', tone: 'bg-[color:var(--accent)]' },
+  { key: 'epi', labelKey: 'compareEpi', tone: 'bg-[color:var(--accent)]' },
+  { key: 'ppi', labelKey: 'comparePpi', tone: 'bg-[color:var(--accent)]' },
+  { key: 'fsi', labelKey: 'compareFsi', tone: 'bg-[color:var(--accent)]' },
+  { key: 'wni', labelKey: 'compareWni', tone: 'bg-[color:var(--accent)]' }
 ];
 
 function getIndex(gov, key) {

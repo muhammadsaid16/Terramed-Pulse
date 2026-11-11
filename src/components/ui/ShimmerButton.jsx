@@ -32,7 +32,7 @@ export default function ShimmerButton({
       ref={buttonRef}
       type={type}
       onClick={onClick}
-      className={`relative inline-flex items-center justify-center overflow-hidden rounded-full p-[1.5px] font-semibold transition-transform duration-100 ease-out active:scale-95 group focus:outline-none focus:ring-2 focus:ring-sky-500/50 ${className}`}
+      className={`relative inline-flex items-center justify-center overflow-hidden rounded-full p-[1.5px] font-semibold transition-transform duration-100 ease-out active:scale-95 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 ${className}`}
       {...props}
     >
       {/* 21st.dev Traveling Shimmer Background (paused off-viewport) */}

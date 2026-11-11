@@ -126,7 +126,7 @@ export function buildEmpiricalMigrationChartData(lang, t) {
       {
         label: t.chartMigrationRisk || (lang === 'ar' ? 'مؤشر قابلية الهجرة (%)' : 'Migration Risk (%)'),
         data: EMPIRICAL_MIGRATION_BENCHMARKS.map(x => x.risk),
-        backgroundColor: 'rgba(255, 69, 58, 0.85)',
+        backgroundColor: 'rgba(244, 63, 94, 0.85)',
         borderRadius: 6
       }
     ]
@@ -145,7 +145,7 @@ export function buildPriorityChartData(allGovs, lang, t) {
       {
         label: t.chartOverallHni,
         data: hniValues,
-        backgroundColor: 'rgba(10, 132, 255, 0.85)',
+        backgroundColor: 'rgba(14, 165, 233, 0.85)',
         borderRadius: 6
       },
       {

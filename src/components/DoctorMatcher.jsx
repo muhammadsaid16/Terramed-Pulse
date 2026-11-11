@@ -5,6 +5,7 @@ import { SPECIALTY_FULL_LABELS } from '../lib/specialties';
 import gsap from 'gsap';
 import { SpotlightCard, NumberTicker, Button, Badge } from './ui';
 import { prefersReducedMotion } from '../lib/motionTokens';
+import SectionHeader from './SectionHeader';
 
 // Icons are presentation, so they stay here; the ids and both label registers come from
 // the module that owns the submission vocabulary.
@@ -66,22 +67,12 @@ export default function DoctorMatcher({
     <section id="section-doctor" className="bento-card p-5 sm:p-8 mb-8 space-y-6">
       
       {/* Module Header */}
-      <div className="border-b border-slate-200/80 dark:border-white/[0.08] pb-4 flex flex-wrap items-start justify-between gap-2">
-        <div className="flex items-start gap-3">
-          <span aria-hidden="true" className="font-mono text-2xs tracking-[0.18em] text-slate-400 dark:text-white/35 pt-1.5">02</span>
-          <div>
-            <h2 className="font-display text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">
-              {t.module2Title}
-            </h2>
-            <p className="text-micro text-slate-600 dark:text-white/50 font-normal mt-1">
-              {t.module2Subtitle}
-            </p>
-          </div>
-        </div>
-        <span className="font-mono text-2xs tracking-[0.08em] text-emerald-600/80 dark:text-emerald-400/60 pt-1.5" dir="ltr">
-          {t.impactChip}
-        </span>
-      </div>
+      <SectionHeader
+        index="02"
+        title={t.module2Title}
+        subtitle={t.module2Subtitle}
+        meta={t.impactChip}
+      />
 
       {/* Specialty Selector Buttons */}
       <div className="space-y-2.5">
@@ -97,7 +88,7 @@ export default function DoctorMatcher({
                 key={spec.id}
                 variant={isSelected ? 'default' : 'outline'}
                 onClick={() => setSelectedSpecialty(spec.id)}
-                className={`p-3 h-auto justify-start text-left rtl:text-right rounded-2xl gap-2.5 transition-all duration-150 ${
+                className={`p-3 h-auto justify-start text-left rtl:text-right rounded-2xl gap-2.5 transition-[color,background-color,border-color,box-shadow,transform,filter] duration-150 ${
                   isSelected
                     ? 'bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 shadow-md font-semibold'
                     : 'text-slate-700 dark:text-white/80'
@@ -196,14 +187,14 @@ export default function DoctorMatcher({
               <SpotlightCard
                 key={r.id}
                 onClick={() => onSelectGov(r.id)}
-                className={`p-3.5 flex items-center justify-between cursor-pointer group shadow-sm dark:shadow-md transition-all ${
+                className={`p-3.5 flex items-center justify-between cursor-pointer group shadow-sm dark:shadow-md transition-[color,background-color,border-color,box-shadow,transform,filter] ${
                   i === 0
                     ? 'ring-1 ring-sky-500/40 bg-sky-500/[0.03]'
                     : ''
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <span className={`w-7 h-7 rounded-full text-xs font-semibold flex items-center justify-center transition-all ${
+                  <span className={`w-7 h-7 rounded-full text-xs font-semibold flex items-center justify-center transition-[color,background-color,border-color,box-shadow,transform,filter] ${
                     i === 0
                       ? 'bg-slate-900 text-white dark:bg-white dark:text-black shadow-sm'
                       : 'bg-slate-100 text-slate-700 border border-slate-200 dark:bg-white/[0.06] dark:text-white/60 dark:border-white/10'

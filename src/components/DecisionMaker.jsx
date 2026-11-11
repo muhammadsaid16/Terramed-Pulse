@@ -32,6 +32,7 @@ import {
   Slider,
   DonutChart
 } from './ui';
+import SectionHeader from './SectionHeader';
 
 ChartJS.register(
   ArcElement,
@@ -140,38 +141,31 @@ export default function DecisionMaker({
     <section id="section-decision" className="bento-card p-5 sm:p-8 mb-8 space-y-6">
       
       {/* Header */}
-      <div className="border-b border-slate-200/80 dark:border-white/[0.08] pb-4 flex flex-wrap items-start justify-between gap-3">
-        <div className="flex items-start gap-3">
-          <span aria-hidden="true" className="font-mono text-2xs tracking-[0.18em] text-slate-400 dark:text-white/35 pt-1.5">04</span>
-          <div>
-            <h2 className="font-display text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">
-              {t.module4Title}
-            </h2>
-            <p className="text-micro text-slate-600 dark:text-white/50 font-normal mt-1">
-              {t.module4Subtitle} ({govName})
-            </p>
+      <SectionHeader
+        index="04"
+        title={t.module4Title}
+        subtitle={`${t.module4Subtitle} (${govName})`}
+        right={
+          <div className="flex flex-wrap items-center gap-2">
+            <Tabs value={activeSubTab} onValueChange={setActiveSubTab} className="w-auto">
+              <TabsList className="p-0.5 h-auto">
+                <TabsTrigger value="simulation" className="gap-1.5 py-1 px-3 text-xs">
+                  <Sliders className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
+                  <span>{t.tabSimulation}</span>
+                </TabsTrigger>
+                <TabsTrigger value="evidence" className="gap-1.5 py-1 px-3 text-xs">
+                  <BookOpen className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                  <span>{t.tabResearchEvidence}</span>
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            <Badge variant="default" pulse={true} className="text-xs py-1">
+              {t.mcdaChip}
+            </Badge>
           </div>
-        </div>
-
-        <div className="flex items-center gap-2 flex-wrap">
-          <Tabs value={activeSubTab} onValueChange={setActiveSubTab} className="w-auto">
-            <TabsList className="p-0.5 h-auto">
-              <TabsTrigger value="simulation" className="gap-1.5 py-1 px-3 text-xs">
-                <Sliders className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
-                <span>{t.tabSimulation}</span>
-              </TabsTrigger>
-              <TabsTrigger value="evidence" className="gap-1.5 py-1 px-3 text-xs">
-                <BookOpen className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                <span>{t.tabResearchEvidence}</span>
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-
-          <Badge variant="default" pulse={true} className="text-xs py-1">
-            {t.mcdaChip}
-          </Badge>
-        </div>
-      </div>
+        }
+      />
 
       {activeSubTab === 'simulation' && (
         <div className="space-y-6 animate-fadeIn">
@@ -562,7 +556,7 @@ export default function DecisionMaker({
           </div>
 
           {/* Executive Chart 2: Migration Risk vs Demand */}
-          <div className="apple-card p-5 flex flex-col justify-between">
+          <div className="apple-card p-5 flex flex-col gap-3">
             <div>
               <div className="flex items-center gap-2 mb-1.5">
                 <BarChart3 className="w-4 h-4 text-sky-500 dark:text-sky-400" />
@@ -570,11 +564,11 @@ export default function DecisionMaker({
                   {t.chartMigrationTitle}
                 </h4>
               </div>
-              <span className="text-2xs text-slate-500 dark:text-white/45 block mb-2 font-medium">
+              <span className="text-2xs text-slate-500 dark:text-white/45 block font-medium">
                 <span className="text-sky-600 dark:text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceExecMigration}
               </span>
             </div>
-            <div className="h-[180px] w-full">
+            <div className="flex-1 min-h-[180px] w-full">
               {migrationChartData ? (
                 <Bar
                   data={migrationChartData}
@@ -587,7 +581,7 @@ export default function DecisionMaker({
           </div>
 
           {/* Executive Chart 3: Governorate Priority Matrix */}
-          <div className="apple-card p-5 flex flex-col justify-between">
+          <div className="apple-card p-5 flex flex-col gap-3">
             <div>
               <div className="flex items-center gap-2 mb-1.5">
                 <ShieldCheck className="w-4 h-4 text-amber-500 dark:text-amber-400" />
@@ -595,11 +589,11 @@ export default function DecisionMaker({
                   {t.chartPriorityTitle}
                 </h4>
               </div>
-              <span className="text-2xs text-slate-500 dark:text-white/45 block mb-2 font-medium">
+              <span className="text-2xs text-slate-500 dark:text-white/45 block font-medium">
                 <span className="text-amber-600 dark:text-amber-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceExecPriority}
               </span>
             </div>
-            <div className="h-[180px] w-full">
+            <div className="flex-1 min-h-[180px] w-full">
               <Bar
                 data={priorityChartData}
                 options={barChartOptions(theme)}

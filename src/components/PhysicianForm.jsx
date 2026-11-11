@@ -169,7 +169,7 @@ export default function PhysicianForm({
                   disabled={isAnonymous}
                   value={isAnonymous ? '' : formData.doctor}
                   onChange={(e) => setFormData({ ...formData, doctor: e.target.value })}
-                  className={`w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30 transition-colors ${isAnonymous ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/40 focus-visible:ring-2 focus-visible:ring-sky-400/60 transition-colors ${isAnonymous ? 'opacity-50 cursor-not-allowed' : ''}`}
                 />
                 <label className="flex items-center gap-1.5 mt-1.5 cursor-pointer select-none">
                   <input
@@ -192,7 +192,7 @@ export default function PhysicianForm({
                 <select
                   value={formData.gov}
                   onChange={(e) => setFormData({ ...formData, gov: e.target.value })}
-                  className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30"
+                  className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/40 focus-visible:ring-2 focus-visible:ring-sky-400/60"
                 >
                   <option value="" disabled>
                     {lang === 'ar' ? 'اختر محافظة' : 'Select governorate'}
@@ -215,7 +215,7 @@ export default function PhysicianForm({
                 <select
                   value={formData.specialty}
                   onChange={(e) => setFormData({ ...formData, specialty: e.target.value })}
-                  className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30"
+                  className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/40 focus-visible:ring-2 focus-visible:ring-sky-400/60"
                 >
                   {SPECIALTY_SHORT_LABELS.map(spec => (
                     <option key={spec.id} value={spec.id}>
@@ -235,7 +235,7 @@ export default function PhysicianForm({
                   placeholder={t.phHospital}
                   value={formData.hospital}
                   onChange={(e) => setFormData({ ...formData, hospital: e.target.value })}
-                  className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30 transition-colors"
+                  className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/40 focus-visible:ring-2 focus-visible:ring-sky-400/60 transition-colors"
                 />
               </div>
             </div>
@@ -255,7 +255,7 @@ export default function PhysicianForm({
                     key={opt.id}
                     type="button"
                     onClick={() => setFormData({ ...formData, considering_migration: opt.id })}
-                    className={`apple-chip py-2 px-1 rounded-full text-xs font-medium transition-all text-center whitespace-nowrap ${
+                    className={`apple-chip py-2 px-1 rounded-full text-xs font-medium transition-[color,background-color,border-color,box-shadow,transform,filter] text-center whitespace-nowrap ${
                       formData.considering_migration === opt.id
                         ? 'bg-white text-black font-semibold shadow-sm'
                         : 'text-white/60 hover:text-white'
@@ -275,7 +275,7 @@ export default function PhysicianForm({
               <select
                 value={formData.primary_reason}
                 onChange={(e) => setFormData({ ...formData, primary_reason: e.target.value })}
-                className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30"
+                className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/40 focus-visible:ring-2 focus-visible:ring-sky-400/60"
               >
                 <option value="salary">{t.reasonSalary}</option>
                 <option value="burnout">{t.reasonBurnout}</option>
@@ -293,7 +293,7 @@ export default function PhysicianForm({
               <select
                 value={formData.needed_support}
                 onChange={(e) => setFormData({ ...formData, needed_support: e.target.value })}
-                className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30"
+                className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/40 focus-visible:ring-2 focus-visible:ring-sky-400/60"
               >
                 <option value="incentive">{t.supportIncentive}</option>
                 <option value="equipment">{t.supportEquipment}</option>
@@ -310,7 +310,7 @@ export default function PhysicianForm({
               <select
                 value={formData.severity}
                 onChange={(e) => setFormData({ ...formData, severity: Number(e.target.value) })}
-                className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30"
+                className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/40 focus-visible:ring-2 focus-visible:ring-sky-400/60"
               >
                 <option value={5}>{t.severity5}</option>
                 <option value={4}>{t.severity4}</option>
@@ -331,7 +331,7 @@ export default function PhysicianForm({
                 placeholder={t.phComment}
                 value={formData.comment}
                 onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
-                className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/30 resize-none font-normal"
+                className="w-full bg-[#0E1320] border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-white/40 focus-visible:ring-2 focus-visible:ring-sky-400/60 resize-none font-normal"
               />
               {formData.comment.length > LIMITS.comment * 0.8 && (
                 <span className="block text-right text-2xs text-white/40 tabular-nums mt-1" dir="ltr">
@@ -380,7 +380,7 @@ export default function PhysicianForm({
               <button
                 type="button"
                 onClick={onOpenDbModal}
-                className={`inline-flex items-center gap-1.5 text-micro font-medium px-2.5 py-0.5 rounded-full border transition-all ${
+                className={`inline-flex items-center gap-1.5 text-micro font-medium px-2.5 py-0.5 rounded-full border transition-[color,background-color,border-color,box-shadow,transform,filter] ${
                   writesEnabled
                     ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/25 hover:bg-emerald-500/20 shadow-sm'
                     : syncState === 'pending'
@@ -399,7 +399,7 @@ export default function PhysicianForm({
                   <button
                     type="button"
                     onClick={() => setActiveFeedTab('local')}
-                    className={`text-micro font-medium px-2.5 py-0.5 rounded-full transition-all ${
+                    className={`text-micro font-medium px-2.5 py-0.5 rounded-full transition-[color,background-color,border-color,box-shadow,transform,filter] ${
                       activeFeedTab === 'local'
                         ? 'bg-white/[0.12] text-white shadow-sm'
                         : 'text-white/50 hover:text-white/80'
@@ -410,7 +410,7 @@ export default function PhysicianForm({
                   <button
                     type="button"
                     onClick={() => setActiveFeedTab('community')}
-                    className={`text-micro font-medium px-2.5 py-0.5 rounded-full transition-all ${
+                    className={`text-micro font-medium px-2.5 py-0.5 rounded-full transition-[color,background-color,border-color,box-shadow,transform,filter] ${
                       activeFeedTab === 'community'
                         ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30 shadow-sm'
                         : 'text-white/50 hover:text-white/80'

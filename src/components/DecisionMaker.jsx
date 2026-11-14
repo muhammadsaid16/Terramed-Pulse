@@ -247,6 +247,7 @@ export default function DecisionMaker({
             {/* Sub-indices Progress Bars using 21st.dev GlowProgressBar */}
             <div className="space-y-3.5 pt-2 text-xs">
             <GlowProgressBar
+              dir={lang === 'ar' ? 'rtl' : 'ltr'}
               label={t.sliderEpi}
               value={sim.simEpi}
               valueText={`${sim.simEpi}`}
@@ -256,6 +257,7 @@ export default function DecisionMaker({
             />
 
             <GlowProgressBar
+              dir={lang === 'ar' ? 'rtl' : 'ltr'}
               label={t.sliderPpi}
               value={baseIndices.ppi}
               valueText={`${baseIndices.ppi}`}
@@ -265,6 +267,7 @@ export default function DecisionMaker({
             />
 
             <GlowProgressBar
+              dir={lang === 'ar' ? 'rtl' : 'ltr'}
               label={t.sliderFsi}
               value={sim.simFsi}
               valueText={`${sim.simFsi}`}
@@ -274,6 +277,7 @@ export default function DecisionMaker({
             />
 
             <GlowProgressBar
+              dir={lang === 'ar' ? 'rtl' : 'ltr'}
               label={t.sliderWni}
               value={sim.simWni}
               valueText={`${sim.simWni}`}
@@ -322,6 +326,7 @@ export default function DecisionMaker({
                 </span>
               </div>
               <Slider
+                dir={lang === 'ar' ? 'rtl' : 'ltr'}
                 min={0}
                 max={150}
                 step={5}
@@ -343,6 +348,7 @@ export default function DecisionMaker({
                 </span>
               </div>
               <Slider
+                dir={lang === 'ar' ? 'rtl' : 'ltr'}
                 min={0}
                 max={200}
                 step={10}
@@ -364,6 +370,7 @@ export default function DecisionMaker({
                 </span>
               </div>
               <Slider
+                dir={lang === 'ar' ? 'rtl' : 'ltr'}
                 min={0}
                 max={100}
                 step={5}
@@ -395,6 +402,7 @@ export default function DecisionMaker({
                 </span>
               </div>
               <Slider
+                dir={lang === 'ar' ? 'rtl' : 'ltr'}
                 min={0}
                 max={100}
                 step={5}
@@ -416,6 +424,7 @@ export default function DecisionMaker({
                 </span>
               </div>
               <Slider
+                dir={lang === 'ar' ? 'rtl' : 'ltr'}
                 min={0}
                 max={100}
                 step={5}
@@ -437,6 +446,7 @@ export default function DecisionMaker({
                 </span>
               </div>
               <Slider
+                dir={lang === 'ar' ? 'rtl' : 'ltr'}
                 min={0}
                 max={50}
                 step={1}
@@ -458,6 +468,7 @@ export default function DecisionMaker({
                 </span>
               </div>
               <Slider
+                dir={lang === 'ar' ? 'rtl' : 'ltr'}
                 min={0}
                 max={30}
                 step={1}

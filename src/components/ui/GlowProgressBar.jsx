@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { cn } from '../../lib/utils';
 
 /**
  * 21st.dev Glow Progress Bar Component
@@ -14,7 +15,8 @@ export default function GlowProgressBar({
   gradientTo = 'to-blue-600',
   glowColor = 'shadow-sky-500/30',
   className = '',
-  once = true
+  once = true,
+  dir
 }) {
   const [isInView, setIsInView] = useState(false);
   const containerRef = useRef(null);
@@ -58,11 +60,12 @@ export default function GlowProgressBar({
     };
   }, [once]);
 
+  const isRtl = dir === 'rtl' || (dir === undefined && typeof document !== 'undefined' && document.documentElement.dir === 'rtl');
   const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
   const displayPercentage = isInView ? percentage : 0;
 
   return (
-    <div ref={containerRef} className={`space-y-1.5 ${className}`}>
+    <div ref={containerRef} dir={isRtl ? 'rtl' : 'ltr'} className={`space-y-1.5 ${className}`}>
       {(label || valueText) && (
         <div className="flex justify-between items-center text-xs">
           {label && <span className="text-[color:var(--ink-2)] font-medium">{label}</span>}
@@ -73,7 +76,13 @@ export default function GlowProgressBar({
       {/* 21st.dev Progress Track */}
       <div className="h-2 w-full rounded-full bg-[color:var(--line)] overflow-hidden p-0.5">
         <div
-          className={`h-full rounded-full bg-gradient-to-r ${gradientFrom} ${gradientTo} transition-all duration-700 ease-out shadow-sm ${glowColor}`}
+          className={cn(
+            'h-full rounded-full transition-all duration-700 ease-out shadow-sm',
+            glowColor,
+            isRtl
+              ? `bg-gradient-to-l ${gradientFrom} ${gradientTo} mr-0 ml-auto`
+              : `bg-gradient-to-r ${gradientFrom} ${gradientTo} ml-0 mr-auto`
+          )}
           style={{ width: `${displayPercentage}%` }}
         />
       </div>

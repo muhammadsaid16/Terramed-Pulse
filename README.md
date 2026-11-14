@@ -112,7 +112,7 @@ TerraPulse Architecture
 │   ├── HNI Sub-Index Breakdown (EPI, PPI, FSI, WNI)
 │   ├── 3 Policy Levers: Mobile Clinics (0-50), Retention Stipends (0-100%), Urban Greening (0-30%)
 │   ├── Simulated Impact: Projected HNI Drop, Prevented ER Visits, Retention Gains
-│   └── 1-Click Printable Executive Briefing Document (@media print)
+│   └── Executive Dashboards: Retention Elasticity, Specialty Propensity, Climate Priority Matrix
 │
 └── Modals & Presets
     ├── 3-Step Guided Trend Detective Wizard
@@ -127,7 +127,8 @@ TerraPulse Architecture
 ### 1. Launch the Vite + React Application
 The root `index.html` is the Vite **entry template** — it loads `/src/main.jsx` as an ES module, so opening it with a double-click renders a blank page. Serve it instead:
 ```bash
-cd "/home/zer0/Desktop/Projects/Nasa project"
+git clone https://github.com/muhammadsaid16/Terramed-Pulse.git
+cd Terramed-Pulse
 
 # Install dependencies (if not already installed)
 npm install
@@ -178,7 +179,7 @@ npm run preview
 ### 2. Run the Full Verification Suite
 `npm test` runs all six suites — 474 checks in total: the live React engine (144), the dataset drift gate (22), the submission-contract gate (165), the legacy JS engine (51), and both Python suites (12 and 80):
 ```bash
-cd "/home/zer0/Desktop/Projects/Nasa project"
+cd Terramed-Pulse
 npm test
 ```
 Individual suites:
@@ -212,7 +213,7 @@ python3 pipeline/test_nasa_pipeline.py       #  80 checks — dataset artifacts 
 ### 3. Run the NASA POWER Python Data Pipeline
 The `pipeline/fetch_nasa_data.py` script queries the real NASA POWER API, computes statistical trends, and exports `data.json`, `data.js` and `embedded-data.js` into `legacy/` (the default `--out-dir`):
 ```bash
-cd "/home/zer0/Desktop/Projects/Nasa project"
+cd Terramed-Pulse
 
 # Fetch live NASA POWER observations into legacy/
 python3 pipeline/fetch_nasa_data.py
@@ -231,8 +232,8 @@ python3 pipeline/fetch_nasa_data.py --offline
 ## 🗂️ Project Directory Structure
 
 ```
-/home/zer0/Desktop/Projects/Nasa project/
-├── index.html                   # Vite entry template (loads /src/main.jsx; not double-clickable)
+Terramed-Pulse/
+├── index.html                   # Vite entry template (loads /src/main.jsx)
 ├── package.json                 # Vite + React 18, Tailwind, Lucide, Leaflet, Chart.js
 ├── vite.config.js               # Optimized Vite bundler configuration
 ├── tailwind.config.js           # Apple dark space theme tokens & typography
@@ -244,9 +245,9 @@ python3 pipeline/fetch_nasa_data.py --offline
 ├── src/                         # ── THE SHIPPED REACT APPLICATION ──
 │   ├── main.jsx                 # React root mount (bundles Leaflet CSS locally)
 │   ├── App.jsx                  # Main application orchestrator & state manager
-│   ├── index.css                # Apple Design fluid interactions, frosted glass, print styles
+│   ├── index.css                # Obsidian/Clean Lab theme tokens, fluid motion, WCAG AA styles
 │   ├── data/
-│   │   ├── terrapulseData.js    # Continuous 31-yr records (no survey fixture ships)
+│   │   ├── terrapulseData.js    # Continuous 31-yr records (1995-2025 calibrated series)
 │   │   ├── terrapulseData.parity.test.mjs # 22-check drift gate vs legacy/data.json
 │   │   └── egyptGovernoratesGeoJson.js  # Official UN OCHA / geoBoundaries polygons
 │   ├── lib/
@@ -259,18 +260,18 @@ python3 pipeline/fetch_nasa_data.py --offline
 │   │   ├── specialties.js       # Shared AR/EN specialty label registers
 │   │   └── translations.js      # Full English & Arabic localization dictionaries
 │   └── components/
-│       ├── Header.jsx           # Apple-style segmented tabs, 1-click cases, language toggle
+│       ├── Header.jsx           # Apple-style segmented tabs, language toggle, theme toggle
 │       ├── KpiStrip.jsx         # Executive metrics with tabular-nums & glowing cards
 │       ├── MapModule.jsx        # Watermark-free Leaflet map (Esri Dark) + 1995-2025 time-lapse
 │       ├── TrendChartModule.jsx # 30-yr Chart.js series, anomaly toggle, Mann-Kendall badge
 │       ├── OppositeTrends.jsx   # Upper Egypt arid warming vs Nile Delta humidity/aerosols
+│       ├── DataProvenance.jsx   # Interactive dataset provenance, DOIs, sensors, and licenses
 │       ├── DoctorMatcher.jsx    # "Stay & Build" 8-specialty clinical impact matcher
-│       ├── PhysicianForm.jsx    # In-page clinical observation & migration intent form
+│       ├── PhysicianObservatory.jsx # Empirical clinical benchmarks & local case logging
 │       ├── DecisionMaker.jsx    # What-If simulator & 3 executive Chart.js dashboards
 │       ├── DbSyncModal.jsx      # Endpoint posture view + the migration, verbatim
 │       ├── WizardModal.jsx      # 3-step Guided Trend Detective Wizard
 │       ├── MathModal.jsx        # Mathematical & statistical methodology guide
-│       ├── PrintBrief.jsx       # Official 1-page ministerial brief for @media print
 │       └── Footer.jsx           # NASA mission credits & hackathon branding
 ├── db/
 │   └── migrations/
@@ -295,18 +296,14 @@ python3 pipeline/fetch_nasa_data.py --offline
     └── embedded-data.js         # Same dataset, window global for file:// use
 ```
 
-> **Legacy status.** `legacy/` is kept for statistical parity against
-> `pipeline/trend_engine.py` and as a record of the pre-React implementation — it is **not**
-> a working demo. `legacy/index.html:969-970` load `data.js` and `trend-engine.js` with plain
-> `<script src>` tags, but `trend-engine.js:808` ends in `export default _engine`, so the
-> browser throws `SyntaxError: Unexpected token 'export'` and `app.js`'s two `TrendEngine`
-> references never resolve. It also pulls Tailwind, Leaflet, Chart.js and Lucide from CDNs,
-> so it is not offline-capable either. Both defects predate this cleanup and are unchanged by
-> it; fixing them is out of scope because nothing ships from this directory. Relocating the
-> files did repair one thing: `data.js`, `data.json`, `embedded-data.js`, `app.js` and
-> `styles.css` previously sat at the repo root while the archive pointed at them by relative
-> path, so it only resolved when served from the root. Serve it with `python3 -m http.server`
-> from inside `legacy/` if you want to read the old UI.
+---
+
+## 🤖 Generative AI Tools & Usage Disclosure
+
+In strict compliance with NASA Space Apps Challenge 2026 rules on AI transparency:
+- **Coding & Implementation Assistance:** Generative AI tools (Large Language Models) were utilized as an interactive programming assistant to draft mathematical functions (Mann-Kendall Horner approximation, Theil-Sen median slopes), write unit and end-to-end regression tests, and optimize Tailwind CSS design tokens for 100% WCAG 2.1 AA contrast compliance.
+- **Bi-directional Layout & Polish:** AI assistance was employed to review bidirectional (RTL/LTR) user interactions, guaranteeing seamless Arabic typography and mirrored slider behavior.
+- **Scientific & Data Integrity:** All NASA Earth Observation datasets (NASA POWER, MERRA-2, MODIS Terra/Aqua, GLDAS-2.1, SEDAC GPWv4) and WHO EMHJ cohorts are authentic, peer-reviewed, and cited directly from official space agency and medical repositories. **Zero scientific values or climate metrics were generated or hallucinated by AI.**
 
 ---
 

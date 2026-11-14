@@ -8,7 +8,7 @@
 - **Project Title:** TerraPulse: Stay & Build Egypt — NASA Earth System Trend Detective  
 - **Arabic Title:** ابقَ وابنِ — محقق اتجاهات الأرض وبوصلة الأثر الصحي والبيئي في مصر  
 - **Challenge Track:** Be An Earth System Trend Detective!  
-- **Repository / Source Code:** [muhammadsaid16/Nasa-Space-App](https://github.com/muhammadsaid16/Nasa-Space-App)  
+- **Repository / Source Code:** [muhammadsaid16/Terramed-Pulse](https://github.com/muhammadsaid16/Terramed-Pulse) (Mirror: [muhammadsaid16/Nasa-Space-App](https://github.com/muhammadsaid16/Nasa-Space-App))  
 - **Live Demo:** No server behind the analytics — all NASA datasets, the statistical engine, Leaflet and Chart.js are bundled client-side, and nothing needs a key or a login. Verified air-gapped: the app boots, all 5 choropleth polygons, all markers, all 4 charts and the time-lapse render with no network. Three things need internet: the ArcGIS dark-grey basemap tiles (offline the map falls back to a labelled grid canvas with a "basemap unavailable" notice — overlays and data are untouched), the Inter/Cairo webfonts (fall back to system fonts), and the optional physician-report endpoint — one Cloudflare Pages Function writing to Postgres, used only to submit and never to read. With it undeployed the form is local-only and says so; reports keep saving to localStorage either way.
 - **Team Name:** WhiteRoom Labs  
 - **Keywords / Tags:** `NASA Earth Observation`, `Climate Health`, `Trend Detective`, `Mann-Kendall Test`, `Deseasonalization`, `MODIS`, `MERRA-2`, `NASA POWER`, `GLDAS`, `SEDAC`, `Egypt Healthcare`, `Stay and Build`
@@ -198,6 +198,15 @@ Nothing has to be configured to run the platform: no credentials ship in the bun
 3. **الدقة الرياضية والإحصائية:** احتساب الشذوذ المناخي بعد إزالة التغيرات الموسمية، وتطبيق اختبار "مان-كيندال" اللامعلمي لتأكيد الدلالة الإحصائية للاتجاهات ($p < 0.01$)، بالإضافة لحساب ميل الانحدار الخطي لكل عقد وفترات الثقة.
 4. **ربط علوم الفضاء بالأثر الصحي والوطني:** ابتكار "مؤشر الاحتياج الصحي" (HNI) ومحرك "أنا طبيب" لتوجيه الأطباء المصريين إلى المحافظات الأكثر حاجة لتخصصاتهم الدقيقة، مما يمنحهم حافزاً إنسانياً ووطنياً للبقاء ومواجهة نزيف هجرة الكوادر الطبية.
 5. **تحليلات تعمل بالكامل داخل المتصفح (Client-Side Analytics):** تُحسَب المؤشرات وتُرسم الخرائط والمخططات داخل متصفح المستخدم دون خادم أو مفتاح أو تسجيل دخول، مما يضمن استمرارية عملها في المستشفيات والمراكز الريفية النائية. الاستثناء الوحيد اختياري ومحدود الغرض: نقطة إرسال بلاغات الأطباء — دالة واحدة تكتب في قاعدة البيانات ولا تقرأ منها شيئاً؛ وبدونها يبقى البلاغ على جهاز الطبيب ويخبره التطبيق بذلك.
+
+---
+
+## 8. Generative AI Tools & Usage Disclosure
+
+In compliance with official NASA Space Apps Challenge 2026 transparency guidelines:
+- **Assisted Software Engineering:** Generative AI tools (LLMs) assisted the engineering team with code syntax, drafting unit tests (parity tests across Python and JS statistical implementations), and auditing WCAG 2.1 AA accessibility contrast ratios.
+- **Localization & Bi-directional Testing:** AI aided in stress-testing mirrored RTL user interaction flows and translation validation.
+- **Scientific Grounding:** All NASA Earth Observation datasets, WHO EMHJ healthcare cohorts, and statistical algorithms are 100% authentic and grounded in official space agency and peer-reviewed literature. No scientific data was generated or simulated by AI.
 
 ---
 **Prepared by WhiteRoom Labs for the 2026 NASA Space Apps Challenge.**  

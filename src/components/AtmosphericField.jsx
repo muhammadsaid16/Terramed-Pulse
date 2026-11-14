@@ -51,12 +51,68 @@ void main() {
 
   vec3 col = mix(vec3(0.012, 0.021, 0.036), vec3(0.945, 0.957, 0.972), uLight);
 
-  // Star field, sparse and cold. Day side: no stars.
-  vec2 starCell = floor(gl_FragCoord.xy / 1.7);
-  float starSeed = hash(starCell);
-  float star = step(0.9972, starSeed);
-  float twinkle = 0.55 + 0.45 * sin(uTime * 1.2 + starSeed * 42.0);
-  col += vec3(0.62, 0.76, 0.9) * star * twinkle * 0.55 * (1.0 - uLight);
+  // Organic multi-layer random star field. Day side: smoothly fades out.
+  vec3 starCol = vec3(0.0);
+  if (uLight < 0.95) {
+    // Large-scale galactic clustering (subtle cosmic density variations)
+    float cluster = fbm(p * 2.2 + vec2(5.2, 1.7));
+    float density = smoothstep(0.25, 0.75, cluster) * 0.45 + 0.55;
+
+    // Layer 1: Dense faint background stars (cellSize = 17.0, coprime)
+    {
+      float sSize = 17.0;
+      vec2 sCell = floor(gl_FragCoord.xy / sSize);
+      vec2 sLocal = fract(gl_FragCoord.xy / sSize);
+      float sSeed = hash(sCell * vec2(19.31, 37.19) + vec2(12.7, 5.3));
+      if (sSeed > (0.86 - density * 0.08)) {
+        vec2 sPos = 0.14 + 0.72 * vec2(hash(sCell + vec2(7.1, 13.9)), hash(sCell + vec2(31.3, 83.1)));
+        float d = length(sLocal - sPos) * sSize;
+        float r = 0.75 + 0.35 * hash(sCell + 9.5);
+        float star = smoothstep(r, 0.0, d);
+        float twinkle = 0.55 + 0.45 * sin(uTime * (1.1 + sSeed * 2.8) + sSeed * 47.0);
+        vec3 tint = mix(vec3(0.65, 0.8, 1.0), vec3(0.92, 0.95, 1.0), hash(sCell + 11.2));
+        starCol += tint * star * twinkle * (0.35 + 0.35 * sSeed);
+      }
+    }
+
+    // Layer 2: Medium twinkling stars (cellSize = 43.0, coprime)
+    {
+      float sSize = 43.0;
+      vec2 sCell = floor(gl_FragCoord.xy / sSize);
+      vec2 sLocal = fract(gl_FragCoord.xy / sSize);
+      float sSeed = hash(sCell * vec2(47.23, 89.61) + vec2(71.9, 29.3));
+      if (sSeed > 0.82) {
+        vec2 sPos = 0.12 + 0.76 * vec2(hash(sCell + vec2(17.3, 41.7)), hash(sCell + vec2(53.1, 19.9)));
+        float d = length(sLocal - sPos) * sSize;
+        float core = smoothstep(1.15, 0.0, d);
+        float halo = exp(-d * 1.2) * 0.35;
+        float twinkle = 0.5 + 0.5 * sin(uTime * (0.9 + sSeed * 3.2) + sSeed * 79.0);
+        vec3 tint = mix(vec3(0.7, 0.88, 1.0), vec3(1.0, 0.94, 0.86), hash(sCell + 3.7));
+        starCol += tint * (core + halo) * twinkle * (0.55 + 0.45 * sSeed);
+      }
+    }
+
+    // Layer 3: Rare prominent navigational stars with subtle cross flare (cellSize = 109.0, coprime)
+    {
+      float sSize = 109.0;
+      vec2 sCell = floor(gl_FragCoord.xy / sSize);
+      vec2 sLocal = fract(gl_FragCoord.xy / sSize);
+      float sSeed = hash(sCell * vec2(113.17, 67.43) + vec2(9.1, 87.7));
+      if (sSeed > 0.87) {
+        vec2 sPos = 0.15 + 0.70 * vec2(hash(sCell + vec2(61.9, 11.3)), hash(sCell + vec2(23.7, 73.5)));
+        vec2 delta = (sLocal - sPos) * sSize;
+        float d = length(delta);
+        float core = smoothstep(1.6, 0.0, d);
+        float halo = exp(-d * 0.45) * 0.45;
+        float spike = max(exp(-abs(delta.x) * 1.8) * exp(-abs(delta.y) * 0.18),
+                          exp(-abs(delta.y) * 1.8) * exp(-abs(delta.x) * 0.18)) * 0.38;
+        float twinkle = 0.6 + 0.4 * sin(uTime * (1.4 + sSeed * 2.2) + sSeed * 113.0);
+        vec3 tint = mix(vec3(0.78, 0.9, 1.0), vec3(1.0, 0.98, 0.92), hash(sCell + 51.0));
+        starCol += tint * (core + halo + spike) * twinkle * 0.9;
+      }
+    }
+  }
+  col += starCol * (1.0 - uLight);
 
   // Slow atmospheric plasma.
   vec2 q = p * 1.25;

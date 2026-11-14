@@ -51,7 +51,7 @@ export default function Header({
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[color:var(--line)] bg-[color:var(--bg)]/80 backdrop-blur-2xl transition-colors">
+    <header className="sticky top-0 z-40 border-b border-[color:var(--line)] bg-[color:var(--bg)] backdrop-blur-2xl transition-colors">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-3 sm:px-6 lg:px-8">
 
         {/* Brand & mission */}
@@ -68,13 +68,13 @@ export default function Header({
                 {t.appTitle}
               </span>
               <Badge variant="default" pulse={true} className="hidden items-center gap-1 py-0.5 text-2xs xs:inline-flex">
-                <Satellite className="h-2.5 w-2.5 text-sky-500 dark:text-sky-400" />
+                <Satellite className="h-2.5 w-2.5 text-[color:var(--info)] dark:text-sky-400" />
                 <span>{t.nasaBadge}</span>
               </Badge>
             </div>
             <div
               dir="ltr"
-              className="mt-0.5 select-none font-mono text-[9px] font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)] transition-colors group-hover:text-[color:var(--accent)]"
+              className="mt-0.5 select-none font-mono text-[10.5px] font-semibold uppercase tracking-[0.26em] text-[color:var(--muted)] transition-colors group-hover:text-[color:var(--accent)]"
             >
               TERRAMED PULSE
             </div>
@@ -93,7 +93,7 @@ export default function Header({
                 className={`flex select-none items-center gap-1.5 rounded-full px-3 py-1.5 text-xs transition-[color,background-color,border-color,box-shadow,transform,filter] duration-150 ease-[cubic-bezier(0.2,0,0,1)] active:scale-[0.98] ${
                   isActive
                     ? 'bg-[color:var(--panel)] font-semibold text-[color:var(--ink)] shadow-[0_1px_2px_rgba(0,0,0,0.18)] ring-1 ring-[color:var(--line)]'
-                    : 'font-medium text-[color:var(--muted)] hover:bg-[color:var(--panel)]/60 hover:text-[color:var(--ink)]'
+                    : 'font-medium text-[color:var(--muted)] hover:bg-[color:var(--panel)] hover:text-[color:var(--ink)]'
                 }`}
               >
                 <Icon className={`h-3.5 w-3.5 shrink-0 transition-colors ${isActive ? 'text-[color:var(--accent)]' : 'text-[color:var(--muted)]'}`} />
@@ -138,7 +138,7 @@ export default function Header({
             {theme === 'dark' ? (
               <Sun className="h-3.5 w-3.5 shrink-0 text-amber-400 transition-transform duration-200 hover:rotate-45" />
             ) : (
-              <Moon className="h-3.5 w-3.5 shrink-0 text-slate-700 transition-transform duration-200 hover:-rotate-12" />
+              <Moon className="h-3.5 w-3.5 shrink-0 text-[color:var(--ink-2)] transition-transform duration-200 hover:-rotate-12" />
             )}
             <span className="hidden whitespace-nowrap text-micro md:inline-block">
               {theme === 'dark' ? t.themeLight : t.themeDark}
@@ -146,10 +146,10 @@ export default function Header({
           </Button>
 
           <Button
-            variant="default"
+            variant="inverse"
             size="chip"
             onClick={toggleLanguage}
-            className="bg-slate-900 font-semibold text-white shadow-sm hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
+            className="font-semibold"
           >
             <Globe className="h-3.5 w-3.5 shrink-0" />
             <span className="whitespace-nowrap">{t.langBtn}</span>
@@ -174,8 +174,8 @@ export default function Header({
 
       {/* Mobile mission menu */}
       {mobileMenuOpen && (
-        <div className="animate-fadeIn border-t border-[color:var(--line)] bg-[color:var(--bg)]/96 px-4 py-4 backdrop-blur-2xl lg:hidden">
-          <div dir="ltr" className="border-b border-[color:var(--line)] py-1 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.28em] text-[color:var(--accent)]">
+        <div className="animate-fadeIn border-t border-[color:var(--line)] bg-[color:var(--bg)] px-4 py-4 backdrop-blur-2xl lg:hidden">
+          <div dir="ltr" className="border-b border-[color:var(--line)] py-1 text-center font-mono text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--accent)]">
             TERRAMED PULSE
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2">
@@ -188,7 +188,7 @@ export default function Header({
                   onClick={() => handleTabClick(tab.id)}
                   className={`flex items-center gap-2 rounded-xl border p-2.5 text-xs font-medium transition-[color,background-color,border-color,box-shadow,transform,filter] ${
                     isActive
-                      ? 'border-[color:var(--accent)]/45 bg-[color:var(--accent-soft)] text-[color:var(--accent)]'
+                      ? 'border-[rgb(var(--accent-rgb)/0.45)] bg-[color:var(--accent-soft)] text-[color:var(--accent)]'
                       : 'border-[color:var(--line)] bg-[color:var(--panel-2)] text-[color:var(--ink-2)] hover:border-[color:var(--line-strong)]'
                   }`}
                 >

@@ -19,7 +19,7 @@ export function Slider({
       dir="ltr"
       className={cn('relative flex w-full touch-none select-none items-center py-2', className)}
     >
-      <div className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-slate-200/80 dark:bg-white/10">
+      <div className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-[color:var(--line)] dark:bg-[color:var(--surface-4)]">
         <div
           className="h-full bg-sky-500 dark:bg-sky-400 transition-none"
           style={{ width: `${percentage}%` }}
@@ -39,8 +39,8 @@ export function Slider({
       />
       <div
         className={cn(
-          'absolute h-4 w-4 -ml-2 rounded-full border-2 border-sky-600 bg-white shadow-sm pointer-events-none',
-          'dark:border-sky-400 dark:bg-slate-900',
+          'absolute h-4 w-4 -ml-2 rounded-full border-2 border-sky-600 bg-[color:var(--panel)] shadow-sm pointer-events-none',
+          'dark:border-sky-400 dark:bg-[color:var(--ink)]',
           'transition-transform duration-100 ease-out',
           'peer-hover:scale-110 peer-active:scale-125 peer-disabled:opacity-50'
         )}

@@ -117,7 +117,7 @@ export default function PrintBrief({
     <aside 
       id="print-executive-brief" 
       aria-label="Executive Decision Support Brief"
-      className="hidden print:block relative overflow-hidden bg-white text-slate-900 p-0 m-0 w-full font-sans text-left rtl:text-right"
+      className="hidden print:block relative overflow-hidden bg-[color:var(--panel)] text-[color:var(--ink)] p-0 m-0 w-full font-sans text-left rtl:text-right"
       dir={isAr ? 'rtl' : 'ltr'}
     >
       {/* Background Simulation Watermark */}
@@ -142,20 +142,20 @@ export default function PrintBrief({
             <div className="text-slate-950 text-[10.5pt]">
               {isAr ? 'جمهورية مصر العربية' : 'Arab Republic of Egypt'}
             </div>
-            <div className="text-slate-800">
+            <div className="text-[color:var(--ink)]">
               {isAr ? 'رئاسة مجلس الوزراء' : 'The Cabinet of Egypt'}
             </div>
-            <div className="text-slate-700 text-[8pt] font-semibold">
+            <div className="text-[color:var(--ink-2)] text-[8pt] font-semibold">
               {isAr ? 'مركز المعلومات ودعم اتخاذ القرار (IDSC)' : 'Information and Decision Support Center (IDSC)'}
             </div>
-            <div className="text-slate-600 text-[7.5pt] font-normal">
+            <div className="text-[color:var(--ink-2)] text-[7.5pt] font-normal">
               {isAr ? 'بالتعاون مع: وزارة الصحة والسكان' : 'In Coordination with: Ministry of Health & Population'}
             </div>
           </div>
 
           {/* Center: Official Coat of Arms & Document Serial */}
           <div className="flex flex-col items-center justify-center text-center px-4">
-            <div className="w-11 h-11 flex items-center justify-center mb-1 text-slate-900">
+            <div className="w-11 h-11 flex items-center justify-center mb-1 text-[color:var(--ink)]">
               <svg viewBox="0 0 100 100" className="w-11 h-11 fill-current">
                 <path d="M50 5 L55 25 L65 20 L60 38 L78 30 L68 48 L88 45 L74 60 L92 65 L72 72 L82 85 L62 80 L65 95 L50 85 L35 95 L38 80 L18 85 L28 72 L8 65 L26 60 L12 45 L32 48 L22 30 L40 38 L35 20 L45 25 Z" opacity="0.15" />
                 <path d="M50 12 L53 28 L62 25 L58 40 L72 35 L64 50 L80 48 L68 62 L82 66 L66 73 L74 84 L58 80 L60 92 L50 84 L40 92 L42 80 L26 84 L34 73 L18 66 L32 62 L20 48 L36 50 L28 35 L42 40 L38 25 L47 28 Z" fill="none" stroke="#0f172a" strokeWidth="2.5" />
@@ -164,10 +164,10 @@ export default function PrintBrief({
                 <path d="M47 44 L53 44 L53 56 L47 56 Z" fill="#0f172a" />
               </svg>
             </div>
-            <div className="font-mono text-[7pt] font-bold tracking-widest text-slate-800" dir="ltr">
+            <div className="font-mono text-[7pt] font-bold tracking-widest text-[color:var(--ink)]" dir="ltr">
               TP-NASA-2026-P09
             </div>
-            <div className="text-[6.5pt] text-slate-600 font-semibold">
+            <div className="text-[6.5pt] text-[color:var(--ink-2)] font-semibold">
               {isAr ? 'منظومة «ابقَ وابنِ» • فريق ' : 'Stay & Build Taskforce • '}
               <span dir="ltr" className="font-mono font-bold tracking-[0.2em]">TERRAMED PULSE</span>
             </div>
@@ -190,13 +190,13 @@ export default function PrintBrief({
         </div>
 
         {/* 2. Ministerial Policy Classification Banner */}
-        <div className="bg-slate-100 border-2 border-slate-900 rounded-md p-2 mb-2 text-center">
+        <div className="bg-[color:var(--panel-2)] border-2 border-slate-900 rounded-md p-2 mb-2 text-center">
           <h1 className="text-[11.5pt] font-extrabold tracking-tight text-slate-950 uppercase leading-snug">
             {isAr
               ? `مذكرة إحاطة لدعم السياسات: تقدير موقف واستبقاء الكفاءات الطبية بمحافظة ${govName}`
               : `EXECUTIVE POLICY BRIEF: HEALTHCARE RETENTION DIRECTIVE: ${govName.toUpperCase()}`}
           </h1>
-          <div className="text-[7.5pt] text-slate-700 font-semibold mt-0.5">
+          <div className="text-[7.5pt] text-[color:var(--ink-2)] font-semibold mt-0.5">
             {isAr
               ? `مبنية على الرصد البيئي لأقمار وكالة ناسا (1995-${year}) وتعدادات التعبئة والإحصاء وأبحاث هجرة الكوادر الطبية`
               : `Synthesized from 30 Years of NASA Earth Observation Satellite Telemetry (1995-${year}), CAPMAS Censuses & Peer-Reviewed Cohorts`}
@@ -217,14 +217,14 @@ export default function PrintBrief({
         </div>
 
         {/* 3. Executive Target Profile & Threat Assessment */}
-        <div className="border border-slate-400 rounded p-2 mb-2.5 bg-slate-50/50">
-          <div className="flex flex-wrap items-center justify-between text-[8pt] pb-1 mb-1 border-b border-slate-300">
+        <div className="border border-[color:var(--line-strong)] rounded p-2 mb-2.5 bg-[color:var(--surface-3)]">
+          <div className="flex flex-wrap items-center justify-between text-[8pt] pb-1 mb-1 border-b border-[color:var(--line-strong)]">
             <div>
               <b>{isAr ? 'المحافظة المستهدفة:' : 'Target Governorate:'}</b> <span className="font-bold text-[9pt] text-slate-950">{govName}</span>
             </div>
             <div>
               <b>{isAr ? 'مستوى الخطورة الإقليمي:' : 'Regional Risk Tier:'}</b>{' '}
-              <span className="font-bold text-slate-950 px-2 py-0.5 bg-slate-200 border border-slate-400 rounded text-[7.5pt]">
+              <span className="font-bold text-slate-950 px-2 py-0.5 bg-[color:var(--line)] border border-[color:var(--line-strong)] rounded text-[7.5pt]">
                 {isAr ? riskTierAr : riskTierEn}
               </span>
             </div>
@@ -234,7 +234,7 @@ export default function PrintBrief({
             </div>
           </div>
 
-          <p className="text-[8pt] leading-relaxed text-slate-800">
+          <p className="text-[8pt] leading-relaxed text-[color:var(--ink)]">
             {isAr
               ? `توضح المعطيات الساتلية الموثقة عبر 31 عاماً أن محافظة ${govName} تتعرض لتسارع خطي في وتيرة الإجهاد المناخي والبيئي، مما ضاعف الضغط السريري على أقسام الطوارئ والكلى والصدر بنسبة غير مسبوقة. يتزامن هذا الإجهاد مع عجز في المنشآت الطبية (مؤشر FSI: ${fsi} من 100) وتنامي مخاطر تسرب الكوادر (مؤشر WNI: ${wni} من 100)، مما يستوجب تفعيلاً فورياً لحزمة استبقاء وحوافز ميدانية موجهة.`
               : `Empirical satellite telemetry spanning 31 years confirms that ${govName} Governorate is facing accelerating environmental strain, severely elevating triage volume in emergency, nephrology, and pulmonology units. This baseline stress interacts with chronic facility deficits (FSI: ${fsi}/100) and acute workforce retention attrition (WNI: ${wni}/100), necessitating immediate implementation of targeted clinical retention stipends.`}
@@ -245,7 +245,7 @@ export default function PrintBrief({
         <div className="mb-2.5">
           <div className="text-[8.5pt] font-extrabold text-slate-950 mb-1 flex items-center justify-between">
             <span>{isAr ? 'أولاً: مصفوفة المؤشرات الحية وتأثير التدخل المقترح (MCDA Evidence Matrix)' : 'I. EMPIRICAL SATELLITE & CLINICAL INDICATORS (MCDA MATRIX)'}</span>
-            <span className="text-[7pt] font-bold text-slate-700 font-mono bg-slate-100 px-2 py-0.5 rounded border border-slate-300" dir="ltr">
+            <span className="text-[7pt] font-bold text-[color:var(--ink-2)] font-mono bg-[color:var(--panel-2)] px-2 py-0.5 rounded border border-[color:var(--line-strong)]" dir="ltr">
               NASA POWER • MERRA-2 • MODIS • GLDAS
             </span>
           </div>
@@ -271,7 +271,7 @@ export default function PrintBrief({
                     <span dir="ltr" className="font-mono">{baseHni} / 100</span>
                   )}
                 </td>
-                <td className="font-bold text-slate-900 text-[8.5pt]">
+                <td className="font-bold text-[color:var(--ink)] text-[8.5pt]">
                   {isAr ? (
                     <span>
                       <span>{simHni} من 100</span>{' '}
@@ -300,7 +300,7 @@ export default function PrintBrief({
                     <span dir="ltr" className="font-mono">{epi} / 100</span>
                   )}
                 </td>
-                <td className="text-slate-800 text-[8pt]">
+                <td className="text-[color:var(--ink)] text-[8pt]">
                   {isAr ? 'معطى بيئي فضائي ثابت' : 'Satellite Baseline Prior'}
                 </td>
                 <td>
@@ -318,7 +318,7 @@ export default function PrintBrief({
                     <span dir="ltr" className="font-mono">{wni} / 100</span>
                   )}
                 </td>
-                <td className="font-bold text-slate-900 text-[8.5pt]">
+                <td className="font-bold text-[color:var(--ink)] text-[8.5pt]">
                   {isAr ? (
                     <span>
                       <span>{Math.round(wni * 0.76)} من 100</span>{' '}
@@ -340,7 +340,7 @@ export default function PrintBrief({
                 <td className="font-semibold text-slate-950">
                   {isAr ? 'خفض ضغط الطوارئ المرتبط بالإجهاد المناخي' : 'Climate-Sensitive ER Pressure Reduction'}
                 </td>
-                <td className="text-slate-700 text-[8pt]">
+                <td className="text-[color:var(--ink-2)] text-[8pt]">
                   {isAr ? 'تكدس حرج في الاستقبال' : 'Severe Triage Congestion'}
                 </td>
                 <td className="font-bold text-slate-950 text-[8.5pt]">
@@ -353,24 +353,24 @@ export default function PrintBrief({
             </tbody>
           </table>
 
-          <div className="text-[6.8pt] text-slate-600 mt-1 flex items-center justify-between">
+          <div className="text-[6.8pt] text-[color:var(--ink-2)] mt-1 flex items-center justify-between">
             <span>
               {isAr
                 ? 'مصادر رصد ناسا المعتمدة: NASA POWER (الحرارة والإشعاع) • MERRA-2 (الهباء الجوي والرطوبة) • MODIS (حرارة السطح والغطاء النباتي) • GLDAS (رطوبة التربة)'
                 : 'Validated NASA Data Sources: NASA POWER (Temp & Solar) • MERRA-2 (Aerosol & Humidity) • MODIS (LST & NDVI) • GLDAS (Soil Moisture)'}
             </span>
-            <span className="font-semibold text-slate-700">
+            <span className="font-semibold text-[color:var(--ink-2)]">
               {isAr ? 'أرقام حية مقاسة لحظياً' : 'Live Runtime Telemetry'}
             </span>
           </div>
         </div>
 
         {/* 5. Frontline Physician Observatory Intelligence */}
-        <div className="border border-slate-400 rounded p-2 mb-2.5 bg-slate-50/30">
+        <div className="border border-[color:var(--line-strong)] rounded p-2 mb-2.5 bg-[color:var(--surface-4)]">
           <div className="text-[8.5pt] font-extrabold text-slate-950 mb-1">
             {isAr ? 'ثانياً: شواهد الرصد الميداني الموثقة (صوت الكفاءات الطبية)' : 'II. VERIFIED FRONTLINE CLINICAL INTELLIGENCE'}
           </div>
-          <div className="grid grid-cols-3 gap-2 text-[7.5pt] border-b border-slate-300 pb-1.5 mb-1">
+          <div className="grid grid-cols-3 gap-2 text-[7.5pt] border-b border-[color:var(--line-strong)] pb-1.5 mb-1">
             <div>
               <b>{isAr ? 'إجمالي البلاغات المسجلة بالإقليم:' : 'Reports in Target Gov:'}</b>{' '}
               <span className="font-bold text-slate-950">{isAr ? reportsLabelAr : `${totalReportsCount} reports`}</span>
@@ -387,17 +387,17 @@ export default function PrintBrief({
               <span className="font-semibold">{isAr ? 'بدل جذب نائي + بيئة عمل آمنة' : 'Hardship stipends & ICU supplies'}</span>
             </div>
           </div>
-          <p className="text-[7.5pt] text-slate-800 italic leading-snug">
+          <p className="text-[7.5pt] text-[color:var(--ink)] italic leading-snug">
             {isAr ? briefConfig.quote_ar : briefConfig.quote_en}
           </p>
         </div>
 
         {/* 6. Mandatory Executive Directives */}
-        <div className="border-2 border-slate-950 rounded p-2 mb-3 bg-white">
+        <div className="border-2 border-slate-950 rounded p-2 mb-3 bg-[color:var(--panel)]">
           <div className="text-[8.5pt] font-extrabold text-slate-950 mb-1 uppercase">
             {isAr ? 'ثالثاً: حزمة التوصيات والتوجيهات التنفيذية الاسترشادية (المقترحة لدعم القرار)' : 'III. RECOMMENDED POLICY & CLINICAL RETENTION INTERVENTIONS'}
           </div>
-          <ol className="text-[8pt] space-y-1 list-decimal pl-4 rtl:pr-4 text-slate-900 leading-normal font-medium">
+          <ol className="text-[8pt] space-y-1 list-decimal pl-4 rtl:pr-4 text-[color:var(--ink)] leading-normal font-medium">
             <li>
               <b>{isAr ? 'إقرار حافز الإجهاد المناخي والطبي (Climate Hardship Allowance):' : 'Climate Hardship Retention Allowance:'}</b>{' '}
               {isAr ? briefConfig.directive1_ar : briefConfig.directive1_en}
@@ -414,14 +414,14 @@ export default function PrintBrief({
         </div>
 
         {/* 7. Signatures and Seal (Academic/Executive Recommendation & Technical Seal) */}
-        <div className="pt-1.5 border-t border-slate-400 text-slate-950">
+        <div className="pt-1.5 border-t border-[color:var(--line-strong)] text-slate-950">
           <div className="flex justify-between items-end text-[8pt]">
             {/* First Column: الجهة المستفيدة المقترحة */}
             <div className="text-center w-[36%]">
-              <div className="font-semibold text-slate-700 text-[7.5pt] mb-5">
+              <div className="font-semibold text-[color:var(--ink-2)] text-[7.5pt] mb-5">
                 {isAr ? 'الجهة المستفيدة المقترحة:' : 'Proposed Beneficiary:'}
               </div>
-              <div className="font-mono text-slate-400 text-[7.5pt]">...................................................</div>
+              <div className="font-mono text-[color:var(--muted)] text-[7.5pt]">...................................................</div>
               <div className="font-bold text-[8pt] mt-1 leading-snug">
                 {isAr ? 'قطاع التخطيط والسياسات الصحية' : 'Health Planning & Policy Sector'}
               </div>
@@ -429,30 +429,30 @@ export default function PrintBrief({
 
             {/* Center Column: الختم التقني */}
             <div className="text-center w-[28%] flex flex-col items-center">
-              <div className="w-18 h-18 rounded-full border-2 border-slate-900 flex flex-col items-center justify-center text-center p-1 bg-slate-50/80 shadow-xs">
+              <div className="w-18 h-18 rounded-full border-2 border-slate-900 flex flex-col items-center justify-center text-center p-1 bg-[color:var(--panel-2)] shadow-xs">
                 <div className="w-[62px] h-[62px] rounded-full border border-dashed border-slate-700 flex flex-col items-center justify-center p-0.5">
                   <span className="text-[5pt] font-black text-slate-950 leading-tight tracking-[0.18em] uppercase font-mono" dir="ltr">
                     TERRAMED PULSE
                   </span>
-                  <span className="text-[4.5pt] font-bold text-slate-800 my-0.5 leading-tight uppercase">
+                  <span className="text-[4.5pt] font-bold text-[color:var(--ink)] my-0.5 leading-tight uppercase">
                     ★ Verified Model 2026 ★
                   </span>
-                  <span className="font-mono text-[4.5pt] font-extrabold text-slate-700 leading-none uppercase">
+                  <span className="font-mono text-[4.5pt] font-extrabold text-[color:var(--ink-2)] leading-none uppercase">
                     NASA Open Data
                   </span>
                 </div>
               </div>
-              <div className="font-mono text-[6pt] font-bold text-slate-600 mt-0.5" dir="ltr">
+              <div className="font-mono text-[6pt] font-bold text-[color:var(--ink-2)] mt-0.5" dir="ltr">
                 TMP-MODEL-2026-VERIFIED
               </div>
             </div>
 
             {/* Second Column: مُعد بواسطة */}
             <div className="text-center w-[36%]">
-              <div className="font-semibold text-slate-700 text-[7.5pt] mb-5">
+              <div className="font-semibold text-[color:var(--ink-2)] text-[7.5pt] mb-5">
                 {isAr ? 'مُعد بواسطة:' : 'Prepared By:'}
               </div>
-              <div className="font-mono text-slate-400 text-[7.5pt]">...................................................</div>
+              <div className="font-mono text-[color:var(--muted)] text-[7.5pt]">...................................................</div>
               <div className="font-bold text-[8pt] mt-1 leading-snug">
                 {isAr
                   ? 'فريق عمل منظومة TERRAMED PULSE لرصد الأرض والتحليل الميداني'

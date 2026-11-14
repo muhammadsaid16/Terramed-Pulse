@@ -21,11 +21,11 @@ export default function Footer({ lang, t, dataUpdated }) {
     : null;
 
   return (
-    <footer className="mt-16 border-t border-[color:var(--line)] bg-[color:var(--bg)]/70 py-8 px-4 text-xs text-[color:var(--muted)] backdrop-blur-xl">
+    <footer className="mt-16 border-t border-[color:var(--line)] bg-[color:var(--bg)] py-8 px-4 text-xs text-[color:var(--muted)] backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-5 md:flex-row md:items-center">
 
         <div className="flex items-center gap-3 text-[color:var(--ink)]">
-          <Orbit className="h-4 w-4 shrink-0 text-sky-600 dark:text-sky-400" />
+          <Orbit className="h-4 w-4 shrink-0 text-[color:var(--info)] dark:text-sky-400" />
           <div className="flex flex-col gap-1">
             <div className="flex flex-wrap items-center gap-2">
               <span dir="ltr" className="font-mono text-2xs font-bold uppercase tracking-[0.26em] text-[color:var(--accent)]">
@@ -37,15 +37,15 @@ export default function Footer({ lang, t, dataUpdated }) {
               </span>
             </div>
             {snapshot && (
-              <span className="inline-flex items-center gap-1.5 font-mono text-[10px] text-[color:var(--muted)]">
-                <CalendarClock className="h-3 w-3 text-sky-500 dark:text-sky-400" />
+              <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-[color:var(--muted)]">
+                <CalendarClock className="h-3 w-3 text-[color:var(--info)] dark:text-sky-400" />
                 <span>{t.dataSnapshotLabel}: {snapshot}</span>
               </span>
             )}
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--muted)]">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--muted)]">
           {DATA_SOURCES.map((source, i) => (
             <React.Fragment key={source.id}>
               {i > 0 && <span className="text-[color:var(--line-strong)]">/</span>}
@@ -55,7 +55,7 @@ export default function Footer({ lang, t, dataUpdated }) {
         </div>
 
         <div className="flex items-center gap-1.5 rounded-full border border-[color:var(--line)] bg-[color:var(--panel-2)] px-3 py-1 font-medium text-[color:var(--ink-2)]">
-          <Award className="h-3.5 w-3.5 text-amber-500 dark:text-amber-400" />
+          <Award className="h-3.5 w-3.5 text-[color:var(--warn)] dark:text-amber-400" />
           <span>{t.footerArchitecture}</span>
         </div>
 

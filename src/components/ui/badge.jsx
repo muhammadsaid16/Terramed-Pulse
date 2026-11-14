@@ -3,17 +3,17 @@ import { cn } from '../../lib/utils';
 
 export const badgeVariants = {
   default:
-    'bg-sky-50 text-sky-700 border-sky-200/80 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800/40',
+    'bg-sky-50 text-[color:var(--info)] border-sky-200/80 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800/40',
   secondary:
-    'bg-slate-100 text-slate-700 border-slate-200/80 dark:bg-white/[0.06] dark:text-white/80 dark:border-white/10',
+    'bg-[color:var(--panel-2)] text-[color:var(--ink-2)] border-[color:var(--line)]',
   outline:
-    'border border-slate-300/80 text-slate-700 bg-transparent dark:border-white/15 dark:text-white/70',
+    'border border-[color:var(--line-strong)] text-[color:var(--ink-2)] bg-transparent',
   destructive:
-    'bg-rose-50 text-rose-700 border-rose-200/80 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/40',
+    'bg-rose-50 text-[color:var(--danger-soft)] border-rose-200/80 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/40',
   success:
-    'bg-emerald-50 text-emerald-700 border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/40',
+    'bg-emerald-50 text-[color:var(--ok)] border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/40',
   warning:
-    'bg-amber-50 text-amber-700 border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/40',
+    'bg-amber-50 text-[color:var(--warn)] border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/40',
   purple:
     'bg-purple-50 text-purple-700 border-purple-200/80 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800/40',
   info:

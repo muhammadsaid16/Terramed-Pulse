@@ -36,9 +36,9 @@ export function TabsList({ className, children, ...props }) {
       role="tablist"
       className={cn(
         'inline-flex items-center justify-center p-1 rounded-xl',
-        'bg-slate-100/90 dark:bg-white/[0.04]',
-        'border border-slate-200/80 dark:border-white/[0.08]',
-        'text-slate-600 dark:text-white/60',
+        'bg-[color:var(--panel-2)]',
+        'border border-[color:var(--line)]',
+        'text-[color:var(--muted)]',
         className
       )}
       {...props}
@@ -76,8 +76,8 @@ export function TabsTrigger({
         'disabled:pointer-events-none disabled:opacity-50',
         'active:scale-[0.98]',
         isActive
-          ? 'bg-white text-slate-900 shadow-sm font-semibold dark:bg-white/15 dark:text-white dark:shadow-[0_2px_10px_rgba(0,0,0,0.3)]'
-          : 'hover:text-slate-900 hover:bg-white/50 dark:hover:text-white dark:hover:bg-white/[0.06]',
+          ? 'bg-[color:var(--panel)] text-[color:var(--ink)] shadow-sm font-semibold border border-[color:var(--line-strong)]'
+          : 'hover:text-[color:var(--ink)] hover:bg-[color:var(--panel)]',
         'motion-reduce:transform-none motion-reduce:transition-none',
         className
       )}

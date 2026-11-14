@@ -80,11 +80,11 @@ export default function GovernorateCompare({ governorates, lang, t, onSelectGov 
       <div
         key={gov.id}
         ref={(node) => { cardRefs.current[cardIndex] = node; }}
-        className="rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.02] p-4 space-y-4"
+        className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel-2)] p-4 space-y-4"
       >
         <div className="flex items-start justify-between gap-2">
           <div>
-            <div className="text-2xs font-mono uppercase tracking-[0.16em] text-slate-400 dark:text-white/35">
+            <div className="text-2xs font-mono uppercase tracking-[0.16em] text-[color:var(--muted)]">
               {side === 'a' ? t.compareGovA : t.compareGovB}
             </div>
             <label className="sr-only" htmlFor={`compare-${side}`}>
@@ -97,7 +97,7 @@ export default function GovernorateCompare({ governorates, lang, t, onSelectGov 
                 if (side === 'a') setGovA(event.target.value);
                 else setGovB(event.target.value);
               }}
-              className="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0b1120] px-2.5 py-1.5 text-xs font-semibold text-slate-800 dark:text-white/90"
+              className="mt-1.5 w-full rounded-lg border border-[color:var(--line-strong)] bg-[color:var(--panel)] dark:bg-[#0b1120] px-2.5 py-1.5 text-xs font-semibold text-[color:var(--ink)]"
             >
               {options.map((option) => (
                 <option key={option.id} value={option.id}>
@@ -109,7 +109,7 @@ export default function GovernorateCompare({ governorates, lang, t, onSelectGov 
           <button
             type="button"
             onClick={() => onSelectGov?.(gov.id)}
-            className="apple-chip px-2 py-1 text-2xs font-semibold text-sky-700 dark:text-sky-300"
+            className="apple-chip px-2 py-1 text-2xs font-semibold text-[color:var(--info)] dark:text-sky-300"
           >
             {t.compareFocus}
           </button>
@@ -117,13 +117,13 @@ export default function GovernorateCompare({ governorates, lang, t, onSelectGov 
 
         <div className="flex items-end justify-between gap-2">
           <div>
-            <div className="text-2xs text-slate-500 dark:text-white/45">{t.compareHni}</div>
-            <div className="telemetry-mono text-2xl font-bold text-slate-900 dark:text-white">
+            <div className="text-2xs text-[color:var(--muted)]">{t.compareHni}</div>
+            <div className="telemetry-mono text-2xl font-bold text-[color:var(--ink)]">
               {formatNumber(getIndex(gov, 'hni'), lang)}
             </div>
           </div>
           {higher && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-1 text-2xs font-semibold text-amber-700 dark:text-amber-300">
+            <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-1 text-2xs font-semibold text-[color:var(--warn)] dark:text-amber-300">
               <TrendingUp className="h-3 w-3" />
               {t.compareHigherNeed}
             </span>
@@ -135,11 +135,11 @@ export default function GovernorateCompare({ governorates, lang, t, onSelectGov 
             const value = getIndex(gov, row.key);
             return (
               <div key={row.key}>
-                <div className="mb-1 flex items-center justify-between gap-2 text-2xs text-slate-500 dark:text-white/50">
+                <div className="mb-1 flex items-center justify-between gap-2 text-2xs text-[color:var(--muted)]">
                   <span>{t[row.labelKey]}</span>
-                  <span className="font-mono font-semibold text-slate-700 dark:text-white/80">{formatNumber(value, lang)}</span>
+                  <span className="font-mono font-semibold text-[color:var(--ink-2)]">{formatNumber(value, lang)}</span>
                 </div>
-                <div className="h-1.5 overflow-hidden rounded-full bg-slate-200/80 dark:bg-white/[0.06]">
+                <div className="h-1.5 overflow-hidden rounded-full bg-[color:var(--line)]">
                   <div
                     ref={(node) => { barRefs.current[`${side}-${row.key}`] = node; }}
                     className={`h-full rounded-full ${row.tone}`}
@@ -151,22 +151,22 @@ export default function GovernorateCompare({ governorates, lang, t, onSelectGov 
           })}
         </div>
 
-        <div className="grid grid-cols-3 gap-2 border-t border-slate-200/80 dark:border-white/[0.06] pt-3 text-2xs">
+        <div className="grid grid-cols-3 gap-2 border-t border-[color:var(--line)] pt-3 text-2xs">
           <div>
-            <div className="text-slate-400 dark:text-white/35">{t.comparePopulation}</div>
-            <div className="mt-0.5 font-mono font-semibold text-slate-700 dark:text-white/80">
+            <div className="text-[color:var(--muted)]">{t.comparePopulation}</div>
+            <div className="mt-0.5 font-mono font-semibold text-[color:var(--ink-2)]">
               {formatNumber(gov.demographics?.population ?? 0, lang)}
             </div>
           </div>
           <div>
-            <div className="text-slate-400 dark:text-white/35">{t.comparePhysicians}</div>
-            <div className="mt-0.5 font-mono font-semibold text-slate-700 dark:text-white/80">
+            <div className="text-[color:var(--muted)]">{t.comparePhysicians}</div>
+            <div className="mt-0.5 font-mono font-semibold text-[color:var(--ink-2)]">
               {formatNumber(gov.demographics?.physicians_per_10k ?? 0, lang)}
             </div>
           </div>
           <div>
-            <div className="text-slate-400 dark:text-white/35">{t.compareBeds}</div>
-            <div className="mt-0.5 font-mono font-semibold text-slate-700 dark:text-white/80">
+            <div className="text-[color:var(--muted)]">{t.compareBeds}</div>
+            <div className="mt-0.5 font-mono font-semibold text-[color:var(--ink-2)]">
               {formatNumber(gov.demographics?.hospital_beds_per_10k ?? 0, lang)}
             </div>
           </div>
@@ -177,16 +177,16 @@ export default function GovernorateCompare({ governorates, lang, t, onSelectGov 
 
   return (
     <section id="section-compare" ref={sectionRef} className="bento-card p-5 sm:p-7 mb-8 space-y-4">
-      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-200/80 dark:border-white/[0.08] pb-4">
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[color:var(--line)] pb-4">
         <div className="flex items-start gap-3">
-          <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-lg border border-sky-200 bg-sky-100 text-sky-600 dark:border-sky-500/20 dark:bg-sky-500/10 dark:text-sky-400">
+          <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-lg border border-sky-200 bg-sky-100 text-[color:var(--info)] dark:border-sky-500/20 dark:bg-sky-500/10 dark:text-sky-400">
             <ArrowLeftRight className="h-4 w-4" />
           </div>
           <div>
-            <h2 className="font-display text-lg font-bold tracking-tight text-slate-900 dark:text-white sm:text-xl">
+            <h2 className="font-display text-lg font-bold tracking-tight text-[color:var(--ink)] sm:text-xl">
               {t.compareTitle}
             </h2>
-            <p className="mt-1 text-micro font-normal text-slate-600 dark:text-white/50">
+            <p className="mt-1 text-micro font-normal text-[color:var(--ink-2)]">
               {t.compareSubtitle}
             </p>
           </div>

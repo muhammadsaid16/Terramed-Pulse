@@ -67,8 +67,8 @@ export function TooltipContent({
       role="tooltip"
       className={cn(
         'absolute z-50 pointer-events-none whitespace-nowrap px-2.5 py-1 text-micro font-medium leading-none rounded-md',
-        'bg-slate-900 text-white shadow-lg border border-slate-700/50',
-        'dark:bg-slate-800 dark:text-slate-100 dark:border-white/10',
+        'bg-[color:var(--ink)] text-white shadow-lg border border-[color:var(--line-strong)]',
+        
         'enter-pop motion-reduce:animate-none',
         sidePositions[side] || sidePositions.top,
         className

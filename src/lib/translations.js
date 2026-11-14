@@ -41,10 +41,10 @@ export const TRANSLATIONS = {
 
     // KPI Strip
     kpiWarmingLabel: "Egypt Avg 30-Yr Warming Rate",
-    kpiWarmingRate: "+0.44°C / decade",
-    kpiWarmingSub: "Accelerating since 2010",
+    kpiWarmingSub: "Warming across the full 1995–2025 record",
+    kpiWarmingSubAccelerating: "Rate rose after 2010",
+    kpiWarmingSubEasing: "Rate eased after 2010",
     kpiHighestNeedLabel: "Highest Climate-Health Need",
-    kpiHighestNeed: "Aswan (HNI: 88.4)",
     kpiHighestNeedSub: "Critical Physician Shortage",
     kpiTotalDoctorsLabel: "Academic Evidence Base",
     kpiTotalDoctors: "Peer-Reviewed Studies",
@@ -55,7 +55,7 @@ export const TRANSLATIONS = {
     kpiTrendDivergenceSub: "Arid heat vs Humid aerosols",
 
     // Module 1: Trend Detective & Map
-    module1Title: "Module 1: Earth System Trend Detective & Spatial Map",
+    module1Title: "Earth System Trend Detective & Spatial Map",
     module1Subtitle: "Interactive 30-Year Satellite Climate-Environmental Observatory (1995-2025)",
     compareTitle: "Side-by-Side Governorate Comparison",
     compareSubtitle: "Compare composite health need, climate pressure, population pressure, facility shortage, and workforce need across two governorates.",
@@ -107,12 +107,12 @@ export const TRANSLATIONS = {
     oppositeTitle: "Opposite-Direction Regional Trend Showcase",
     oppositeDesc: "Earth systems display opposing regional trajectories across Egypt’s geographic coordinates:",
     upperEgyptLabel: "Upper Egypt (Aswan & Assiut): Rapid Arid Warming",
-    upperEgyptDetail: "T2M rising at +0.54°C/decade while Relative Humidity drops by -2.8%/decade, driving extreme desiccation, heatstroke, and severe renal-cardiac strain.",
+    upperEgyptDetail: "The daytime heat extreme climbs about 3× faster here than on the coast, and days above the extreme-heat threshold are rising steeply. Aridification compounds it: vegetation index falls every decade. The clinical load is heatstroke, dehydration and renal strain.",
     deltaLabel: "Nile Delta & Coast (Alexandria & Cairo): Humidity Surge & Aerosols",
-    deltaDetail: "Alexandria coastal RH2M surges by +2.5%/decade alongside high PM2.5 stagnation in Cairo (85 µg/m³), elevating dangerous wet-bulb index and pediatric asthma.",
+    deltaDetail: "Humidity here moves the other way: it climbs in Cairo while it eases slightly along the Alexandria coast, and suspended particles keep rising on top of that. The result is a rising wet-bulb load and pediatric asthma pressure in the most populated governorate.",
 
     // Module 2: Doctor Matcher
-    module2Title: 'Module 2: "Stay & Build Egypt" Doctor Impact Matcher (ابقَ وابنِ)',
+    module2Title: '"Stay & Build Egypt" Doctor Impact Matcher (ابقَ وابنِ)',
     module2Subtitle: "Directly linking clinical specialties to NASA satellite environmental drivers",
     chooseSpecialtyLabel: "Select Your Medical Specialty:",
     clinicalRationaleHeading: "Biomedical & Pathophysiological Mechanism:",
@@ -122,7 +122,7 @@ export const TRANSLATIONS = {
     matchBadge: "High Climate Demand Match",
 
     // Module 3: Physician Observatory
-    module3Title: "Module 3: Healthcare Workforce & Physician Retention Observatory",
+    module3Title: "Healthcare Workforce & Physician Retention Observatory",
     module3Subtitle: "Reference meta-synthesis of 3 peer-reviewed physician migration studies (WHO EMHJ 2021, Oxford 2015, MDPI 2025) and CAPMAS healthcare capacity benchmarks",
     formTitle: "Log a Frontline Clinical Observation & Retention Signal",
     inputDoctorName: "Physician Name (or Anonymous):",
@@ -177,7 +177,7 @@ export const TRANSLATIONS = {
     evidenceMdpiStat: "Work dissatisfaction increases emigration likelihood by 20 times (MDPI 2025)",
 
     // Module 4: Decision-Maker
-    module4Title: 'Module 4: Decision-Maker & "What-If" Policy Lab',
+    module4Title: 'Decision-Maker & "What-If" Policy Lab',
     module4Subtitle: "Simulating strategic resource allocation to curb Health Need Index (HNI) nationwide",
     simulationHeading: "Live Simulation Output Scoreboard",
     baselineHni: "Baseline HNI",
@@ -462,10 +462,10 @@ export const TRANSLATIONS = {
 
     // KPI Strip
     kpiWarmingLabel: "متوسط معدل الاحترار في مصر (30 عاماً)",
-    kpiWarmingRate: "+0.44°C / عقد",
-    kpiWarmingSub: "تسارع ملحوظ منذ عام 2010",
+    kpiWarmingSub: "احترار عبر كامل سجل 1995–2025",
+    kpiWarmingSubAccelerating: "تصاعد المعدل بعد 2010",
+    kpiWarmingSubEasing: "تباطأ المعدل بعد 2010",
     kpiHighestNeedLabel: "المحافظة الأعلى في الاحتياج الصحي-المناخي",
-    kpiHighestNeed: "أسوان (مؤشر HNI: 88.4)",
     kpiHighestNeedSub: "عجز حرج في الكوادر التخصصية",
     kpiTotalDoctorsLabel: "قاعدة الأدلة الأكاديمية",
     kpiTotalDoctors: "دراسات أكاديمية محكّمة",
@@ -476,7 +476,7 @@ export const TRANSLATIONS = {
     kpiTrendDivergenceSub: "جفاف حراري مقابل عوالق ورطوبة",
 
     // Module 1: Trend Detective & Map
-    module1Title: "الوحدة 1: محقق اتجاهات أنظمة الأرض والخريطة التفاعلية",
+    module1Title: "محقق اتجاهات أنظمة الأرض والخريطة التفاعلية",
     module1Subtitle: "المرصد الساتلي الموثق عبر 30 عاماً من بيانات ناسا (1995-2025)",
     compareTitle: "مقارنة جانبية بين المحافظات",
     compareSubtitle: "قارن الاحتياج الصحي المركب والضغط البيئي والسكاني وعجز المنشآت ونقص الكوادر بين محافظتين.",
@@ -528,12 +528,12 @@ export const TRANSLATIONS = {
     oppositeTitle: "شواهد الاتجاهات المتعاكسة بين أقاليم مصر",
     oppositeDesc: "تُظهر أنظمة الأرض مسارات مناخية متضادة عبر الإحداثيات الجغرافية لمصر:",
     upperEgyptLabel: "صعيد مصر (أسوان وأسيوط): احترار جاف متسارع",
-    upperEgyptDetail: "ارتفاع درجات الحرارة بمعدل +0.54° مئوية/عقد مع تراجع الرطوبة النسبية بمقدار -2.8%/عقد، مما يفاقم ضربات الشمس وإجهاد الكلى والقلب.",
+    upperEgyptDetail: "ترتفع الذروة الحرارية النهارية هنا بضعف سرعتها مقارنة بالساحل تقريباً، مع تصاعد حاد في عدد الأيام الحارة المتطرفة. ويضاعف الجفاف الموقف: تراجع مؤشر الغطاء النباتي كل عقد. والعبء السريري يشمل ضربة الشمس والجفاف وإجهاد الكلى.",
     deltaLabel: "الدلتا والساحل (الإسكندرية والقاهرة): تصاعد الرطوبة والعوالق",
-    deltaDetail: "تصاعد الرطوبة في الإسكندرية (+2.5%/عقد) بالتزامن مع تركز ذرات الغبار في القاهرة (85 µg/m³)، مما يرفع الإجهاد الرطب وحساسية الصدر للأطفال.",
+    deltaDetail: "الرطوبة هنا تتحرك في الاتجاه المعاكس: ترتفع في القاهرة وتتراجع ببطء على ساحل الإسكندرية، بينما تستمر الجسيمات المعلّقة في الزيادة فوق ذلك. والنتيجة ارتفاع في الإجهاد الرطب وضغط حساسية الصدر في أكثر المحافظات سكاناً.",
 
     // Module 2: Doctor Matcher
-    module2Title: 'الوحدة 2: محرك "ابقَ وابنِ" لربط التخصصات الطبية بأثر ناسا',
+    module2Title: 'محرك "ابقَ وابنِ" لربط التخصصات الطبية بأثر ناسا',
     module2Subtitle: "ربط مباشر بين التخصصات السريرية والمتغيرات البيئية الساتلية لناسا",
     chooseSpecialtyLabel: "اختر تخصصك الطبي:",
     clinicalRationaleHeading: "الآلية الفسيولوجية والمرضية:",
@@ -543,7 +543,7 @@ export const TRANSLATIONS = {
     matchBadge: "مطابقة عالية للاحتياج المناخي",
 
     // Module 3: Physician Observatory
-    module3Title: "الوحدة 3: مرصد القوى البشرية الصحية واستبقاء الأطباء",
+    module3Title: "مرصد القوى البشرية الصحية واستبقاء الأطباء",
     module3Subtitle: "تحليل مرجعي مجمّع لـ 3 دراسات محكّمة حول هجرة الأطباء (منظمة الصحة العالمية 2021، أكسفورد 2015، MDPI 2025) ومؤشرات التوزيع الجغرافي لجهاز التعبئة والإحصاء",
     formTitle: "تسجيل ملاحظة سريرية ميدانية ومؤشر استبقاء",
     inputDoctorName: "اسم الطبيب (أو طبيب ميداني):",
@@ -596,7 +596,7 @@ export const TRANSLATIONS = {
     evidenceMdpiStat: "عدم الرضا عن بيئة العمل بالمستشفيات يرفع احتمالية الهجرة بمقدار 20 ضعفاً (MDPI 2025)",
 
     // Module 4: Decision-Maker
-    module4Title: 'الوحدة 4: لوحة صانع القرار ومختبر "ماذا لو؟" للسياسات',
+    module4Title: 'لوحة صانع القرار ومختبر "ماذا لو؟" للسياسات',
     module4Subtitle: "محاكاة التوزيع الاستراتيجي للموارد لخفض مؤشر الاحتياج الصحي (HNI) على مستوى الجمهورية",
     simulationHeading: "لوحة نتائج المحاكاة الحية",
     baselineHni: "مؤشر HNI الأساسي",

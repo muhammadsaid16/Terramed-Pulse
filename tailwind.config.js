@@ -15,8 +15,10 @@ export default {
       },
       fontSize: {
         // Telemetry micro-steps: labels/readouts below body size.
-        '2xs': ['0.625rem', { lineHeight: '0.875rem' }],   // 10px
-        'micro': ['0.6875rem', { lineHeight: '1rem' }],    // 11px
+        // Floor is 11px for tracking labels and 12px for running micro-copy —
+        // anything smaller stops being readable on a laptop or a projector.
+        '2xs': ['0.6875rem', { lineHeight: '1rem' }],     // 11px
+        'micro': ['0.75rem', { lineHeight: '1.0625rem' }], // 12px
       },
       colors: {
         teal: {

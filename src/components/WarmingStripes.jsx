@@ -70,7 +70,7 @@ export default function WarmingStripes({ className = '', size = 'default' }) {
           </span>
         ) : (
           <span
-            className="text-2xs font-semibold tabular-nums text-rose-500 dark:text-rose-400"
+            className="text-2xs font-semibold tabular-nums text-[color:var(--danger)] dark:text-rose-400"
             dir="ltr"
           >
             Δ +{delta.toFixed(1)}°C <span className="opacity-60">1995→2025</span>
@@ -110,7 +110,7 @@ export default function WarmingStripes({ className = '', size = 'default' }) {
       <div className="mt-2 flex items-baseline justify-between font-mono text-2xs tabular-nums text-[color:var(--muted)]">
         <span>{years[0]}</span>
         <span className="opacity-70">{years[Math.floor(years.length / 2)]}</span>
-        <span className={isHero ? 'text-rose-400/80' : ''}>{years[years.length - 1]}</span>
+        <span className={isHero ? 'text-[color:var(--danger)]' : ''}>{years[years.length - 1]}</span>
       </div>
 
       {isHero && (

@@ -76,7 +76,7 @@ export default function DoctorMatcher({
 
       {/* Specialty Selector Buttons */}
       <div className="space-y-2.5">
-        <label className="text-xs font-medium text-slate-700 dark:text-white/60 block">
+        <label className="text-xs font-medium text-[color:var(--ink-2)] block">
           {t.chooseSpecialtyLabel}
         </label>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -90,11 +90,11 @@ export default function DoctorMatcher({
                 onClick={() => setSelectedSpecialty(spec.id)}
                 className={`p-3 h-auto justify-start text-left rtl:text-right rounded-2xl gap-2.5 transition-[color,background-color,border-color,box-shadow,transform,filter] duration-150 ${
                   isSelected
-                    ? 'bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 shadow-md font-semibold'
-                    : 'text-slate-700 dark:text-white/80'
+                    ? 'bg-[color:var(--inverse-bg)] text-[color:var(--inverse-fg)] hover:bg-[color:var(--inverse-bg-hover)] shadow-md font-semibold'
+                    : 'text-[color:var(--ink-2)]'
                 }`}
               >
-                <Icon className={`w-4 h-4 shrink-0 ${isSelected ? 'text-white dark:text-black' : 'text-slate-500 dark:text-white/50'}`} />
+                <Icon className={`w-4 h-4 shrink-0 ${isSelected ? 'text-[color:var(--inverse-fg)]' : 'text-[color:var(--muted)]'}`} />
                 <span className="text-xs font-medium leading-tight truncate">
                   {lang === 'ar' ? spec.ar : spec.en}
                 </span>
@@ -111,8 +111,8 @@ export default function DoctorMatcher({
         <SpotlightCard
           className="lg:col-span-7 apple-card p-6 space-y-4 relative overflow-hidden border border-sky-400/30 dark:border-sky-400/40 shadow-[0_0_20px_-3px_rgba(14,165,233,0.15)] self-start"
         >
-          <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] pb-3 mb-1">
-            <h3 className="font-semibold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+          <div className="flex items-center justify-between border-b border-[color:var(--line)] pb-3 mb-1">
+            <h3 className="font-semibold text-sm text-[color:var(--ink)] flex items-center gap-2">
               <span>{lang === 'ar' ? currentSpecialtyObj?.ar : currentSpecialtyObj?.en}</span>
             </h3>
             <Badge variant="success" className="gap-1.5 py-1">
@@ -123,17 +123,17 @@ export default function DoctorMatcher({
 
           {/* Biomedical Mechanism */}
           <div className="space-y-2">
-            <h4 className="text-micro font-medium text-slate-500 dark:text-white/45 uppercase tracking-[0.05em]">
+            <h4 className="text-micro font-medium text-[color:var(--muted)] uppercase tracking-[0.05em]">
               {t.clinicalRationaleHeading}
             </h4>
-            <p className="text-xs text-slate-700 dark:text-white/80 leading-relaxed font-normal">
+            <p className="text-xs text-[color:var(--ink-2)] leading-relaxed font-normal">
               {lang === 'ar' ? topGov?.justification_ar : topGov?.justification_en}
             </p>
           </div>
 
           {/* NASA Satellite Drivers */}
           <div className="space-y-2">
-            <h4 className="text-micro font-medium text-slate-500 dark:text-white/45 uppercase tracking-[0.05em]">
+            <h4 className="text-micro font-medium text-[color:var(--muted)] uppercase tracking-[0.05em]">
               {t.nasaDriversHeading}
             </h4>
             <div className="flex flex-wrap gap-2 text-2xs font-medium">
@@ -150,11 +150,11 @@ export default function DoctorMatcher({
           </div>
 
           {/* Retention Callout & Action */}
-          <div className="p-4 rounded-2xl bg-slate-100/70 border border-slate-200/80 dark:bg-white/[0.03] dark:border-white/[0.08] space-y-3">
-            <h4 className="text-xs font-semibold text-slate-900 dark:text-white">
+          <div className="p-4 rounded-2xl bg-[color:var(--panel-2)] border border-[color:var(--line)] dark:bg-[color:var(--surface-2)] space-y-3">
+            <h4 className="text-xs font-semibold text-[color:var(--ink)]">
               {t.whyEgyptNeedsHeading}
             </h4>
-            <p className="text-xs text-slate-700 dark:text-white/70 leading-relaxed font-normal">
+            <p className="text-xs text-[color:var(--ink-2)] leading-relaxed font-normal">
               {lang === 'ar'
                 ? `محافظة ${topGov?.name_ar} تعاني من مؤشر عجز منشآت يبلغ ${topGov?.keyDrivers?.fsi}/100 وتصاعد مستمر في موجات الإجهاد الحراري. تواجدك هنا يرفع نسبة خفض العبء المرضي المرتبط بالمناخ.`
                 : `${topGov?.name_en} suffers from a severe facility gap (${topGov?.keyDrivers?.fsi}/100) and accelerating heatwave frequency. Practicing your specialty here maximizes the relative reduction in climate-sensitive disease burden.`}
@@ -164,9 +164,9 @@ export default function DoctorMatcher({
               variant="default"
               size="lg"
               onClick={() => onVoiceNeeds && onVoiceNeeds(topGov?.id, selectedSpecialty)}
-              className="w-full py-2.5 h-auto text-xs flex items-center justify-center gap-2 bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
+              className="w-full py-2.5 h-auto text-xs flex items-center justify-center gap-2 bg-[color:var(--inverse-bg)] text-[color:var(--inverse-fg)] hover:bg-[color:var(--inverse-bg-hover)]"
             >
-              <HeartPulse className="w-4 h-4 text-rose-400 dark:text-rose-600" />
+              <HeartPulse className="w-4 h-4 text-rose-400" />
               <span>
                 {lang === 'ar'
                   ? `الخطوة التالية: معاينة بيانات وأدلة الاستبقاء في ${topGov?.name_ar} ⬅`
@@ -178,7 +178,7 @@ export default function DoctorMatcher({
 
         {/* Right: Ranked Recommendations (5 cols) */}
         <div className="lg:col-span-5 flex flex-col space-y-3">
-          <span className="text-xs font-medium text-slate-600 dark:text-white/50 px-1">
+          <span className="text-xs font-medium text-[color:var(--ink-2)] px-1">
             {t.topGovsHeading}
           </span>
 
@@ -196,26 +196,26 @@ export default function DoctorMatcher({
                 <div className="flex items-center gap-3">
                   <span className={`w-7 h-7 rounded-full text-xs font-semibold flex items-center justify-center transition-[color,background-color,border-color,box-shadow,transform,filter] ${
                     i === 0
-                      ? 'bg-slate-900 text-white dark:bg-white dark:text-black shadow-sm'
-                      : 'bg-slate-100 text-slate-700 border border-slate-200 dark:bg-white/[0.06] dark:text-white/60 dark:border-white/10'
+                      ? 'bg-[color:var(--inverse-bg)] text-[color:var(--inverse-fg)] shadow-sm'
+                      : 'bg-[color:var(--panel-2)] text-[color:var(--ink-2)] border border-[color:var(--line)] dark:bg-[color:var(--surface-3)]'
                   }`}>
                     {i + 1}
                   </span>
                   <div>
-                    <span className="text-xs font-semibold text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
+                    <span className="text-xs font-semibold text-[color:var(--ink)] group-hover:text-[color:var(--info)] dark:group-hover:text-sky-400 transition-colors">
                       {lang === 'ar' ? r.name_ar : r.name_en}
                     </span>
-                    <span className="text-2xs text-slate-500 dark:text-white/45 block tabular-nums font-normal mt-0.5">
+                    <span className="text-2xs text-[color:var(--muted)] block tabular-nums font-normal mt-0.5">
                       {t.relativePriorityLabel}: <NumberTicker value={r.priorityIndex} /> / 100
                     </span>
-                    <span className="text-2xs text-slate-500 dark:text-white/45 block tabular-nums font-normal mt-0.5">
+                    <span className="text-2xs text-[color:var(--muted)] block tabular-nums font-normal mt-0.5">
                       {t.envBurdenShareLabel}: <NumberTicker value={r.envBurdenPct} suffix="%" />
                     </span>
                   </div>
                 </div>
 
                 <div className="text-right rtl:text-left">
-                  <span className="text-xs font-semibold text-slate-900 dark:text-white tabular-nums bg-slate-100 dark:bg-white/[0.06] px-3 py-1 rounded-full border border-slate-200 dark:border-white/10">
+                  <span className="text-xs font-semibold text-[color:var(--ink)] tabular-nums bg-[color:var(--panel-2)] px-3 py-1 rounded-full border border-[color:var(--line-strong)]">
                     <NumberTicker value={r.match_pct} suffix={`% ${t.matchWord}`} />
                   </span>
                 </div>
@@ -227,8 +227,8 @@ export default function DoctorMatcher({
       </div>
 
       {/* Provenance Attribution Bar */}
-      <div className="pt-3 border-t border-slate-200/80 dark:border-white/[0.06] flex items-center gap-1.5 text-2xs text-slate-500 dark:text-white/45 font-medium">
-        <span className="text-sky-600 dark:text-sky-400 font-semibold shrink-0">{t.sourcePrefix || 'المصدر:'}</span>
+      <div className="pt-3 border-t border-[color:var(--line)] flex items-center gap-1.5 text-2xs text-[color:var(--muted)] font-medium">
+        <span className="text-[color:var(--info)] dark:text-sky-400 font-semibold shrink-0">{t.sourcePrefix || 'المصدر:'}</span>
         <span>{t.doctorMatcherSource}</span>
       </div>
 

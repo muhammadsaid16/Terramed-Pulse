@@ -21,17 +21,66 @@
   --panel-2: rgba(247, 249, 252, 0.92);
   --ink: #0B1220;
   --ink-2: #334155;
-  --muted: #64748B;
+  --muted: #55637A;
   --line: rgba(11, 18, 32, 0.10);
   --line-strong: rgba(11, 18, 32, 0.17);
-  --accent: #0284C7;
-  --accent-bright: #0EA5E9;
-  --accent-soft: rgba(2, 132, 199, 0.10);
+  --accent: #0369A1;
+  --accent-bright: #0284C7;
+  --accent-soft: rgba(3, 105, 161, 0.10);
   --grid: rgba(11, 18, 32, 0.045);
   --glow-a: rgba(14, 165, 233, 0.14);
   --glow-b: rgba(245, 158, 11, 0.10);
   --spotlight-glow: rgba(2, 132, 199, 0.08);
   --hair-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.9) inset;
+
+  /* Channel triplets.
+     Tailwind v3 cannot apply an opacity modifier to an arbitrary var() color:
+     `bg-[color:var(--panel)]/90` compiles to nothing at all, so the element ends
+     up with no background. These triplets carry the same colours in a form that
+     accepts an alpha channel: `bg-[rgb(var(--panel-rgb)/0.9)]`.
+
+     A triplet names the colour, not its opacity. Where the plain token is
+     already translucent (--panel is 94% white in daylight, --panel-2 is a
+     4.5% white veil at night), the triplet is the same colour and the alpha
+     in the class is the only opacity applied. */
+  --bg-rgb: 242 244 247;
+  --panel-rgb: 255 255 255;
+  --panel-2-rgb: 247 249 252;
+  --ink-rgb: 11 18 32;
+  --ink-2-rgb: 51 65 85;
+  --muted-rgb: 100 116 139;
+  --line-rgb: 11 18 32;
+  --accent-rgb: 2 132 199;
+
+  /* Status colours.
+     Each one is chosen for the theme it lives in: a light theme needs the
+     darker end of the ramp, a dark theme the lighter end, so the same
+     semantic role stays above 4.5:1 in both. */
+  --warn: #B45309;
+  --warn-soft: #92400E;
+  --danger: #BE123C;
+  --danger-soft: #9F1239;
+  --ok: #047857;
+  --ok-soft: #065F46;
+  --info: #0369A1;
+  --info-soft: #075985;
+  --muted-strong: #55637A;
+  /* Raised-surface levels.
+     Each one is a complete colour WITH its alpha baked in, so one class reads
+     correctly in both themes. Using an opacity modifier on a triplet instead
+     would need a light/dark pair for every surface, and the two branches
+     drift apart as soon as one of them is edited. */
+  --surface-2: rgba(247, 249, 252, 0.92);
+  --surface-3: rgba(241, 245, 249, 0.97);
+  --surface-4: rgba(226, 232, 240, 0.98);
+
+  /* Inverted surfaces: a filled button that must stay legible in either theme.
+     Light theme uses a dark button, dark theme uses a light one, and the label
+     colour is always the opposite of its surface. */
+  --inverse-bg: #0B1220;
+  --inverse-fg: #FFFFFF;
+  --inverse-bg-hover: #16203A;
+  --inverse-ring: rgba(255, 255, 255, 0.22);
 }
 
 html.dark {
@@ -52,6 +101,33 @@ html.dark {
   --glow-b: rgba(244, 63, 94, 0.08);
   --spotlight-glow: rgba(56, 189, 248, 0.14);
   --hair-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.045) inset;
+
+  --bg-rgb: 4 7 13;
+  --panel-rgb: 7 12 21;
+  --panel-2-rgb: 255 255 255;
+  --ink-rgb: 233 238 246;
+  --ink-2-rgb: 185 196 212;
+  --muted-rgb: 138 153 173;
+  --line-rgb: 255 255 255;
+  --accent-rgb: 56 189 248;
+
+  --warn: #FBBF24;
+  --warn-soft: #FCD34D;
+  --danger: #FB7185;
+  --danger-soft: #FDA4AF;
+  --ok: #34D399;
+  --ok-soft: #6EE7B7;
+  --info: #38BDF8;
+  --info-soft: #7DD3FC;
+  --muted-strong: #9BA9BC;
+  --surface-2: rgba(255, 255, 255, 0.045);
+  --surface-3: rgba(255, 255, 255, 0.07);
+  --surface-4: rgba(255, 255, 255, 0.10);
+
+  --inverse-bg: #F4F7FB;
+  --inverse-fg: #060A12;
+  --inverse-bg-hover: #FFFFFF;
+  --inverse-ring: rgba(255, 255, 255, 0.16);
 }
 
 html {

@@ -166,19 +166,19 @@ export function DonutChart({
         >
           {activeSlice ? (
             <div className="enter-pop motion-reduce:animate-none flex flex-col items-center justify-center max-w-full">
-              <span className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">
+              <span className="text-2xl sm:text-3xl font-bold tracking-tight text-[color:var(--ink)] leading-none">
                 {activeSlice.value}{totalSuffix}
               </span>
-              <span className="text-2xs text-slate-600 dark:text-white/75 font-medium leading-tight max-w-[84px] mt-1 line-clamp-2 break-words">
+              <span className="text-2xs text-[rgb(var(--ink-2-rgb)/0.75)] font-medium leading-tight max-w-[84px] mt-1 line-clamp-2 break-words">
                 {cleanSliceLabel(activeSlice.label)}
               </span>
             </div>
           ) : (
             <div className="animate-fadeIn motion-reduce:animate-none flex flex-col items-center justify-center max-w-full">
-              <span className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">
+              <span className="text-2xl sm:text-3xl font-bold tracking-tight text-[color:var(--ink)] leading-none">
                 {total}{totalSuffix}
               </span>
-              <span className="text-2xs text-slate-500 dark:text-white/50 font-medium uppercase tracking-wider mt-1">
+              <span className="text-2xs text-[color:var(--muted)] font-medium uppercase tracking-wider mt-1">
                 {totalLabel}
               </span>
             </div>
@@ -201,8 +201,8 @@ export function DonutChart({
                   'flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs cursor-pointer select-none',
                   'transition-all duration-150 ease-[cubic-bezier(0.2,0,0,1)]',
                   isHovered
-                    ? 'bg-slate-100 dark:bg-white/10 font-semibold translate-x-1 rtl:-translate-x-1 shadow-sm'
-                    : 'text-slate-600 dark:text-white/70 hover:bg-slate-50 dark:hover:bg-white/[0.04]'
+                    ? 'bg-[color:var(--panel-2)] font-semibold translate-x-1 rtl:-translate-x-1 shadow-sm'
+                    : 'text-[color:var(--muted)] hover:bg-[color:var(--panel-2)]'
                 )}
               >
                 <div className="flex items-center gap-2 truncate">
@@ -215,7 +215,7 @@ export function DonutChart({
                   />
                   <span className="truncate">{displayLabel}</span>
                 </div>
-                <span className="font-mono font-medium text-slate-900 dark:text-white shrink-0 ml-2 rtl:mr-2">
+                <span className="font-mono font-medium text-[color:var(--ink)] shrink-0 ml-2 rtl:mr-2">
                   {slice.value}{totalSuffix}
                 </span>
               </div>

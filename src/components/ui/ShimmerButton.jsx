@@ -46,7 +46,7 @@ export default function ShimmerButton({
       />
 
       {/* Button Body */}
-      <span className="relative z-10 inline-flex items-center justify-center gap-2 w-full h-full px-5 py-2.5 rounded-full bg-slate-900 text-white dark:bg-[#0c1222] dark:text-white border border-slate-700/50 dark:border-white/10 group-hover:bg-slate-800 dark:group-hover:bg-[#121b33] transition-colors shadow-sm">
+      <span className="relative z-10 inline-flex items-center justify-center gap-2 w-full h-full px-5 py-2.5 rounded-full bg-[color:var(--inverse-bg)] text-[color:var(--inverse-fg)] border border-[color:var(--inverse-ring)] group-hover:bg-[color:var(--inverse-bg-hover)] transition-colors shadow-sm">
         {children}
       </span>
     </button>

@@ -150,11 +150,11 @@ export default function DecisionMaker({
             <Tabs value={activeSubTab} onValueChange={setActiveSubTab} className="w-auto">
               <TabsList className="p-0.5 h-auto">
                 <TabsTrigger value="simulation" className="gap-1.5 py-1 px-3 text-xs">
-                  <Sliders className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
+                  <Sliders className="w-3.5 h-3.5 text-[color:var(--info)] dark:text-sky-400" />
                   <span>{t.tabSimulation}</span>
                 </TabsTrigger>
                 <TabsTrigger value="evidence" className="gap-1.5 py-1 px-3 text-xs">
-                  <BookOpen className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                  <BookOpen className="w-3.5 h-3.5 text-[color:var(--ok)] dark:text-emerald-400" />
                   <span>{t.tabResearchEvidence}</span>
                 </TabsTrigger>
               </TabsList>
@@ -170,13 +170,13 @@ export default function DecisionMaker({
       {activeSubTab === 'simulation' && (
         <div className="space-y-6 animate-fadeIn">
           {/* Policy Scenario Model Notice */}
-          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/[0.08] text-xs">
-            <Info className="w-4 h-4 text-sky-600 dark:text-sky-400 shrink-0 mt-0.5" />
+          <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[color:var(--panel-2)] border border-[color:var(--line)] text-xs">
+            <Info className="w-4 h-4 text-[color:var(--info)] dark:text-sky-400 shrink-0 mt-0.5" />
             <div>
-              <span className="font-semibold text-slate-900 dark:text-white/90 block text-micro uppercase tracking-wider">
+              <span className="font-semibold text-[color:var(--ink)] block text-micro uppercase tracking-wider">
                 {t.policyScenarioBadge}
               </span>
-              <span className="text-micro text-slate-600 dark:text-white/50 leading-relaxed block mt-0.5">
+              <span className="text-micro text-[color:var(--ink-2)] leading-relaxed block mt-0.5">
                 {t.policyScenarioNotice}
               </span>
             </div>
@@ -189,11 +189,11 @@ export default function DecisionMaker({
           className="lg:col-span-5 apple-card p-6 lg:sticky lg:top-24 shadow-sm dark:shadow-md relative overflow-hidden border border-emerald-400/40 dark:border-emerald-500/40 shadow-[0_0_25px_-5px_rgba(16,185,129,0.18)]"
         >
           <div className="space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] pb-3">
-              <h3 className="font-semibold text-xs text-slate-800 dark:text-white/80">
+            <div className="flex items-center justify-between border-b border-[color:var(--line)] pb-3">
+              <h3 className="font-semibold text-xs text-[color:var(--ink)]">
                 {t.simulationHeading}
               </h3>
-              <span className="text-micro font-medium text-slate-700 dark:text-white/50 bg-slate-100 dark:bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-white/10">
+              <span className="text-micro font-medium text-[color:var(--ink-2)] bg-[color:var(--panel-2)] px-2.5 py-0.5 rounded-full border border-[color:var(--line-strong)]">
                 {govName}
               </span>
             </div>
@@ -201,7 +201,7 @@ export default function DecisionMaker({
             {!hasBaseline && (
               <div
                 role="status"
-                className="flex items-center gap-2 text-micro text-amber-700 bg-amber-50 border border-amber-200 dark:text-amber-300 dark:bg-amber-500/10 dark:border-amber-500/25 rounded-xl px-3 py-2"
+                className="flex items-center gap-2 text-micro text-[color:var(--warn)] bg-amber-50 border border-amber-200 dark:text-amber-300 dark:bg-amber-500/10 dark:border-amber-500/25 rounded-xl px-3 py-2"
               >
                 <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
                 <span>{t.baselineMissingBadge}</span>
@@ -209,23 +209,23 @@ export default function DecisionMaker({
             )}
 
             {/* Delta Indicator */}
-            <div className="flex items-center justify-center gap-6 p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.08]">
+            <div className="flex items-center justify-center gap-6 p-4 rounded-2xl bg-[color:var(--panel-2)] border border-[color:var(--line)]">
               <div className="text-center">
-                <span className="text-2xs text-slate-500 dark:text-white/45 block uppercase tracking-[0.05em] font-medium">
+                <span className="text-2xs text-[color:var(--muted)] block uppercase tracking-[0.05em] font-medium">
                   {t.baselineHni}
                 </span>
-                <div className="text-3xl font-semibold text-slate-700 dark:text-white/70 tabular-nums">
+                <div className="text-3xl font-semibold text-[color:var(--ink-2)] tabular-nums">
                   <NumberTicker value={baseIndices.hni} decimalPlaces={1} />
                 </div>
               </div>
-              <div className="text-slate-300 dark:text-white/30 font-light text-2xl select-none" aria-hidden="true">
+              <div className="text-[color:var(--muted)] font-light text-2xl select-none" aria-hidden="true">
                 {lang === 'ar' ? '←' : '→'}
               </div>
               <div className="text-center">
-                <span className="text-2xs text-emerald-600 dark:text-emerald-400 block uppercase tracking-[0.05em] font-medium">
+                <span className="text-2xs text-[color:var(--ok)] dark:text-emerald-400 block uppercase tracking-[0.05em] font-medium">
                   {t.simulatedHni}
                 </span>
-                <div className="text-3xl font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                <div className="text-3xl font-semibold text-[color:var(--ok)] dark:text-emerald-400 tabular-nums">
                   <NumberTicker value={sim.simHni} decimalPlaces={1} />
                 </div>
               </div>
@@ -233,7 +233,7 @@ export default function DecisionMaker({
 
             {/* Clear breathing space between the numbers box and reduction pill */}
             <div className="text-center mt-6 mb-2">
-              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30 tabular-nums shadow-sm">
+              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-[color:var(--ok)] border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30 tabular-nums shadow-sm">
                 <span dir="ltr" className="font-mono font-bold">
                   <NumberTicker value={sim.deltaHni} decimalPlaces={1} prefix={sim.deltaHni > 0 ? '+' : ''} />
                 </span>
@@ -283,11 +283,11 @@ export default function DecisionMaker({
             />
           </div>
 
-          <details className="rounded-xl border border-slate-200/80 dark:border-white/[0.08] bg-slate-50 dark:bg-white/[0.02] px-3.5 py-2.5">
-            <summary className="cursor-pointer text-micro font-medium text-slate-600 dark:text-white/60 select-none">
+          <details className="rounded-xl border border-[color:var(--line)] bg-[color:var(--panel-2)] px-3.5 py-2.5">
+            <summary className="cursor-pointer text-micro font-medium text-[color:var(--ink-2)] select-none">
               {t.modelAssumptionsTitle}
             </summary>
-            <p className="mt-2 text-micro leading-relaxed text-slate-500 dark:text-white/50">
+            <p className="mt-2 text-micro leading-relaxed text-[color:var(--muted)]">
               {t.modelAssumptionsBody}
             </p>
           </details>
@@ -297,18 +297,18 @@ export default function DecisionMaker({
 
         {/* Right: Policy Sliders & Projected Health Dividends (7 cols) */}
         <div className="lg:col-span-7 apple-card p-6 space-y-6 shadow-sm dark:shadow-md">
-          <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] pb-3">
-            <h3 className="font-semibold text-xs text-slate-900 dark:text-white/80">
+          <div className="flex items-center justify-between border-b border-[color:var(--line)] pb-3">
+            <h3 className="font-semibold text-xs text-[color:var(--ink)]">
               {t.leversTitle}
             </h3>
-            <span className="text-micro text-slate-500 dark:text-white/50">{t.leversSub}</span>
+            <span className="text-micro text-[color:var(--muted)]">{t.leversSub}</span>
           </div>
 
           {/* TRACK 1: DIRECT FINANCIAL & COMPENSATION PACKAGE */}
-          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/[0.06] space-y-4">
-            <div className="flex items-center gap-2 border-b border-slate-200/80 dark:border-white/[0.06] pb-2">
+          <div className="p-4 rounded-2xl bg-[color:var(--panel-2)] border border-[color:var(--line)] space-y-4">
+            <div className="flex items-center gap-2 border-b border-[color:var(--line)] pb-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-              <h4 className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">
+              <h4 className="text-xs font-semibold text-[color:var(--ok)] dark:text-emerald-300">
                 {t.trackFinancialTitle}
               </h4>
             </div>
@@ -316,8 +316,8 @@ export default function DecisionMaker({
             {/* Slider 1: Base Salary Hike */}
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
-                <label className="text-slate-800 dark:text-white/80">{t.sliderSalaryHike}</label>
-                <span dir="ltr" className="font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-white/10 text-micro">
+                <label className="text-[color:var(--ink)]">{t.sliderSalaryHike}</label>
+                <span dir="ltr" className="font-semibold text-[color:var(--ok)] dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-[color:var(--surface-3)] px-2.5 py-0.5 rounded-full border border-emerald-200 text-micro">
                   +{salaryHikePct}%
                 </span>
               </div>
@@ -329,7 +329,7 @@ export default function DecisionMaker({
                 onChange={setSalaryHikePct}
                 ariaLabel={t.sliderSalaryHike}
               />
-              <p className="text-2xs text-slate-500 dark:text-white/45 leading-relaxed font-normal">
+              <p className="text-2xs text-[color:var(--muted)] leading-relaxed font-normal">
                 {t.sourceRationaleSalary}
               </p>
             </div>
@@ -337,8 +337,8 @@ export default function DecisionMaker({
             {/* Slider 2: Hazard & Infection Pay */}
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
-                <label className="text-slate-800 dark:text-white/80">{t.sliderHazardPay}</label>
-                <span dir="ltr" className="font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-white/10 text-micro">
+                <label className="text-[color:var(--ink)]">{t.sliderHazardPay}</label>
+                <span dir="ltr" className="font-semibold text-[color:var(--ok)] dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-[color:var(--surface-3)] px-2.5 py-0.5 rounded-full border border-emerald-200 text-micro">
                   +{hazardPayPct}%
                 </span>
               </div>
@@ -350,7 +350,7 @@ export default function DecisionMaker({
                 onChange={setHazardPayPct}
                 ariaLabel={t.sliderHazardPay}
               />
-              <p className="text-2xs text-slate-500 dark:text-white/45 leading-relaxed font-normal">
+              <p className="text-2xs text-[color:var(--muted)] leading-relaxed font-normal">
                 {t.sourceRationaleHazard}
               </p>
             </div>
@@ -358,8 +358,8 @@ export default function DecisionMaker({
             {/* Slider 3: Remote Housing & Hardship Allowance */}
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
-                <label className="text-slate-800 dark:text-white/80">{t.sliderIncentive}</label>
-                <span dir="ltr" className="font-semibold text-emerald-700 dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-white/10 text-micro">
+                <label className="text-[color:var(--ink)]">{t.sliderIncentive}</label>
+                <span dir="ltr" className="font-semibold text-[color:var(--ok)] dark:text-emerald-300 tabular-nums bg-emerald-50 dark:bg-[color:var(--surface-3)] px-2.5 py-0.5 rounded-full border border-emerald-200 text-micro">
                   +{stipendPct}%
                 </span>
               </div>
@@ -371,17 +371,17 @@ export default function DecisionMaker({
                 onChange={setStipendPct}
                 ariaLabel={t.sliderIncentive}
               />
-              <p className="text-2xs text-slate-500 dark:text-white/45 leading-relaxed font-normal">
+              <p className="text-2xs text-[color:var(--muted)] leading-relaxed font-normal">
                 {t.sourceRationaleStipend}
               </p>
             </div>
           </div>
 
           {/* TRACK 2: WORKPLACE SAFETY & CLINICAL FACILITIES */}
-          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/[0.06] space-y-4">
-            <div className="flex items-center gap-2 border-b border-slate-200/80 dark:border-white/[0.06] pb-2">
+          <div className="p-4 rounded-2xl bg-[color:var(--panel-2)] border border-[color:var(--line)] space-y-4">
+            <div className="flex items-center gap-2 border-b border-[color:var(--line)] pb-2">
               <span className="w-2 h-2 rounded-full bg-sky-500"></span>
-              <h4 className="text-xs font-semibold text-sky-700 dark:text-sky-300">
+              <h4 className="text-xs font-semibold text-[color:var(--info)] dark:text-sky-300">
                 {t.trackFacilitiesTitle}
               </h4>
             </div>
@@ -389,8 +389,8 @@ export default function DecisionMaker({
             {/* Slider 4: Hospital Security Protection */}
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
-                <label className="text-slate-800 dark:text-white/80">{t.sliderSecurity}</label>
-                <span dir="ltr" className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-micro">
+                <label className="text-[color:var(--ink)]">{t.sliderSecurity}</label>
+                <span dir="ltr" className="font-semibold text-[color:var(--info)] dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-[color:var(--surface-3)] px-2.5 py-0.5 rounded-full border border-sky-200 text-micro">
                   +{securityPct}%
                 </span>
               </div>
@@ -402,7 +402,7 @@ export default function DecisionMaker({
                 onChange={setSecurityPct}
                 ariaLabel={t.sliderSecurity}
               />
-              <p className="text-2xs text-slate-500 dark:text-white/45 leading-relaxed font-normal">
+              <p className="text-2xs text-[color:var(--muted)] leading-relaxed font-normal">
                 {t.sourceRationaleSecurity}
               </p>
             </div>
@@ -410,8 +410,8 @@ export default function DecisionMaker({
             {/* Slider 5: Critical Care & Dialysis Re-equipment */}
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
-                <label className="text-slate-800 dark:text-white/80">{t.sliderEquipment}</label>
-                <span dir="ltr" className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-micro">
+                <label className="text-[color:var(--ink)]">{t.sliderEquipment}</label>
+                <span dir="ltr" className="font-semibold text-[color:var(--info)] dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-[color:var(--surface-3)] px-2.5 py-0.5 rounded-full border border-sky-200 text-micro">
                   +{equipmentPct}%
                 </span>
               </div>
@@ -423,7 +423,7 @@ export default function DecisionMaker({
                 onChange={setEquipmentPct}
                 ariaLabel={t.sliderEquipment}
               />
-              <p className="text-2xs text-slate-500 dark:text-white/45 leading-relaxed font-normal">
+              <p className="text-2xs text-[color:var(--muted)] leading-relaxed font-normal">
                 {t.sourceRationaleEquipment}
               </p>
             </div>
@@ -431,8 +431,8 @@ export default function DecisionMaker({
             {/* Slider 6: Mobile Response Clinics */}
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
-                <label className="text-slate-800 dark:text-white/80">{t.sliderClinics}</label>
-                <span dir="ltr" className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-micro">
+                <label className="text-[color:var(--ink)]">{t.sliderClinics}</label>
+                <span dir="ltr" className="font-semibold text-[color:var(--info)] dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-[color:var(--surface-3)] px-2.5 py-0.5 rounded-full border border-sky-200 text-micro">
                   +{clinics}
                 </span>
               </div>
@@ -444,7 +444,7 @@ export default function DecisionMaker({
                 onChange={setClinics}
                 ariaLabel={t.sliderClinics}
               />
-              <p className="text-2xs text-slate-500 dark:text-white/45 leading-relaxed font-normal">
+              <p className="text-2xs text-[color:var(--muted)] leading-relaxed font-normal">
                 {t.sourceRationaleClinics}
               </p>
             </div>
@@ -452,8 +452,8 @@ export default function DecisionMaker({
             {/* Slider 7: Urban Greening & Cool Surfaces (NASA Heat Exposure Reduction) */}
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs font-medium">
-                <label className="text-slate-800 dark:text-white/80">{t.sliderGreening}</label>
-                <span dir="ltr" className="font-semibold text-sky-700 dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-white/[0.08] px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-white/10 text-micro">
+                <label className="text-[color:var(--ink)]">{t.sliderGreening}</label>
+                <span dir="ltr" className="font-semibold text-[color:var(--info)] dark:text-sky-300 tabular-nums bg-sky-50 dark:bg-[color:var(--surface-3)] px-2.5 py-0.5 rounded-full border border-sky-200 text-micro">
                   +{greeningPct}%
                 </span>
               </div>
@@ -465,7 +465,7 @@ export default function DecisionMaker({
                 onChange={setGreeningPct}
                 ariaLabel={t.sliderGreening}
               />
-              <p className="text-2xs text-slate-500 dark:text-white/45 leading-relaxed font-normal">
+              <p className="text-2xs text-[color:var(--muted)] leading-relaxed font-normal">
                 {t.sourceRationaleGreening}
               </p>
             </div>
@@ -473,33 +473,33 @@ export default function DecisionMaker({
 
           {/* Projected Dividends */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-            <SpotlightCard className="p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.08] text-center shadow-xs">
-              <span className="text-micro text-slate-500 dark:text-white/50 block font-medium">
+            <SpotlightCard className="p-4 rounded-2xl bg-[color:var(--panel-2)] border border-[color:var(--line)] text-center shadow-xs">
+              <span className="text-micro text-[color:var(--muted)] block font-medium">
                 {t.erPressureReduction}
               </span>
-              <div className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white mt-1 tabular-nums" dir="ltr">
+              <div className="text-xl sm:text-2xl font-semibold text-[color:var(--ink)] mt-1 tabular-nums" dir="ltr">
                 -<NumberTicker value={sim.erPressureReductionPct} suffix="%" />
               </div>
-              <span className="text-2xs text-slate-500 dark:text-white/40 block mt-1">
+              <span className="text-2xs text-[color:var(--muted)] block mt-1">
                 {t.scenarioIllustrativeNote}
               </span>
-              <span className="text-2xs text-slate-500 dark:text-white/45 block mt-1 pt-1.5 border-t border-slate-200/80 dark:border-white/[0.06]">
-                <span className="text-sky-600 dark:text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceErPressureReduction}
+              <span className="text-2xs text-[color:var(--muted)] block mt-1 pt-1.5 border-t border-[color:var(--line)]">
+                <span className="text-[color:var(--info)] dark:text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceErPressureReduction}
               </span>
             </SpotlightCard>
 
-            <SpotlightCard className="p-4 rounded-2xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200/80 dark:border-white/[0.08] text-center shadow-xs">
-              <span className="text-micro text-slate-500 dark:text-white/50 block font-medium">
+            <SpotlightCard className="p-4 rounded-2xl bg-[color:var(--panel-2)] border border-[color:var(--line)] text-center shadow-xs">
+              <span className="text-micro text-[color:var(--muted)] block font-medium">
                 {t.retentionBoost}
               </span>
-              <div className="text-xl sm:text-2xl font-semibold text-sky-600 dark:text-sky-400 mt-1 tabular-nums">
+              <div className="text-xl sm:text-2xl font-semibold text-[color:var(--info)] dark:text-sky-400 mt-1 tabular-nums">
                 +<NumberTicker value={sim.retentionGainPct} decimalPlaces={1} suffix="%" />
               </div>
-              <span className="text-2xs text-sky-600/80 dark:text-sky-400/60 block mt-1">
+              <span className="text-2xs text-[color:var(--muted)] block mt-1">
                 {t.modeledResponseNote}
               </span>
-              <span className="text-2xs text-sky-600/90 dark:text-sky-400/80 block mt-1 pt-1.5 border-t border-slate-200/80 dark:border-white/[0.06]">
-                <span className="text-slate-500 dark:text-white/40">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceProjectedRetention}
+              <span className="text-2xs text-[color:var(--muted)] block mt-1 pt-1.5 border-t border-[color:var(--line)]">
+                <span className="text-[color:var(--info)] dark:text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceProjectedRetention}
               </span>
             </SpotlightCard>
           </div>
@@ -509,12 +509,12 @@ export default function DecisionMaker({
       </div>
 
       {/* 3 Executive Dashboards Required by NASA Challenge */}
-      <div className="pt-6 border-t border-slate-200/80 dark:border-white/[0.08] space-y-4">
+      <div className="pt-6 border-t border-[color:var(--line)] space-y-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/[0.06] border border-slate-200 dark:border-white/10 flex items-center justify-center">
-            <BarChart3 className="w-4 h-4 text-sky-600 dark:text-sky-400" />
+          <div className="w-8 h-8 rounded-full bg-[color:var(--panel-2)] border border-[color:var(--line-strong)] flex items-center justify-center">
+            <BarChart3 className="w-4 h-4 text-[color:var(--info)] dark:text-sky-400" />
           </div>
-          <h3 className="font-semibold text-base text-slate-900 dark:text-white">
+          <h3 className="font-semibold text-base text-[color:var(--ink)]">
             {t.execChartsTitle}
           </h3>
         </div>
@@ -525,13 +525,13 @@ export default function DecisionMaker({
           <div className="apple-card p-5 flex flex-col justify-between shadow-sm dark:shadow-md">
             <div>
               <div className="flex items-center gap-2 mb-1.5">
-                <PieChart className="w-4 h-4 text-rose-500 dark:text-rose-400" />
-                <h4 className="text-xs font-semibold text-slate-900 dark:text-white/90">
+                <PieChart className="w-4 h-4 text-[color:var(--danger)] dark:text-rose-400" />
+                <h4 className="text-xs font-semibold text-[color:var(--ink)]">
                   {t.chartTurnoverTitle}
                 </h4>
               </div>
-              <span className="text-2xs text-slate-500 dark:text-white/45 block mb-2 font-medium">
-                <span className="text-rose-600 dark:text-rose-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceExecTurnover}
+              <span className="text-2xs text-[color:var(--muted)] block mb-2 font-medium">
+                <span className="text-[color:var(--danger)] dark:text-rose-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceExecTurnover}
               </span>
             </div>
             <div className="w-full flex items-center justify-center py-1">
@@ -550,7 +550,7 @@ export default function DecisionMaker({
                   legendClassName="w-full mt-2"
                 />
               ) : (
-                <p className="text-xs text-slate-500 dark:text-white/45 px-4 text-center leading-relaxed">{t.chartNoFieldData}</p>
+                <p className="text-xs text-[color:var(--muted)] px-4 text-center leading-relaxed">{t.chartNoFieldData}</p>
               )}
             </div>
           </div>
@@ -559,13 +559,13 @@ export default function DecisionMaker({
           <div className="apple-card p-5 flex flex-col gap-3">
             <div>
               <div className="flex items-center gap-2 mb-1.5">
-                <BarChart3 className="w-4 h-4 text-sky-500 dark:text-sky-400" />
-                <h4 className="text-xs font-semibold text-slate-900 dark:text-white/90">
+                <BarChart3 className="w-4 h-4 text-[color:var(--info)] dark:text-sky-400" />
+                <h4 className="text-xs font-semibold text-[color:var(--ink)]">
                   {t.chartMigrationTitle}
                 </h4>
               </div>
-              <span className="text-2xs text-slate-500 dark:text-white/45 block font-medium">
-                <span className="text-sky-600 dark:text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceExecMigration}
+              <span className="text-2xs text-[color:var(--muted)] block font-medium">
+                <span className="text-[color:var(--info)] dark:text-sky-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceExecMigration}
               </span>
             </div>
             <div className="flex-1 min-h-[180px] w-full">
@@ -575,7 +575,7 @@ export default function DecisionMaker({
                   options={barChartOptions(theme)}
                 />
               ) : (
-                <p className="h-full flex items-center justify-center text-xs text-slate-500 dark:text-white/45 px-4 text-center leading-relaxed">{t.chartNoFieldData}</p>
+                <p className="h-full flex items-center justify-center text-xs text-[color:var(--muted)] px-4 text-center leading-relaxed">{t.chartNoFieldData}</p>
               )}
             </div>
           </div>
@@ -584,13 +584,13 @@ export default function DecisionMaker({
           <div className="apple-card p-5 flex flex-col gap-3">
             <div>
               <div className="flex items-center gap-2 mb-1.5">
-                <ShieldCheck className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-                <h4 className="text-xs font-semibold text-slate-900 dark:text-white/90">
+                <ShieldCheck className="w-4 h-4 text-[color:var(--warn)] dark:text-amber-400" />
+                <h4 className="text-xs font-semibold text-[color:var(--ink)]">
                   {t.chartPriorityTitle}
                 </h4>
               </div>
-              <span className="text-2xs text-slate-500 dark:text-white/45 block font-medium">
-                <span className="text-amber-600 dark:text-amber-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceExecPriority}
+              <span className="text-2xs text-[color:var(--muted)] block font-medium">
+                <span className="text-[color:var(--warn)] dark:text-amber-400 font-semibold">{t.sourcePrefix || 'المصدر:'}</span> {t.sourceExecPriority}
               </span>
             </div>
             <div className="flex-1 min-h-[180px] w-full">
@@ -615,10 +615,10 @@ export default function DecisionMaker({
               <Badge variant="success" className="text-2xs font-bold py-0.5">
                 {lang === 'ar' ? 'الصحة العالمية EMHJ (2021)' : 'WHO EMHJ (2021)'}
               </Badge>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
+              <div className="text-2xl font-bold text-[color:var(--ink)] tabular-nums">
                 <NumberTicker value={97.4} decimalPlaces={1} suffix="%" />
               </div>
-              <p className="text-xs text-slate-600 dark:text-white/70 leading-relaxed">
+              <p className="text-xs text-[color:var(--ink-2)] leading-relaxed">
                 {t.evidenceWhoStat}
               </p>
             </SpotlightCard>
@@ -627,10 +627,10 @@ export default function DecisionMaker({
               <Badge variant="default" className="text-2xs font-bold py-0.5">
                 {lang === 'ar' ? 'أكسفورد Int Health (2015)' : 'Oxford Int Health (2015)'}
               </Badge>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
+              <div className="text-2xl font-bold text-[color:var(--ink)] tabular-nums">
                 <NumberTicker value={81.8} decimalPlaces={1} suffix="%" />
               </div>
-              <p className="text-xs text-slate-600 dark:text-white/70 leading-relaxed">
+              <p className="text-xs text-[color:var(--ink-2)] leading-relaxed">
                 {t.evidenceOxfordStat}
               </p>
             </SpotlightCard>
@@ -639,14 +639,14 @@ export default function DecisionMaker({
               <Badge variant="warning" className="text-2xs font-bold py-0.5">
                 {lang === 'ar' ? 'مجلة MDPI للعلوم الاجتماعية (2025)' : 'MDPI Social Sciences (2025)'}
               </Badge>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
+              <div className="text-2xl font-bold text-[color:var(--ink)] tabular-nums">
                 {lang === 'ar' ? (
                   <><NumberTicker value={20.0} decimalPlaces={1} suffix="×" /> أرجحية</>
                 ) : (
                   <><NumberTicker value={20.0} decimalPlaces={1} suffix="×" /> Odds</>
                 )}
               </div>
-              <p className="text-xs text-slate-600 dark:text-white/70 leading-relaxed">
+              <p className="text-xs text-[color:var(--ink-2)] leading-relaxed">
                 {t.evidenceMdpiStat}
               </p>
             </SpotlightCard>
@@ -654,9 +654,9 @@ export default function DecisionMaker({
 
           {/* Detailed Peer-Reviewed Studies */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2 pb-2.5 border-b border-slate-200/80 dark:border-white/[0.06] mb-1">
-              <FileText className="w-4 h-4 text-sky-600 dark:text-sky-400" />
-              <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+            <div className="flex items-center gap-2 pb-2.5 border-b border-[color:var(--line)] mb-1">
+              <FileText className="w-4 h-4 text-[color:var(--info)] dark:text-sky-400" />
+              <h3 className="text-sm font-semibold text-[color:var(--ink)]">
                 {t.researchEvidenceTitle}
               </h3>
             </div>
@@ -664,7 +664,7 @@ export default function DecisionMaker({
             <div className="grid grid-cols-1 gap-4">
               {MIGRATION_RESEARCH_STUDIES.map((study) => (
                 <div key={study.id} className="apple-card p-5 space-y-3">
-                  <div className="flex flex-wrap items-start justify-between gap-2 border-b border-slate-200/80 dark:border-white/[0.08] pb-3">
+                  <div className="flex flex-wrap items-start justify-between gap-2 border-b border-[color:var(--line)] pb-3">
                     <div>
                       <Badge variant="default" className="text-2xs font-bold py-0.5">
                         {(lang === 'ar' ? study.journal_ar : study.journal_en) || study.journal} ({study.year})
@@ -673,7 +673,7 @@ export default function DecisionMaker({
                         href={study.url || study.doi}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs font-semibold text-slate-900 dark:text-white/95 mt-1.5 leading-snug hover:text-sky-600 dark:hover:text-sky-400 block transition-colors"
+                        className="text-xs font-semibold text-[color:var(--ink)] mt-1.5 leading-snug hover:text-[color:var(--info)] dark:hover:text-sky-400 block transition-colors"
                       >
                         {study.citation}
                       </a>
@@ -684,7 +684,7 @@ export default function DecisionMaker({
                           href={study.pubmed}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-micro text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 flex items-center gap-1 font-semibold transition-colors"
+                          className="text-micro text-[color:var(--ok)] hover:text-[color:var(--ok)] dark:text-emerald-400 dark:hover:text-emerald-300 flex items-center gap-1 font-semibold transition-colors"
                         >
                           <span>PubMed</span>
                           <ExternalLink className="w-3 h-3" />
@@ -695,7 +695,7 @@ export default function DecisionMaker({
                           href={study.researchgate}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-micro text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300 flex items-center gap-1 font-medium transition-colors"
+                          className="text-micro text-[color:var(--info)] hover:underline flex items-center gap-1 font-medium transition-colors"
                         >
                           <span>ResearchGate</span>
                           <ExternalLink className="w-3 h-3" />
@@ -705,7 +705,7 @@ export default function DecisionMaker({
                         href={study.url || study.doi}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-micro text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 flex items-center gap-1 font-medium transition-colors"
+                        className="text-micro text-[color:var(--info)] hover:text-[color:var(--info)] dark:text-sky-400 dark:hover:text-sky-300 flex items-center gap-1 font-medium transition-colors"
                       >
                         <span>{study.id === 'mdpi_societies_2025' ? (lang === 'ar' ? 'المستودع الأكاديمي' : 'Open Access') : 'DOI'}</span>
                         <ExternalLink className="w-3 h-3" />
@@ -713,47 +713,47 @@ export default function DecisionMaker({
                     </div>
                   </div>
 
-                  <p className="text-xs text-slate-600 dark:text-white/80 leading-relaxed bg-slate-50 dark:bg-white/[0.02] p-3 rounded-xl border border-slate-200/80 dark:border-white/[0.05]">
+                  <p className="text-xs text-[color:var(--ink-2)] leading-relaxed bg-[color:var(--panel-2)] p-3 rounded-xl border border-[color:var(--line)]">
                     {lang === 'ar' ? study.narrative_ar : study.narrative_en}
                   </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-1">
-                    <div className="bg-slate-50 dark:bg-white/[0.03] p-3 rounded-xl border border-slate-200/80 dark:border-white/[0.06]">
-                      <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium mb-1">
+                    <div className="bg-[color:var(--panel-2)] p-3 rounded-xl border border-[color:var(--line)]">
+                      <span className="text-2xs text-[color:var(--muted)] block font-medium mb-1">
                         {t.researchStudyCohort}
                       </span>
-                      <span className="text-slate-800 dark:text-white/85 text-micro leading-relaxed block">
+                      <span className="text-[color:var(--ink)] text-micro leading-relaxed block">
                         {(lang === 'ar' ? study.cohort_ar : study.cohort_en) || study.cohort} ({t.sampleSizeLabel} {study.sample_size})
                       </span>
                     </div>
 
-                    <div className="bg-slate-50 dark:bg-white/[0.03] p-3 rounded-xl border border-slate-200/80 dark:border-white/[0.06]">
-                      <span className="text-2xs text-slate-500 dark:text-white/40 block font-medium mb-1">
+                    <div className="bg-[color:var(--panel-2)] p-3 rounded-xl border border-[color:var(--line)]">
+                      <span className="text-2xs text-[color:var(--muted)] block font-medium mb-1">
                         {t.researchKeyMetrics}
                       </span>
-                      <div className="space-y-1 text-micro text-slate-800 dark:text-white/85">
+                      <div className="space-y-1 text-micro text-[color:var(--ink)]">
                         {study.key_findings.migration_intent_pct && (
                           <div className="flex justify-between items-center">
-                            <span className="text-slate-600 dark:text-white/60">{t.metricMigrationIntent}</span>
-                            <span className="font-semibold text-rose-600 dark:text-rose-300 tabular-nums">{study.key_findings.migration_intent_pct}%</span>
+                            <span className="text-[color:var(--ink-2)]">{t.metricMigrationIntent}</span>
+                            <span className="font-semibold text-[color:var(--danger)] dark:text-rose-300 tabular-nums">{study.key_findings.migration_intent_pct}%</span>
                           </div>
                         )}
                         {study.key_findings.retention_willingness_if_improved_pct && (
                           <div className="flex justify-between items-center">
-                            <span className="text-slate-600 dark:text-white/60">{t.metricWillingToStay}</span>
-                            <span className="font-semibold text-emerald-600 dark:text-emerald-300 tabular-nums">{study.key_findings.retention_willingness_if_improved_pct}%</span>
+                            <span className="text-[color:var(--ink-2)]">{t.metricWillingToStay}</span>
+                            <span className="font-semibold text-[color:var(--ok)] dark:text-emerald-300 tabular-nums">{study.key_findings.retention_willingness_if_improved_pct}%</span>
                           </div>
                         )}
                         {study.key_findings.plan_to_return_after_training_pct && (
                           <div className="flex justify-between items-center">
-                            <span className="text-slate-600 dark:text-white/60">{t.metricPlanToReturn}</span>
-                            <span className="font-semibold text-sky-600 dark:text-sky-300 tabular-nums">{study.key_findings.plan_to_return_after_training_pct}%</span>
+                            <span className="text-[color:var(--ink-2)]">{t.metricPlanToReturn}</span>
+                            <span className="font-semibold text-[color:var(--info)] dark:text-sky-300 tabular-nums">{study.key_findings.plan_to_return_after_training_pct}%</span>
                           </div>
                         )}
                         {study.key_findings.work_dissatisfaction_odds_ratio && (
                           <div className="flex justify-between items-center">
-                            <span className="text-slate-600 dark:text-white/60">{t.metricWorkDissatisfaction}</span>
-                            <span className="font-semibold text-amber-600 dark:text-amber-300 tabular-nums">{study.key_findings.work_dissatisfaction_odds_ratio}× {t.oddsUnit}</span>
+                            <span className="text-[color:var(--ink-2)]">{t.metricWorkDissatisfaction}</span>
+                            <span className="font-semibold text-[color:var(--warn)] dark:text-amber-300 tabular-nums">{study.key_findings.work_dissatisfaction_odds_ratio}× {t.oddsUnit}</span>
                           </div>
                         )}
                       </div>
@@ -767,22 +767,22 @@ export default function DecisionMaker({
 
           {/* Evidence-Based Levers Matrix */}
           <div className="apple-card p-5 space-y-4">
-            <div className="flex items-center gap-2 pb-3 border-b border-slate-200/80 dark:border-white/[0.06] mb-1">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              <h3 className="text-xs font-semibold text-slate-900 dark:text-white">
+            <div className="flex items-center gap-2 pb-3 border-b border-[color:var(--line)] mb-1">
+              <ShieldCheck className="w-4 h-4 text-[color:var(--ok)] dark:text-emerald-400" />
+              <h3 className="text-xs font-semibold text-[color:var(--ink)]">
                 {t.actionablePolicyDrivers}
               </h3>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {DOCUMENTED_MIGRATION_DRIVERS.map(driver => (
-                <div key={driver.id} className="p-3.5 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/[0.06] space-y-1.5">
-                  <span className="text-xs font-semibold text-slate-900 dark:text-white block">
+                <div key={driver.id} className="p-3.5 rounded-xl bg-[color:var(--panel-2)] border border-[color:var(--line)] space-y-1.5">
+                  <span className="text-xs font-semibold text-[color:var(--ink)] block">
                     {lang === 'ar' ? driver.ar : driver.en}
                   </span>
-                  <div className="text-micro text-rose-600 dark:text-rose-300/90 font-medium">
+                  <div className="text-micro text-[color:var(--danger)] dark:text-rose-300/90 font-medium">
                     📌 {lang === 'ar' ? driver.evidence_stat_ar : driver.evidence_stat}
                   </div>
-                  <div className="text-micro text-emerald-700 dark:text-emerald-300 font-medium pt-1 border-t border-slate-200/80 dark:border-white/[0.06]">
+                  <div className="text-micro text-[color:var(--ok)] dark:text-emerald-300 font-medium pt-1 border-t border-[color:var(--line)]">
                     🎯 {lang === 'ar' ? driver.policy_lever_ar : driver.policy_lever}
                   </div>
                 </div>

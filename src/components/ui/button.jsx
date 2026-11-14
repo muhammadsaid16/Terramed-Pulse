@@ -4,17 +4,19 @@ import { cn } from '../../lib/utils';
 export const buttonVariants = {
   variant: {
     default:
-      'bg-sky-600 text-white hover:bg-sky-700 shadow-sm dark:bg-sky-500 dark:hover:bg-sky-600 dark:text-white',
+      'bg-sky-600 text-white hover:bg-sky-700 shadow-sm dark:bg-sky-500 dark:hover:bg-sky-600',
+    inverse:
+      'bg-[color:var(--inverse-bg)] text-[color:var(--inverse-fg)] hover:bg-[color:var(--inverse-bg-hover)] shadow-sm',
     secondary:
-      'bg-slate-100 text-slate-800 hover:bg-slate-200 dark:bg-white/[0.08] dark:text-white/90 dark:hover:bg-white/[0.14]',
+      'bg-[color:var(--panel-2)] text-[color:var(--ink-2)] hover:bg-[color:var(--line)] hover:text-[color:var(--ink)]',
     outline:
-      'border border-slate-200/90 bg-white/80 hover:bg-slate-50 text-slate-700 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/80 dark:hover:bg-white/[0.08]',
+      'border border-[color:var(--line-strong)] bg-[color:var(--panel)] hover:bg-[color:var(--panel-2)] text-[color:var(--ink-2)] hover:text-[color:var(--ink)]',
     ghost:
-      'text-slate-700 hover:bg-slate-100 dark:text-white/80 dark:hover:bg-white/[0.08]',
+      'text-[color:var(--ink-2)] hover:bg-[color:var(--panel-2)] hover:text-[color:var(--ink)]',
     destructive:
       'bg-rose-600 text-white hover:bg-rose-700 shadow-sm dark:bg-rose-500 dark:hover:bg-rose-600',
     link:
-      'text-sky-600 underline-offset-4 hover:underline dark:text-sky-400 p-0 h-auto'
+      'text-[color:var(--info)] underline-offset-4 hover:underline dark:text-sky-400 p-0 h-auto'
   },
   size: {
     default: 'h-9 px-4 py-2 text-xs sm:text-sm rounded-xl',

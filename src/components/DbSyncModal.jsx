@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Database, X, Check, Copy, RefreshCw, ShieldCheck, EyeOff } from 'lucide-react';
+import { Database, Check, Copy, RefreshCw, ShieldCheck, EyeOff } from 'lucide-react';
+import Modal from './ui/Modal';
 import { getSyncStatus, SQL_TABLE_SCHEMA } from '../lib/dbService';
 
 // An endpoint-and-posture view, not a credential form. There is nothing to paste here:
@@ -23,12 +24,7 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
   useEffect(() => {
     if (!isOpen) return undefined;
     setLastCheck(null);
-    // The overlay is a real dialog: it blocks the page behind it, so the keyboard has
-    // to be able to leave it. Discovered by trying to click past it in a browser.
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   const handleRecheck = async () => {
     setChecking(true);
@@ -89,43 +85,31 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
-      <div
-        className="bg-white/95 dark:bg-[#0c1222]/95 backdrop-blur-3xl border border-slate-200/90 dark:border-white/12 rounded-3xl max-w-2xl w-full p-6 sm:p-8 modal-spring space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto"
-        dir={isAr ? 'rtl' : 'ltr'}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-white/[0.08] pb-4">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-              <Database className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-base text-slate-900 dark:text-white">
-                {isAr ? 'نقطة إرسال البلاغات' : 'Report Submission Endpoint'}
-              </h3>
-              <p className="text-micro text-slate-500 dark:text-white/50">
-                {isAr
-                  ? 'Neon (Postgres) خلف دالة Cloudflare Pages: مسار كتابة فقط'
-                  : 'Neon (Postgres) behind a Cloudflare Pages Function: write path only'}
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="apple-chip p-1.5 rounded-full text-slate-400 hover:text-slate-700 dark:text-white/50 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.08] transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={isAr ? 'نقطة إرسال البلاغات' : 'Report Submission Endpoint'}
+      titleId="db-sync-title"
+      panelClassName="max-w-2xl"
+    >
+      <div className="flex items-center gap-3">
+        <div className="w-9 h-9 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+          <Database className="w-5 h-5 text-[color:var(--ok)] dark:text-emerald-400" />
         </div>
+        <p className="text-micro text-[color:var(--muted)]">
+          {isAr
+            ? 'Neon (Postgres) خلف دالة Cloudflare Pages: مسار كتابة فقط'
+            : 'Neon (Postgres) behind a Cloudflare Pages Function: write path only'}
+        </p>
+      </div>
 
         {/* Current posture pill */}
         <div className={`p-4 rounded-2xl border flex items-center justify-between gap-3 ${
           writesEnabled
-            ? 'bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-950/20 dark:border-emerald-500/30 dark:text-emerald-300'
+            ? 'bg-emerald-50 border-emerald-200 text-[color:var(--ok-soft)] dark:bg-emerald-950/20 dark:border-emerald-500/30 dark:text-emerald-300'
             : pending
-              ? 'bg-sky-50 border-sky-200 text-sky-800 dark:bg-sky-950/20 dark:border-sky-500/30 dark:text-sky-300'
-              : 'bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/20 dark:border-amber-500/30 dark:text-amber-300'
+              ? 'bg-sky-50 border-sky-200 text-[color:var(--info-soft)] dark:bg-sky-950/20 dark:border-sky-500/30 dark:text-sky-300'
+              : 'bg-amber-50 border-amber-200 text-[color:var(--warn-soft)] dark:bg-amber-950/20 dark:border-amber-500/30 dark:text-amber-300'
         }`}>
           <div className="flex items-center gap-2.5">
             <span className="relative flex h-2.5 w-2.5">
@@ -154,7 +138,7 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
             type="button"
             onClick={handleRecheck}
             disabled={checking}
-            className="text-micro px-2.5 py-1 rounded-lg bg-slate-200/80 hover:bg-slate-200 text-slate-800 dark:bg-white/10 dark:hover:bg-white/15 dark:text-white/80 transition-colors inline-flex items-center gap-1.5 disabled:opacity-50"
+            className="text-micro px-2.5 py-1 rounded-lg bg-[color:var(--line)] hover:bg-[color:var(--line)] text-[color:var(--ink)] dark:bg-[color:var(--surface-4)] dark:hover:bg-[color:var(--surface-4)] transition-colors inline-flex items-center gap-1.5 disabled:opacity-50"
           >
             <RefreshCw className={`w-3 h-3 ${checking ? 'animate-spin' : ''}`} />
             {isAr ? 'إعادة الفحص' : 'Re-check'}
@@ -172,28 +156,28 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
         )}
 
         {verdict && (
-          <div className="p-3 rounded-xl text-xs bg-slate-50 border border-slate-200 text-slate-700 dark:bg-white/[0.04] dark:border-white/10 dark:text-white/80 leading-relaxed">
+          <div className="p-3 rounded-xl text-xs bg-[color:var(--panel-2)] border border-[color:var(--line)] text-[color:var(--ink-2)] dark:bg-[color:var(--surface-2)] leading-relaxed">
             {verdict}
           </div>
         )}
 
         {/* What this topology actually guarantees */}
-        <div className="text-xs text-slate-600 dark:text-white/70 leading-relaxed bg-slate-50 dark:bg-white/[0.02] p-3.5 rounded-2xl border border-slate-200/80 dark:border-white/[0.06] space-y-2.5">
+        <div className="text-xs text-[color:var(--ink-2)] leading-relaxed bg-[color:var(--panel-2)] p-3.5 rounded-2xl border border-[color:var(--line)] space-y-2.5">
           <p>
             {isAr ? (
               <>
-                يعمل <b className="font-mono tracking-[0.15em]" dir="ltr">TERRAMED PULSE</b> دون خادم خاص به بالنسبة للبيانات والخرائط والمخططات: المؤشرات تُحسب من بذور مدمجة وتُعرض بلا شبكة. مسار البلاغات هو الاستثناء الوحيد: <span className="text-slate-900 dark:text-white font-medium">متصفح ثابت ← دالة Pages ← Neon</span>، والدالة هي الكيان الوحيد المسموح له بالكتابة.
+                يعمل <b className="font-mono tracking-[0.15em]" dir="ltr">TERRAMED PULSE</b> دون خادم خاص به بالنسبة للبيانات والخرائط والمخططات: المؤشرات تُحسب من بذور مدمجة وتُعرض بلا شبكة. مسار البلاغات هو الاستثناء الوحيد: <span className="text-[color:var(--ink)] font-medium">متصفح ثابت ← دالة Pages ← Neon</span>، والدالة هي الكيان الوحيد المسموح له بالكتابة.
               </>
             ) : (
               <>
-                <b className="font-mono tracking-[0.15em]" dir="ltr">TERRAMED PULSE</b> needs no server for its data, map and charts: indicators compute from the embedded satellite dataset and render with no network. The report feed is the one exception: <span className="text-slate-900 dark:text-white font-medium">static browser → Pages Function → Neon</span>, and the function is the only thing allowed to write.
+                <b className="font-mono tracking-[0.15em]" dir="ltr">TERRAMED PULSE</b> needs no server for its data, map and charts: indicators compute from the embedded satellite dataset and render with no network. The report feed is the one exception: <span className="text-[color:var(--ink)] font-medium">static browser → Pages Function → Neon</span>, and the function is the only thing allowed to write.
               </>
             )}
           </p>
           <ul className="space-y-2">
             {lines.map((line, i) => (
               <li key={i} className="flex items-start gap-2.5">
-                <line.icon className="w-3.5 h-3.5 shrink-0 mt-0.5 text-emerald-600 dark:text-emerald-400/80" />
+                <line.icon className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[color:var(--ok)] dark:text-emerald-400/80" />
                 <span>{line.text}</span>
               </li>
             ))}
@@ -201,9 +185,9 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
         </div>
 
         {/* Schema, for whoever holds the database console */}
-        <div className="pt-2 border-t border-slate-200/80 dark:border-white/[0.08] space-y-2">
+        <div className="pt-2 border-t border-[color:var(--line)] space-y-2">
           <div className="flex items-center justify-between gap-3">
-            <span className="text-micro font-medium text-slate-600 dark:text-white/60">
+            <span className="text-micro font-medium text-[color:var(--ink-2)]">
               {isAr
                 ? 'نفس ملف db/migrations/0001_neon_physician_reports.sql: يُنفَّذ في محرر Neon SQL:'
                 : 'Verbatim from db/migrations/0001_neon_physician_reports.sql, run in the Neon SQL Editor:'}
@@ -211,23 +195,23 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
             <button
               type="button"
               onClick={handleCopySql}
-              className="inline-flex items-center gap-1.5 text-micro font-medium px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 dark:bg-white/[0.06] dark:hover:bg-white/10 dark:text-white/80 dark:border-white/10 transition-colors shrink-0"
+              className="inline-flex items-center gap-1.5 text-micro font-medium px-2.5 py-1 rounded-lg bg-[color:var(--panel-2)] hover:bg-[color:var(--line)] text-[color:var(--ink)] border border-[color:var(--line)] dark:bg-[color:var(--surface-3)] dark:hover:bg-[color:var(--surface-4)] transition-colors shrink-0"
             >
               {copiedSql ? (
                 <>
-                  <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                  <span className="text-emerald-700 dark:text-emerald-300">{isAr ? 'تم النسخ!' : 'Copied!'}</span>
+                  <Check className="w-3.5 h-3.5 text-[color:var(--ok)] dark:text-emerald-400" />
+                  <span className="text-[color:var(--ok)] dark:text-emerald-300">{isAr ? 'تم النسخ!' : 'Copied!'}</span>
                 </>
               ) : (
                 <>
-                  <Copy className="w-3.5 h-3.5 text-slate-500 dark:text-white/60" />
+                  <Copy className="w-3.5 h-3.5 text-[color:var(--muted)]" />
                   <span>{isAr ? 'نسخ كود SQL' : 'Copy SQL'}</span>
                 </>
               )}
             </button>
           </div>
 
-          <p className="text-micro text-slate-500 dark:text-white/45 leading-relaxed">
+          <p className="text-micro text-[color:var(--muted)] leading-relaxed">
             {isAr
               ? 'يقرأ هذا الملف أي جدول موجود مسبقاً ويرفض التعديل عليه بدل الصمت. بعد التطبيق تُنشأ كلمة مرور للـ role web_writer من محرر SQL أو لوحة Neon، ثم توضع في Cloudflare كـ Secret باسم NEON_URL مع IP_SALT، ولا تضع أيّاً منهما في متغيّرات VITE_* لأن أي قيمة VITE تُدمج في الحزمة العامة.'
               : 'The file reads whatever table already exists and refuses to adapt to it rather than proceeding silently. After it is applied, set the web_writer password in the SQL Editor or the Neon dashboard, then attach it to Cloudflare as the NEON_URL secret alongside IP_SALT, and never as a VITE_* variable, because every VITE value is inlined into the public bundle.'}
@@ -235,12 +219,11 @@ export default function DbSyncModal({ isOpen, onClose, lang = 'en', syncStatus =
 
           <pre
             dir="ltr"
-            className="p-3 bg-slate-900 text-emerald-400 dark:bg-black/50 dark:text-emerald-300/80 rounded-xl font-mono text-2xs border border-slate-800 dark:border-white/5 overflow-x-auto max-h-32 select-all"
+            className="p-3 bg-[color:var(--ink)] text-emerald-400 dark:bg-black/50 rounded-xl font-mono text-2xs border border-[color:var(--line-strong)] overflow-x-auto max-h-32 select-all"
           >
             {SQL_TABLE_SCHEMA}
           </pre>
         </div>
-      </div>
-    </div>
+    </Modal>
   );
 }

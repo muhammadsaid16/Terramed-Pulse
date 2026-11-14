@@ -49,7 +49,7 @@ export default function InteractiveHoverCard({
         transition: 'transform 0.15s ease-out',
         willChange: 'transform'
       }}
-      className={`relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white/90 p-5 shadow-sm transition-shadow hover:shadow-lg dark:border-white/[0.08] dark:bg-[#0c1222]/80 dark:hover:border-white/[0.16] ${className}`}
+      className={`relative overflow-hidden rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel)] p-5 shadow-sm transition-shadow hover:shadow-lg hover:border-[color:var(--line-strong)] ${className}`}
       {...props}
     >
       {/* Dynamic Specular Glare */}

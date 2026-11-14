@@ -17,13 +17,17 @@ const GOV_MAP_COORDINATES = {
 
 // Calibrated 6-tier Climate & Heat scale: single source for the polygon/marker color and the on-map legend.
 // Tier `min` thresholds are mirrored in the legend caption strings — keep both in sync.
+// Marker fills are the one place the palette cannot be the light tint: the
+// number inside is white text, so each fill has to carry a 4.5:1 contrast
+// ratio against white. The scale dots below use the lighter tint of the same
+// hue, because a dot carries no text.
 const HEAT_TIERS = [
-  { min: 72, hex: '#f43f5e', dot: 'bg-rose-500 shadow-sm shadow-rose-500/50', labelKey: 'scaleCritical' },
-  { min: 63, hex: '#f97316', dot: 'bg-orange-500 shadow-sm shadow-orange-500/50', labelKey: 'scaleSevere' },
-  { min: 57, hex: '#f59e0b', dot: 'bg-amber-500 shadow-sm shadow-amber-500/50', labelKey: 'scaleArid' },
-  { min: 50, hex: '#8b5cf6', dot: 'bg-purple-500 shadow-sm shadow-purple-500/50', labelKey: 'scaleSmog' },
-  { min: 44, hex: '#06b6d4', dot: 'bg-cyan-500 shadow-sm shadow-cyan-500/50', labelKey: 'scaleModerate' },
-  { min: 10, hex: '#10b981', dot: 'bg-emerald-500 shadow-sm shadow-emerald-500/50', labelKey: 'scaleBaseline' }
+  { min: 72, hex: '#be123c', dot: 'bg-rose-500 shadow-sm shadow-rose-500/50', labelKey: 'scaleCritical' },
+  { min: 63, hex: '#c2410c', dot: 'bg-orange-500 shadow-sm shadow-orange-500/50', labelKey: 'scaleSevere' },
+  { min: 57, hex: '#a16207', dot: 'bg-amber-500 shadow-sm shadow-amber-500/50', labelKey: 'scaleArid' },
+  { min: 50, hex: '#6d28d9', dot: 'bg-purple-500 shadow-sm shadow-purple-500/50', labelKey: 'scaleSmog' },
+  { min: 44, hex: '#0e7490', dot: 'bg-cyan-500 shadow-sm shadow-cyan-500/50', labelKey: 'scaleModerate' },
+  { min: 10, hex: '#047857', dot: 'bg-emerald-500 shadow-sm shadow-emerald-500/50', labelKey: 'scaleBaseline' }
 ];
 
 // Severity scores are clamped to [10, 100] upstream, so the last tier is unreachable only below 10.
@@ -266,6 +270,7 @@ export default function MapModule({
       const color = getDynamicColor(severityScore);
       const isSelected = selectedGov === govId;
       const name = lang === 'ar' ? gov.name_ar : gov.name_en;
+      const metricLabel = t[MAP_METRIC_OPTIONS.find(o => o.id === mapMetric)?.labelKey] || mapMetric;
 
       const iconHtml = `
         <div class="relative flex items-center justify-center cursor-pointer group" style="width: 52px; height: 52px;">
@@ -277,8 +282,8 @@ export default function MapModule({
           </div>
           <div class="absolute -bottom-6 px-2.5 py-0.5 rounded-full text-2xs font-medium whitespace-nowrap border transition-[color,background-color,border-color,box-shadow,transform,filter] ${
             isSelected
-              ? 'bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-black dark:border-white scale-105 font-semibold shadow-md dark:shadow-[0_4px_16px_rgba(255,255,255,0.3)]'
-              : 'bg-white/95 text-slate-800 border-slate-200/90 shadow-md dark:bg-[#07090F]/90 dark:backdrop-blur-md dark:text-white/90 dark:border-white/10 dark:shadow-lg'
+              ? 'bg-[color:var(--inverse-bg)] text-[color:var(--inverse-fg)] hover:bg-[color:var(--inverse-bg-hover)] border-[color:var(--inverse-ring)] scale-105 font-semibold shadow-md'
+              : 'bg-[color:var(--panel)] text-[color:var(--ink)] border-[color:var(--line-strong)] shadow-md dark:bg-[#07090F]/90 dark:backdrop-blur-md dark:shadow-lg'
           }">
             ${name}
           </div>
@@ -293,7 +298,37 @@ export default function MapModule({
       });
 
       const marker = L.marker(coords, { icon: customIcon });
+      // The marker is the primary way to pick a governorate, so it needs a name
+      // a screen reader can read and a keyboard a user can reach. Leaflet
+      // creates the element itself, so the attributes go on the icon markup
+      // rather than on the marker afterwards.
+      const markerEl = marker.getElement();
+      if (markerEl) {
+        markerEl.setAttribute('role', 'button');
+        markerEl.setAttribute('tabindex', '0');
+        markerEl.setAttribute(
+          'aria-label',
+          `${name}, ${displayVal} ${metricLabel}, ${year}`
+        );
+      }
+      marker.on('add', () => {
+        const el = marker.getElement();
+        if (!el) return;
+        el.setAttribute('role', 'button');
+        el.setAttribute('tabindex', '0');
+        el.setAttribute(
+          'aria-label',
+          `${name}, ${displayVal} ${metricLabel}, ${year}`
+        );
+      });
       marker.on('click', () => setSelectedGov(govId));
+      marker.on('keydown', (event) => {
+        const key = event.originalEvent?.key;
+        if (key === 'Enter' || key === ' ') {
+          event.originalEvent.preventDefault?.();
+          setSelectedGov(govId);
+        }
+      });
       layerGroup.addLayer(marker);
     });
 
@@ -308,17 +343,21 @@ export default function MapModule({
 
     // 4. Native-style Palestine geographic label directly covering the erased spot
     const palestineMarker = L.marker([30.95, 34.96], {
+      title: 'Palestine',
+      alt: 'Palestine',
+      keyboard: false,
+      interactive: false,
       icon: L.divIcon({
         className: 'palestine-map-label',
+        // Decorative: the basemap label carries no datum the app exposes.
         html: `
-          <div style="display:inline-flex;align-items:center;justify-content:center;background:#414143;box-shadow:0 0 8px 6px #414143;border-radius:2px;padding:2px 4px;pointer-events:none;user-select:none;">
+          <div aria-label="Palestine" title="Palestine" style="display:inline-flex;align-items:center;justify-content:center;background:#414143;box-shadow:0 0 8px 6px #414143;border-radius:2px;padding:2px 4px;pointer-events:none;user-select:none;">
             <span style="color:#e2e8f0;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;white-space:nowrap;line-height:1;">PALESTINE</span>
           </div>
         `,
         iconSize: [78, 18],
         iconAnchor: [39, 9]
-      }),
-      interactive: false
+      })
     });
     layerGroup.addLayer(palestineMarker);
   }, [mapReady, data, selectedGov, selectedVar, year, mapMetric, lang]);
@@ -355,9 +394,9 @@ export default function MapModule({
         title_en: '2001-2012: Warming Acceleration & Upper Egypt Heat Escalation',
         title_ar: '2001-2012: تسارع الاحترار وتزايد الإجهاد الحراري بصعيد مصر',
         anomaly: '\u200E+0.65°C',
-        color: 'text-amber-950 dark:text-amber-300',
+        color: 'text-[color:var(--warn-soft)] dark:text-amber-300',
         badgeBg: 'bg-amber-200 dark:bg-amber-500/25',
-        badgeText: 'text-amber-950 dark:text-amber-100',
+        badgeText: 'text-[color:var(--warn-soft)] dark:text-amber-100',
         badgeBorder: 'border-amber-500 dark:border-amber-500/50',
         badge: t.phaseWarmingBadge
       };
@@ -379,10 +418,10 @@ export default function MapModule({
     <div className="flex flex-col h-full space-y-5">
       
       {/* Top Map Metric Selector Toolbar (Apple Segmented Style) */}
-      <div className="flex flex-wrap items-center justify-between gap-2.5 bg-slate-100/80 dark:bg-white/[0.03] backdrop-blur-xl p-2.5 rounded-[14px] border border-slate-200/90 dark:border-white/[0.08]">
+      <div className="flex flex-wrap items-center justify-between gap-2.5 bg-[color:var(--panel-2)] dark:bg-[color:var(--surface-2)] backdrop-blur-xl p-2.5 rounded-[14px] border border-[color:var(--line-strong)]">
         <div className="flex items-center gap-2 px-1">
-          <Layers className="w-4 h-4 text-sky-600 dark:text-sky-400" />
-          <span className="text-xs font-medium text-slate-700 dark:text-white/70">{t.layerSelectorLabel}</span>
+          <Layers className="w-4 h-4 text-[color:var(--info)] dark:text-sky-400" />
+          <span className="text-xs font-medium text-[color:var(--ink-2)]">{t.layerSelectorLabel}</span>
         </div>
         <div className="apple-segmented-track flex flex-wrap items-center gap-0.5">
           {MAP_METRIC_OPTIONS.map(metric => (
@@ -392,7 +431,7 @@ export default function MapModule({
               className={`apple-segmented-item px-2.5 py-1 text-micro font-medium transition-[color,background-color,border-color,box-shadow,transform,filter] ${
                 mapMetric === metric.id
                   ? 'apple-segmented-item-active'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 dark:text-white/60 dark:hover:text-white dark:hover:bg-white/[0.04]'
+                  : 'text-[color:var(--ink-2)] hover:text-[color:var(--ink)] hover:bg-[color:var(--line)] dark:hover:text-white dark:hover:bg-[color:var(--surface-2)]'
               }`}
             >
               {t[metric.labelKey]}
@@ -402,9 +441,9 @@ export default function MapModule({
       </div>
 
       {/* Active Layer Empirical Sensor Attribution Pill */}
-      <div className="flex items-start gap-2 text-micro bg-slate-50 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/[0.06] rounded-xl px-3 py-1.5 font-medium">
-        <span className="shrink-0 text-slate-500 dark:text-white/40">{t.sourcePrefix || 'المصدر:'}</span>
-        <span className="min-w-0 leading-snug text-sky-700 dark:text-sky-300/90 text-right rtl:text-left font-semibold">
+      <div className="flex items-start gap-2 text-micro bg-[color:var(--panel-2)] border border-[color:var(--line)] rounded-xl px-3 py-1.5 font-medium">
+        <span className="shrink-0 text-[color:var(--muted)]">{t.sourcePrefix || 'المصدر:'}</span>
+        <span className="min-w-0 leading-snug text-[color:var(--info)] dark:text-sky-300/90 text-right rtl:text-left font-semibold">
           {mapMetric === 'var'
             ? (t[`sensorSource_${selectedVar}`] || 'NASA Earth Observation')
             : (t[`sensorSource_${mapMetric}`] || 'NASA POWER / CAPMAS 2024')}
@@ -412,17 +451,17 @@ export default function MapModule({
       </div>
 
       {/* Map Viewport Container */}
-      <div className="relative isolate flex-1 min-h-[460px] rounded-[14px] overflow-hidden border border-slate-200/90 dark:border-white/[0.08] shadow-md dark:shadow-2xl">
+      <div className="relative isolate flex-1 min-h-[460px] rounded-[14px] overflow-hidden border border-[color:var(--line-strong)] shadow-md dark:shadow-2xl">
         <div ref={mapContainerRef} className="w-full h-full min-h-[460px]" />
 
         {basemapNoticeVisible && (
           <div
             role="status"
             aria-live="polite"
-            className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[450] max-w-[92%] flex items-start gap-2 bg-white/90 dark:bg-black/70 backdrop-blur-2xl px-3 py-2 rounded-xl border border-slate-200 dark:border-white/[0.14] shadow-xl"
+            className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[450] max-w-[92%] flex items-start gap-2 bg-[color:var(--panel)] dark:bg-black/70 backdrop-blur-2xl px-3 py-2 rounded-xl border border-[color:var(--line)] shadow-xl"
           >
-            <CloudOff className="w-3.5 h-3.5 shrink-0 text-amber-600 dark:text-amber-300 mt-0.5" />
-            <span className="text-micro leading-snug text-slate-800 dark:text-white/80">
+            <CloudOff className="w-3.5 h-3.5 shrink-0 text-[color:var(--warn)] dark:text-amber-300 mt-0.5" />
+            <span className="text-micro leading-snug text-[color:var(--ink)]">
               {t.basemapOffline}
             </span>
           </div>
@@ -430,16 +469,16 @@ export default function MapModule({
 
         {/* Basemap credit */}
         {creditedTilesVisible && (
-          <div className="absolute bottom-[78px] right-2 z-[400] px-1.5 py-0.5 rounded-md bg-white/70 text-slate-700 border border-slate-200/60 dark:border-transparent dark:bg-black/45 text-2xs leading-none dark:text-white/45 pointer-events-none">
+          <div className="absolute bottom-[78px] right-2 z-[400] px-1.5 py-0.5 rounded-md bg-[color:var(--panel)] text-[color:var(--ink-2)] border border-[rgb(var(--line-rgb)/0.6)] dark:border-transparent dark:bg-black/45 text-2xs leading-none pointer-events-none">
             © Esri, Source: Esri, Maxar, Earthstar Geographics
           </div>
         )}
 
         {/* Dynamic On-Map Year HUD Banner */}
-        <div className="absolute top-3 left-3 right-3 z-[400] bg-white/95 dark:bg-black/75 backdrop-blur-2xl px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl border border-slate-300 dark:border-white/[0.12] shadow-xl flex items-start sm:items-center justify-between gap-2">
+        <div className="absolute top-3 left-3 right-3 z-[400] bg-[color:var(--panel)] dark:bg-black/75 backdrop-blur-2xl px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl border border-[color:var(--line-strong)] shadow-xl flex items-start sm:items-center justify-between gap-2">
           <div className="flex min-w-0 items-start sm:items-center gap-2">
             <Flame className={`w-4 h-4 mt-0.5 sm:mt-0 shrink-0 ${timelinePhase.color}`} />
-            <span className="text-xs font-bold leading-snug text-slate-950 dark:text-white line-clamp-2 sm:line-clamp-1">
+            <span className="text-xs font-bold leading-snug text-[color:var(--ink)] line-clamp-2 sm:line-clamp-1">
               {lang === 'ar' ? timelinePhase.title_ar : timelinePhase.title_en}
             </span>
           </div>
@@ -454,15 +493,15 @@ export default function MapModule({
         </div>
 
         {/* Dynamic Live Heatmap Legend (desktop overlay) */}
-        <div className="absolute bottom-4 left-4 z-[400] hidden sm:block bg-white/90 dark:bg-black/75 backdrop-blur-2xl p-3.5 rounded-2xl border border-slate-200/80 dark:border-white/[0.12] shadow-lg dark:shadow-2xl text-xs space-y-1.5">
-          <div className="font-semibold text-micro text-slate-900 dark:text-white/90 flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
+        <div className="absolute bottom-4 left-4 z-[400] hidden sm:block bg-[color:var(--panel)] dark:bg-black/75 backdrop-blur-2xl p-3.5 rounded-2xl border border-[color:var(--line)] shadow-lg dark:shadow-2xl text-xs space-y-1.5">
+          <div className="font-semibold text-micro text-[color:var(--ink)] flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[color:var(--info)] dark:text-sky-400" />
             <span>{t.heatScaleTitle} ({year})</span>
           </div>
           {HEAT_TIERS.map(tier => (
             <div key={tier.labelKey} className="flex items-center gap-2 text-2xs">
               <span className={`w-2.5 h-2.5 rounded-full ${tier.dot}`}></span>
-              <span className="text-slate-700 dark:text-white/80 font-medium">
+              <span className="text-[color:var(--ink-2)] font-medium">
                 {t[tier.labelKey]}
               </span>
             </div>
@@ -471,28 +510,28 @@ export default function MapModule({
       </div>
 
       {/* Compact heat-scale legend for phones (keeps the map viewport clear) */}
-      <div className="sm:hidden rounded-[14px] border border-slate-200/80 dark:border-white/[0.08] bg-slate-50 dark:bg-white/[0.02] p-3">
-        <div className="flex items-center gap-1.5 text-micro font-semibold text-slate-900 dark:text-white/90">
-          <Sparkles className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
+      <div className="sm:hidden rounded-[14px] border border-[color:var(--line)] bg-[color:var(--panel-2)] p-3">
+        <div className="flex items-center gap-1.5 text-micro font-semibold text-[color:var(--ink)]">
+          <Sparkles className="w-3.5 h-3.5 text-[color:var(--info)] dark:text-sky-400" />
           <span>{t.heatScaleTitle} ({year})</span>
         </div>
         <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1.5">
           {HEAT_TIERS.map(tier => (
-            <div key={tier.labelKey} className="flex items-center gap-1.5 text-[10px]">
+            <div key={tier.labelKey} className="flex items-center gap-1.5 text-[11px]">
               <span className={`w-2 h-2 shrink-0 rounded-full ${tier.dot}`}></span>
-              <span className="font-medium text-slate-700 dark:text-white/75">{t[tier.labelKey]}</span>
+              <span className="font-medium text-[color:var(--ink-2)]">{t[tier.labelKey]}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* 30-Year Time-Lapse Slider Control Box (Apple Player Aesthetics) */}
-      <div className="p-4 rounded-[14px] bg-slate-100/70 dark:bg-white/[0.03] backdrop-blur-xl border border-slate-200/90 dark:border-white/[0.08] space-y-3">
+      <div className="p-4 rounded-[14px] bg-[color:var(--panel-2)] dark:bg-[color:var(--surface-2)] backdrop-blur-xl border border-[color:var(--line-strong)] space-y-3">
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsPlaying(!isPlaying)}
-              className="apple-chip px-3.5 py-1.5 rounded-full bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 font-semibold flex items-center gap-1.5 shadow-sm transition-[color,background-color,border-color,box-shadow,transform,filter] text-xs"
+              className="apple-chip px-3.5 py-1.5 rounded-full bg-[color:var(--inverse-bg)] text-[color:var(--inverse-fg)] hover:bg-[color:var(--inverse-bg-hover)] font-semibold flex items-center gap-1.5 shadow-sm transition-[color,background-color,border-color,box-shadow,transform,filter] text-xs"
             >
               {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
               <span>{isPlaying ? t.btnPauseTime : t.btnPlayTime}</span>
@@ -500,7 +539,7 @@ export default function MapModule({
 
             <button
               onClick={() => setYear(prev => Math.max(1995, prev - 1))}
-              className="apple-chip p-2 rounded-full bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] dark:text-white/80 dark:border-white/10"
+              className="apple-chip p-2 rounded-full bg-[color:var(--panel)] hover:bg-[color:var(--panel-2)] text-[color:var(--ink-2)] border border-[color:var(--line)] dark:bg-[color:var(--surface-3)] dark:hover:bg-[color:var(--surface-2)]"
               title={t.prevYearTitle}
             >
               <ChevronLeft className="w-3.5 h-3.5" />
@@ -508,7 +547,7 @@ export default function MapModule({
 
             <button
               onClick={() => setYear(prev => Math.min(2025, prev + 1))}
-              className="apple-chip p-2 rounded-full bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] dark:text-white/80 dark:border-white/10"
+              className="apple-chip p-2 rounded-full bg-[color:var(--panel)] hover:bg-[color:var(--panel-2)] text-[color:var(--ink-2)] border border-[color:var(--line)] dark:bg-[color:var(--surface-3)] dark:hover:bg-[color:var(--surface-2)]"
               title={t.nextYearTitle}
             >
               <ChevronRight className="w-3.5 h-3.5" />
@@ -516,8 +555,8 @@ export default function MapModule({
           </div>
 
           <div className="flex items-center gap-2.5">
-            <span className="text-slate-500 dark:text-white/45 font-medium text-xs">{t.timelapseYearLabel}</span>
-            <span dir="ltr" className="text-xl font-semibold text-slate-900 dark:text-white tabular-nums bg-white dark:bg-white/[0.06] px-3 py-0.5 rounded-xl border border-slate-200/80 dark:border-white/10 shadow-sm">
+            <span className="text-[color:var(--muted)] font-medium text-xs">{t.timelapseYearLabel}</span>
+            <span dir="ltr" className="text-xl font-semibold text-[color:var(--ink)] tabular-nums bg-[color:var(--panel)] dark:bg-[color:var(--surface-3)] px-3 py-0.5 rounded-xl border border-[color:var(--line)] shadow-sm">
               {year}
             </span>
           </div>
@@ -530,20 +569,22 @@ export default function MapModule({
             min="1995"
             max="2025"
             value={year}
+            aria-label={t.timelapseYearLabel || 'Year'}
+            aria-valuetext={`${year}`}
             onChange={(e) => {
               setYear(Number(e.target.value));
               if (isPlaying) setIsPlaying(false);
             }}
             className="slider-teal w-full"
           />
-          <div className="flex justify-between text-micro font-medium text-slate-500 dark:text-white/45 px-1 tabular-nums">
-            <span className="text-emerald-600 dark:text-emerald-400/90 font-medium">
+          <div className="flex justify-between text-micro font-medium text-[color:var(--muted)] px-1 tabular-nums">
+            <span className="text-[color:var(--ok)] dark:text-emerald-400/90 font-medium">
               {t.yearBaselineCaption}
             </span>
-            <span className="text-amber-600 dark:text-amber-400/90 font-medium">
+            <span className="text-[color:var(--warn)] dark:text-amber-400/90 font-medium">
               {t.yearMidCaption}
             </span>
-            <span className="text-rose-600 dark:text-rose-400/90 font-medium">
+            <span className="text-[color:var(--danger)] dark:text-rose-400/90 font-medium">
               {t.yearPeakCaption}
             </span>
           </div>

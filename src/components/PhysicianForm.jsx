@@ -241,7 +241,7 @@ export default function PhysicianForm({
             </div>
 
             {/* Migration Intent (Apple Segmented Style) */}
-            <div className="p-3 bg-white/[0.03] rounded-2xl border border-white/[0.08] space-y-2">
+            <div className="p-3 bg-[color:var(--surface-2)] rounded-2xl border border-white/[0.08] space-y-2">
               <label className="text-micro font-medium text-white/70 block">
                 {t.inputMigration}
               </label>
@@ -257,7 +257,7 @@ export default function PhysicianForm({
                     onClick={() => setFormData({ ...formData, considering_migration: opt.id })}
                     className={`apple-chip py-2 px-1 rounded-full text-xs font-medium transition-[color,background-color,border-color,box-shadow,transform,filter] text-center whitespace-nowrap ${
                       formData.considering_migration === opt.id
-                        ? 'bg-white text-black font-semibold shadow-sm'
+                        ? 'bg-[color:var(--panel)] text-black font-semibold shadow-sm'
                         : 'text-white/60 hover:text-white'
                     }`}
                   >
@@ -361,7 +361,7 @@ export default function PhysicianForm({
 
           {/* Toast Notification */}
           {toastMessage && (
-            <div className="p-3 bg-white/[0.08] border border-white/15 rounded-xl text-xs text-white flex items-center gap-2 shadow-xl enter-success-pop">
+            <div className="p-3 bg-[color:var(--surface-3)] border border-white/15 rounded-xl text-xs text-white flex items-center gap-2 shadow-xl enter-success-pop">
               <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
               <span>{toastMessage}</span>
             </div>
@@ -385,7 +385,7 @@ export default function PhysicianForm({
                     ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/25 hover:bg-emerald-500/20 shadow-sm'
                     : syncState === 'pending'
                       ? 'bg-sky-500/10 text-sky-300 border-sky-500/25'
-                      : 'bg-white/[0.04] text-white/70 border-white/10 hover:bg-white/[0.08]'
+                      : 'bg-[color:var(--surface-2)] text-white/70 border-white/10 hover:bg-[color:var(--surface-3)]'
                 }`}
                 title={t.dbBadgeTooltip}
               >
@@ -395,13 +395,13 @@ export default function PhysicianForm({
               </button>
 
               {communityReports.length > 0 ? (
-                <div className="flex items-center bg-white/[0.04] p-0.5 rounded-full border border-white/10">
+                <div className="flex items-center bg-[color:var(--surface-2)] p-0.5 rounded-full border border-white/10">
                   <button
                     type="button"
                     onClick={() => setActiveFeedTab('local')}
                     className={`text-micro font-medium px-2.5 py-0.5 rounded-full transition-[color,background-color,border-color,box-shadow,transform,filter] ${
                       activeFeedTab === 'local'
-                        ? 'bg-white/[0.12] text-white shadow-sm'
+                        ? 'bg-[color:var(--surface-4)] text-white shadow-sm'
                         : 'text-white/50 hover:text-white/80'
                     }`}
                   >
@@ -420,7 +420,7 @@ export default function PhysicianForm({
                   </button>
                 </div>
               ) : (
-                <span className="text-micro text-white/60 font-medium bg-white/[0.06] px-2.5 py-0.5 rounded-full border border-white/10">
+                <span className="text-micro text-white/60 font-medium bg-[color:var(--surface-3)] px-2.5 py-0.5 rounded-full border border-white/10">
                   {t.feedSubLocal} ({reports.length})
                 </span>
               )}
@@ -429,7 +429,7 @@ export default function PhysicianForm({
 
           <div className="space-y-3 max-h-[540px] overflow-y-auto pr-1">
             {((activeFeedTab === 'community' && communityReports.length > 0) ? communityReports : reports).length === 0 && (
-              <div className="py-12 px-5 text-center rounded-2xl border border-dashed border-white/12 bg-white/[0.02]">
+              <div className="py-12 px-5 text-center rounded-2xl border border-dashed border-white/12 bg-[color:var(--surface-2)]">
                 <p className="text-sm font-semibold text-white/70">{t.feedEmptyTitle}</p>
                 <p className="text-xs text-white/45 mt-2 leading-relaxed max-w-md mx-auto">
                   {activeFeedTab === 'community' ? t.communityFeedDesc : t.feedEmptySub}
@@ -458,7 +458,7 @@ export default function PhysicianForm({
                       <span className="text-xs font-semibold text-white">
                         {docName}
                       </span>
-                      <span className="text-2xs font-medium px-2 py-0.5 rounded-full bg-white/[0.06] text-white/70 border border-white/10">
+                      <span className="text-2xs font-medium px-2 py-0.5 rounded-full bg-[color:var(--surface-3)] text-white/70 border border-white/10">
                         {displaySpecialty}
                       </span>
                     </div>
@@ -486,7 +486,7 @@ export default function PhysicianForm({
                     </span>
                   </div>
 
-                  <p className="text-xs text-white/70 leading-relaxed bg-white/[0.02] p-3 rounded-xl border border-white/[0.05] font-normal">
+                  <p className="text-xs text-white/70 leading-relaxed bg-[color:var(--surface-2)] p-3 rounded-xl border border-white/[0.05] font-normal">
                     "{rep.comment}"
                   </p>
                 </div>

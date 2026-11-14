@@ -168,27 +168,3 @@ test('methodology modal documents the ER model and 3 studies', async () => {
   assert.match(body, /Three-Study Meta-Synthesis/);
   assert.match(body, /does not estimate absolute admissions/);
 });
-
-test('English print brief uses ER pressure and no absolute counts', async () => {
-  await page.addInitScript(() => {
-    window.print = () => { window.__printed = true; };
-  });
-  await open('/?lang=en&gov=aswan');
-  await page.locator('button[title="Print Brief"]:visible').first().click();
-  await page.waitForFunction(() => window.__printed === true, null, { timeout: 5000 });
-  const printText = await page.locator('#print-executive-brief').textContent();
-  assert.match(printText, /Climate-Sensitive ER Pressure Reduction/);
-  assert.doesNotMatch(printText, /1,159|1,735/);
-});
-
-test('Arabic print brief renders RTL content and no absolute counts', async () => {
-  await page.addInitScript(() => {
-    window.print = () => { window.__printed = true; };
-  });
-  await open('/?lang=ar&gov=aswan');
-  await page.locator('button[title="طباعة التقرير التنفيذي"]:visible').first().click();
-  await page.waitForFunction(() => window.__printed === true, null, { timeout: 5000 });
-  const printText = await page.locator('#print-executive-brief').textContent();
-  assert.match(printText, /خفض ضغط الطوارئ المرتبط بالإجهاد المناخي/);
-  assert.doesNotMatch(printText, /1,159|1,735/);
-});

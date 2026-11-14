@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Activity, Stethoscope, FileText, Sliders, Globe, Compass, Printer, Menu, X, Satellite, Sun, Moon } from 'lucide-react';
+import { Activity, Stethoscope, FileText, Sliders, Globe, Compass, Menu, X, Satellite, Sun, Moon } from 'lucide-react';
 import { Button, Badge } from './ui';
 import { scrollBehavior } from '../lib/motionTokens';
 
@@ -118,16 +118,6 @@ export default function Header({
           </Button>
 
           <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => window.print()}
-            className="hidden h-8 w-8 rounded-full sm:flex"
-            title={t.btnPrintBrief}
-          >
-            <Printer className="h-3.5 w-3.5 shrink-0 text-[color:var(--muted)]" />
-          </Button>
-
-          <Button
             variant="outline"
             size="chip"
             onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
@@ -209,16 +199,6 @@ export default function Header({
             >
               <Compass className="h-3.5 w-3.5 text-[color:var(--accent)]" />
               <span>{t.btnWizard}</span>
-            </button>
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                window.print();
-              }}
-              className="flex items-center justify-center gap-1.5 rounded-xl border border-[color:var(--line)] bg-[color:var(--panel-2)] px-3 py-2 text-xs font-medium text-[color:var(--ink-2)] hover:border-[color:var(--line-strong)]"
-            >
-              <Printer className="h-3.5 w-3.5 text-[color:var(--muted)]" />
-              <span>{t.btnPrintBrief}</span>
             </button>
           </div>
         </div>

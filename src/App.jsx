@@ -4,7 +4,6 @@ import Header from './components/Header';
 import KpiStrip from './components/KpiStrip';
 import OppositeTrends from './components/OppositeTrends';
 import DataProvenance from './components/DataProvenance';
-import PrintBrief from './components/PrintBrief';
 import Footer from './components/Footer';
 import AtmosphericField from './components/AtmosphericField';
 import SectionHeader from './components/SectionHeader';
@@ -340,18 +339,6 @@ export default function App() {
         <AtmosphericField theme={theme} className="opacity-95" />
         <div className="absolute inset-0 grid-field grid-field-global" />
       </div>
-
-      {/* Official Government Print Brief Container */}
-      <PrintBrief
-        govData={currentGovData}
-        selectedGov={selectedGov}
-        year={year}
-        selectedVar={selectedVar}
-        reports={reports}
-        allGovs={appData?.governorates}
-        lang={lang}
-        t={t}
-      />
 
       {/* Main Top Header */}
       <Header

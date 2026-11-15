@@ -1,4 +1,4 @@
-# TerraPulse: Stay & Build Egypt — NASA Earth System Trend Detective
+# Terramed Pulse: Stay & Build Egypt — NASA Earth System Trend Detective
 ### ابقَ وابنِ — محقق اتجاهات نظام الأرض وبوصلة الأثر الصحي والبيئي في مصر
 
 **NASA Space Apps Challenge 2026** — *Category: "Be An Earth System Trend Detective!"*  
@@ -18,7 +18,7 @@ Egypt stands at a critical climate and human capital crossroads. While global an
 
 Compounding this environmental divergence is Egypt's severe physician brain drain: over 50% of recent medical graduates seek opportunities abroad (WHO EMHJ cohort, $n=885$), leaving Upper Egypt with as few as **5.2 physicians per 10,000 residents** (compared to 16.5 in Cairo, CAPMAS 2024).
 
-**TerraPulse ("Stay & Build Egypt" — ابقَ وابنِ)** bridges this gap. It acts as an interactive Earth System Trend Detective and public health compass that connects NASA satellite data directly to clinical demand, crowdsources verified physician field observations, and equips decision-makers with a "What-If" policy simulation lab to retain medical talent and protect vulnerable communities.
+**Terramed Pulse ("Stay & Build Egypt" — ابقَ وابنِ)** bridges this gap. It acts as an interactive Earth System Trend Detective and public health compass that connects NASA satellite data directly to clinical demand, crowdsources verified physician field observations, and equips decision-makers with a "What-If" policy simulation lab to retain medical talent and protect vulnerable communities.
 
 ---
 
@@ -29,13 +29,13 @@ Compounding this environmental divergence is Egypt's severe physician brain drai
 
 يتزامن ذلك مع هجرة الكوادر الطبية الشابة للخارج (أكثر من 50% ينوون الهجرة وفق دراسة الصحة العالمية EMHJ)، مما أدى لعجز طبي حاد في الصعيد (5.2 طبيب لكل 10 آلاف مواطن بأسوان مقابل 16.5 بالقاهرة وفق تعداد CAPMAS 2024).
 
-تأتي منصة **"تيرابالس: ابقَ وابنِ"** لتكون محققاً فضائياً تفاعلياً لاتجاهات الأرض وبوصلة للأثر الصحي؛ تربط قياسات أقمار ناسا باحتياجات التخصصات الطبية، وتستقبل بلاغات الأطباء الميدانية في الوقت الفعلي، وتتيح لصناع القرار محاكاة تدخلات السياسات لتوجيه الموارد واستبقاء الأطباء لحماية أرواح المصريين.
+تأتي منصة **"تيراميد بالس (Terramed Pulse): ابقَ وابنِ"** لتكون محققاً فضائياً تفاعلياً لاتجاهات الأرض وبوصلة للأثر الصحي؛ تربط قياسات أقمار ناسا باحتياجات التخصصات الطبية، وتستقبل بلاغات الأطباء الميدانية في الوقت الفعلي، وتتيح لصناع القرار محاكاة تدخلات السياسات لتوجيه الموارد واستبقاء الأطباء لحماية أرواح المصريين.
 
 ---
 
 ## 🔬 Scientific Triangulation: Delineating NASA Data, Potential Health Impact & Medical Statistics
 
-To maintain strict scientific integrity and avoid conflating remote sensing observations with clinical epidemiology, TerraPulse clearly differentiates between three distinct evidence tiers:
+To maintain strict scientific integrity and avoid conflating remote sensing observations with clinical epidemiology, Terramed Pulse clearly differentiates between three distinct evidence tiers:
 
 | Evidence Tier | Data Source & Nature | What It Proves (Strengths) | Methodological Boundary (Limitations) |
 |---|---|---|---|
@@ -47,7 +47,7 @@ To maintain strict scientific integrity and avoid conflating remote sensing obse
 
 ## 🛰️ NASA Earth Observation Datasets & Sensors
 
-TerraPulse integrates multi-sensor NASA Earth observations covering the continuous 30-year baseline from 1995 to 2025:
+Terramed Pulse integrates multi-sensor NASA Earth observations covering the continuous 30-year baseline from 1995 to 2025:
 
 | Dataset / Sensor | Variable Identifier | Spatial & Temporal Resolution | Public Health & Environmental Relevance |
 |---|---|---|---|
@@ -65,7 +65,7 @@ TerraPulse integrates multi-sensor NASA Earth observations covering the continuo
 
 ## 📐 Mathematical & Statistical Architecture
 
-TerraPulse features an in-browser statistical calculation engine that executes non-parametric and parametric trend tests on demand with zero server roundtrips:
+Terramed Pulse features an in-browser statistical calculation engine that executes non-parametric and parametric trend tests on demand with zero server roundtrips:
 
 ### 1. Ordinary Least Squares (OLS) Linear Regression & Student's t 95% Confidence Interval
 $$\text{Slope } m = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^n (x_i - \bar{x})^2}, \quad \text{Intercept } b = \bar{y} - m\bar{x}$$
@@ -107,7 +107,7 @@ $$\text{HNI} = 0.35 \times \text{EPI} + 0.30 \times \text{PPI} + 0.20 \times \te
 ## 🏛️ System Modules
 
 ```
-TerraPulse Architecture
+Terramed Pulse Architecture
 │
 ├── Module 1: Earth System Trend Detective & Spatial Map
 │   ├── Leaflet.js Interactive Egypt Map (5 Governorates: Cairo, Giza, Alex, Assiut, Aswan)
@@ -166,7 +166,7 @@ npm run preview
 > the **Esri ArcGIS `World_Dark_Gray_Base` tile layer** (offline, the map keeps its polygons,
 > markers, legend and time-lapse on a plain grid canvas and shows a "basemap unavailable"
 > notice instead of retrying), the **Inter/Cairo webfonts** from Google Fonts (system-font
-> fallback), and **the report submission endpoint** when one is deployed. TerraPulse is
+> fallback), and **the report submission endpoint** when one is deployed. Terramed Pulse is
 > offline-*capable*, not fully offline — and since the cloud write path landed, "no
 > backend" is true of the data and false of the feed.
 >

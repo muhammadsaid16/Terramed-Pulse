@@ -265,7 +265,6 @@ Terramed-Pulse/
 │       ├── MapModule.jsx        # Watermark-free Leaflet map (Esri Dark) + 1995-2025 time-lapse
 │       ├── TrendChartModule.jsx # 30-yr Chart.js series, anomaly toggle, Mann-Kendall badge
 │       ├── OppositeTrends.jsx   # Upper Egypt arid warming vs Nile Delta humidity/aerosols
-│       ├── DataProvenance.jsx   # Interactive dataset provenance, DOIs, sensors, and licenses
 │       ├── DoctorMatcher.jsx    # "Stay & Build" 8-specialty clinical impact matcher
 │       ├── PhysicianObservatory.jsx # Empirical clinical benchmarks & local case logging
 │       ├── DecisionMaker.jsx    # What-If simulator & 3 executive Chart.js dashboards

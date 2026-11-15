@@ -3,7 +3,6 @@ import { Stethoscope, BarChart3, ShieldCheck } from 'lucide-react';
 import Header from './components/Header';
 import KpiStrip from './components/KpiStrip';
 import OppositeTrends from './components/OppositeTrends';
-import DataProvenance from './components/DataProvenance';
 import Footer from './components/Footer';
 import AtmosphericField from './components/AtmosphericField';
 import SectionHeader from './components/SectionHeader';
@@ -612,9 +611,6 @@ export default function App() {
 
         {/* Opposite Trends Demonstration Showcase */}
         <OppositeTrends t={t} lang={lang} />
-
-        {/* Where every figure on the page came from */}
-        <DataProvenance t={t} lang={lang} />
 
         {/* ===================================================================
             MODULE 2: DOCTOR IMPACT MATCHER (STAY & BUILD EGYPT)

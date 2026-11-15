@@ -7,7 +7,7 @@
     "end_year": 2025,
     "total_years": 31,
     "governorates_count": 5,
-    "generated_at": "2026-10-28T18:10:20.867034Z",
+    "generated_at": "2026-11-14T18:10:20.867034Z",
     "sources": {
       "nasa_power": "NASA POWER API (LaRC) v2.0 Monthly Point Parameters (T2M, T2M_MAX, RH2M, ALLSKY_SFC_SW_DWN)",
       "merra2": "NASA MERRA-2 Reanalysis (GMAO) Total Aerosol Optical Depth 550nm (AOD) & PM2.5",

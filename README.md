@@ -4,6 +4,9 @@
 **NASA Space Apps Challenge 2026** — *Category: "Be An Earth System Trend Detective!"*  
 *Developed with WhiteRoom Labs*
 
+🌐 **Live Website / رابط المنصة المباشر:** [https://terramed-pulse.pages.dev](https://terramed-pulse.pages.dev)  
+🚀 **Source Code Repository:** [https://github.com/muhammadsaid16/Terramed-Pulse](https://github.com/muhammadsaid16/Terramed-Pulse)
+
 ---
 
 ## 🌍 Executive Summary (الموجز التنفيذي)

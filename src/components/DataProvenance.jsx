@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Database, ExternalLink, ChevronDown } from 'lucide-react';
 import { TERRAPULSE_DATA } from '../data/terrapulseData';
-import { getHeadlineMetrics } from '../lib/headlineMetrics';
 import Reveal from './Reveal';
 
 /**
@@ -69,7 +68,6 @@ const NASA_SOURCES = [
 export default function DataProvenance({ lang = 'en', t }) {
   const [openId, setOpenId] = useState(null);
   const isAr = lang === 'ar';
-  const m = getHeadlineMetrics();
   const meta = TERRAPULSE_DATA.metadata || {};
 
   return (
@@ -193,21 +191,6 @@ export default function DataProvenance({ lang = 'en', t }) {
             );
           })}
         </ul>
-
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[color:var(--line)] bg-[color:var(--surface-3)] px-5 py-3.5 font-mono text-[11px] text-[color:var(--muted)] sm:px-7">
-          <span>
-            {isAr ? 'إصدار البيانات' : 'Dataset build'}:{' '}
-            <span className="text-[color:var(--ink-2)]" dir="ltr">{meta.generated_at}</span>
-          </span>
-          <span>
-            {isAr ? 'أقوى اختبار اتجاه' : 'Strongest trend test'}:{' '}
-            <span className="text-[color:var(--ink-2)]" dir="ltr">
-              {m.strongestMk
-                ? `${m.strongestMk.variable} · Z=${m.strongestMk.z.toFixed(2)}`
-                : '—'}
-            </span>
-          </span>
-        </div>
       </section>
     </Reveal>
   );

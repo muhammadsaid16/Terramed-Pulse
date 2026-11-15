@@ -14,6 +14,7 @@ const DecisionMaker = lazy(() => import('./components/DecisionMaker'));
 const WizardModal = lazy(() => import('./components/WizardModal'));
 const MathModal = lazy(() => import('./components/MathModal'));
 const DbSyncModal = lazy(() => import('./components/DbSyncModal'));
+const FortiGuardModal = lazy(() => import('./components/FortiGuardModal'));
 const GovernorateCompare = lazy(() => import('./components/GovernorateCompare'));
 const DoctorMatcher = lazy(() => import('./components/DoctorMatcher'));
 const PhysicianObservatory = lazy(() => import('./components/PhysicianObservatory'));
@@ -92,6 +93,11 @@ export default function App() {
   const [isDbModalOpen, setIsDbModalOpen] = useState(() => {
     try {
       return new URLSearchParams(window.location.search).get('modal') === 'db';
+    } catch { return false; }
+  });
+  const [isFortiGuardOpen, setIsFortiGuardOpen] = useState(() => {
+    try {
+      return new URLSearchParams(window.location.search).get('modal') === 'fortiguard';
     } catch { return false; }
   });
   const [syncStatus, setSyncStatus] = useState(() => ({
@@ -350,6 +356,7 @@ export default function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onOpenWizard={() => setIsWizardOpen(true)}
+        onOpenFortiGuard={() => setIsFortiGuardOpen(true)}
       />
 
       {/* ===================================================================
@@ -696,6 +703,17 @@ export default function App() {
             onClose={() => setIsDbModalOpen(false)}
             lang={lang}
             syncStatus={syncStatus}
+          />
+        </Suspense>
+      )}
+
+      {isFortiGuardOpen && (
+        <Suspense fallback={null}>
+          <FortiGuardModal
+            isOpen={isFortiGuardOpen}
+            onClose={() => setIsFortiGuardOpen(false)}
+            lang={lang}
+            t={t}
           />
         </Suspense>
       )}

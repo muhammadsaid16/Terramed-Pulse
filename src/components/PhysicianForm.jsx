@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Edit3, Send, CheckCircle2, MapPin, Building, Database } from 'lucide-react';
 import { SPECIALTY_SHORT_LABELS, specialtyLabel } from '../lib/specialties';
 import { LIMITS } from '../lib/reportLimits';
+import { inspectRequest } from '../lib/fortiguardShield';
 
 export default function PhysicianForm({
   reports,
@@ -81,6 +82,26 @@ export default function PhysicianForm({
     const submittedDocName = isAnonymous || !formData.doctor.trim()
       ? (t.anonymousDoctorName || (lang === 'ar' ? 'طبيب مجهول' : 'Anonymous Physician'))
       : formData.doctor.trim();
+
+    // FortiGuard WAF Inline Inspection
+    const fortiguardCheck = inspectRequest({
+      target: 'PHYSICIAN_OBSERVATORY_FORM',
+      payload: {
+        doctor: submittedDocName,
+        hospital: formData.hospital.trim(),
+        comment: formData.comment.trim()
+      }
+    });
+
+    if (!fortiguardCheck.allowed) {
+      setErrors({
+        comment: lang === 'ar'
+          ? `تم حجب المدخلات بواسطة FortiGuard WAF: كود البصمة [${fortiguardCheck.signature || 'FG-WAF-BLOCK'}]`
+          : `Blocked by FortiGuard WAF: Malicious vector [${fortiguardCheck.signature || 'FG-WAF-BLOCK'}]`
+      });
+      setErrorNonce(n => n + 1);
+      return;
+    }
 
     const newReport = {
       id: `report-${Date.now()}`,

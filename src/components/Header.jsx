@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Activity, Stethoscope, FileText, Sliders, Globe, Compass, Menu, X, Satellite, Sun, Moon } from 'lucide-react';
+import { Activity, Stethoscope, FileText, Sliders, Globe, Compass, Menu, X, Satellite, Sun, Moon, ShieldCheck } from 'lucide-react';
 import { Button, Badge } from './ui';
 import { scrollBehavior } from '../lib/motionTokens';
 
@@ -23,7 +23,8 @@ export default function Header({
   t,
   activeTab,
   setActiveTab,
-  onOpenWizard
+  onOpenWizard,
+  onOpenFortiGuard
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -120,6 +121,21 @@ export default function Header({
           <Button
             variant="outline"
             size="chip"
+            onClick={onOpenFortiGuard}
+            className="flex items-center gap-1.5 border-cyan-500/30 bg-cyan-500/10 text-cyan-600 hover:border-cyan-400 dark:text-cyan-400"
+            title={t.btnFortiGuard || "FortiGuard WAF"}
+            aria-label={t.btnFortiGuard || "FortiGuard WAF"}
+          >
+            <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-cyan-600 dark:text-cyan-400" />
+            <span className="hidden whitespace-nowrap text-micro font-mono font-bold sm:inline-block">
+              {t.btnFortiGuard || "FortiGuard"}
+            </span>
+            <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          </Button>
+
+          <Button
+            variant="outline"
+            size="chip"
             onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
             className="flex items-center gap-1.5"
             title={theme === 'dark' ? t.themeLight : t.themeDark}
@@ -199,6 +215,16 @@ export default function Header({
             >
               <Compass className="h-3.5 w-3.5 text-[color:var(--accent)]" />
               <span>{t.btnWizard}</span>
+            </button>
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenFortiGuard();
+              }}
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-3 py-2 text-xs font-medium text-cyan-600 dark:text-cyan-400"
+            >
+              <ShieldCheck className="h-3.5 w-3.5" />
+              <span>{t.btnFortiGuard || "FortiGuard WAF"}</span>
             </button>
           </div>
         </div>

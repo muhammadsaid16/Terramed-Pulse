@@ -9,7 +9,7 @@
     "functions": "wrangler pages dev dist --port 8788 --compatibility-date 2025-06-01",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node src/lib/trendEngine.test.mjs && node src/data/terrapulseData.parity.test.mjs && node src/lib/syncContract.test.mjs && node src/lib/chartAdapters.test.mjs && node src/components/PhysicianForm.integrity.test.mjs && node src/lib/headlineMetrics.test.mjs && node pipeline/test-legacy-engine.js && python3 pipeline/test_trend_engine.py && python3 pipeline/test_nasa_pipeline.py",
+    "test": "node src/lib/fortiguardShield.test.mjs && node src/lib/trendEngine.test.mjs && node src/data/terrapulseData.parity.test.mjs && node src/lib/syncContract.test.mjs && node src/lib/chartAdapters.test.mjs && node src/components/PhysicianForm.integrity.test.mjs && node src/lib/headlineMetrics.test.mjs && node pipeline/test-legacy-engine.js && python3 pipeline/test_trend_engine.py && python3 pipeline/test_nasa_pipeline.py",
     "test:e2e": "node --test e2e/smoke.test.mjs"
   },
   "dependencies": {

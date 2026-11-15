@@ -12,20 +12,36 @@
 ## 🌍 Executive Summary (الموجز التنفيذي)
 
 **English:**  
-Egypt stands at a critical climate and human capital crossroads. While global analyses often treat national climate warming as a uniform phenomenon, 30 years of NASA satellite Earth observations (1995–2025) reveal **starkly opposing regional trends** across Egypt’s geographic coordinates. In Upper Egypt (Aswan, Assiut), extreme daytime temperatures ($T_{2M\_MAX}$) are escalating at $+0.55^\circ\text{C}$ to $+0.72^\circ\text{C}$ per decade alongside rapid aridification (Relative Humidity dropping by $-2.8\%$/decade), triggering acute dehydration, heatstroke, and endemic renal/cardiovascular crises. Simultaneously, coastal Nile Delta regions (Alexandria) experience **increasing relative humidity** ($+2.5\%$/decade) coupled with fine particulate pollution ($PM_{2.5} > 85\,\mu\text{g/m}^3$) in Greater Cairo, sharply worsening wet-bulb respiratory stress and pediatric asthma.
+Egypt stands at a critical climate and human capital crossroads. While global analyses often treat national climate warming as a uniform phenomenon, 31 years of NASA satellite Earth observations (1995–2025) reveal **starkly opposing regional trends** across Egypt’s geographic coordinates:
+- In **Upper Egypt (Aswan, Assiut)**, mean air temperature ($T_{2M}$) rises steadily at $+0.35^\circ\text{C}$/decade ($p < 0.001$, Mann-Kendall $Z = 3.59$), with daily maximum temperatures ($T_{2M\_MAX}$) increasing at $+0.49^\circ\text{C}$/decade in Aswan, driving a cumulative $+1.46^\circ\text{C}$ peak temperature increase over the 30-year record alongside severe topsoil desiccation (GLDAS Soil Moisture dropping by $-1.52\,\text{kg/m}^2$/decade, $p < 0.0001$). Radiometric land surface temperature ($LST_{DAY}$ from MODIS) escalates at $+1.41^\circ\text{C}$ to $+1.44^\circ\text{C}$/decade.
+- In **Greater Cairo & the Nile Delta (Cairo, Giza, Alexandria)**, fine particulate pollution (MERRA-2 $PM_{2.5}$) escalates at $+7.05\,\mu\text{g/m}^3$/decade ($p < 0.0001$, baseline $> 78\,\mu\text{g/m}^3$) alongside agricultural greenness loss (MODIS NDVI $-0.022$/decade, $p < 0.0001$) and heavy soil moisture depletion ($-2.06\,\text{kg/m}^2$/decade in Alexandria, $p < 0.0001$). Meanwhile, maritime buffering in Alexandria keeps daily maximum warming lower ($+0.16^\circ\text{C}$/decade).
 
-Compounding this environmental divergence is Egypt's severe physician brain drain: over 50% of recent medical graduates seek opportunities abroad, leaving Upper Egypt with as few as **5.2 physicians per 10,000 residents** (compared to 16.5 in Cairo).
+Compounding this environmental divergence is Egypt's severe physician brain drain: over 50% of recent medical graduates seek opportunities abroad (WHO EMHJ cohort, $n=885$), leaving Upper Egypt with as few as **5.2 physicians per 10,000 residents** (compared to 16.5 in Cairo, CAPMAS 2024).
 
 **TerraPulse ("Stay & Build Egypt" — ابقَ وابنِ)** bridges this gap. It acts as an interactive Earth System Trend Detective and public health compass that connects NASA satellite data directly to clinical demand, crowdsources verified physician field observations, and equips decision-makers with a "What-If" policy simulation lab to retain medical talent and protect vulnerable communities.
 
 ---
 
 **العربية:**  
-تقف مصر اليوم أمام منعطف حرج يجمع بين تسارع الأزمات المناخية وتحديات الحفاظ على الكوادر الطبية الوطنية. تكشف بيانات أقمار وكالة ناسا الفضائية عبر 30 عاماً (1995–2025) عن **اتجاهات إقليمية متضادة تماماً** بين أقاليم مصر المختلفة؛ ففي صعيد مصر (أسوان وأسيوط) يتسارع الاحترار الشديد بمعدل $+0.55$ إلى $+0.72$ درجة مئوية لكل عقد بالتزامن مع جفاف شديد، مسبباً موجات جفاف حاد وفشلاً كلوياً وإجهاداً قلبياً مميتاً. وفي المقابل، يشهد الساحل الشمالي والدلتا (الإسكندرية) **ارتفاعاً في الرطوبة النسبية** ممتزجاً مع ركود الجسيمات العالقة الدقيقة ($PM_{2.5}$) بالقاهرة، مما يضاعف أزمات الربو الشعبي عند الأطفال وإجهاد البصيلة الرطبة.
+تقف مصر اليوم أمام منعطف حرج يجمع بين تسارع الأزمات المناخية وتحديات الحفاظ على الكوادر الطبية الوطنية. تكشف بيانات أقمار وكالة ناسا الفضائية عبر 31 عاماً (1995–2025) عن **اتجاهات إقليمية متضادة تماماً** بين أقاليم مصر المختلفة:
+- في **صعيد مصر (أسوان وأسيوط)**: يرتفع متوسط درجة حرارة الهواء ($T_{2M}$) بمعدل $+0.35$ درجة مئوية لكل عقد ($p < 0.001$, $Z = 3.59$)، بينما تتصاعد درجات الحرارة العظمى ($T_{2M\_MAX}$) بمعدل $+0.49$ درجة مئوية لكل عقد بأسوان، مسجلة زيادة تراكمية قدرها $+1.46$ درجة مئوية في ذروة القيظ عبر 30 عاماً، مصحوبة بتراجع حاد في رطوبة التربة ($-1.52\,\text{kg/m}^2$/عقد، $p < 0.0001$)، وارتفاع حرارة سطح الأرض الإشعاعية ($LST_{DAY}$ عبر MODIS) بمعدل $+1.41$ إلى $+1.44$ درجة مئوية لكل عقد.
+- في **القاهرة الكبرى ودلتا النيل (القاهرة، الجيزة، الإسكندرية)**: تتصاعد ملوثات الجسيمات الدقيقة (MERRA-2 $PM_{2.5}$) بمعدل $+7.05\,\mu\text{g/m}^3$ لكل عقد ($p < 0.0001$) مع انحسار الغطاء النباتي (MODIS NDVI بمعدل $-0.022$/عقد) وجفاف حاد في رطوبة التربة الساحلية ($-2.06\,\text{kg/m}^2$/عقد بالإسكندرية)، في حين يخفف الغطاء البحري بالإسكندرية من تسارع درجات الحرارة العظمى ($+0.16$ درجة مئوية/عقد).
 
-يتزامن ذلك مع هجرة الكوادر الطبية الشابة للخارج، مما أدى لعجز طبي حاد في الصعيد (5.2 طبيب لكل 10 آلاف مواطن بأسوان مقابل 16.5 بالقاهرة).
+يتزامن ذلك مع هجرة الكوادر الطبية الشابة للخارج (أكثر من 50% ينوون الهجرة وفق دراسة الصحة العالمية EMHJ)، مما أدى لعجز طبي حاد في الصعيد (5.2 طبيب لكل 10 آلاف مواطن بأسوان مقابل 16.5 بالقاهرة وفق تعداد CAPMAS 2024).
 
 تأتي منصة **"تيرابالس: ابقَ وابنِ"** لتكون محققاً فضائياً تفاعلياً لاتجاهات الأرض وبوصلة للأثر الصحي؛ تربط قياسات أقمار ناسا باحتياجات التخصصات الطبية، وتستقبل بلاغات الأطباء الميدانية في الوقت الفعلي، وتتيح لصناع القرار محاكاة تدخلات السياسات لتوجيه الموارد واستبقاء الأطباء لحماية أرواح المصريين.
+
+---
+
+## 🔬 Scientific Triangulation: Delineating NASA Data, Potential Health Impact & Medical Statistics
+
+To maintain strict scientific integrity and avoid conflating remote sensing observations with clinical epidemiology, TerraPulse clearly differentiates between three distinct evidence tiers:
+
+| Evidence Tier | Data Source & Nature | What It Proves (Strengths) | Methodological Boundary (Limitations) |
+|---|---|---|---|
+| **1. Environmental Evidence**<br>*(القرائن البيئية)* | **NASA Earth Observations:**<br>• NASA POWER ($T_{2M}, T_{2M\_MAX}, RH_{2M}$)<br>• NASA MERRA-2 ($PM_{2.5}, AOD$)<br>• NASA MODIS Terra/Aqua ($NDVI, LST$)<br>• NASA/NOAA GLDAS-2.1 (Soil Moisture, $ET$) | Objective, continuous physical changes in atmospheric and land parameters over 31 years (1995–2025) with rigorous parametric (OLS regression, 95% CI) and non-parametric (Mann-Kendall test, $p < 0.001$) validation. | Measures physical photons, radiance, and atmospheric concentrations. **Does not measure patient admissions, morbidities, or clinical outcomes.** |
+| **2. Potential Health Impact**<br>*(الأثر الصحي المحتمل والميكانيزم الحيوي)* | **Biomedical & Pathophysiological Models:**<br>Peer-reviewed medical literature on thermal and toxicological stress pathways: heatstroke, hemoconcentration, acute tubular necrosis, oxidative alveolar airway injury. | Maps physical hazards to organ-specific vulnerabilities across 8 specialties (e.g., extreme heat $\to$ Nephrology/Emergency; aerosols $\to$ Pulmonology), establishing clinical demand urgency. | Represents **exposure-driven vulnerability and plausible epidemiological risk**, not direct clinical diagnostic proof. |
+| **3. Actual Medical Statistics**<br>*(الإحصاءات والبيانات الطبية الواقعية)* | **Ground-Truth Healthcare Registries:**<br>• **CAPMAS 2024:** Official physician densities (5.2/10k in Aswan vs 16.5/10k in Cairo) and hospital bed counts.<br>• **WHO EMHJ 2021 ($n=885$):** Documented physician migration drivers and working hours.<br>• **Physician Voice In-Page Observatory:** Local clinical severity scores (1–5) and facility burdens logged by frontline clinicians. | Real-world clinical capacity, systemic healthcare workforce shortages, and actual field-reported case burdens in Egyptian governorates. | Reflects healthcare institutional capacity and workforce retention; does not track satellite physics directly. |
 
 ---
 

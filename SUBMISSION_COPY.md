@@ -67,15 +67,23 @@ TerraPulse connects the dots between NASA satellite trends and frontline human r
 TerraPulse integrates 5 distinct NASA and partner Earth science missions. We avoided simplistic raw trendlines: our engine implements mathematical deseasonalization by subtracting the WMO-standard 1995–2005 climatological normal ($\overline{Y}_{base}$) from each annual observation, isolating the anomaly signal from the multi-decadal baseline. Every trend is tested using the non-parametric Mann-Kendall test ($S, \text{Var}(S), Z, p$) with significance badges requiring $p < 0.01$ (99% confidence).
 
 ### 2. Opposite-Direction Regional Trends
-We demonstrated that environmental forcing is heterogenous. In Aswan and Assiut, temperatures and solar radiation trend steeply upward ($+1.42^\circ\text{C}$/decade), triggering dehydration, heatstroke, and renal stress. Simultaneously, in the Nile Delta fringes, soil moisture and MODIS NDVI trend downward ($-0.032$/decade), causing agricultural strain. In Alexandria, maritime buffering keeps temperature rise lower ($+0.48^\circ\text{C}$/decade) but raises relative humidity, driving respiratory and cardiac humidity-heat strain.
+We demonstrated that environmental forcing is heterogenous:
+- In **Upper Egypt (Aswan, Assiut)**, mean surface air temperature ($T_{2M}$) rises at $+0.35^\circ\text{C}$/decade ($p < 0.001$, Mann-Kendall $Z = 3.59$), with extreme daytime maximum temperatures ($T_{2M\_MAX}$) increasing at $+0.49^\circ\text{C}$/decade in Aswan, driving a cumulative $+1.46^\circ\text{C}$ peak increase across the 30-year record. Radiometric Land Surface Temperature ($LST_{DAY}$ from MODIS) escalates at $+1.41^\circ\text{C}$ to $+1.44^\circ\text{C}$/decade alongside acute soil moisture desiccation (GLDAS Noah $-1.52\,\text{kg/m}^2$/decade, $p < 0.0001$).
+- In **Nile Delta & Coast (Alexandria, Cairo)**, fine particulate pollution (MERRA-2 $PM_{2.5}$) escalates at $+7.05\,\mu\text{g/m}^3$/decade ($p < 0.0001$), agricultural greenness declines (MODIS NDVI $-0.022$/decade, $p < 0.0001$), and coastal soil moisture depletes rapidly ($-2.06\,\text{kg/m}^2$/decade, $p < 0.0001$), while maritime buffering keeps Alexandria's daily maximum warming lower ($+0.16^\circ\text{C}$/decade).
 
-### 3. Human Impact & Healthcare Retention ("Stay & Build")
+### 3. Methodological Boundary: Environmental Evidence vs. Potential Health Impact vs. Medical Statistics
+To guarantee scientific integrity and prevent overclaiming from satellite data alone, TerraPulse establishes a strict three-tier evidence taxonomy:
+1. **Environmental Evidence (NASA Earth Observations):** Physical observations (NASA POWER, MERRA-2, MODIS, GLDAS) measuring real atmospheric and land shifts over 31 years ($p < 0.001$). *Boundary:* Satellites detect physical radiance and particulate mass; they do not measure patient vitals or clinical admissions.
+2. **Potential Health Impact (Biomedical Mechanisms):** Established pathophysiological pathways in peer-reviewed literature (e.g., extreme heat $>40^\circ\text{C}$ inducing hemoconcentration, acute tubular necrosis, and prerenal azotemia; fine particulates inducing airway oxidative stress). *Boundary:* Represents exposure-driven clinical vulnerability and demand elasticity across specialties, not verified diagnostic counts.
+3. **Actual Medical Statistics (Empirical Healthcare Capacity):** Ground-truth data sourced from CAPMAS 2024 census records (hospital beds, 5.2 vs 16.5 doctors/10k regional deficit) and the WHO EMHJ 2021 cohort ($n=885$ Egyptian MDs), alongside in-page local case logging by practicing physicians.
+
+### 4. Human Impact & Healthcare Retention ("Stay & Build")
 Instead of stopping at scientific charts, TerraPulse addresses a national socio-economic emergency. The Health Need Index directly links NASA variables to medical specialties:
 - **Pulmonologists** are directed to Cairo and Giza (MERRA-2 AOD $> 0.42$).
 - **Nephrologists & Emergency Physicians** are directed to Aswan and Assiut (NASA POWER $T2M\_MAX > 42^\circ\text{C}$).
 - **Family Medicine & Pediatrics** are matched with Delta communities facing agro-environmental transitions.
 
-### 4. Technical Execution & Accessibility
+### 5. Technical Execution & Accessibility
 Nothing has to be configured to run the platform: no credentials ship in the bundle, no backend is required for the data, the map, the charts or the statistics. By compiling a complete 30-year dataset into client-side JavaScript, TerraPulse guarantees instantaneous 60fps chart rendering, offline resilience for its data, maps and analysis, and universal compatibility across devices and browsers. (The streamed Esri basemap tiles and the Google-hosted webfonts are the two network exceptions — see *Live Demo* above; both degrade without an error. The third exception is opt-in and single-purpose: the report submission endpoint, one serverless function that can insert and cannot read.)
 
 ---
@@ -135,9 +143,9 @@ Nothing has to be configured to run the platform: no credentials ship in the bun
 ### Slide 2: The Two Converging Crises
 - **Key Message:** Environmental stress and physician brain drain threaten national stability.
 - **Data Points:**
-  * NASA POWER records confirm a $+1.42^\circ\text{C}$ warming per decade in Upper Egypt.
-  * Over 11,000 physicians resigned from Egypt's public health system between 2019 and 2024.
-  * High-risk governorates face a double penalty: the greatest environmental exposure and the fewest doctors.
+  * NASA POWER and MODIS observations confirm multi-decadal thermal escalation in Upper Egypt: mean air temperature rising at $+0.35^\circ\text{C}$/decade ($p < 0.001$, Mann-Kendall $Z = 3.59$), maximum daily heat increasing at $+0.49^\circ\text{C}$/decade ($+1.46^\circ\text{C}$ 30-year cumulative peak rise), and land surface temperature (LST) rising at $+1.44^\circ\text{C}$/decade.
+  * Over 11,000 physicians resigned from Egypt's public health system between 2019 and 2024 (CAPMAS & Medical Syndicate).
+  * High-risk governorates face a double penalty: the greatest environmental exposure and the fewest doctors (5.2 vs 16.5 doctors/10k).
 - **Visuals:** Juxtaposition of rising heat anomalies against regional doctor shortages per 10,000 residents.
 
 ### Slide 3: The Multi-Mission Trend Detective
@@ -195,10 +203,14 @@ Nothing has to be configured to run the platform: no credentials ship in the bun
 
 ### كيفية تلبية متطلبات التحدي
 1. **استكشاف متغيرات متعددة المهام:** دمجت المنصة بيانات أرصاد الفضاء من خمس منظومات تابعة لناسا (NASA POWER, MERRA-2, MODIS, GLDAS, SEDAC) لتغطية درجة الحرارة، الإشعاع الشمسي، الرطوبة، مؤشر الغطاء النباتي، الأتربة المعلقة، رطوبة التربة، والكثافة السكانية.
-2. **اكتشاف الاتجاهات المتعاكسة إقليمياً:** أثبتت المنصة بالدليل العلمي تبايناً حاداً بين الارتفاع القياسي في درجات الحرارة والموجات الحارة بصعيد مصر (+1.42 درجة/عقد) مقابل انحسار الغطاء النباتي وجفاف التربة في أطراف دلتا النيل.
-3. **الدقة الرياضية والإحصائية:** احتساب الشذوذ المناخي بعد إزالة التغيرات الموسمية، وتطبيق اختبار "مان-كيندال" اللامعلمي لتأكيد الدلالة الإحصائية للاتجاهات ($p < 0.01$)، بالإضافة لحساب ميل الانحدار الخطي لكل عقد وفترات الثقة.
-4. **ربط علوم الفضاء بالأثر الصحي والوطني:** ابتكار "مؤشر الاحتياج الصحي" (HNI) ومحرك "أنا طبيب" لتوجيه الأطباء المصريين إلى المحافظات الأكثر حاجة لتخصصاتهم الدقيقة، مما يمنحهم حافزاً إنسانياً ووطنياً للبقاء ومواجهة نزيف هجرة الكوادر الطبية.
-5. **تحليلات تعمل بالكامل داخل المتصفح (Client-Side Analytics):** تُحسَب المؤشرات وتُرسم الخرائط والمخططات داخل متصفح المستخدم دون خادم أو مفتاح أو تسجيل دخول، مما يضمن استمرارية عملها في المستشفيات والمراكز الريفية النائية. الاستثناء الوحيد اختياري ومحدود الغرض: نقطة إرسال بلاغات الأطباء — دالة واحدة تكتب في قاعدة البيانات ولا تقرأ منها شيئاً؛ وبدونها يبقى البلاغ على جهاز الطبيب ويخبره التطبيق بذلك.
+2. **اكتشاف الاتجاهات المتعاكسة إقليمياً:** أثبتت المنصة بالدليل العلمي تبايناً حاداً بين الاحترار في صعيد مصر (ارتفاع متوسط الحرارة بمعدل $+0.35$ درجة مئوية/عقد، وتصاعد درجات الحرارة العظمى بمعدل $+0.49$ درجة مئوية/عقد بأسوان مع ذروة تراكمية قدرها $+1.46$ درجة مئوية، وارتفاع حرارة سطح الأرض LST بمعدل $+1.44$ درجة/عقد) مقابل انحسار الغطاء النباتي ($-0.022$/عقد) وجفاف التربة الحاد في الدلتا والإسكندرية ($-2.06\,\text{kg/m}^2$/عقد).
+3. **التمييز المنهجي الصارم بين القرائن البيئية والأثر الصحي والإحصاءات الميدانية:**
+   - **القرائن البيئية الفضائية (NASA Data):** قياسات فيزيائية دقيقة ومحسوبة إحصائياً ($p < 0.001$) للحرارة والملوثات ورطوبة التربة دون قياس مباشر للحالات السريرية.
+   - **الأثر الصحي المحتمل والميكانيزم الحيوي:** نماذج قائمة على أبحاث علمية محكمة توضح المسارات البيولوجية (مثل: تأثير القيظ الشديد على القصور الكلوي الحاد والجفاف، والجسيمات الدقيقة على تفاقم الربو).
+   - **الإحصاءات والبيانات الطبية الواقعية:** بيانات حقيقية مستندة إلى مسوح الجهاز المركزي للتعبئة العامة والإحصاء (CAPMAS 2024) ودراسة منظمة الصحة العالمية (WHO EMHJ 2021, n=885) وبلاغات الأطباء الميدانية في المستشفيات.
+4. **الدقة الرياضية والإحصائية:** احتساب الشذوذ المناخي بعد إزالة التغيرات الموسمية، وتطبيق اختبار "مان-كيندال" اللامعلمي لتأكيد الدلالة الإحصائية للاتجاهات ($p < 0.01$)، بالإضافة لحساب ميل الانحدار الخطي لكل عقد وفترات الثقة 95%.
+5. **ربط علوم الفضاء بالأثر الصحي والوطني:** ابتكار "مؤشر الاحتياج الصحي" (HNI) ومحرك "أنا طبيب" لتوجيه الأطباء المصريين إلى المحافظات الأكثر حاجة لتخصصاتهم الدقيقة، مما يمنحهم حافزاً إنسانياً ووطنياً للبقاء ومواجهة نزيف هجرة الكوادر الطبية.
+6. **تحليلات تعمل بالكامل داخل المتصفح (Client-Side Analytics):** تُحسَب المؤشرات وتُرسم الخرائط والمخططات داخل متصفح المستخدم دون خادم أو مفتاح أو تسجيل دخول، مما يضمن استمرارية عملها في المستشفيات والمراكز الريفية النائية. الاستثناء الوحيد اختياري ومحدود الغرض: نقطة إرسال بلاغات الأطباء — دالة واحدة تكتب في قاعدة البيانات ولا تقرأ منها شيئاً؛ وبدونها يبقى البلاغ على جهاز الطبيب ويخبره التطبيق بذلك.
 
 ---
 
